@@ -39,6 +39,14 @@
 *                                                                       *
 ************************************************************************/
 
+#include <QGroupBox>
+#include <QLabel>
+#include <QVBoxLayout>
+#include <QRadioButton>
+#include <QMessageBox>
+
+#include "QColorButton.h"
+
 #include "SGOglLightNBPage.h"
 #include "SGOglNotebook.h"
 #include "SGFixedGLState.h"
@@ -46,389 +54,405 @@
 #include "App.h"
 #include "SGFrame.h"
 #include "SGCanvas.h"
-#include <wx/colordlg.h>
-#include <wx/msgdlg.h>
 
-BEGIN_EVENT_TABLE(SGOglLightNBPage, wxPanel)
-    EVT_COMMAND_RANGE(Id::FFSD_START_LIGHT, Id::FFSD_END_LIGHT, wxEVT_COMMAND_RADIOBOX_SELECTED, SGOglLightNBPage::OnRadio)
-    EVT_COMMAND_RANGE(Id::FFSD_START_LIGHT, Id::FFSD_END_LIGHT, wxEVT_COMMAND_TEXT_ENTER,        SGOglLightNBPage::OnTextEnter)
-    EVT_COMMAND_RANGE(Id::FFSD_START_LIGHT, Id::FFSD_END_LIGHT, wxEVT_COMMAND_BUTTON_CLICKED,    SGOglLightNBPage::OnButton)
-    EVT_COMMAND_RANGE(Id::FFSD_START_LIGHT, Id::FFSD_END_LIGHT, wxEVT_COMMAND_CHECKBOX_CLICKED,  SGOglLightNBPage::OnCheckbox)
-END_EVENT_TABLE()
-
-SGOglLightNBPage::SGOglLightNBPage(SGOglNotebook* parent, wxWindowID id)
-: wxPanel(parent,id)
+SGOglLightNBPage::SGOglLightNBPage(SGOglNotebook* parent)
+: QWidget(parent)
 {
     m_parent = parent;
     SGFixedGLState* glState = m_parent->GetGLState();
 
-    wxStaticBox* lightBox             = new wxStaticBox(this, wxID_ANY, wxT("Lighting Parameters"),  wxDefaultPosition, wxDefaultSize, 0);
-    wxStaticBox* enableDisableBox     = new wxStaticBox(this, wxID_ANY, wxT("glEnable/glDisable"),   wxDefaultPosition, wxDefaultSize, 0);
-    wxStaticBox* selectedLightBox     = new wxStaticBox(this, wxID_ANY, wxT("Selected Light Properties"),   wxDefaultPosition, wxDefaultSize, 10);
-    wxStaticBoxSizer* lightSizer      = new wxStaticBoxSizer(lightBox, wxVERTICAL);
-    wxStaticBoxSizer* h1              = new wxStaticBoxSizer(enableDisableBox, wxHORIZONTAL);
-    wxBoxSizer* h3                    = new wxStaticBoxSizer(selectedLightBox, wxHORIZONTAL);
-    wxBoxSizer* h2             = new wxBoxSizer(wxHORIZONTAL);
-    wxBoxSizer* h3v1           = new wxBoxSizer(wxVERTICAL);
-    wxBoxSizer* h3v2           = new wxBoxSizer(wxVERTICAL);
-    wxBoxSizer* h3v3           = new wxBoxSizer(wxVERTICAL);
-    wxBoxSizer* h3v4           = new wxBoxSizer(wxVERTICAL);
-    wxBoxSizer* labelh3v1      = new wxBoxSizer(wxVERTICAL);
-    wxBoxSizer* labelh3v2      = new wxBoxSizer(wxVERTICAL);
-    wxBoxSizer* labelh3v3      = new wxBoxSizer(wxVERTICAL);
-    wxBoxSizer* labelh3v4      = new wxBoxSizer(wxVERTICAL);
+    QGroupBox* lightBox             = new QGroupBox(tr("Lighting Parameters"), this);
+    QGroupBox* enableDisableBox     = new QGroupBox(tr("glEnable/glDisable"), this);
+    QGroupBox* lightSelectionBox    = new QGroupBox(tr("Select Light"), this);
+    QGroupBox* selectedLightBox     = new QGroupBox(tr("Selected Light Properties"), this);
+    QGridLayout* lightSizer     = new QGridLayout(lightBox);
+    QHBoxLayout* h1             = new QHBoxLayout(enableDisableBox);
+    QHBoxLayout* h2             = new QHBoxLayout(lightSelectionBox);
+    QGridLayout* h3             = new QGridLayout(selectedLightBox);
 
-    wxString LightSelectionArray[8];
-    LightSelectionArray[0]  = wxT("L0  ");
-    LightSelectionArray[1]  = wxT("L1  ");
-    LightSelectionArray[2]  = wxT("L2  ");
-    LightSelectionArray[3]  = wxT("L3  ");
-    LightSelectionArray[4]  = wxT("L4  ");
-    LightSelectionArray[5]  = wxT("L5  ");
-    LightSelectionArray[6]  = wxT("L6  ");
-    LightSelectionArray[7]  = wxT("L7  ");
-
-    lightSelectionBox    = new wxRadioBox(this, Id::LightSelectionBoxVal, wxT("Select Light"),    wxDefaultPosition, wxDefaultSize, 8, LightSelectionArray , 1, wxRA_SPECIFY_ROWS, wxDefaultValidator);
-
-    lcb0 = new wxCheckBox(this, Id::L0EnableVal, wxT("L0"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
-    lcb1 = new wxCheckBox(this, Id::L1EnableVal, wxT("L1"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
-    lcb2 = new wxCheckBox(this, Id::L2EnableVal, wxT("L2"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
-    lcb3 = new wxCheckBox(this, Id::L3EnableVal, wxT("L3"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
-    lcb4 = new wxCheckBox(this, Id::L4EnableVal, wxT("L4"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
-    lcb5 = new wxCheckBox(this, Id::L5EnableVal, wxT("L5"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
-    lcb6 = new wxCheckBox(this, Id::L6EnableVal, wxT("L6"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
-    lcb7 = new wxCheckBox(this, Id::L7EnableVal, wxT("L7"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
-    lightingCheckBox  = new wxCheckBox(this, Id::LightingEnableVal,wxT("GL_LIGHTING"),  wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
-    normalizeCheckBox = new wxCheckBox(this, Id::NormalizeEnableVal,wxT("GL_NORMALIZE"),wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
-    separateSpecularColorCheckBox = new wxCheckBox(this, Id::SeparateSpecularColorEnableVal,wxT("GL_SEPARATE_SPECULAR_COLOR"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
-
-    lcb0->SetValue(glState->GetLight(0)->lightEnabled);
-    lcb1->SetValue(glState->GetLight(1)->lightEnabled);
-    lcb2->SetValue(glState->GetLight(2)->lightEnabled);
-    lcb3->SetValue(glState->GetLight(3)->lightEnabled);
-    lcb4->SetValue(glState->GetLight(4)->lightEnabled);
-    lcb5->SetValue(glState->GetLight(5)->lightEnabled);
-    lcb6->SetValue(glState->GetLight(6)->lightEnabled);
-    lcb7->SetValue(glState->GetLight(7)->lightEnabled);
-
-    lightingCheckBox->SetValue(glState->GetLightingEnable());
-    normalizeCheckBox->SetValue(glState->GetNormalizeEnable());
-    separateSpecularColorCheckBox->SetValue(glState->GetSeparateSpecularColorEnable());
-
-    Light *light = glState->GetLight(lightSelectionBox->GetSelection());
-
-    lightPosition = new wxTextCtrl(this, Id::LightPositionVal,  FloatToString4(light->lightPositionVector),      wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER, wxDefaultValidator, wxT("Light Position")       );
-
-    spotDirection = new wxTextCtrl(this, Id::SpotDirectionVal, FloatToString3(light->lightSpotDirectionVector),  wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER, wxDefaultValidator, wxT("Spotlight Direction")  );
-    spotExponent  = new wxTextCtrl(this, Id::SpotExponentVal,  FloatToString1(light->lightSpotExponent),   wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER, wxDefaultValidator, wxT("Spotlight Exponent")   );
-    spotCutoff    = new wxTextCtrl(this, Id::SpotCutoffVal,    FloatToString1(light->lightSpotCutoff),     wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER, wxDefaultValidator, wxT("Spot Cutoff")          );
-
-    constantAttenuation  = new wxTextCtrl(this, Id::AttenuationConstantVal,  FloatToString1(light->lightConstantAttenuation),  wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER, wxDefaultValidator, wxT("Constant Attenuation") );
-    linearAttenuation    = new wxTextCtrl(this, Id::AttenuationLinearVal,    FloatToString1(light->lightLinearAttenuation),    wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER, wxDefaultValidator, wxT("Linear Attenuation")   );
-    quadraticAttenuation = new wxTextCtrl(this, Id::AttenuationQuadraticVal, FloatToString1(light->lightQuadraticAttenuation), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER, wxDefaultValidator, wxT("Quadratic Attenuation"));
-
-    ambientLight  = new wxButton(this, Id::AmbientLightVal,   wxT(""),  wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER, wxDefaultValidator, wxT("Ambient"));
-    specularLight = new wxButton(this, Id::SpecularLightVal,  wxT(""),  wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER, wxDefaultValidator, wxT("Specular"));
-    diffuseLight  = new wxButton(this, Id::DiffuseLightVal,   wxT(""),  wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER, wxDefaultValidator, wxT("Diffuse"));
-
-    ambientLight->SetBackgroundColour(ToWxIntColor(light->lightAmbientColorVector));
-    specularLight->SetBackgroundColour(ToWxIntColor(light->lightSpecularColorVector));
-    diffuseLight->SetBackgroundColour(ToWxIntColor(light->lightDiffuseColorVector));
-
-    wxStaticText* positionLbl = new wxStaticText(this, 0, wxT("GL_POSITION"), wxDefaultPosition, wxDefaultSize, wxALIGN_TOP);
-
-    wxStaticText* ambientLbl  = new wxStaticText(this, 0, wxT("GL_AMBIENT"),   wxDefaultPosition, wxDefaultSize, wxALIGN_TOP);
-    wxStaticText* specularLbl = new wxStaticText(this, 0, wxT("GL_SPECULAR"),  wxDefaultPosition, wxDefaultSize, wxALIGN_TOP);
-    wxStaticText* diffuseLbl  = new wxStaticText(this, 0, wxT("GL_DIFFUSE"),   wxDefaultPosition, wxDefaultSize, wxALIGN_TOP);
-
-    wxStaticText* spotDirectionLbl  = new wxStaticText(this, 0, wxT("GL_SPOT_DIRECTION"),wxDefaultPosition, wxDefaultSize, wxALIGN_TOP);
-    wxStaticText* spotExponentLbl   = new wxStaticText(this, 0, wxT("GL_SPOT_EXPONENT"), wxDefaultPosition, wxDefaultSize, wxALIGN_TOP);
-    wxStaticText* spotCutoffLbl     = new wxStaticText(this, 0, wxT("GL_SPOT_CUTOFF"),   wxDefaultPosition, wxDefaultSize, wxALIGN_TOP);
-
-    wxStaticText* constantAttenLbl  = new wxStaticText(this, 0, wxT("GL_CONSTANT_ATTENUATION"),   wxDefaultPosition, wxDefaultSize, wxALIGN_TOP);
-    wxStaticText* linearAttenLbl    = new wxStaticText(this, 0, wxT("GL_LINEAR_ATTENUATION"),     wxDefaultPosition, wxDefaultSize, wxALIGN_TOP);
-    wxStaticText* quadraticAttenLbl = new wxStaticText(this, 0, wxT("GL_QUADRATIC_ATTENUATION"),  wxDefaultPosition, wxDefaultSize, wxALIGN_TOP);
-
-
-    h1->Add(lcb0, 0, wxALL | wxADJUST_MINSIZE, 5);
-    h1->Add(lcb1, 0, wxALL | wxADJUST_MINSIZE, 5);
-    h1->Add(lcb2, 0, wxALL | wxADJUST_MINSIZE, 5);
-    h1->Add(lcb3, 0, wxALL | wxADJUST_MINSIZE, 5);
-    h1->Add(lcb4, 0, wxALL | wxADJUST_MINSIZE, 5);
-    h1->Add(lcb5, 0, wxALL | wxADJUST_MINSIZE, 5);
-    h1->Add(lcb6, 0, wxALL | wxADJUST_MINSIZE, 5);
-    h1->Add(lcb7, 0, wxALL | wxADJUST_MINSIZE, 5);
-    h1->Add(lightingCheckBox, 0, wxALL | wxADJUST_MINSIZE, 5);
-    h1->Add(normalizeCheckBox,0, wxALL | wxADJUST_MINSIZE, 5);
-    h1->Add(separateSpecularColorCheckBox,0,wxALL | wxADJUST_MINSIZE, 5);
-
-    h3v1->Add(lightPosition, 0, wxALIGN_TOP | wxALL | wxADJUST_MINSIZE, 5);
-
-    labelh3v1->Add(positionLbl, 0, wxALIGN_TOP | wxALL | wxADJUST_MINSIZE, 5);
-
-    h3v2->Add(ambientLight, 0, wxALIGN_CENTER | wxALL | wxADJUST_MINSIZE, 5 );
-    h3v2->Add(specularLight, 0, wxALIGN_CENTER | wxALL | wxADJUST_MINSIZE, 5);
-    h3v2->Add(diffuseLight , 0, wxALIGN_CENTER | wxALL | wxADJUST_MINSIZE, 5);
-
-    labelh3v2->Add(ambientLbl , 0, wxTOP |wxBOTTOM | wxADJUST_MINSIZE, 9);
-    labelh3v2->Add(specularLbl, 0, wxTOP |wxBOTTOM | wxADJUST_MINSIZE, 9);
-    labelh3v2->Add(diffuseLbl , 0, wxTOP |wxBOTTOM | wxADJUST_MINSIZE, 9);
-
-    h3v3->Add(spotDirection, 0, wxALIGN_CENTER | wxALL | wxADJUST_MINSIZE, 5);
-    h3v3->Add(spotExponent , 0, wxALIGN_CENTER | wxALL | wxADJUST_MINSIZE, 5 );
-    h3v3->Add(spotCutoff  ,  0, wxALIGN_CENTER | wxALL | wxADJUST_MINSIZE, 5 );
-
-    labelh3v3->Add(spotDirectionLbl,  0, wxALIGN_CENTER | wxALL | wxADJUST_MINSIZE, 9);
-    labelh3v3->Add(spotExponentLbl ,  0, wxALIGN_CENTER | wxALL | wxADJUST_MINSIZE, 9 );
-    labelh3v3->Add(spotCutoffLbl  ,   0, wxALIGN_CENTER | wxALL | wxADJUST_MINSIZE, 9 );
-
-    h3v4->Add(constantAttenuation,    0, wxALIGN_CENTER | wxALL | wxADJUST_MINSIZE, 5 );
-    h3v4->Add(linearAttenuation  ,    0, wxALIGN_CENTER | wxALL | wxADJUST_MINSIZE, 5 );
-    h3v4->Add(quadraticAttenuation,   0, wxALIGN_CENTER | wxALL | wxADJUST_MINSIZE, 5);
-
-    labelh3v4->Add(constantAttenLbl,  0, wxALIGN_CENTER | wxALL | wxADJUST_MINSIZE, 9 );
-    labelh3v4->Add(linearAttenLbl  ,  0, wxALIGN_CENTER | wxALL | wxADJUST_MINSIZE, 9 );
-    labelh3v4->Add(quadraticAttenLbl, 0, wxALIGN_CENTER | wxALL | wxADJUST_MINSIZE, 9);
-    
-    h2->Add(lightSelectionBox);
-
-    h3->Add(labelh3v1, 0, wxTOP | wxADJUST_MINSIZE, 5);
-    h3->Add(h3v1);
-    h3->Add(labelh3v2, 0, wxTOP | wxADJUST_MINSIZE, 5);
-    h3->Add(h3v2);
-    h3->Add(labelh3v3, 0, wxTOP | wxADJUST_MINSIZE, 5);
-    h3->Add(h3v3);
-    h3->Add(labelh3v4, 0, wxTOP | wxADJUST_MINSIZE, 5);
-    h3->Add(h3v4);
-
-    lightSizer->Add(h1, 0 , wxALL | wxADJUST_MINSIZE, 10);
-    lightSizer->Add(h2, 0 , wxALL | wxADJUST_MINSIZE, 10);
-    lightSizer->Add(h3, 0 , wxALL | wxADJUST_MINSIZE, 10);
-
-    SetAutoLayout(TRUE);
-    SetSizer( lightSizer );
-    lightSizer->SetSizeHints( this );
-}
-
-void SGOglLightNBPage::OnButton(wxCommandEvent& event)
-{
-    wxColour oglColor;
-    SGFixedGLState* glState = m_parent->GetGLState();
-    int lightSelected = lightSelectionBox->GetSelection();
-    glState->SetLightChanged(true);
-
-    switch(event.GetId()){
-        case Id::AmbientLightVal :
-            oglColor = wxGetColourFromUser(this, ToWxIntColor((glState->GetLight(lightSelected))->lightAmbientColorVector));
-            glState->GetLight(lightSelected)->lightAmbientColorVector = ToGLFPColor(oglColor);
-            break;
-        case Id::DiffuseLightVal :
-            oglColor = wxGetColourFromUser(this, ToWxIntColor((glState->GetLight(lightSelected))->lightDiffuseColorVector));
-            glState->GetLight(lightSelected)->lightDiffuseColorVector = ToGLFPColor(oglColor);
-            break;
-        case Id::SpecularLightVal :
-            oglColor = wxGetColourFromUser(this, ToWxIntColor((glState->GetLight(lightSelected))->lightSpecularColorVector));
-            glState->GetLight(lightSelected)->lightSpecularColorVector = ToGLFPColor(oglColor);
-            break;
-        default :
-            break;
+    lightSelectionGroup = new QButtonGroup(this);
+    for (int i=0; i<8; i++) {
+        QRadioButton *lrb = new QRadioButton(QString("L%1  ").arg(i), this);
+        h2->addWidget(lrb);
+        lightSelectionGroup->addButton(lrb, i);
     }
-    FindWindowById(event.GetId())->SetBackgroundColour(oglColor);
-    wxGetApp().GetFrame()->SetCanvasMode(0);
-    wxGetApp().GetFrame()->GetCanvas()->Update();
-    event.Skip();
+    lightSelectionGroup->button(0)->setChecked(true);
+    connect(lightSelectionGroup, SIGNAL(buttonClicked(int)), SLOT(OnRadio(int)));
+
+    lcb0 = new QCheckBox(tr("L0"), this);
+    lcb1 = new QCheckBox(tr("L1"), this);
+    lcb2 = new QCheckBox(tr("L2"), this);
+    lcb3 = new QCheckBox(tr("L3"), this);
+    lcb4 = new QCheckBox(tr("L4"), this);
+    lcb5 = new QCheckBox(tr("L5"), this);
+    lcb6 = new QCheckBox(tr("L6"), this);
+    lcb7 = new QCheckBox(tr("L7"), this);
+    lightingCheckBox  = new QCheckBox(tr("GL_LIGHTING"), this);
+    normalizeCheckBox = new QCheckBox(tr("GL_NORMALIZE"), this);
+    separateSpecularColorCheckBox = new QCheckBox(tr("GL_SEPARATE_SPECULAR_COLOR"), this);
+
+    lcb0->setChecked(glState->GetLight(0)->lightEnabled);
+    lcb1->setChecked(glState->GetLight(1)->lightEnabled);
+    lcb2->setChecked(glState->GetLight(2)->lightEnabled);
+    lcb3->setChecked(glState->GetLight(3)->lightEnabled);
+    lcb4->setChecked(glState->GetLight(4)->lightEnabled);
+    lcb5->setChecked(glState->GetLight(5)->lightEnabled);
+    lcb6->setChecked(glState->GetLight(6)->lightEnabled);
+    lcb7->setChecked(glState->GetLight(7)->lightEnabled);
+
+    lightCheckGroup = new QButtonGroup(this);
+    lightCheckGroup->setExclusive(false);
+    lightCheckGroup->addButton(lcb0, 0);
+    lightCheckGroup->addButton(lcb1, 1);
+    lightCheckGroup->addButton(lcb2, 2);
+    lightCheckGroup->addButton(lcb3, 3);
+    lightCheckGroup->addButton(lcb4, 4);
+    lightCheckGroup->addButton(lcb5, 5);
+    lightCheckGroup->addButton(lcb6, 6);
+    lightCheckGroup->addButton(lcb7, 7);
+    lightCheckGroup->addButton(lightingCheckBox, 8);
+    lightCheckGroup->addButton(normalizeCheckBox, 9);
+    lightCheckGroup->addButton(separateSpecularColorCheckBox, 10);
+    connect(lightCheckGroup, SIGNAL(buttonClicked(int)), SLOT(OnCheckbox(int)));
+
+    lightingCheckBox->setChecked(glState->GetLightingEnable());
+    normalizeCheckBox->setChecked(glState->GetNormalizeEnable());
+    separateSpecularColorCheckBox->setChecked(glState->GetSeparateSpecularColorEnable());
+
+    Light *light = glState->GetLight(lightSelectionGroup->checkedId());
+
+    lightPosition = new QLineEdit(FloatToString4(light->lightPositionVector), this);
+    connect(lightPosition, SIGNAL(returnPressed()), SLOT(lightPositionChanged()));
+
+    spotDirection = new QLineEdit(FloatToString3(light->lightSpotDirectionVector), this);
+    connect(spotDirection, SIGNAL(returnPressed()), SLOT(spotDirectionChanged()));
+
+    spotExponent  = new QDoubleSpinBox(this);
+    spotExponent->setRange(-1000, 1000);
+    spotExponent->setValue(light->lightSpotExponent);
+    connect(spotExponent, SIGNAL(valueChanged(double)), SLOT(spotExponentChanged()));
+
+    spotCutoff    = new QDoubleSpinBox(this);
+    spotCutoff->setRange(-1000, 1000);
+    spotCutoff->setValue(light->lightSpotCutoff);
+    connect(spotCutoff, SIGNAL(valueChanged(double)), SLOT(spotCutoffChanged()));
+
+    constantAttenuation  = new QDoubleSpinBox(this);
+    constantAttenuation->setRange(-1000, 1000);
+    constantAttenuation->setValue(light->lightConstantAttenuation);
+    connect(constantAttenuation, SIGNAL(valueChanged(double)), SLOT(constantAttenuationChanged()));
+
+    linearAttenuation    = new QDoubleSpinBox(this);
+    linearAttenuation->setRange(-1000, 1000);
+    linearAttenuation->setValue(light->lightLinearAttenuation);
+    connect(linearAttenuation, SIGNAL(valueChanged(double)), SLOT(linearAttenuationChanged()));
+
+    quadraticAttenuation = new QDoubleSpinBox(this);
+    quadraticAttenuation->setRange(-1000, 1000);
+    quadraticAttenuation->setValue(light->lightQuadraticAttenuation);
+    connect(quadraticAttenuation, SIGNAL(valueChanged(double)), SLOT(quadraticAttenuationChanged()));
+
+    ambientLight  = new QColorButton(this);
+    ambientLight->setColor(ToQtColor(light->lightAmbientColorVector));
+    connect(ambientLight, SIGNAL(clicked()), SLOT(ambientLightChanged()));
+
+    specularLight = new QColorButton(this);
+    specularLight->setColor(ToQtColor(light->lightSpecularColorVector));
+    connect(specularLight, SIGNAL(clicked()), SLOT(specularLightChanged()));
+
+    diffuseLight  = new QColorButton(this);
+    diffuseLight->setColor(ToQtColor(light->lightDiffuseColorVector));
+    connect(diffuseLight, SIGNAL(clicked()), SLOT(diffuseLightChanged()));
+
+    QLabel* positionLbl = new QLabel(tr("GL_POSITION"), this);
+
+    QLabel* ambientLbl  = new QLabel(tr("GL_AMBIENT"),  this);
+    QLabel* specularLbl = new QLabel(tr("GL_SPECULAR"), this);
+    QLabel* diffuseLbl  = new QLabel(tr("GL_DIFFUSE"),  this);
+
+    QLabel* spotDirectionLbl  = new QLabel(tr("GL_SPOT_DIRECTION"), this);
+    QLabel* spotExponentLbl   = new QLabel(tr("GL_SPOT_EXPONENT"),  this);
+    QLabel* spotCutoffLbl     = new QLabel(tr("GL_SPOT_CUTOFF"),    this);
+
+    QLabel* constantAttenLbl  = new QLabel(tr("GL_CONSTANT_ATTENUATION"),  this);
+    QLabel* linearAttenLbl    = new QLabel(tr("GL_LINEAR_ATTENUATION"),    this);
+    QLabel* quadraticAttenLbl = new QLabel(tr("GL_QUADRATIC_ATTENUATION"), this);
+
+
+    h1->addWidget(lcb0);
+    h1->addWidget(lcb1);
+    h1->addWidget(lcb2);
+    h1->addWidget(lcb3);
+    h1->addWidget(lcb4);
+    h1->addWidget(lcb5);
+    h1->addWidget(lcb6);
+    h1->addWidget(lcb7);
+    h1->addWidget(lightingCheckBox);
+    h1->addWidget(normalizeCheckBox);
+    h1->addWidget(separateSpecularColorCheckBox);
+
+    h3->addWidget(positionLbl, 0, 0);
+
+    h3->addWidget(lightPosition, 0, 1);
+
+    h3->addWidget(ambientLbl,  0, 2);
+    h3->addWidget(specularLbl, 1, 2);
+    h3->addWidget(diffuseLbl,  2, 2);
+
+    h3->addWidget(ambientLight,  0, 3);
+    h3->addWidget(specularLight, 1, 3);
+    h3->addWidget(diffuseLight,  2, 3);
+
+    h3->addWidget(spotDirectionLbl, 0, 4);
+    h3->addWidget(spotExponentLbl,  1, 4);
+    h3->addWidget(spotCutoffLbl,    2, 4);
+
+    h3->addWidget(spotDirection, 0, 5);
+    h3->addWidget(spotExponent,  1, 5);
+    h3->addWidget(spotCutoff,    2, 5);
+
+    h3->addWidget(constantAttenLbl,  0, 6);
+    h3->addWidget(linearAttenLbl,    1, 6);
+    h3->addWidget(quadraticAttenLbl, 2, 6);
+
+    h3->addWidget(constantAttenuation,  0, 7);
+    h3->addWidget(linearAttenuation,    1, 7);
+    h3->addWidget(quadraticAttenuation, 2, 7);
+
+
+    lightSizer->addWidget(enableDisableBox,  0, 0, 1, 2);
+    lightSizer->addWidget(lightSelectionBox, 1, 0, 1, 1);
+    lightSizer->addWidget(selectedLightBox,  2, 0, 1, 3);
+    lightSizer->setRowStretch(3, 2);
+    lightSizer->setColumnStretch(4, 2);
+
+    setLayout(new QVBoxLayout);
+    layout()->addWidget(lightBox);
 }
 
-void SGOglLightNBPage::OnCheckbox(wxCommandEvent& event)
+void SGOglLightNBPage::ambientLightChanged()
+{
+    SGFixedGLState* glState = m_parent->GetGLState();
+    int lightSelected = lightSelectionGroup->checkedId();
+    glState->SetLightChanged(true);
+    glState->GetLight(lightSelected)->lightAmbientColorVector = ToGLFPColor(ambientLight->color());
+
+    m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
+    m_parent->GetFrame()->GetCanvas()->updateGL();
+}
+
+void SGOglLightNBPage::specularLightChanged()
+{
+    SGFixedGLState* glState = m_parent->GetGLState();
+    int lightSelected = lightSelectionGroup->checkedId();
+    glState->SetLightChanged(true);
+    glState->GetLight(lightSelected)->lightSpecularColorVector = ToGLFPColor(specularLight->color());
+
+    m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
+    m_parent->GetFrame()->GetCanvas()->updateGL();
+}
+
+void SGOglLightNBPage::diffuseLightChanged()
+{
+    SGFixedGLState* glState = m_parent->GetGLState();
+    int lightSelected = lightSelectionGroup->checkedId();
+    glState->SetLightChanged(true);
+    glState->GetLight(lightSelected)->lightDiffuseColorVector = ToGLFPColor(diffuseLight->color());
+
+    m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
+    m_parent->GetFrame()->GetCanvas()->updateGL();
+}
+
+void SGOglLightNBPage::OnCheckbox(int index)
 {
     SGFixedGLState* glState = m_parent->GetGLState();
     glState->SetLightChanged(true);
-    switch(event.GetId()){
-        case Id::L0EnableVal:
-            glState->GetLight(0)->lightEnabled = lcb0->IsChecked();
+    switch(index){
+        case 0:
+            glState->GetLight(0)->lightEnabled = lcb0->isChecked();
             break;
-        case Id::L1EnableVal:
-            glState->GetLight(1)->lightEnabled = lcb1->IsChecked();
+        case 1:
+            glState->GetLight(1)->lightEnabled = lcb1->isChecked();
             break;
-        case Id::L2EnableVal:
-            glState->GetLight(2)->lightEnabled = lcb2->IsChecked();
+        case 2:
+            glState->GetLight(2)->lightEnabled = lcb2->isChecked();
             break;
-        case Id::L3EnableVal:
-            glState->GetLight(3)->lightEnabled = lcb3->IsChecked();
+        case 3:
+            glState->GetLight(3)->lightEnabled = lcb3->isChecked();
             break;
-        case Id::L4EnableVal:
-            glState->GetLight(4)->lightEnabled = lcb4->IsChecked();
+        case 4:
+            glState->GetLight(4)->lightEnabled = lcb4->isChecked();
             break;
-        case Id::L5EnableVal:
-            glState->GetLight(5)->lightEnabled = lcb5->IsChecked();
+        case 5:
+            glState->GetLight(5)->lightEnabled = lcb5->isChecked();
             break;
-        case Id::L6EnableVal:
-            glState->GetLight(6)->lightEnabled = lcb6->IsChecked();
+        case 6:
+            glState->GetLight(6)->lightEnabled = lcb6->isChecked();
             break;
-        case Id::L7EnableVal:
-            glState->GetLight(7)->lightEnabled = lcb7->IsChecked();
+        case 7:
+            glState->GetLight(7)->lightEnabled = lcb7->isChecked();
             break;
-        case Id::LightingEnableVal:
-            glState->SetLightingEnable(lightingCheckBox->IsChecked());
+        case 8:
+            glState->SetLightingEnable(lightingCheckBox->isChecked());
             break;
-        case Id::NormalizeEnableVal:
-            glState->SetNormalizeEnable(normalizeCheckBox->IsChecked());
+        case 9:
+            glState->SetNormalizeEnable(normalizeCheckBox->isChecked());
             break;
-        case Id::SeparateSpecularColorEnableVal:
-            glState->SetSeparateSpecularColorEnable(separateSpecularColorCheckBox->IsChecked());
+        case 10:
+            glState->SetSeparateSpecularColorEnable(separateSpecularColorCheckBox->isChecked());
             break;
         default:
             break;
     }
-    wxGetApp().GetFrame()->SetCanvasMode(0);
-    wxGetApp().GetFrame()->GetCanvas()->Update();
+    m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
+    m_parent->GetFrame()->GetCanvas()->updateGL();
 }
 
-void SGOglLightNBPage::OnTextEnter(wxCommandEvent& event)
+void SGOglLightNBPage::spotExponentChanged()
 {
+    int lightSelected = lightSelectionGroup->checkedId();
     SGFixedGLState* glState = m_parent->GetGLState();
     glState->SetLightChanged(true);
-    wxArrayString userEnteredValues;
-    vec3 tempLightSpotDirectionVector;
-    vec4 tempLightPosVector;
-    int lightSelected = lightSelectionBox->GetSelection();
+    glState->GetLight(lightSelected)->lightSpotExponent = spotExponent->value();
+    m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
+    m_parent->GetFrame()->GetCanvas()->updateGL();
+}
 
-    switch(event.GetId()){
+void SGOglLightNBPage::spotCutoffChanged()
+{
+    int lightSelected = lightSelectionGroup->checkedId();
+    SGFixedGLState* glState = m_parent->GetGLState();
+    glState->SetLightChanged(true);
+    glState->GetLight(lightSelected)->lightSpotCutoff = spotCutoff->value();
+    m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
+    m_parent->GetFrame()->GetCanvas()->updateGL();
+}
 
-        case Id::AttenuationConstantVal:
-            if((constantAttenuation->GetValue()).IsEmpty())
-            {
-                IncorrectFormat("one floating point value.", *this);
-                break;
-            }
-            glState->GetLight(lightSelected)->lightConstantAttenuation = atof((constantAttenuation ->GetValue()).c_str());
-            break;
+void SGOglLightNBPage::constantAttenuationChanged()
+{
+    int lightSelected = lightSelectionGroup->checkedId();
+    SGFixedGLState* glState = m_parent->GetGLState();
+    glState->SetLightChanged(true);
+    glState->GetLight(lightSelected)->lightConstantAttenuation = constantAttenuation ->value();
+    m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
+    m_parent->GetFrame()->GetCanvas()->updateGL();
+}
 
-        case Id::AttenuationLinearVal:
-            if((linearAttenuation->GetValue()).IsEmpty())
-            {
-                IncorrectFormat(wxT("one floating point value."), *this);
-                break;
-            }
-            glState->GetLight(lightSelected)->lightLinearAttenuation = atof((linearAttenuation   ->GetValue()).c_str());
-            break;
+void SGOglLightNBPage::quadraticAttenuationChanged()
+{
+    int lightSelected = lightSelectionGroup->checkedId();
+    SGFixedGLState* glState = m_parent->GetGLState();
+    glState->SetLightChanged(true);
+    glState->GetLight(lightSelected)->lightQuadraticAttenuation = quadraticAttenuation->value();
+    m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
+    m_parent->GetFrame()->GetCanvas()->updateGL();
+}
 
-        case Id::AttenuationQuadraticVal:
-            if((quadraticAttenuation->GetValue()).IsEmpty())
-            {
-                IncorrectFormat(wxT("one floating point value."), *this);
-                break;
-            }
-            glState->GetLight(lightSelected)->lightQuadraticAttenuation = atof((quadraticAttenuation->GetValue()).c_str());
-            break;
+void SGOglLightNBPage::linearAttenuationChanged()
+{
+    int lightSelected = lightSelectionGroup->checkedId();
+    SGFixedGLState* glState = m_parent->GetGLState();
+    glState->SetLightChanged(true);
+    glState->GetLight(lightSelected)->lightLinearAttenuation = linearAttenuation->value();
+    m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
+    m_parent->GetFrame()->GetCanvas()->updateGL();
+}
 
-        case Id::LightPositionVal:
-            if(!(lightPosition->GetValue()).IsEmpty())
-            {
-                if((parseVector(lightPosition->GetValue())).GetCount() == 4)
-                {
-                    userEnteredValues = parseVector(lightPosition->GetValue());
-                }
-                else
-                {
-                    IncorrectFormat(wxT("four floating point values, with each value separated by a comma."), *this);
-                    return;
-                }
-            }
-            else
-            {
-                    IncorrectFormat(wxT("four floating point values, with each value separated by a comma."), *this);
-                    return;
-                }
-            for(int i = 0; i < 4; i++)
-            {
-                tempLightPosVector[i] = atof(userEnteredValues.Item(i).c_str());
-            }
-            if(tempLightPosVector[3] != 1 && tempLightPosVector[3] != 0.0)
-            {
-                wxMessageDialog badW(this, wxT("The w component of GL_POSITION must be 0.0 or 1.0"), wxT(""), wxOK, wxDefaultPosition);
-                badW.ShowModal();
-            }
-
-            glState->GetLight(lightSelected)->lightPositionVector = tempLightPosVector;
-            break;
-
-        case Id::SpotCutoffVal:
-            if((spotCutoff->GetValue()).IsEmpty())
-            {
-                IncorrectFormat(wxT("one floating point value."), *this);
-                break;
-            }
-            glState->GetLight(lightSelected)->lightSpotCutoff = atof(spotCutoff->GetValue().c_str());
-            break;
-
-        case Id::SpotDirectionVal:
-            if(!(spotDirection->GetValue()).IsEmpty())
-            {
-                if((parseVector(spotDirection->GetValue())).GetCount() == 3)
-                {
-                    userEnteredValues = parseVector(spotDirection->GetValue());
-                }
-                else
-                {
-                    IncorrectFormat(wxT("three floating point values, with each value separated by a comma."), *this);
-                    break;
-                }
-            }
-            else
-            {
-                    IncorrectFormat(wxT("three floating point values, with each value separated by a comma."), *this);
-                    break;
-            }
-            userEnteredValues = parseVector(spotDirection->GetValue());
-            for(int i = 0; i < 3; i++)
-            {
-                tempLightSpotDirectionVector[i] = atof((userEnteredValues.Item(i)).c_str());
-            }
-            glState->GetLight(lightSelected)->lightSpotDirectionVector = tempLightSpotDirectionVector;
-            break;
-
-        case Id::SpotExponentVal:
-            if((spotExponent->GetValue()).IsEmpty())
-            {
-                IncorrectFormat(wxT("one floating point value."), *this);
-                return;
-            }
-            glState->GetLight(lightSelected)->lightSpotExponent = atof(spotExponent->GetValue().c_str());
-            break;
-
-        default:
-            break;
+void SGOglLightNBPage::lightPositionChanged()
+{
+    QStringList userEnteredValues;
+    if(!(lightPosition->text()).isEmpty())
+    {
+        if((parseVector(lightPosition->text())).size() == 4)
+        {
+            userEnteredValues = parseVector(lightPosition->text());
         }
-    wxGetApp().GetFrame()->SetCanvasMode(0);
-    wxGetApp().GetFrame()->GetCanvas()->Update();
+        else
+        {
+            IncorrectFormat(tr("four floating point values, with each value separated by a comma."), this);
+            return;
+        }
+    }
+    else
+    {
+        IncorrectFormat(tr("four floating point values, with each value separated by a comma."), this);
+        return;
+    }
+    vec4 tempLightPosVector;
+    for(int i = 0; i < 4; i++)
+    {
+        tempLightPosVector[i] = userEnteredValues[i].toFloat();
+    }
+    if(tempLightPosVector[3] != 1 && tempLightPosVector[3] != 0.0)
+    {
+        QMessageBox::warning(this, tr(""), tr("The w component of GL_POSITION must be 0.0 or 1.0"));
+    }
+
+    int lightSelected = lightSelectionGroup->checkedId();
+    SGFixedGLState* glState = m_parent->GetGLState();
+    glState->SetLightChanged(true);
+    glState->GetLight(lightSelected)->lightPositionVector = tempLightPosVector;
+    m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
+    m_parent->GetFrame()->GetCanvas()->updateGL();
 }
 
-void SGOglLightNBPage::OnRadio(wxCommandEvent& event)
+void SGOglLightNBPage::spotDirectionChanged()
+{
+    QStringList userEnteredValues;
+    if(!(spotDirection->text()).isEmpty())
+    {
+        if((parseVector(spotDirection->text())).size() == 3)
+        {
+            userEnteredValues = parseVector(spotDirection->text());
+        }
+        else
+        {
+            IncorrectFormat(tr("three floating point values, with each value separated by a comma."), this);
+            return;
+        }
+    }
+    else
+    {
+        IncorrectFormat(tr("three floating point values, with each value separated by a comma."), this);
+        return;
+    }
+    userEnteredValues = parseVector(spotDirection->text());
+
+    vec3 tempLightSpotDirectionVector;
+    for(int i = 0; i < 3; i++)
+    {
+        tempLightSpotDirectionVector[i] = userEnteredValues[i].toFloat();
+    }
+
+    int lightSelected = lightSelectionGroup->checkedId();
+    SGFixedGLState* glState = m_parent->GetGLState();
+    glState->SetLightChanged(true);
+    glState->GetLight(lightSelected)->lightSpotDirectionVector = tempLightSpotDirectionVector;
+    m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
+    m_parent->GetFrame()->GetCanvas()->updateGL();
+}
+
+void SGOglLightNBPage::OnRadio(int index)
 {
     SGFixedGLState* glState = m_parent->GetGLState();
     glState->SetLightChanged(true);
-    Light* light = glState->GetLight(lightSelectionBox->GetSelection());
-    switch(event.GetId()){
-        case Id::LightSelectionBoxVal:
+    Light* light = glState->GetLight(index);
 
-            ambientLight ->SetBackgroundColour(ToWxIntColor(light->lightAmbientColorVector ));
-            diffuseLight ->SetBackgroundColour(ToWxIntColor(light->lightDiffuseColorVector ));
-            specularLight->SetBackgroundColour(ToWxIntColor(light->lightSpecularColorVector));
+    ambientLight ->setColor(ToQtColor(light->lightAmbientColorVector ));
+    diffuseLight ->setColor(ToQtColor(light->lightDiffuseColorVector ));
+    specularLight->setColor(ToQtColor(light->lightSpecularColorVector));
 
-            spotDirection->SetValue(FloatToString3( light->lightSpotDirectionVector ));
-            spotExponent ->SetValue(wxString::Format(wxT("%.1f"),light->lightSpotExponent));
-            spotCutoff   ->SetValue(wxString::Format(wxT("%.1f"),light->lightSpotCutoff));
+    spotDirection->setText(FloatToString3( light->lightSpotDirectionVector ));
+    spotExponent ->setValue(light->lightSpotExponent);
+    spotCutoff   ->setValue(light->lightSpotCutoff);
 
-            constantAttenuation->SetValue(wxString::Format(wxT("%.1f"),light->lightConstantAttenuation));
-            quadraticAttenuation->SetValue(wxString::Format(wxT("%.1f"),light->lightQuadraticAttenuation));
-            linearAttenuation->SetValue(wxString::Format(wxT("%.1f"),light->lightLinearAttenuation));
-            
-            lightPosition->SetValue(FloatToString4(light->lightPositionVector));
-            
-        default:
-            break;
-    }
-    wxGetApp().GetFrame()->SetCanvasMode(0);
-    wxGetApp().GetFrame()->GetCanvas()->Update();
+    constantAttenuation->setValue(light->lightConstantAttenuation);
+    quadraticAttenuation->setValue(light->lightQuadraticAttenuation);
+    linearAttenuation->setValue(light->lightLinearAttenuation);
+
+    lightPosition->setText(FloatToString4(light->lightPositionVector));
+
+    m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
+    m_parent->GetFrame()->GetCanvas()->updateGL();
 }
+

@@ -39,6 +39,10 @@
 *                                                                       *
 ************************************************************************/
 
+#include <QVBoxLayout>
+#include <QGroupBox>
+#include <QRadioButton>
+
 #include "App.h"
 #include "SGCanvasWrapper.h"
 #include "SGCanvas.h"
@@ -46,57 +50,40 @@
 #include "SGFixedGLState.h"
 #include "UtilityFunctions.h"
 
-BEGIN_EVENT_TABLE(SGCanvasWrapper, wxPanel)
-    EVT_COMMAND_RANGE(Id::GLModeChoiceVal, Id::GLModeChoiceVal, wxEVT_COMMAND_RADIOBOX_SELECTED, SGCanvasWrapper::OnRadio)
-    EVT_KEY_DOWN(SGCanvasWrapper::OnKey)
-END_EVENT_TABLE()
-
-SGCanvasWrapper::SGCanvasWrapper(SGFrame *parent, wxWindowID id,const wxPoint& pos, const wxSize& size)
-:wxPanel(parent, id, pos, size)
+SGCanvasWrapper::SGCanvasWrapper(SGFrame *parent)
+:QFrame(parent)
 {
     m_parent = parent;
-    mode = Id::GLModeChoiceFixed;
+    mode = GLModeChoiceFixed;
 
-    wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
+    setFocusPolicy(Qt::StrongFocus);
 
-    canvas      = new SGCanvas(parent, this, -1, wxDefaultPosition, wxSize(size.x,size.y- 50) );
+    QVBoxLayout *topSizer = new QVBoxLayout();
 
-    wxString glModeEnumArray[3];
-    glModeEnumArray[0] = wxT("FIXED FUNCTIONALITY MODE");
-    glModeEnumArray[1] = wxT("EQUIVALENT SHADER MODE ");
-    glModeChoice = new wxRadioBox(this, Id::GLModeChoiceVal, wxT("Select GL Mode"), wxDefaultPosition, wxDefaultSize, 2, glModeEnumArray, 1, wxRA_SPECIFY_ROWS, wxDefaultValidator);
+    canvas      = new SGCanvas(parent, this);
+    canvas->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
+    QGroupBox *gb = new QGroupBox(tr("Select GL Mode"), this);
+    gb->setLayout(new QHBoxLayout);
+    QRadioButton *fixed = new QRadioButton(tr("FIXED FUNCTIONALITY MODE"), gb);
+    fixed->setChecked(true);
+    QRadioButton *shader = new QRadioButton(tr("EQUIVALENT SHADER MODE "), gb);
+    gb->layout()->addWidget(fixed);
+    gb->layout()->addWidget(shader);
 
-    topSizer->Add(glModeChoice,         0, wxALIGN_CENTER | wxALL | wxADJUST_MINSIZE, 10);
-    topSizer->Add(canvas,         1, wxEXPAND | wxALIGN_CENTER | wxALL | wxADJUST_MINSIZE, 10);
+    glModeChoice = new QButtonGroup(this);
+    glModeChoice->addButton(fixed, 0);
+    glModeChoice->addButton(shader, 1);
+    connect(glModeChoice, SIGNAL(buttonClicked(int)), SLOT(OnRadio(int)));
 
-
-    SetSizer( topSizer );
-    topSizer->SetSizeHints( this );
-    this->Show(TRUE);
+    topSizer->addWidget(gb);
+    topSizer->addWidget(canvas);
+    setLayout(topSizer);
 }
 
-void SGCanvasWrapper::OnRadio(wxCommandEvent& event)
+void SGCanvasWrapper::OnRadio(int id)
 {
-    switch(event.GetId()){
-
-        case Id::GLModeChoiceVal:
-            if(glModeChoice->GetSelection()== 0)
-            {
-                mode = Id::GLModeChoiceFixed;
-            }
-            else
-            {
-                canvas->SwitchToShaderMode();
-                mode = Id::GLModeChoiceShader;
-            }
-            break;
-
-        default:
-            break;
-        }
-    canvas->Update();
-    event.Skip();
+    SetMode((GLMode)id);
 }
 
 SGFixedGLState* SGCanvasWrapper::GetGLState() 
@@ -106,31 +93,27 @@ SGFixedGLState* SGCanvasWrapper::GetGLState()
 
 void SGCanvasWrapper::SwitchMode()
 {
-    if(mode == Id::GLModeChoiceFixed)
+    if(mode == GLModeChoiceFixed)
     {
-        glModeChoice->SetSelection(1);
+        glModeChoice->button(1)->setChecked(true);
         canvas->SwitchToShaderMode();
-        mode = Id::GLModeChoiceShader;
+        mode = GLModeChoiceShader;
     }
-    else if(mode == Id::GLModeChoiceShader)
+    else if(mode == GLModeChoiceShader)
     {
-        glModeChoice->SetSelection(0);
-        mode = Id::GLModeChoiceFixed;
+        glModeChoice->button(0)->setChecked(true);
+        mode = GLModeChoiceFixed;
     }
-    canvas->Update();
+    canvas->updateGL();
 }
 
-void SGCanvasWrapper::SetMode(int a)
+void SGCanvasWrapper::SetMode(GLMode a)
 {
-    if(glModeChoice->GetSelection() == a)
+    if(mode == a)
     {
         return;
     }
     SwitchMode();
 }
 
-void SGCanvasWrapper::OnKey(wxKeyEvent& event)
-{
-    SwitchMode();
-    canvas->Update();
-}
+

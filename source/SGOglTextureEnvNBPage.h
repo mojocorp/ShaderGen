@@ -41,35 +41,39 @@
 
 #pragma once
 
-#include "Compulsory.h"
+#include <QWidget>
+#include <QCheckBox>
+#include <QButtonGroup>
+#include <QComboBox>
 
 class SGOglNotebook;
+class QColorButton;
 
-class SGOglTextureEnvNBPage: public wxPanel
+class SGOglTextureEnvNBPage: public QWidget
 {
+    Q_OBJECT
 public:
-    SGOglTextureEnvNBPage(SGOglNotebook*  parent, wxWindowID id);
+    SGOglTextureEnvNBPage(SGOglNotebook*  parent);
 
-    void OnRadioTexApply(wxCommandEvent& event);
-    void OnRadioTextureNum(wxCommandEvent& event);
-    void OnCheckbox(wxCommandEvent &event);
+private slots:
+    void OnRadioTexApply();
+    void OnRadioTextureNum();
+    void OnCheckbox(int index);
 
 
-    void OnChoiceTextureChoose(wxCommandEvent &event);
-    void OnChoiceTextureCombineMode(wxCommandEvent &event);
-    void OnChoiceTextureCombineOperandArg0(wxCommandEvent &event);
-    void OnChoiceTextureCombineOperandArg1(wxCommandEvent &event);
-    void OnChoiceTextureCombineOperandArg2(wxCommandEvent &event);
-    void OnChoiceTextureCombineScale(wxCommandEvent &event);
-    void OnChoiceTextureCombineSrc0RGB(wxCommandEvent &event);
-    void OnChoiceTextureCombineSrc1RGB(wxCommandEvent &event);
-    void OnChoiceTextureCombineSrc2RGB(wxCommandEvent &event);
+    void OnChoiceTextureChoose();
+    void OnChoiceTextureCombineMode();
+    void OnChoiceTextureCombineOperandArg0();
+    void OnChoiceTextureCombineOperandArg1();
+    void OnChoiceTextureCombineOperandArg2();
+    void OnChoiceTextureCombineScale();
+    void OnChoiceTextureCombineSrc0RGB();
+    void OnChoiceTextureCombineSrc1RGB();
+    void OnChoiceTextureCombineSrc2RGB();
     
-    //void OnChoice(wxCommandEvent &event);
+    //void OnChoice();
 
-    void OnButton(wxCommandEvent &event);
-
-    DECLARE_EVENT_TABLE()
+    void OnButton();
 
 private:
 
@@ -119,15 +123,15 @@ private:
 
     SGOglNotebook *m_parent;
 
-    wxRadioBox *texApplyBox, *textureBox;
+    QButtonGroup *texApplyGroup, *textureGroup, *texCheckBoxGroup;
     
-    wxCheckBox *texEnable, *tex0CheckBox, *tex1CheckBox, *tex2CheckBox,
-               *tex3CheckBox, *tex4CheckBox, *texEnableCheckBox;
+    QCheckBox *texEnable, *tex0CheckBox, *tex1CheckBox, *tex2CheckBox,
+               *tex3CheckBox, *tex4CheckBox;
     
-    wxChoice   *texChoose, *texCombineModeChoose, *texCombineScaleChoose,
+    QComboBox  *texChoose, *texCombineModeChoose, *texCombineScaleChoose,
                *texCombineSrc0RGBChoose, *texCombineSrc1RGBChoose, 
                *texCombineSrc2RGBChoose, *texCombineOperandArg0Choose,
                *texCombineOperandArg1Choose, *texCombineOperandArg2Choose;   
 
-    wxButton *texEnvColorButton;
+    QColorButton *texEnvColorButton;
 };

@@ -41,34 +41,29 @@
 
 #pragma once
 
-#include "Compulsory.h"
-#include <wx/font.h>
+#include <QTabWidget>
+#include <QTextEdit>
 
 class SGFrame;
-class IUniformPanel;
 
-class SGShaderTextWindow: public wxPanel
+class SGShaderTextWindow: public QFrame
 {
+    Q_OBJECT
 public:
     SGShaderTextWindow(SGFrame *frame);
-    wxTextCtrl* GetVertexShaderBox(){ return textBoxVert; }
-    wxTextCtrl* GetFragmentShaderBox(){ return textBoxFrag ;}
-    wxTextCtrl* GetInfoBox(){ return textBoxInfo ;}
+    QTextEdit* GetVertexShaderBox(){ return textBoxVert; }
+    QTextEdit* GetFragmentShaderBox(){ return textBoxFrag ;}
+    QTextEdit* GetInfoBox(){ return textBoxInfo ;}
     bool haveRefreshed, haveCompiled, haveLinked;
-    
-    void Refresh();
-    void Refresh(wxCommandEvent &event);
-    void OnButtonCompile(wxCommandEvent &event);
-    void OnButtonLink(wxCommandEvent &event);
-    void OnButtonBuild(wxCommandEvent &event);
-    void OnButtonClearLog(wxCommandEvent &event);
-
-    DECLARE_EVENT_TABLE()
-
+public slots:
+    void refresh();
+    void compile();
+    void link();
+    void build();
+    void clearLog();
 private:
-    wxTextCtrl *textBoxVert, *textBoxFrag, *textBoxInfo;
-    wxTextCtrl *textFieldRow, *textFieldCol;
-    wxNotebook *notebook;
-    wxFont fixedFont;
+    QTextEdit *textBoxVert, *textBoxFrag, *textBoxInfo;
+    QTextEdit *textFieldRow, *textFieldCol;
+    QTabWidget *notebook;
     SGFrame *m_frame;
 };

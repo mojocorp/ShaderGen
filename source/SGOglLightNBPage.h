@@ -41,57 +41,55 @@
 
 #pragma once
 
-#include "Compulsory.h"
+#include <QWidget>
+#include <QButtonGroup>
+#include <QCheckBox>
+#include <QLineEdit>
+#include <QDoubleSpinBox>
 
 class SGOglNotebook;
+class QColorButton;
 
-class SGOglLightNBPage : public wxPanel
+class SGOglLightNBPage : public QWidget
 {
+    Q_OBJECT
 public:
-    SGOglLightNBPage(SGOglNotebook*  parent, wxWindowID id);
-    
-    void OnButton(wxCommandEvent& event);
-    void OnCheckbox(wxCommandEvent& event);
-    void OnTextEnter(wxCommandEvent& event);
-    void OnRadio(wxCommandEvent& event);
+    SGOglLightNBPage(SGOglNotebook*  parent);
 
-DECLARE_EVENT_TABLE()
+private slots:
+    void OnCheckbox(int index);
+    void OnRadio(int index);
+    void lightPositionChanged();
+    void spotDirectionChanged();
+    void spotExponentChanged();
+    void spotCutoffChanged();
+    void constantAttenuationChanged();
+    void quadraticAttenuationChanged();
+    void linearAttenuationChanged();
+    void ambientLightChanged();
+    void specularLightChanged();
+    void diffuseLightChanged();
 
 private:
-    //void IncorrectFormat(wxString str);
     SGOglNotebook *m_parent;
 
-// The pattern in GUI is shown-----------
+    QButtonGroup *lightSelectionGroup, *lightCheckGroup;
 
-//.-----------------h1-------------------
-//.-----------------h2-------------------
-//.--h3v1--|--h3v2--|--h3v3--|--h3v4-----
-//.--h3v1--|--h3v2--|--h3v3--|--h3v4-----
-//.--h3v1--|--h3v2--|--h3v3--|--h3v4-----
+    QCheckBox *lcb0, *lcb1, *lcb2, *lcb3;
+    QCheckBox *lcb4, *lcb5, *lcb6, *lcb7;
+    QCheckBox *lightingCheckBox, *normalizeCheckBox, *separateSpecularColorCheckBox;
 
-//selection of lights----h2-------
-wxRadioBox* lightSelectionBox;
+    QLineEdit* lightPosition;
 
-//enabling lights--------h1-------
-wxCheckBox *lcb0, *lcb1, *lcb2, *lcb3;
-wxCheckBox *lcb4, *lcb5, *lcb6, *lcb7;
-wxCheckBox *lightingCheckBox, *normalizeCheckBox, *separateSpecularColorCheckBox;
+    QLineEdit* spotDirection;
+    QDoubleSpinBox* spotExponent;
+    QDoubleSpinBox* spotCutoff;
 
-//-----------------------h3v1-----
-wxTextCtrl* lightPosition;
+    QDoubleSpinBox* constantAttenuation;
+    QDoubleSpinBox* quadraticAttenuation;
+    QDoubleSpinBox* linearAttenuation;
 
-//-spotlight controls----h3v3-----
-wxTextCtrl* spotDirection;
-wxTextCtrl* spotExponent;
-wxTextCtrl* spotCutoff;  
-
-//-attenuation controls--h3v4-----
-wxTextCtrl* constantAttenuation;
-wxTextCtrl* quadraticAttenuation;
-wxTextCtrl* linearAttenuation;
-
-//-color buttons---------h3v2-----
-wxButton* ambientLight;
-wxButton* specularLight;
-wxButton* diffuseLight;
+    QColorButton* ambientLight;
+    QColorButton* specularLight;
+    QColorButton* diffuseLight;
 };

@@ -41,15 +41,22 @@
 
 #pragma once
 
-#include "Compulsory.h"
-
 class SGModels
 {
 public:
+    enum ModelId {
+        ModelTorus = 0,
+        ModelPlane,
+        ModelSphere,
+        ModelConic,
+        ModelTrefoil,
+        ModelKlein
+    };
+
     SGModels();
     ~SGModels();
-    void DrawModel(Id id);
-    Id CurrentId() {return currentId;}
+    void DrawModel(ModelId id);
+    ModelId CurrentId() {return currentId;}
 private:
-    Id currentId;
+    ModelId currentId;
 };

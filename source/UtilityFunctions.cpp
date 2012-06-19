@@ -39,9 +39,9 @@
 *                                                                       *
 ************************************************************************/
 
+#include <QMessageBox>
+
 #include "UtilityFunctions.h"
-#include "App.h"
-#include "Compulsory.h"
 #include "SGShaderTextWindow.h"
 #include "SGFrame.h"
 
@@ -50,9 +50,10 @@ int printOglError(char *file, int line)
 {
     GLenum glErr;
     int    retCode = 0;
-    wxString str ;
-    wxTextCtrl *text = wxGetApp().GetFrame()->GetShaderTextWindow()->GetInfoBox();
-    while(text->ScrollLines(2));
+
+    QString str ;
+    QTextEdit *text = SGFrame::instance->GetShaderTextWindow()->GetInfoBox();
+    text->textCursor().movePosition(QTextCursor::End);
 
     glErr = glGetError();
 
@@ -60,8 +61,8 @@ int printOglError(char *file, int line)
     {
         while (glErr != GL_NO_ERROR)
         {
-            str = wxString::Format("\nglError in file %s @ line %d: %s\n", file, line, gluErrorString(glErr));
-            text->AppendText(str);
+            str = QString("\nglError in file %1 @ line %2: %3\n").arg(file).arg(line).arg( (const char*)gluErrorString(glErr));
+            text->append(str);
             retCode = 1;
             glErr = glGetError();
         }
@@ -69,10 +70,10 @@ int printOglError(char *file, int line)
     return retCode;
 }
 
-void IncorrectFormat(wxString str, wxWindow &errorWindow)
+void IncorrectFormat(QString str, QWidget *errorWindow)
 {
-    wxString errorString(wxString("Enter data in the correct format, you need "));
-    errorString.Append(str);
-    wxMessageDialog badValues(&errorWindow, errorString, "Incorrect Data Entry", wxOK, wxDefaultPosition);
-    badValues.ShowModal();
+    QString errorString("Enter data in the correct format, you need ");
+    errorString += str;
+
+    QMessageBox::warning(errorWindow, QObject::tr("Incorrect Data Entry"), errorString);
 }

@@ -39,6 +39,12 @@
 *                                                                       *
 ************************************************************************/
 
+#include <QGroupBox>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QLabel>
+#include <QRadioButton>
+
 #include "SGOglTextureCoordNBPage.h"
 #include "SGOglNotebook.h"
 #include "SGFixedGLState.h"
@@ -46,325 +52,352 @@
 #include "App.h"
 #include "SGFrame.h"
 #include "SGCanvas.h"
-#include <wx/colordlg.h>
 
-BEGIN_EVENT_TABLE(SGOglTextureCoordNBPage, wxPanel)
-    EVT_COMMAND(Id::TextureCoordUnit, wxEVT_COMMAND_RADIOBOX_SELECTED, SGOglTextureCoordNBPage::OnRadioTextureCoordUnit)
-    EVT_COMMAND(Id::TexCoordGen, wxEVT_COMMAND_RADIOBOX_SELECTED, SGOglTextureCoordNBPage::OnRadioTexCoordGen)
-    EVT_COMMAND_RANGE(Id::Tex0TexGenEnableVal, Id::Tex4TexGenEnableVal, wxEVT_COMMAND_CHECKBOX_CLICKED, SGOglTextureCoordNBPage::OnCheckbox)
-    EVT_COMMAND(Id::EyePlaneCoeffValS, wxEVT_COMMAND_TEXT_ENTER, SGOglTextureCoordNBPage::OnTextEnterEyeCoeffS)
-    EVT_COMMAND(Id::EyePlaneCoeffValT, wxEVT_COMMAND_TEXT_ENTER, SGOglTextureCoordNBPage::OnTextEnterEyeCoeffT)
-    EVT_COMMAND(Id::ObjectPlaneCoeffValS, wxEVT_COMMAND_TEXT_ENTER, SGOglTextureCoordNBPage::OnTextEnterObjCoeffS)
-    EVT_COMMAND(Id::ObjectPlaneCoeffValT, wxEVT_COMMAND_TEXT_ENTER, SGOglTextureCoordNBPage::OnTextEnterObjCoeffT)
-END_EVENT_TABLE()
-
-SGOglTextureCoordNBPage::SGOglTextureCoordNBPage(SGOglNotebook* parent, wxWindowID id)
-:wxPanel(parent,id)
+SGOglTextureCoordNBPage::SGOglTextureCoordNBPage(SGOglNotebook* parent)
+    :QWidget(parent)
 {
     m_parent = parent;
     SGFixedGLState* glState = m_parent->GetGLState();
 
-    wxStaticBox* texBox            = new wxStaticBox(this, wxID_ANY, wxT("Textures"),   wxDefaultPosition, wxDefaultSize, ZERO_PIXEL_BORDER);
-    wxStaticBox* texPropertyBox    = new wxStaticBox(this, wxID_ANY, wxT("Selected Texture Properties"),   wxDefaultPosition, wxDefaultSize, ZERO_PIXEL_BORDER);
+    QGroupBox* texBox            = new QGroupBox(tr("Textures"), this);
+    QGroupBox* texPropertyBox    = new QGroupBox(tr("Selected Texture Properties"), this);
 
-    wxStaticBoxSizer* textureSizer                 = new wxStaticBoxSizer(texBox, wxVERTICAL);
-    wxStaticBoxSizer* selectedTexPropertiesSizer   = new wxStaticBoxSizer(texPropertyBox, wxHORIZONTAL);
+    QGridLayout* textureSizer                 = new QGridLayout(texBox);
+    QGridLayout* selectedTexPropertiesSizer   = new QGridLayout(texPropertyBox);
 
-    wxStaticBox* eyePlaneCoeffBox = new wxStaticBox(this, wxID_ANY, wxT("Eye Plane Coefficients"), wxDefaultPosition, wxDefaultSize, ZERO_PIXEL_BORDER);
-    wxStaticBoxSizer* eyePlaneCoeffBoxSizer = new wxStaticBoxSizer(eyePlaneCoeffBox, wxHORIZONTAL);
+    QGroupBox* eyePlaneCoeffBox = new QGroupBox(tr("Eye Plane Coefficients"), this);
+    QHBoxLayout* eyePlaneCoeffBoxSizer = new QHBoxLayout(eyePlaneCoeffBox);
 
-    wxBoxSizer* eyePlaneLabelSizer = new wxBoxSizer(wxVERTICAL);
-    wxBoxSizer* eyePlaneTextSizer = new wxBoxSizer(wxVERTICAL);
+    QVBoxLayout* eyePlaneLabelSizer = new QVBoxLayout();
+    QVBoxLayout* eyePlaneTextSizer = new QVBoxLayout();
 
-    wxStaticText* eyePlaneCoeffLabelS = new wxStaticText(this, wxID_ANY, wxT("GL_S"), wxDefaultPosition, wxDefaultSize, wxALIGN_TOP);
-    wxStaticText* eyePlaneCoeffLabelT = new wxStaticText(this, wxID_ANY, wxT("GL_T"), wxDefaultPosition, wxDefaultSize, wxALIGN_TOP);
+    QLabel* eyePlaneCoeffLabelS = new QLabel(tr("GL_S"), this);
+    QLabel* eyePlaneCoeffLabelT = new QLabel(tr("GL_T"), this);
     
-    eyePlaneCoeffTextS = new wxTextCtrl(this, Id::EyePlaneCoeffValS, FloatToString4(glState->GetTexture(0)->eyePlaneCoeffS), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER, wxDefaultValidator, wxT("Eye Plane Coefficient S")  );
-    eyePlaneCoeffTextT = new wxTextCtrl(this, Id::EyePlaneCoeffValT, FloatToString4(glState->GetTexture(0)->eyePlaneCoeffT), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER, wxDefaultValidator, wxT("Eye Plane Coefficient T")  );
-   
-    eyePlaneLabelSizer->Add(eyePlaneCoeffLabelS, 0, wxTOP, TEN_PIXEL_BORDER);
-    eyePlaneLabelSizer->Add(eyePlaneCoeffLabelT, 0, wxTOP, FIFTEEN_PIXEL_BORDER);
+    eyePlaneCoeffTextS = new QLineEdit(FloatToString4(glState->GetTexture(0)->eyePlaneCoeffS), this);
+    connect(eyePlaneCoeffTextS, SIGNAL(returnPressed()), SLOT(OnTextEnterEyeCoeffS()));
 
-    eyePlaneTextSizer->Add(eyePlaneCoeffTextS, 0, wxALL, FIVE_PIXEL_BORDER);
-    eyePlaneTextSizer->Add(eyePlaneCoeffTextT, 0, wxALL, FIVE_PIXEL_BORDER);
+    eyePlaneCoeffTextT = new QLineEdit(FloatToString4(glState->GetTexture(0)->eyePlaneCoeffT), this);
+    connect(eyePlaneCoeffTextT, SIGNAL(returnPressed()), SLOT(OnTextEnterEyeCoeffT()));
 
-    eyePlaneCoeffBoxSizer->Add(eyePlaneLabelSizer, 0, wxALL | wxADJUST_MINSIZE, FIVE_PIXEL_BORDER);
-    eyePlaneCoeffBoxSizer->Add(eyePlaneTextSizer, 0, wxALL | wxADJUST_MINSIZE, FIVE_PIXEL_BORDER);
+    eyePlaneLabelSizer->addWidget(eyePlaneCoeffLabelS);
+    eyePlaneLabelSizer->addWidget(eyePlaneCoeffLabelT);
 
-    wxStaticBox* objectPlaneCoeffBox = new wxStaticBox(this, wxID_ANY, wxT("Object Plane Coefficients"), wxDefaultPosition, wxDefaultSize, ZERO_PIXEL_BORDER);
-    wxStaticBoxSizer* objectPlaneCoeffBoxSizer = new wxStaticBoxSizer(objectPlaneCoeffBox, wxHORIZONTAL);
+    eyePlaneTextSizer->addWidget(eyePlaneCoeffTextS);
+    eyePlaneTextSizer->addWidget(eyePlaneCoeffTextT);
+
+    eyePlaneCoeffBoxSizer->addLayout(eyePlaneLabelSizer);
+    eyePlaneCoeffBoxSizer->addLayout(eyePlaneTextSizer);
+
+    QGroupBox* objectPlaneCoeffBox = new QGroupBox(tr("Object Plane Coefficients"), this);
+    QHBoxLayout* objectPlaneCoeffBoxSizer = new QHBoxLayout(objectPlaneCoeffBox);
     
-    wxBoxSizer* objectPlaneLabelSizer = new wxBoxSizer(wxVERTICAL);
-    wxBoxSizer* objectPlaneTextSizer = new wxBoxSizer(wxVERTICAL);
+    QVBoxLayout* objectPlaneLabelSizer = new QVBoxLayout();
+    QVBoxLayout* objectPlaneTextSizer = new QVBoxLayout();
 
-    wxStaticText* objectPlaneCoeffLabelS = new wxStaticText(this, wxID_ANY, wxT("GL_S"), wxDefaultPosition, wxDefaultSize, wxALIGN_TOP);
-    wxStaticText* objectPlaneCoeffLabelT = new wxStaticText(this, wxID_ANY, wxT("GL_T"), wxDefaultPosition, wxDefaultSize, wxALIGN_TOP);
+    QLabel* objectPlaneCoeffLabelS = new QLabel(tr("GL_S"), this);
+    QLabel* objectPlaneCoeffLabelT = new QLabel(tr("GL_T"), this);
 
-    objectPlaneCoeffTextS = new wxTextCtrl(this, Id::ObjectPlaneCoeffValS, FloatToString4(glState->GetTexture(0)->objectPlaneCoeffS), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER, wxDefaultValidator, wxT("Object Plane Coefficient S")  );
-    objectPlaneCoeffTextT = new wxTextCtrl(this, Id::ObjectPlaneCoeffValT, FloatToString4(glState->GetTexture(0)->objectPlaneCoeffT), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER, wxDefaultValidator, wxT("Object Plane Coefficient T")  );
+    objectPlaneCoeffTextS = new QLineEdit(FloatToString4(glState->GetTexture(0)->objectPlaneCoeffS), this);
+    connect(objectPlaneCoeffTextS, SIGNAL(returnPressed()), SLOT(OnTextEnterObjCoeffS()));
 
-    objectPlaneLabelSizer->Add(objectPlaneCoeffLabelS, 0, wxTOP, TEN_PIXEL_BORDER);
-    objectPlaneLabelSizer->Add(objectPlaneCoeffLabelT, 0, wxTOP, FIFTEEN_PIXEL_BORDER);
+    objectPlaneCoeffTextT = new QLineEdit(FloatToString4(glState->GetTexture(0)->objectPlaneCoeffT), this);
+    connect(objectPlaneCoeffTextT, SIGNAL(returnPressed()), SLOT(OnTextEnterObjCoeffT()));
 
-    objectPlaneTextSizer->Add(objectPlaneCoeffTextS, 0, wxALL, FIVE_PIXEL_BORDER);
-    objectPlaneTextSizer->Add(objectPlaneCoeffTextT, 0, wxALL, FIVE_PIXEL_BORDER);
+    objectPlaneLabelSizer->addWidget(objectPlaneCoeffLabelS);
+    objectPlaneLabelSizer->addWidget(objectPlaneCoeffLabelT);
 
-    objectPlaneCoeffBoxSizer->Add(objectPlaneLabelSizer, 0, wxALL |wxADJUST_MINSIZE, FIVE_PIXEL_BORDER);
-    objectPlaneCoeffBoxSizer->Add(objectPlaneTextSizer, 0, wxALL | wxADJUST_MINSIZE, FIVE_PIXEL_BORDER);
+    objectPlaneTextSizer->addWidget(objectPlaneCoeffTextS);
+    objectPlaneTextSizer->addWidget(objectPlaneCoeffTextT);
 
-    wxBoxSizer* coeffSizer = new wxBoxSizer(wxVERTICAL);
-    coeffSizer->Add(eyePlaneCoeffBoxSizer, 0, wxALL | wxADJUST_MINSIZE, FIVE_PIXEL_BORDER);
-    coeffSizer->Add(objectPlaneCoeffBoxSizer, 0, wxALL | wxADJUST_MINSIZE, FIVE_PIXEL_BORDER);
+    objectPlaneCoeffBoxSizer->addLayout(objectPlaneLabelSizer);
+    objectPlaneCoeffBoxSizer->addLayout(objectPlaneTextSizer);
 
-    wxString texNumArray[5];
-    texNumArray[0] = wxT("T0");
-    texNumArray[1] = wxT("T1");
-    texNumArray[2] = wxT("T2");
-    texNumArray[3] = wxT("T3");
-    texNumArray[4] = wxT("T4");
-    texCoordUnitBox = new wxRadioBox(this, Id::TextureCoordUnit, wxT("Selected Texture Unit"), wxDefaultPosition, wxDefaultSize, 5, texNumArray, 1,wxRA_SPECIFY_ROWS, wxDefaultValidator);
-  
-    tex0TexGenEnableCheckBox = new wxCheckBox(this, Id::Tex0TexGenEnableVal, wxT("T0"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
-    tex0TexGenEnableCheckBox->SetValue(glState->GetTexture(0)->texGen);
+    QGroupBox *texCoordUnitBox = new QGroupBox(tr("Selected Texture Unit"), this);
+    QHBoxLayout *texCoordUnitSizer = new QHBoxLayout(texCoordUnitBox);
 
-    tex1TexGenEnableCheckBox = new wxCheckBox(this, Id::Tex1TexGenEnableVal, wxT("T1"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
-    tex1TexGenEnableCheckBox->SetValue(glState->GetTexture(1)->texGen);
+    QRadioButton *tex0TexSelRadioButton = new QRadioButton(tr("T0"), this);
+    QRadioButton *tex1TexSelRadioButton = new QRadioButton(tr("T1"), this);
+    QRadioButton *tex2TexSelRadioButton = new QRadioButton(tr("T2"), this);
+    QRadioButton *tex3TexSelRadioButton = new QRadioButton(tr("T3"), this);
+    QRadioButton *tex4TexSelRadioButton = new QRadioButton(tr("T4"), this);
 
-    tex2TexGenEnableCheckBox = new wxCheckBox(this, Id::Tex2TexGenEnableVal, wxT("T2"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
-    tex2TexGenEnableCheckBox->SetValue(glState->GetTexture(2)->texGen);
+    texCoordUnitSizer->addWidget(tex0TexSelRadioButton);
+    texCoordUnitSizer->addWidget(tex1TexSelRadioButton);
+    texCoordUnitSizer->addWidget(tex2TexSelRadioButton);
+    texCoordUnitSizer->addWidget(tex3TexSelRadioButton);
+    texCoordUnitSizer->addWidget(tex4TexSelRadioButton);
 
-    tex3TexGenEnableCheckBox = new wxCheckBox(this, Id::Tex3TexGenEnableVal, wxT("T3"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
-    tex3TexGenEnableCheckBox->SetValue(glState->GetTexture(3)->texGen);
+    texCoordUnitGroup = new QButtonGroup(this);
+    texCoordUnitGroup->addButton(tex0TexSelRadioButton, 0);
+    texCoordUnitGroup->addButton(tex1TexSelRadioButton, 1);
+    texCoordUnitGroup->addButton(tex2TexSelRadioButton, 2);
+    texCoordUnitGroup->addButton(tex3TexSelRadioButton, 3);
+    texCoordUnitGroup->addButton(tex4TexSelRadioButton, 4);
+    texCoordUnitGroup->button(0)->setChecked(true);
+    connect(texCoordUnitGroup, SIGNAL(buttonClicked(int)), SLOT(OnRadioTextureCoordUnit(int)));
 
-    tex4TexGenEnableCheckBox = new wxCheckBox(this, Id::Tex4TexGenEnableVal, wxT("T4"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
-    tex4TexGenEnableCheckBox->SetValue(glState->GetTexture(4)->texGen);
+    tex0TexGenEnableCheckBox = new QCheckBox(tr("T0"), this);
+    tex0TexGenEnableCheckBox->setChecked(glState->GetTexture(0)->texGen);
 
-    wxStaticBox* texGenEnableDisableBox        = new wxStaticBox(this, wxID_ANY, wxT("glEnable/glDisable TexGen"),   wxDefaultPosition, wxDefaultSize, ZERO_PIXEL_BORDER);
-    wxStaticBoxSizer* texGenEnableDisableSizer    = new wxStaticBoxSizer(texGenEnableDisableBox, wxHORIZONTAL);    
+    tex1TexGenEnableCheckBox = new QCheckBox(tr("T1"), this);
+    tex1TexGenEnableCheckBox->setChecked(glState->GetTexture(1)->texGen);
 
-    texGenEnableDisableSizer->Add(tex0TexGenEnableCheckBox, 0, wxALL | wxADJUST_MINSIZE, SEVEN_PIXEL_BORDER);
-    texGenEnableDisableSizer->Add(tex1TexGenEnableCheckBox, 0, wxALL | wxADJUST_MINSIZE, SEVEN_PIXEL_BORDER);
-    texGenEnableDisableSizer->Add(tex2TexGenEnableCheckBox, 0, wxALL | wxADJUST_MINSIZE, SEVEN_PIXEL_BORDER);
-    texGenEnableDisableSizer->Add(tex3TexGenEnableCheckBox, 0, wxALL | wxADJUST_MINSIZE, SEVEN_PIXEL_BORDER);
-    texGenEnableDisableSizer->Add(tex4TexGenEnableCheckBox, 0, wxALL | wxADJUST_MINSIZE, SEVEN_PIXEL_BORDER);
+    tex2TexGenEnableCheckBox = new QCheckBox(tr("T2"), this);
+    tex2TexGenEnableCheckBox->setChecked(glState->GetTexture(2)->texGen);
 
-    wxBoxSizer* selectedTextureAndEnableSizer = new wxBoxSizer(wxHORIZONTAL);
-    selectedTextureAndEnableSizer->Add(texGenEnableDisableSizer, 0, wxRIGHT | wxLEFT, SEVEN_PIXEL_BORDER);
-    selectedTextureAndEnableSizer->Add(texCoordUnitBox);
-    textureSizer->Add(selectedTextureAndEnableSizer);
+    tex3TexGenEnableCheckBox = new QCheckBox(tr("T3"), this);
+    tex3TexGenEnableCheckBox->setChecked(glState->GetTexture(3)->texGen);
 
-    wxString coordGenArray[5];
-    coordGenArray[0] = wxT("GL_OBJECT_LINEAR");
-    coordGenArray[1] = wxT("GL_EYE_LINEAR");
-    coordGenArray[2] = wxT("GL_SPHERE_MAP");
-    coordGenArray[3] = wxT("GL_REFLECTION_MAP");
-    coordGenArray[4] = wxT("GL_NORMAL_MAP");
-    coordGenBox      = new wxRadioBox(this, Id::TexCoordGen, wxT("Texture Coordinate Generation Method (Vertex Shader)"),    wxDefaultPosition, wxDefaultSize, 5, coordGenArray, 1,wxRA_SPECIFY_COLS, wxDefaultValidator);
+    tex4TexGenEnableCheckBox = new QCheckBox(tr("T4"), this);
+    tex4TexGenEnableCheckBox->setChecked(glState->GetTexture(4)->texGen);
 
-    selectedTexPropertiesSizer->Add(coordGenBox, 0 , wxALL , FIVE_PIXEL_BORDER);
-    selectedTexPropertiesSizer->Add(coeffSizer, 0, wxALL, ZERO_PIXEL_BORDER);
+    QGroupBox* texGenEnableDisableBox        = new QGroupBox(tr("glEnable/glDisable TexGen"), this);
+    QHBoxLayout* texGenEnableDisableSizer    = new QHBoxLayout(texGenEnableDisableBox);
 
-    textureSizer->Add(selectedTexPropertiesSizer, 0, wxALL, FIVE_PIXEL_BORDER);
-    SetAutoLayout(TRUE);
-    
-    SetSizer(textureSizer);
-    textureSizer->SetSizeHints(this);
+    texGenEnableDisableSizer->addWidget(tex0TexGenEnableCheckBox);
+    texGenEnableDisableSizer->addWidget(tex1TexGenEnableCheckBox);
+    texGenEnableDisableSizer->addWidget(tex2TexGenEnableCheckBox);
+    texGenEnableDisableSizer->addWidget(tex3TexGenEnableCheckBox);
+    texGenEnableDisableSizer->addWidget(tex4TexGenEnableCheckBox);
+
+    texCoordSelGroup = new QButtonGroup(this);
+    texCoordSelGroup->setExclusive(false);
+    texCoordSelGroup->addButton(tex0TexGenEnableCheckBox, 0);
+    texCoordSelGroup->addButton(tex1TexGenEnableCheckBox, 1);
+    texCoordSelGroup->addButton(tex2TexGenEnableCheckBox, 2);
+    texCoordSelGroup->addButton(tex3TexGenEnableCheckBox, 3);
+    texCoordSelGroup->addButton(tex4TexGenEnableCheckBox, 4);
+    connect(texCoordSelGroup, SIGNAL(buttonClicked(int)), SLOT(OnCheckbox(int)));
+
+    QGroupBox *coordGenBox      = new QGroupBox(tr("Texture Coordinate Generation Method (Vertex Shader)"), this);
+    QVBoxLayout *coordGenSizer = new QVBoxLayout(coordGenBox);
+
+    QRadioButton *olinearCoordGenRadioButton = new QRadioButton(tr("GL_OBJECT_LINEAR"), this);
+    QRadioButton *elinearCoordGenRadioButton = new QRadioButton(tr("GL_EYE_LINEAR"), this);
+    QRadioButton *spheremCoordGenRadioButton = new QRadioButton(tr("GL_SPHERE_MAP"), this);
+    QRadioButton *reflecmCoordGenRadioButton = new QRadioButton(tr("GL_REFLECTION_MAP"), this);
+    QRadioButton *normalmCoordGenRadioButton = new QRadioButton(tr("GL_NORMAL_MAP"), this);
+
+    coordGenSizer->addWidget(olinearCoordGenRadioButton);
+    coordGenSizer->addWidget(elinearCoordGenRadioButton);
+    coordGenSizer->addWidget(spheremCoordGenRadioButton);
+    coordGenSizer->addWidget(reflecmCoordGenRadioButton);
+    coordGenSizer->addWidget(normalmCoordGenRadioButton);
+
+    coordGenGroup = new QButtonGroup(this);
+    coordGenGroup->addButton(olinearCoordGenRadioButton, 0);
+    coordGenGroup->addButton(elinearCoordGenRadioButton, 1);
+    coordGenGroup->addButton(spheremCoordGenRadioButton, 2);
+    coordGenGroup->addButton(reflecmCoordGenRadioButton, 3);
+    coordGenGroup->addButton(normalmCoordGenRadioButton, 4);
+    coordGenGroup->button(0)->setChecked(true);
+    connect(coordGenGroup, SIGNAL(buttonClicked(int)), SLOT(OnRadioTexCoordGen(int)));
+
+    selectedTexPropertiesSizer->addWidget(coordGenBox,         0, 0, 2, 1);
+    selectedTexPropertiesSizer->addWidget(eyePlaneCoeffBox,    0, 1);
+    selectedTexPropertiesSizer->addWidget(objectPlaneCoeffBox, 1, 1);
+
+    textureSizer->addWidget(texGenEnableDisableBox, 0, 0);
+    textureSizer->addWidget(texCoordUnitBox,        0, 1);
+    textureSizer->addWidget(texPropertyBox,         1, 0, 1, 2);
+    textureSizer->setRowStretch(2, 2);
+    textureSizer->setColumnStretch(2, 2);
+
+    setLayout(new QVBoxLayout);
+    layout()->addWidget(texBox);
 }
 
-void SGOglTextureCoordNBPage::OnRadioTextureCoordUnit(wxCommandEvent &event)
+void SGOglTextureCoordNBPage::OnRadioTextureCoordUnit(int index)
 {
     UpdateWidgets();
-    wxGetApp().GetFrame()->SetCanvasMode(0);
-    wxGetApp().GetFrame()->GetCanvas()->Update();
+    m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
+    m_parent->GetFrame()->GetCanvas()->updateGL();
 }
 
-void SGOglTextureCoordNBPage::OnRadioTexCoordGen(wxCommandEvent& event)
+void SGOglTextureCoordNBPage::OnRadioTexCoordGen(int index)
 {
     SGFixedGLState* glState = m_parent->GetGLState();
-    int workingTextureCoords;
 
-    workingTextureCoords = texCoordUnitBox->GetSelection();
+    int workingTextureCoords = texCoordUnitGroup->checkedId();
 
-    switch(coordGenBox->GetSelection()){
-                case TEXTURE_COORDINATE_OBJECT_LINEAR:
-                    glState->GetTexture(workingTextureCoords)->textureCoordinateGeneration = GL_OBJECT_LINEAR;
-                    break;
-                case TEXTURE_COORDINATE_EYE_LINEAR:
-                    glState->GetTexture(workingTextureCoords)->textureCoordinateGeneration = GL_EYE_LINEAR;
-                    break;
-                case TEXTURE_COORDINATE_SPHERE_MAP:
-                    glState->GetTexture(workingTextureCoords)->textureCoordinateGeneration = GL_SPHERE_MAP;
-                    break;
-                case TEXTURE_COORDINATE_REFLECTION_MAP:
-                    glState->GetTexture(workingTextureCoords)->textureCoordinateGeneration = GL_REFLECTION_MAP;
-                    break;
-                case TEXTURE_COORDINATE_NORMAL_MAP:
-                    glState->GetTexture(workingTextureCoords)->textureCoordinateGeneration = GL_NORMAL_MAP;
-                    break;
-                default:
-                    break;
+    switch(index){
+    case TEXTURE_COORDINATE_OBJECT_LINEAR:
+        glState->GetTexture(workingTextureCoords)->textureCoordinateGeneration = GL_OBJECT_LINEAR;
+        break;
+    case TEXTURE_COORDINATE_EYE_LINEAR:
+        glState->GetTexture(workingTextureCoords)->textureCoordinateGeneration = GL_EYE_LINEAR;
+        break;
+    case TEXTURE_COORDINATE_SPHERE_MAP:
+        glState->GetTexture(workingTextureCoords)->textureCoordinateGeneration = GL_SPHERE_MAP;
+        break;
+    case TEXTURE_COORDINATE_REFLECTION_MAP:
+        glState->GetTexture(workingTextureCoords)->textureCoordinateGeneration = GL_REFLECTION_MAP;
+        break;
+    case TEXTURE_COORDINATE_NORMAL_MAP:
+        glState->GetTexture(workingTextureCoords)->textureCoordinateGeneration = GL_NORMAL_MAP;
+        break;
+    default:
+        break;
     }
-    wxGetApp().GetFrame()->SetCanvasMode(0);
-    wxGetApp().GetFrame()->GetCanvas()->Update();
+    m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
+    m_parent->GetFrame()->GetCanvas()->updateGL();
 }
 
-void SGOglTextureCoordNBPage::OnCheckbox(wxCommandEvent &event)
+void SGOglTextureCoordNBPage::OnCheckbox(int index)
 {
     SGFixedGLState *glState = m_parent->GetGLState();
 
-    switch(event.GetId()){
-        case Id::Tex0TexGenEnableVal:
-            glState->GetTexture(0)->texGen = tex0TexGenEnableCheckBox->IsChecked();
-            break;
-        case Id::Tex1TexGenEnableVal:
-            glState->GetTexture(1)->texGen = tex1TexGenEnableCheckBox->IsChecked();
-            break;  
-        case Id::Tex2TexGenEnableVal:
-            glState->GetTexture(2)->texGen = tex2TexGenEnableCheckBox->IsChecked();
-            break;
-        case Id::Tex3TexGenEnableVal:
-            glState->GetTexture(3)->texGen = tex3TexGenEnableCheckBox->IsChecked();
-            break;
-        case Id::Tex4TexGenEnableVal:
-            glState->GetTexture(4)->texGen = tex4TexGenEnableCheckBox->IsChecked();
-            break;
+    switch(index){
+    case 0:
+        glState->GetTexture(0)->texGen = tex0TexGenEnableCheckBox->isChecked();
+        break;
+    case 1:
+        glState->GetTexture(1)->texGen = tex1TexGenEnableCheckBox->isChecked();
+        break;
+    case 2:
+        glState->GetTexture(2)->texGen = tex2TexGenEnableCheckBox->isChecked();
+        break;
+    case 3:
+        glState->GetTexture(3)->texGen = tex3TexGenEnableCheckBox->isChecked();
+        break;
+    case 4:
+        glState->GetTexture(4)->texGen = tex4TexGenEnableCheckBox->isChecked();
+        break;
     }
-    wxGetApp().GetFrame()->SetCanvasMode(0);
-    wxGetApp().GetFrame()->GetCanvas()->Update();
+    m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
+    m_parent->GetFrame()->GetCanvas()->updateGL();
 }
 
-void SGOglTextureCoordNBPage::OnTextEnterEyeCoeffS(wxCommandEvent &event)
+void SGOglTextureCoordNBPage::OnTextEnterEyeCoeffS()
 {
     SGFixedGLState* glState = m_parent->GetGLState();
     glState->SetTextureChanged(true);
-    wxArrayString userEnteredValues;
 
     vec4 eyePlaneSVec;
 
-    if((parseVector(eyePlaneCoeffTextS->GetValue())).GetCount() == 4)
+    if((parseVector(eyePlaneCoeffTextS->text())).size() == 4)
     {
-        userEnteredValues = parseVector(eyePlaneCoeffTextS->GetValue());
+        QStringList userEnteredValues = parseVector(eyePlaneCoeffTextS->text());
         for(int i = 0; i < 4; i++)
         {
-            eyePlaneSVec[i] = atof((userEnteredValues.Item(i)).c_str());
+            eyePlaneSVec[i] = userEnteredValues[i].toFloat();
         }
-        glState->GetTexture(texCoordUnitBox->GetSelection())->eyePlaneCoeffS = eyePlaneSVec;
+        glState->GetTexture(texCoordUnitGroup->checkedId())->eyePlaneCoeffS = eyePlaneSVec;
     }
     else
     {
-        IncorrectFormat(wxT("four floating point values, with each value seperated by a comma."), *this);
+        IncorrectFormat(tr("four floating point values, with each value seperated by a comma."), this);
         return;
     }
-    wxGetApp().GetFrame()->SetCanvasMode(0);
-    wxGetApp().GetFrame()->GetCanvas()->Update();
+    m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
+    m_parent->GetFrame()->GetCanvas()->updateGL();
 }
 
-void SGOglTextureCoordNBPage::OnTextEnterEyeCoeffT(wxCommandEvent &event)
+void SGOglTextureCoordNBPage::OnTextEnterEyeCoeffT()
 {
     SGFixedGLState* glState = m_parent->GetGLState();
     glState->SetTextureChanged(true);
-    wxArrayString userEnteredValues;
 
     vec4 eyePlaneTVec;
 
-    if((parseVector(eyePlaneCoeffTextT->GetValue())).GetCount() == 4)
+    if((parseVector(eyePlaneCoeffTextT->text())).size() == 4)
     {
-        userEnteredValues = parseVector(eyePlaneCoeffTextT->GetValue());
+        QStringList userEnteredValues = parseVector(eyePlaneCoeffTextT->text());
         for(int i = 0; i < 4; i++)
         {
-            eyePlaneTVec[i] = atof((userEnteredValues.Item(i)).c_str());
+            eyePlaneTVec[i] = userEnteredValues[i].toFloat();
         }
-        glState->GetTexture(texCoordUnitBox->GetSelection())->eyePlaneCoeffT = eyePlaneTVec;
+        glState->GetTexture(texCoordUnitGroup->checkedId())->eyePlaneCoeffT = eyePlaneTVec;
     }
     else
     {
-        IncorrectFormat(wxT("four floating point values, with each value seperated by a comma."), *this);
+        IncorrectFormat(tr("four floating point values, with each value seperated by a comma."), this);
         return;
     }
-    wxGetApp().GetFrame()->SetCanvasMode(0);
-    wxGetApp().GetFrame()->GetCanvas()->Update();
+    m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
+    m_parent->GetFrame()->GetCanvas()->updateGL();
 }
 
-void SGOglTextureCoordNBPage::OnTextEnterObjCoeffS(wxCommandEvent &event)
+void SGOglTextureCoordNBPage::OnTextEnterObjCoeffS()
 {
     SGFixedGLState* glState = m_parent->GetGLState();
     glState->SetTextureChanged(true);
-    wxArrayString userEnteredValues;
 
     vec4 objPlaneSVec;
 
-    if((parseVector(objectPlaneCoeffTextS->GetValue())).GetCount() == 4)
+    if((parseVector(objectPlaneCoeffTextS->text())).size() == 4)
     {
-        userEnteredValues = parseVector(objectPlaneCoeffTextS->GetValue());
+        QStringList userEnteredValues = parseVector(objectPlaneCoeffTextS->text());
         for(int i = 0; i < 4; i++)
         {
-            objPlaneSVec[i] = atof((userEnteredValues.Item(i)).c_str());
+            objPlaneSVec[i] = userEnteredValues[i].toFloat();
         }
-        glState->GetTexture(texCoordUnitBox->GetSelection())->objectPlaneCoeffS = objPlaneSVec;                
+        glState->GetTexture(texCoordUnitGroup->checkedId())->objectPlaneCoeffS = objPlaneSVec;
     }
     else
     {
-        IncorrectFormat(wxT("four floating point values, with each value seperated by a comma."), *this);
+        IncorrectFormat(tr("four floating point values, with each value seperated by a comma."), this);
         return;
     }
-    wxGetApp().GetFrame()->SetCanvasMode(0);
-    wxGetApp().GetFrame()->GetCanvas()->Update();
+    m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
+    m_parent->GetFrame()->GetCanvas()->updateGL();
 }
 
-void SGOglTextureCoordNBPage::OnTextEnterObjCoeffT(wxCommandEvent &event)
+void SGOglTextureCoordNBPage::OnTextEnterObjCoeffT()
 {
     SGFixedGLState* glState = m_parent->GetGLState();
     glState->SetTextureChanged(true);
-    wxArrayString userEnteredValues;
 
     vec4 objPlaneTVec;
 
-    if((parseVector(objectPlaneCoeffTextT->GetValue())).GetCount() == 4)
+    if((parseVector(objectPlaneCoeffTextT->text())).size() == 4)
     {
-        userEnteredValues = parseVector(objectPlaneCoeffTextT->GetValue());
+        QStringList userEnteredValues = parseVector(objectPlaneCoeffTextT->text());
         for(int i = 0; i < 4; i++)
         {
-            objPlaneTVec[i] = atof((userEnteredValues.Item(i)).c_str());
+            objPlaneTVec[i] = userEnteredValues[i].toFloat();
         }
-        glState->GetTexture(texCoordUnitBox->GetSelection())->objectPlaneCoeffT = objPlaneTVec;
+        glState->GetTexture(texCoordUnitGroup->checkedId())->objectPlaneCoeffT = objPlaneTVec;
     }
     else
     {
-        IncorrectFormat("four floating point values, with each value seperated by a comma.", *this);
+        IncorrectFormat("four floating point values, with each value seperated by a comma.", this);
         return;
     }
-    wxGetApp().GetFrame()->SetCanvasMode(0);
-    wxGetApp().GetFrame()->GetCanvas()->Update();
+    m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
+    m_parent->GetFrame()->GetCanvas()->updateGL();
 }
 
 void SGOglTextureCoordNBPage::UpdateWidgets()
 {
     SGFixedGLState* glState = m_parent->GetGLState();
     glState->SetTextureChanged(true);
-    Texture* texture = glState->GetTexture(texCoordUnitBox->GetSelection());
+    Texture* texture = glState->GetTexture(texCoordUnitGroup->checkedId());
 
     switch(texture->textureCoordinateGeneration){
-        case GL_OBJECT_LINEAR:
-            coordGenBox->SetSelection(TEXTURE_COORDINATE_OBJECT_LINEAR);
-            break;
-        case GL_EYE_LINEAR:
-            coordGenBox->SetSelection(TEXTURE_COORDINATE_EYE_LINEAR);
-            break;
-        case GL_SPHERE_MAP:
-            coordGenBox->SetSelection(TEXTURE_COORDINATE_SPHERE_MAP);
-            break;
-        case GL_REFLECTION_MAP:
-            coordGenBox->SetSelection(TEXTURE_COORDINATE_REFLECTION_MAP);
-            break;
-        case GL_NORMAL_MAP:
-            coordGenBox->SetSelection(TEXTURE_COORDINATE_NORMAL_MAP);
-            break;
-        default:
-            break;
+    case GL_OBJECT_LINEAR:
+        coordGenGroup->button(TEXTURE_COORDINATE_OBJECT_LINEAR)->setChecked(true);
+        break;
+    case GL_EYE_LINEAR:
+        coordGenGroup->button(TEXTURE_COORDINATE_EYE_LINEAR)->setChecked(true);
+        break;
+    case GL_SPHERE_MAP:
+        coordGenGroup->button(TEXTURE_COORDINATE_SPHERE_MAP)->setChecked(true);
+        break;
+    case GL_REFLECTION_MAP:
+        coordGenGroup->button(TEXTURE_COORDINATE_REFLECTION_MAP)->setChecked(true);
+        break;
+    case GL_NORMAL_MAP:
+        coordGenGroup->button(TEXTURE_COORDINATE_NORMAL_MAP)->setChecked(true);
+        break;
+    default:
+        break;
     }
 
-    eyePlaneCoeffTextS->SetValue(FloatToString4(texture->eyePlaneCoeffS));
-    eyePlaneCoeffTextT->SetValue(FloatToString4(texture->eyePlaneCoeffT));
-    objectPlaneCoeffTextS->SetValue(FloatToString4(texture->objectPlaneCoeffS));
-    objectPlaneCoeffTextT->SetValue(FloatToString4(texture->objectPlaneCoeffT));
+    eyePlaneCoeffTextS->setText(FloatToString4(texture->eyePlaneCoeffS));
+    eyePlaneCoeffTextT->setText(FloatToString4(texture->eyePlaneCoeffT));
+    objectPlaneCoeffTextS->setText(FloatToString4(texture->objectPlaneCoeffS));
+    objectPlaneCoeffTextT->setText(FloatToString4(texture->objectPlaneCoeffT));
 }
+

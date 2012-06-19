@@ -41,25 +41,27 @@
 
 # pragma once
 
-#include "Compulsory.h"
-#include <wx/msgdlg.h>
+#include <QWidget>
+#include <QCheckBox>
+#include <QButtonGroup>
+#include <QLineEdit>
 
 class SGOglNotebook;
 
-class SGOglTextureCoordNBPage: public wxPanel
+class SGOglTextureCoordNBPage: public QWidget
 {
+    Q_OBJECT
 public:
-    SGOglTextureCoordNBPage(SGOglNotebook*  parent, wxWindowID id);
+    SGOglTextureCoordNBPage(SGOglNotebook*  parent);
 
-    void OnRadioTexCoordGen(wxCommandEvent &event);
-    void OnRadioTextureCoordUnit(wxCommandEvent &event);
-    void OnCheckbox(wxCommandEvent &evt);
-    void OnTextEnterEyeCoeffS(wxCommandEvent &event);
-    void OnTextEnterEyeCoeffT(wxCommandEvent &event);
-    void OnTextEnterObjCoeffS(wxCommandEvent &event);
-    void OnTextEnterObjCoeffT(wxCommandEvent &event);
-
-    DECLARE_EVENT_TABLE()
+private slots:
+    void OnRadioTexCoordGen(int index);
+    void OnRadioTextureCoordUnit(int index);
+    void OnCheckbox(int index);
+    void OnTextEnterEyeCoeffS();
+    void OnTextEnterEyeCoeffT();
+    void OnTextEnterObjCoeffS();
+    void OnTextEnterObjCoeffT();
 
 private:
 
@@ -73,11 +75,11 @@ private:
 
     SGOglNotebook *m_parent;
 
-    wxCheckBox *tex0TexGenEnableCheckBox, *tex1TexGenEnableCheckBox, *tex2TexGenEnableCheckBox, *tex3TexGenEnableCheckBox, *tex4TexGenEnableCheckBox;
+    QCheckBox *tex0TexGenEnableCheckBox, *tex1TexGenEnableCheckBox, *tex2TexGenEnableCheckBox, *tex3TexGenEnableCheckBox, *tex4TexGenEnableCheckBox;
     
-    wxRadioBox *coordGenBox, *texCoordUnitBox;
+    QButtonGroup *coordGenGroup, *texCoordSelGroup, *texCoordUnitGroup;
     
-    wxTextCtrl *eyePlaneCoeffTextS, *eyePlaneCoeffTextT, *objectPlaneCoeffTextS, *objectPlaneCoeffTextT;
+    QLineEdit *eyePlaneCoeffTextS, *eyePlaneCoeffTextT, *objectPlaneCoeffTextS, *objectPlaneCoeffTextT;
 
     void UpdateWidgets();
 };

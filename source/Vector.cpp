@@ -40,11 +40,10 @@
 ************************************************************************/
 
 #include <math.h>
-#include "UtilityFunctions.h"
+#include <string.h>
+
+#include <GL/glew.h>
 #include "Vector.h"
-#include "App.h"
-#include "SGShaderTextWindow.h"
-#include "SGFrame.h"
 
 // Basic vector math.  This is by no means complete; add to this file as necessary.
 

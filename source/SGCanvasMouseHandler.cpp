@@ -39,6 +39,9 @@
 *                                                                       *
 ************************************************************************/
 
+#include <QTime>
+#include <QMouseEvent>
+
 #include "SGCanvasMouseHandler.h"
 #include "SGCanvas.h"
 #include "SGFrame.h"
@@ -61,7 +64,6 @@ SGCanvasMouseHandler::SGCanvasMouseHandler(SGCanvas * canvas1)
 
 void SGCanvasMouseHandler::Reset()
 {
-    previous = wxGetElapsedTime(true);
     frames = 0.0f;
 
     startZoom = StartZoom;
@@ -72,26 +74,22 @@ void SGCanvasMouseHandler::Reset()
     Stop();
     vPrev = vec3(0.0f, 0.0f, 0.0f);
     vInc = vec3(0.0f, 0.0f, 0.0f);
-    inertiaTheta = 0.0f;
-    inertiaAxis = vec3(0.0f, 1.0f, 0.0f);
     validStart = false;
     xform.identity();
-    wxStartTimer();
 }
 
 void SGCanvasMouseHandler::Stop()
 {
-    inertiaTheta = 0.0f;
     vInc = vec3(0.0f, 0.0f, 0.0f);
 }
 
-void SGCanvasMouseHandler::OnMouse(wxMouseEvent& event)
+void SGCanvasMouseHandler::OnMousePress(QMouseEvent *event)
 {
-    vec3 cursor = canvas->GetWorldSpace(event.GetX(), event.GetY());
+    vec3 cursor = canvas->GetWorldSpace(event->x(), event->y());
 
-    if (event.LeftDown())
+    if (event->buttons() & Qt::LeftButton)
     {
-        if (!event.ControlDown())
+        if (!(event->modifiers() & Qt::ControlModifier))
         {
             Stop();
         }
@@ -101,25 +99,20 @@ void SGCanvasMouseHandler::OnMouse(wxMouseEvent& event)
         vPrev = cursor;
         validStart = true;
     }
-    else if (event.LeftUp() && validStart)
+    // Right mouse button zooms.
+    else if (event->buttons() & Qt::RightButton)
     {
-        float theta = 180 * vInc.magnitude();
-        if (theta < -InertiaThreshold || theta > InertiaThreshold)
-        {
-            inertiaAxis = cross(vStart, cursor);
-            if (inertiaAxis.magnitude())
-            {
-                inertiaAxis.unitize();
-                inertiaTheta = theta;
-            }
-        }
-        else if (!event.ControlDown())
-        {
-            Stop();
-        }
-        validStart = false;
+        vStart = cursor;
+        startZoom = canvas->GetZoom();
+        validStart = true;
     }
-    else if (event.Moving() && event.LeftIsDown())
+}
+
+void SGCanvasMouseHandler::OnMouseMove(QMouseEvent *event)
+{
+    vec3 cursor = canvas->GetWorldSpace(event->x(), event->y());
+
+    if (event->buttons() & Qt::LeftButton)
     {
         if (!validStart)
         {
@@ -127,13 +120,13 @@ void SGCanvasMouseHandler::OnMouse(wxMouseEvent& event)
         }
         else
         {
-            if (event.ControlDown())
+            if (event->modifiers() & Qt::ControlModifier)
             {
                 float delta = cursor.y - vStart.y;
                 if (delta)
                 {
                     canvas->SetZoom(startZoom + delta);
-                    canvas->Update();
+                    canvas->updateGL();
                 }
             }
             else
@@ -148,26 +141,14 @@ void SGCanvasMouseHandler::OnMouse(wxMouseEvent& event)
                     glRotatef(-theta, axis.x, axis.y, axis.z);
                     glMultMatrixf((float*) &mStart);
                     glGetFloatv(GL_MODELVIEW_MATRIX, (float*) &xform);
-                    canvas->Update();
+                    canvas->updateGL();
                 }
             }
             vInc = cursor - vPrev;
         }
         vPrev = cursor;
     }
-
-    // Right mouse button zooms.
-    else if (event.RightDown())
-    {
-        vStart = cursor;
-        startZoom = canvas->GetZoom();
-        validStart = true;
-    }
-    else if (event.RightUp() && validStart)
-    {
-        validStart = false;
-    }
-    else if (event.Moving() && event.RightIsDown())
+    else if (event->buttons() & Qt::RightButton)
     {
         if (validStart)
         {
@@ -175,19 +156,22 @@ void SGCanvasMouseHandler::OnMouse(wxMouseEvent& event)
             if (delta)
             {
                 canvas->SetZoom(startZoom + delta);
-                canvas->Update();
+                canvas->updateGL();
             }
         }
     }
+}
 
-    event.Skip();
+void SGCanvasMouseHandler::OnMouseRelease(QMouseEvent *event)
+{
+    validStart = false;
 }
 
 void SGCanvasMouseHandler::LoadMatrix() const
 {
     glLoadIdentity();
 
-    if (canvas->GetFrame()->IsChecked(Id::ViewPerspective))
+    if (canvas->GetFrame()->isPerspective())
     {
         glTranslatef(0.0f, 0.0f, SGCanvas::CameraZ - 1.0f);
     }

@@ -41,7 +41,11 @@
 
 #pragma once
 
-#include "Compulsory.h"
+#include <GL/glew.h>
+
+#include <QString>
+
+//#include "Compulsory.h"
 #include "globals.h"
 
 class SGShaderGenerator
@@ -49,8 +53,8 @@ class SGShaderGenerator
 public:
     SGShaderGenerator();
     ~SGShaderGenerator();
-    const char* BuildVertexShader();
-    const char* BuildFragmentShader();
+    const QString & BuildVertexShader();
+    const QString & BuildFragmentShader();
 
 private:
     typedef struct _currentTextureState{
@@ -63,8 +67,8 @@ private:
         GLboolean textureGenerationEnableArray[NUM_TEXTURE_COORDS];
     } CurrentTextureState;
 
-    wxString fragShader;
-    wxString vertShader;
+    QString fragShader;
+    QString vertShader;
 
     bool fLightPoint, fLightSpot, fLightDir, fLightDirSpot;
     bool fMapSphere, fMapReflection, vTexGenEnable;
@@ -82,22 +86,22 @@ private:
     CurrentTextureState currentTexture[NUM_TEXTURES];
 
     void InitTextures();
-    void BuildFragFog(wxString &str);
-    void BuildFragTex(wxString &str);
+    void BuildFragFog(QString &str);
+    void BuildFragTex(QString &str);
 
-    void BuildFragSeparateSpecularColor(wxString &str);
+    void BuildFragSeparateSpecularColor(QString &str);
 
-    void BuildLightCode  ( wxString &str );
-    void BuildVertMain   ( wxString &str );
-    void BuildFuncFnormal( wxString &str );
-    void BuildFuncFog    ( wxString &str );
-    void BuildFuncPoint  ( wxString &str );
-    void BuildTexCoord   ( wxString &str );
+    void BuildLightCode  ( QString &str );
+    void BuildVertMain   ( QString &str );
+    void BuildFuncFnormal( QString &str );
+    void BuildFuncFog    ( QString &str );
+    void BuildFuncPoint  ( QString &str );
+    void BuildTexCoord   ( QString &str );
 
-    void AddFuncLightDirectional   (wxString &str) const;
-    void AddFuncLightPoint         (wxString &str) const;
-    void AddFuncLightSpot          (wxString &str) const;
-    void AddFuncSphereMap          (wxString &str) const;
-    void AddFuncReflectionMap      (wxString &str) const;
-    void AddFuncLightSpotDirection (wxString &str) const;
+    void AddFuncLightDirectional   (QString &str) const;
+    void AddFuncLightPoint         (QString &str) const;
+    void AddFuncLightSpot          (QString &str) const;
+    void AddFuncSphereMap          (QString &str) const;
+    void AddFuncReflectionMap      (QString &str) const;
+    void AddFuncLightSpotDirection (QString &str) const;
 };

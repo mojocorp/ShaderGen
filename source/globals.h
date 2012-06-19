@@ -41,7 +41,7 @@
 
 #pragma once
 
-#include "SGCanvas.h"
+//TODO #include "SGCanvas.h"
 #include "Vector.h"
 
 const bool DEBUG_ON = true;

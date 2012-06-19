@@ -41,14 +41,10 @@
 
 #pragma once
 
-#include "Compulsory.h"
-#include <wx/dialog.h>
+#include <QDialog>
 
-class AboutDialog : public wxDialog
+class AboutDialog : public QDialog
 {
 public:
-    void Create( wxWindow *parent);
-    void OnClose(wxCloseEvent &evt) { Show (false) ;}
-
-DECLARE_EVENT_TABLE()
+    AboutDialog(QWidget *parent);
 };

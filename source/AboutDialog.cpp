@@ -39,33 +39,30 @@
 *                                                                       *
 ************************************************************************/
 
+#include <QApplication>
+#include <QVBoxLayout>
+#include <QGroupBox>
+#include <QLabel>
 
 #include "AboutDialog.h"
 #include "SGShaderTextWindow.h"
-#include <wx/statline.h>
-#include <wx/image.h>
-#include <wx/stattext.h>
 
-BEGIN_EVENT_TABLE(AboutDialog, wxDialog)
-    EVT_CLOSE(AboutDialog::OnClose)
-END_EVENT_TABLE()
-
-void AboutDialog::Create( wxWindow *parent)
+AboutDialog::AboutDialog(QWidget *parent)
+    : QDialog(parent)
 {
-    wxDialog::Create( parent,  Id::ModalAbout, wxT("About"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxCAPTION );
-    wxBoxSizer* topSizer = new wxBoxSizer(wxVERTICAL);
-    wxStaticBoxSizer* sideSizer = new wxStaticBoxSizer(new wxStaticBox(this, wxID_ANY, wxT("")), wxHORIZONTAL);
-    wxImage img("../textures/BrickWall.bmp");
-    wxBitmap splash(img);
-    wxStaticBitmap* bmp = new wxStaticBitmap(this ,wxID_ANY, splash);
-    sideSizer->Add(bmp);
-    wxStaticLine *line = new wxStaticLine(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL);
-    sideSizer->Add(line, 0, wxEXPAND | wxLEFT | wxRIGHT | wxADJUST_MINSIZE, 10);
-    wxSize size(splash.GetWidth() * 1.5, splash.GetHeight());
+    QHBoxLayout* sideSizer = new QHBoxLayout(this);
+    QLabel* bmp = new QLabel(this);
+    QPixmap splash(qApp->applicationDirPath() + "/textures/BrickWall.png");
+    bmp->setPixmap(splash.scaled(splash.width(), splash.width()));
+    bmp->setMargin(0);
+    sideSizer->addWidget(bmp);
+    QFrame *line = new QFrame(this);
+    line->setFrameStyle( QFrame::VLine | QFrame::Sunken );
+    sideSizer->addWidget(line);
 
-    wxString textStr =  wxT("\n"
-    "GLSL ShaderGen v3.0\n"
-    "Copyright © 2005 3Dlabs. All rights reserved\n\n"
+    QString textStr =  tr("\n"
+    "GLSL ShaderGen v3.1.0\n"
+    "Copyright (c) 2005 3Dlabs. All rights reserved\n\n"
     "http://www.3dlabs.com/contact \n\n"
     "Lead Developer:\n"
     "   Joshua Alan Doss\n\n"
@@ -75,16 +72,14 @@ void AboutDialog::Create( wxWindow *parent)
     "   Dave Baldwin\n"
     "   Philip Rideout\n"
     "   Randi Rost\n"
-    "   Matthew Williams\n\n"
+    "   Matthew Williams\n"
+    "   Morgan Leborgne\n\n"
     "Community Contributor(s):\n"
     "   Ajoy Das\n"
     "   Michael M. Morrison\n\n"
     "3Dlabs thanks the developers of wxWidgets, Glew and Inno Setup.\n");
 
-    wxStaticText *textt = new wxStaticText( this, wxID_ANY, textStr, wxDefaultPosition);
-    sideSizer->Add(textt);
-    topSizer->Add(sideSizer);
-    SetSizer(topSizer);
-    topSizer->SetSizeHints(this);
-    Centre(wxBOTH);    
+    QLabel *textt = new QLabel( textStr, this);
+    sideSizer->addWidget(textt);
+    setLayout(sideSizer);
 }

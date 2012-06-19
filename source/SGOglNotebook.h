@@ -41,9 +41,9 @@
 
 #pragma once
 
-#include "Compulsory.h"
-#include <wx/notebook.h>
+#include <QTabWidget>
 
+class   SGFrame;
 class   SGOglLightNBPage;
 class   SGOglMaterialNBPage;
 class   SGOglFogNBPage;
@@ -53,15 +53,16 @@ class   SGOglTextureCoordNBPage;
 class   SGOglTextureEnvNBPage;
 class   SGTextures;
 
-class SGOglNotebook: public wxNotebook
+class SGOglNotebook: public QTabWidget
 {
 public:
-    SGOglNotebook( wxWindow *parent, wxWindowID id);
-    ~SGOglNotebook(){Clean();}
+    SGOglNotebook(SGFrame * parent = 0);
+    ~SGOglNotebook();
     SGFixedGLState* GetGLState(){ return glState; }
     SGTextures* GetTextures() { return textures; }
-
+    SGFrame* GetFrame() { return m_parent; }
 private:
+    SGFrame              *m_parent;
     SGOglLightNBPage     *lightPage;
     SGOglMaterialNBPage  *materialPage;
     SGOglFogNBPage       *fogPage;
@@ -70,6 +71,4 @@ private:
     SGOglTextureEnvNBPage *textureEnvPage;
     SGFixedGLState       *glState;
     SGTextures *textures;
-
-    void Clean();
 };

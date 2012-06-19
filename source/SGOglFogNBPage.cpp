@@ -39,6 +39,13 @@
 *                                                                       *
 ************************************************************************/
 
+#include <QGroupBox>
+#include <QBoxLayout>
+#include <QLabel>
+#include <QRadioButton>
+#include <QDoubleSpinBox>
+#include "QColorButton.h"
+
 #include "SGOglFogNBPage.h"
 #include "SGOglNotebook.h"
 #include "SGFixedGLState.h"
@@ -47,36 +54,34 @@
 #include "SGFrame.h"
 #include "SGCanvas.h"
 #include "Vector.h"
-#include <wx/colordlg.h>
 
-BEGIN_EVENT_TABLE(SGOglFogNBPage, wxPanel)
-    EVT_COMMAND_RANGE(Id::FFSD_START_FOG, Id::FFSD_END_FOG, wxEVT_COMMAND_RADIOBOX_SELECTED, SGOglFogNBPage::OnRadio)
-    EVT_COMMAND_RANGE(Id::FFSD_START_FOG, Id::FFSD_END_FOG, wxEVT_COMMAND_TEXT_ENTER,        SGOglFogNBPage::OnTextEnter)
-    EVT_COMMAND_RANGE(Id::FFSD_START_FOG, Id::FFSD_END_FOG, wxEVT_COMMAND_BUTTON_CLICKED ,   SGOglFogNBPage::OnButton)
-    EVT_COMMAND_RANGE(Id::FFSD_START_FOG, Id::FFSD_END_FOG, wxEVT_COMMAND_CHECKBOX_CLICKED,  SGOglFogNBPage::OnCheckbox)
-END_EVENT_TABLE()
-
-
-SGOglFogNBPage::SGOglFogNBPage(SGOglNotebook* parent, wxWindowID id)
-:wxPanel(parent,id)
+SGOglFogNBPage::SGOglFogNBPage(SGOglNotebook* parent)
+:QWidget(parent)
 {
     m_parent = parent;
     SGFixedGLState* glState = m_parent->GetGLState();
     Fog *fog = glState->GetFog();
 
-    wxStaticBox* fogBox            = new wxStaticBox(this, -1, wxT("Fog Parameters"),  wxDefaultPosition, wxDefaultSize, 0);
-    wxStaticBoxSizer* fogSizer     = new wxStaticBoxSizer(fogBox, wxHORIZONTAL);
-    wxBoxSizer* v1       = new wxBoxSizer(wxVERTICAL  );
-    wxBoxSizer* v2       = new wxBoxSizer(wxVERTICAL  );
-    wxBoxSizer* v3       = new wxBoxSizer(wxVERTICAL  );
-    wxBoxSizer* v4       = new wxBoxSizer(wxVERTICAL  );
-    wxBoxSizer* v5       = new wxBoxSizer(wxVERTICAL  );
+    QGroupBox* fogBox            = new QGroupBox(tr("Fog Parameters"),  this);
+    QGridLayout* fogSizer     = new QGridLayout(fogBox);
 
-    wxString fogEnumArray[3];
-    fogEnumArray[0] = wxT("GL_LINEAR");
-    fogEnumArray[1] = wxT("GL_EXP");
-    fogEnumArray[2] = wxT("GL_EXP2");
-    fogModeChoice = new wxRadioBox(this, Id::FogModeChoiceVal, wxT("Select Fog Mode"), wxDefaultPosition, wxDefaultSize, 3, fogEnumArray, 1, wxRA_SPECIFY_COLS, wxDefaultValidator);
+    QRadioButton *fogLinear = new QRadioButton(tr("GL_LINEAR"), this);
+    QRadioButton *fogExp = new QRadioButton(tr("GL_EXP"), this);
+    QRadioButton *fogExp2 = new QRadioButton(tr("GL_EXP2"), this);
+
+    QGroupBox *fogModeChoiceBox = new QGroupBox(tr("Select Fog Mode"), this);
+    QVBoxLayout *fogModeChoiceSizer = new QVBoxLayout(fogModeChoiceBox);
+
+    fogModeChoiceSizer->addWidget(fogLinear);
+    fogModeChoiceSizer->addWidget(fogExp);
+    fogModeChoiceSizer->addWidget(fogExp2);
+
+    fogModeChoice = new QButtonGroup(this);
+    fogModeChoice->addButton(fogLinear, 0);
+    fogModeChoice->addButton(fogExp, 1);
+    fogModeChoice->addButton(fogExp2, 2);
+    connect(fogModeChoice, SIGNAL(buttonClicked(int)), SLOT(OnRadio(int)));
+
     GLenum aa = glState->GetFog()->fogMode;
     
     if( aa == GL_LINEAR )
@@ -96,129 +101,123 @@ SGOglFogNBPage::SGOglFogNBPage(SGOglNotebook* parent, wxWindowID id)
         aa = 1;
     }
     
-    fogModeChoice->SetSelection(aa);
+    fogModeChoice->button(aa)->setChecked(true);
 
-    fogDensity = new wxTextCtrl(this, Id::FogDensityVal, FloatToString1(fog->fogDensity),wxDefaultPosition,  wxDefaultSize, wxTE_PROCESS_ENTER, wxDefaultValidator, wxT("GL_FOG_DENSITY"));
-    fogStart   = new wxTextCtrl(this, Id::FogStartVal,   FloatToString1(fog->fogStart),  wxDefaultPosition,  wxDefaultSize, wxTE_PROCESS_ENTER, wxDefaultValidator, wxT("GL_FOG_START"));
-    fogEnd     = new wxTextCtrl(this, Id::FogEndVal,     FloatToString1(fog->fogEnd),    wxDefaultPosition,  wxDefaultSize, wxTE_PROCESS_ENTER, wxDefaultValidator, wxT("GL_FOG_END"));
-    fogColor   = new wxButton  (this, Id::FogColorVal,  "",  wxDefaultPosition,  wxDefaultSize, 0, wxDefaultValidator, wxT("GL_FOG_COLOR"));
-    fogColor->SetBackgroundColour(ToWxIntColor(fog->fogColorVector));
+    fogDensity = new QDoubleSpinBox(this);
+    fogDensity->setRange(0, 100);
+    fogDensity->setValue(fog->fogDensity);
+    fogStart   = new QDoubleSpinBox(this);
+    fogStart->setRange(-1000, 1000);
+    fogStart->setValue(fog->fogStart);
+    fogEnd     = new QDoubleSpinBox(this);
+    fogEnd->setRange(-1000, 1000);
+    fogEnd->setValue(fog->fogEnd);
 
-    wxStaticText* fogDensityLbl      = new wxStaticText(this, 0, wxT("GL_FOG_DENSITY"),wxDefaultPosition, wxDefaultSize, wxALIGN_TOP);
-    wxStaticText* fogStartLbl        = new wxStaticText(this, 0, wxT("GL_FOG_START"),  wxDefaultPosition, wxDefaultSize, wxALIGN_TOP);
-    wxStaticText* fogEndLbl          = new wxStaticText(this, 0, wxT("GL_FOG_END"),    wxDefaultPosition, wxDefaultSize, wxALIGN_TOP);
-    wxStaticText* fogColorLbl        = new wxStaticText(this, 0, wxT("GL_FOG_COLOR"),  wxDefaultPosition, wxDefaultSize, wxALIGN_TOP);
+    connect(fogDensity, SIGNAL(valueChanged(double)), SLOT(fogDensityChanged(double)));
+    connect(fogStart, SIGNAL(valueChanged(double)), SLOT(fogDensityChanged(double)));
+    connect(fogEnd, SIGNAL(valueChanged(double)), SLOT(fogDensityChanged(double)));
 
-    fogCheckBox              = new wxCheckBox  (this, Id::FogEnableVal, wxT("GL_FOG_ENABLE"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
-    fogCheckBox->SetValue(glState->GetFogEnable());
+    fogColor   = new QColorButton  (this);
+    fogColor->setColor(ToQtColor(fog->fogColorVector));
+    connect(fogColor, SIGNAL(selected(QColor)), SLOT(fogColorChanged(QColor)));
 
-    v1->Add(fogCheckBox,         0, wxALIGN_CENTER | wxALL | wxADJUST_MINSIZE, 5);
-    v1->Add(fogModeChoice);
+    QLabel* fogDensityLbl      = new QLabel(tr("GL_FOG_DENSITY"), this);
+    QLabel* fogStartLbl        = new QLabel(tr("GL_FOG_START"), this);
+    QLabel* fogEndLbl          = new QLabel(tr("GL_FOG_END"), this);
+    QLabel* fogColorLbl        = new QLabel(tr("GL_FOG_COLOR"), this);
 
-    v2->Add(fogDensityLbl,       0, wxTOP |wxBOTTOM | wxADJUST_MINSIZE, 9);
-    v2->Add(fogStartLbl,         0, wxTOP |wxBOTTOM | wxADJUST_MINSIZE, 9);
-    v2->Add(fogEndLbl,           0, wxTOP |wxBOTTOM | wxADJUST_MINSIZE, 9);
+    fogCheckBox              = new QCheckBox  (tr("GL_FOG_ENABLE"), this);
+    fogCheckBox->setChecked(glState->GetFogEnable());
+    connect(fogCheckBox, SIGNAL(clicked(bool)), SLOT(OnCheckbox()));
 
-    v3->Add(fogDensity,          0, wxALIGN_CENTER | wxALL | wxADJUST_MINSIZE, 5);
-    v3->Add(fogStart,            0, wxALIGN_CENTER | wxALL | wxADJUST_MINSIZE, 5);
-    v3->Add(fogEnd,              0, wxALIGN_CENTER | wxALL | wxADJUST_MINSIZE, 5);
+    fogSizer->addWidget(fogCheckBox, 0, 0);
 
-    v4->Add(fogColorLbl,         0, wxTOP |wxBOTTOM | wxADJUST_MINSIZE, 9);
+    fogSizer->addWidget(fogModeChoiceBox, 1, 0, 3, 1);
 
-    v5->Add(fogColor,            0, wxALIGN_CENTER | wxALL | wxADJUST_MINSIZE, 5);
+    fogSizer->addWidget(fogDensityLbl, 1, 1);
+    fogSizer->addWidget(fogStartLbl,   2, 1);
+    fogSizer->addWidget(fogEndLbl,     3, 1);
 
-    fogSizer->Add(v1, 0 , wxALL |wxADJUST_MINSIZE, 10);
-    fogSizer->Add(v2, 0 , wxALL |wxADJUST_MINSIZE, 10);
-    fogSizer->Add(v3, 0 , wxALL |wxADJUST_MINSIZE, 10);
-    fogSizer->Add(v4, 0 , wxALL |wxADJUST_MINSIZE, 10);
-    fogSizer->Add(v5, 0 , wxALL |wxADJUST_MINSIZE, 10);
+    fogSizer->addWidget(fogDensity, 1, 2);
+    fogSizer->addWidget(fogStart,   2, 2);
+    fogSizer->addWidget(fogEnd,     3, 2);
 
-    SetAutoLayout(TRUE);
-    SetSizer( fogSizer );
-    fogSizer->SetSizeHints( this );\
+    fogSizer->addWidget(fogColorLbl, 1, 3);
+
+    fogSizer->addWidget(fogColor, 1, 4);
+    fogSizer->setRowStretch(4, 2);
+    fogSizer->setColumnStretch(5, 2);
+
+    setLayout(new QVBoxLayout);
+    layout()->addWidget(fogBox);
 }
 
-void SGOglFogNBPage::OnButton(wxCommandEvent& event)
-{
-    wxColour oglColor;
-    SGFixedGLState* glState = m_parent->GetGLState();
-    glState->SetFogChanged(true);
-
-
-    oglColor = wxGetColourFromUser(this, ToWxIntColor( glState->GetFog()->fogColorVector ));
-    glState->GetFog()->fogColorVector = ToGLFPColor(oglColor);
-    fogColor->SetBackgroundColour(oglColor);
-
-    wxGetApp().GetFrame()->SetCanvasMode(0);
-    wxGetApp().GetFrame()->GetCanvas()->Update();
-    event.Skip();
-}
-
-void SGOglFogNBPage::OnCheckbox(wxCommandEvent& event)
+void SGOglFogNBPage::fogColorChanged(const QColor & color)
 {
     SGFixedGLState* glState = m_parent->GetGLState();
     glState->SetFogChanged(true);
 
-    glState->SetFogEnable(fogCheckBox->IsChecked());
+    glState->GetFog()->fogColorVector = ToGLFPColor(color);
 
-    wxGetApp().GetFrame()->SetCanvasMode(0);
-    wxGetApp().GetFrame()->GetCanvas()->Update();
+    m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
+    m_parent->GetFrame()->GetCanvas()->updateGL();
 }
 
-void SGOglFogNBPage::OnTextEnter(wxCommandEvent& event)
+void SGOglFogNBPage::OnCheckbox()
 {
     SGFixedGLState* glState = m_parent->GetGLState();
     glState->SetFogChanged(true);
-    switch(event.GetId())
-    {
-        case Id::FogDensityVal:
-            if((fogDensity->GetValue()).IsEmpty())
-            {
-                IncorrectFormat("one floating point value.", *this);
-                break;
-            }
-            glState->GetFog()->fogDensity = atof((fogDensity->GetValue()).c_str());
-            break;
-        case Id::FogStartVal:
-            if((fogStart->GetValue()).IsEmpty())
-            {
-                IncorrectFormat("one floating point value.", *this);
-                break;
-            }
-            glState->GetFog()->fogStart   = atof((fogStart->GetValue()).c_str());
-            break;
-        case Id::FogEndVal:
-            if((fogEnd->GetValue()).IsEmpty())
-            {
-                IncorrectFormat("one floating point value.", *this);
-                break;
-            }
-            glState->GetFog()->fogEnd     = atof((fogEnd->GetValue()).c_str());
-            break;
-        default:
-            break;
-        }
-    wxGetApp().GetFrame()->SetCanvasMode(0);
-    wxGetApp().GetFrame()->GetCanvas()->Update();
+
+    glState->SetFogEnable(fogCheckBox->isChecked());
+
+    m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
+    m_parent->GetFrame()->GetCanvas()->updateGL();
 }
 
-void SGOglFogNBPage::OnRadio(wxCommandEvent& event)
+void SGOglFogNBPage::fogDensityChanged(double density)
 {
     SGFixedGLState* glState = m_parent->GetGLState();
     glState->SetFogChanged(true);
-            switch(fogModeChoice->GetSelection()){
-                case 0:
-                    glState->GetFog()->fogMode = GL_LINEAR;
-                    break;
-                case 1:
-                    glState->GetFog()->fogMode = GL_EXP;
-                    break;
-                case 2:
-                    glState->GetFog()->fogMode = GL_EXP2;
-                    break;
-                default:
-                    break;
+    glState->GetFog()->fogDensity = density;
+    m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
+    m_parent->GetFrame()->GetCanvas()->updateGL();
+}
+
+void SGOglFogNBPage::fogStartChanged(double start)
+{
+    SGFixedGLState* glState = m_parent->GetGLState();
+    glState->SetFogChanged(true);
+    glState->GetFog()->fogStart   = start;
+    m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
+    m_parent->GetFrame()->GetCanvas()->updateGL();
+}
+
+void SGOglFogNBPage::fogEndChanged(double end)
+{
+    SGFixedGLState* glState = m_parent->GetGLState();
+    glState->SetFogChanged(true);
+    glState->GetFog()->fogEnd   = end;
+    m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
+    m_parent->GetFrame()->GetCanvas()->updateGL();
+}
+
+void SGOglFogNBPage::OnRadio(int index)
+{
+    SGFixedGLState* glState = m_parent->GetGLState();
+    glState->SetFogChanged(true);
+    switch(index){
+    case 0:
+        glState->GetFog()->fogMode = GL_LINEAR;
+        break;
+    case 1:
+        glState->GetFog()->fogMode = GL_EXP;
+        break;
+    case 2:
+        glState->GetFog()->fogMode = GL_EXP2;
+        break;
+    default:
+        break;
     }
-    wxGetApp().GetFrame()->SetCanvasMode(0);
-    wxGetApp().GetFrame()->GetCanvas()->Update();
+    m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
+    m_parent->GetFrame()->GetCanvas()->updateGL();
 }

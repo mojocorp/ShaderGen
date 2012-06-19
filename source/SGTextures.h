@@ -41,10 +41,11 @@
 
 #pragma once
 
-#include "Compulsory.h"
-#include <wx/image.h>
+#include <GL/glew.h>
 
-class SGOglNotebook;
+#include <QImage>
+
+class SGFixedGLState;
 
 struct ITexture
 {
@@ -56,18 +57,33 @@ struct ITexture
 class SGTextures
 {
 public:
-    SGTextures(SGOglNotebook *parent);
+    enum TextureId {
+        TextureLogo = 0,
+        TextureLogoNormal,
+        TextureRust,
+        TextureLeopard,
+        TextureEyeball,
+        TextureCobblestone,
+        TextureCobblestoneNormal,
+        TextureBricks,
+        TextureBricksNormal,
+        TextureStonewall,
+        TextureStonewallNormal,
+        TextureMetalSheet,
+        TextureMetalSheetNormal
+    };
+
+    SGTextures(SGFixedGLState *state);
     ~SGTextures();
     void Load(const char* filename);
-    void Activate(Id id, GLint unit);
+    void Activate(TextureId id, GLint unit);
     void Deactivate(GLint unit);
-    bool LoadPng(const char* filename);
     void ActivateLogo();
 
 private:
-    SGOglNotebook *m_parent;
-    ITexture textures[Id::NumTextures] ;
-    wxString TextureNames[Id::NumTextures];
+    SGFixedGLState *glState;
+    ITexture textures[13] ;
+    QString TextureNames[13];
     GLuint logo;
-    wxImage image1;
+    QImage image1;
 };

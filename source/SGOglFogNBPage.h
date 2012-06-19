@@ -41,30 +41,37 @@
 
 #pragma once
 
-#include "Compulsory.h"
+#include <QWidget>
+#include <QButtonGroup>
+#include <QPushButton>
+#include <QCheckBox>
+#include <QDoubleSpinBox>
 
 class SGOglNotebook;
+class QColorButton;
 
-class SGOglFogNBPage : public wxPanel
+class SGOglFogNBPage : public QWidget
 {
+    Q_OBJECT
 public:
-    SGOglFogNBPage(SGOglNotebook*  parent, wxWindowID id);
+    SGOglFogNBPage(SGOglNotebook*  parent);
 
-    void OnButton(wxCommandEvent& event);
-    void OnCheckbox(wxCommandEvent& event);
-    void OnTextEnter(wxCommandEvent& event);
-    void OnRadio(wxCommandEvent& event);
-
-DECLARE_EVENT_TABLE()
+protected slots:
+    void OnCheckbox();
+    void fogColorChanged(const QColor & color);
+    void fogDensityChanged(double);
+    void fogStartChanged(double);
+    void fogEndChanged(double);
+    void OnRadio(int index);
 
 private:
     //void IncorrectFormat(wxString str);
     SGOglNotebook *m_parent;
 
-    wxRadioBox* fogModeChoice;
-    wxButton*   fogColor;
-    wxTextCtrl* fogDensity; 
-    wxTextCtrl* fogStart;
-    wxTextCtrl* fogEnd; 
-    wxCheckBox* fogCheckBox;
+    QButtonGroup* fogModeChoice;
+    QColorButton*   fogColor;
+    QDoubleSpinBox* fogDensity;
+    QDoubleSpinBox* fogStart;
+    QDoubleSpinBox* fogEnd;
+    QCheckBox* fogCheckBox;
 };

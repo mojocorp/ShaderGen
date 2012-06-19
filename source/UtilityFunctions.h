@@ -41,16 +41,22 @@
 
 #pragma once
 
-#include "Compulsory.h"
+#include <GL/glew.h>
+
+#include <QString>
+#include <QColor>
+#include <QStringList>
+
 #include "Vector.h"
-#include "Globals.h"
-#include <wx/tokenzr.h>
+#include "globals.h"
+
+class QWidget;
 
 #define PrintOpenGLError() printOglError(__FILE__, __LINE__)
 
 int printOglError(char *file, int line);
 
-void IncorrectFormat(wxString str, wxWindow& errorWindow);
+void IncorrectFormat(QString str, QWidget *errorWindow);
 
 
 /******************************************************
@@ -65,36 +71,20 @@ The following two functions are used to convert color
     the OpenGL floating point color representation.
 ******************************************************/
 
-static const wxColour ToWxIntColor( const vec4 fpColor)
+inline const QColor ToQtColor( const vec4 fpColor)
 {
-    unsigned char r = (unsigned char) ( fpColor.x * 255);
-    unsigned char g = (unsigned char) ( fpColor.y * 255);
-    unsigned char b = (unsigned char) ( fpColor.z * 255);
-    return wxColour(r, g, b);
+    return QColor::fromRgbF(fpColor.x, fpColor.y, fpColor.z);
 }
 
-static const vec4 ToGLFPColor(const wxColour color)
+inline const vec4 ToGLFPColor(const QColor color)
 {
-    float r = (float)color.Red()  /255.0f;
-    float g = (float)color.Green()/255.0f;
-    float b = (float)color.Blue() /255.0f;
-    float a = 1.0f;
-    return vec4(r, g, b,a);
+    return vec4(color.redF(), color.greenF(), color.blueF(), 1.0f);
 }
 
-static wxString FloatToString3(const float *v) { return wxString::Format("%.1f,%.1f,%.1f",v[0],v[1],v[2]); }
-static wxString FloatToString4(const float *v) { return wxString::Format("%.1f,%.1f,%.1f,%.1f",v[0],v[1],v[2],v[3]); }
-static wxString FloatToString1(const float v) { return wxString::Format("%.1f",v); }
+inline QString FloatToString3(const float *v) { return QString().sprintf("%.1f,%.1f,%.1f",v[0],v[1],v[2]); }
+inline QString FloatToString4(const float *v) { return QString().sprintf("%.1f,%.1f,%.1f,%.1f",v[0],v[1],v[2],v[3]); }
 
-static wxString DoubleToString1(const double v) { return wxString::Format("%.6f",v); }
-
-static const wxArrayString parseVector(wxString userEntry)
+inline QStringList parseVector(QString userEntry)
 {
-    wxStringTokenizer vecTokenizer(userEntry, ",");
-    wxArrayString noCommas;
-    while(vecTokenizer.HasMoreTokens()){
-        wxString currToken = vecTokenizer.GetNextToken();
-        noCommas.Add(currToken, 1);
-    }
-    return noCommas;
+    return userEntry.split(",");
 }

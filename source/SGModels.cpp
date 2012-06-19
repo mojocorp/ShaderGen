@@ -50,37 +50,35 @@ SGModels::~SGModels()
 {
 }
 
-void SGModels::DrawModel(Id id)
+void SGModels::DrawModel(ModelId id)
 {
     int slices = 100;
-    if(id <= Id::ModelsEnd  &&  id >= Id::ModelsStart){
-        switch(id){
+    switch(id){
 
-            case Id::ModelPlane:
-                TPlane().Draw(slices);
-                break;
-            case Id::ModelTorus:
-                TTorus().Draw(slices);
-                break;
+    case ModelPlane:
+        TPlane().Draw(slices);
+        break;
+    case ModelTorus:
+        TTorus().Draw(slices);
+        break;
 
-            case Id::ModelSphere:
-                TSphere().Draw(slices);
-                break;
+    case ModelSphere:
+        TSphere().Draw(slices);
+        break;
 
-            case Id::ModelConic:
-                TConic().Draw(slices);
-                break;
+    case ModelConic:
+        TConic().Draw(slices);
+        break;
 
-            case Id::ModelTrefoil:
-                TTrefoil().Draw(slices);
-                break;
+    case ModelTrefoil:
+        TTrefoil().Draw(slices);
+        break;
 
-            case Id::ModelKlein:
-                TKlein().Draw(slices);
-                break;
+    case ModelKlein:
+        TKlein().Draw(slices);
+        break;
 
-            default:
-                break;
-        }
+    default:
+        break;
     }
 }

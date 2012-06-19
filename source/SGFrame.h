@@ -41,15 +41,14 @@
 
 #pragma once
 
-#include "Compulsory.h"
+#include <QMainWindow>
+
 #include "Vector.h"
-#include "AboutDialog.h"
 #include "SGOglNotebook.h"
-#include "SGCanvas.h"
 #include "SGModels.h"
 #include "SGShaderGenerator.h"
+#include "SGCanvasWrapper.h"
 
-class SGCanvasWrapper;
 class SGOglNotebook;
 class SGShaderTextWindow;
 class SGModels;
@@ -58,40 +57,60 @@ class SGFixedGLState;
 class SGShaderGenerator;
 class SGTextures;
 
-class SGFrame : public wxFrame 
+class SGFrame : public QMainWindow
 {
+    Q_OBJECT
 public:
-    SGFrame(const wxString& title, const wxPoint& pos, const wxSize& size);
-    void Clean();
+    SGFrame(const QString& title);
+    ~SGFrame();
 
     SGOglNotebook* GetOglNotebook(){ return oglNotebook; }
+
     SGShaderTextWindow* GetShaderTextWindow(){ return shaderText; }
     SGCanvasWrapper* GetCanvasWrapper(){ return canvas; }
     SGCanvas* GetCanvas() { return canvas->GetCanvas(); }
 
     SGFixedGLState* GetGLState() { return oglNotebook->GetGLState(); }
     SGTextures* GetTextures() { return oglNotebook->GetTextures(); }
-    void Check(Id id);
-    void Uncheck(Id id);
-    bool IsChecked(Id id) const;
-    void OnFileExit(wxCommandEvent& event);
-    void OnHelp(wxCommandEvent& event);
-    void DrawModel(Id model) { models->DrawModel(model); }
-    void OnModel(wxCommandEvent& event);
-    const char* GetVertexShader() { return shaderGen->BuildVertexShader(); }
-    const char* GetFragmentShader() { return shaderGen->BuildFragmentShader(); }
-    void OnClose(wxCloseEvent &event);
-    void AboutCreate(wxCommandEvent &evt) { aboutDlg.Show(true); }
-    void SetCanvasMode(int a);
-    void UpdateCanvas(wxCommandEvent& event) { GetCanvas()->Update(); }
 
+    void DrawModel(SGModels::ModelId model) { models->DrawModel(model); }
+    void SetCanvasMode(SGCanvasWrapper::GLMode a);
+    void SetStatusText(const QString &text);
+    bool isPerspective() const;
+
+    const QString & GetVertexShader() { return shaderGen->BuildVertexShader(); }
+    const QString & GetFragmentShader() { return shaderGen->BuildFragmentShader(); }
+
+    static SGFrame *instance;
+private slots:
+    void modelActionTriggered(QAction *action);
+    void viewActionTriggered();
+    void help();
+    void about();
 private:
+    void createActions();
+    void createMenus();
+    void createStatusBar();
+
+    QMenu *fileMenu;
+    QMenu *viewMenu;
+    QMenu *modelMenu;
+    QMenu *helpMenu;
+
+    QAction *exitAct;
+    QAction *perspAct;
+    QAction *torusAct;
+    QAction *sphereAct;
+    QAction *trefoilAct;
+    QAction *kleinAct;
+    QAction *conicAct;
+    QAction *planeAct;
+    QAction *aboutAct;
+    QAction *helpAct;
+
     SGOglNotebook *oglNotebook;
     SGCanvasWrapper *canvas;
     SGShaderTextWindow* shaderText;
     SGModels *models;
     SGShaderGenerator *shaderGen;
-    AboutDialog aboutDlg;
-
-DECLARE_EVENT_TABLE()
 };

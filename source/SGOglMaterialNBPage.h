@@ -41,33 +41,37 @@
 
 #pragma once
 
-#include "Compulsory.h"
+#include <QWidget>
+#include <QDoubleSpinBox>
+
 #include "SGFixedGLState.h"
 
 class SGOglNotebook;
+class QColorButton;
 
-class SGOglMaterialNBPage: public wxPanel{
-
+class SGOglMaterialNBPage: public QWidget
+{
+    Q_OBJECT
 public:
-    SGOglMaterialNBPage(SGOglNotebook*  parent, wxWindowID id);
+    SGOglMaterialNBPage(SGOglNotebook*  parent);
 
-    void OnButton(wxCommandEvent& event);
-    void OnTextEnter(wxCommandEvent& event);
-
-    DECLARE_EVENT_TABLE()
+private slots:
+    void ambientChanged();
+    void diffuseChanged();
+    void specularChanged();
+    void emissionChanged();
+    void shininessChanged();
 
 private:
 
     SGOglNotebook *m_parent;
 
-    wxTextCtrl* shininessMaterial;
+    QDoubleSpinBox* shininessMaterial;
 
-    wxButton* ambientMaterial;
-    wxButton* diffuseMaterial; 
-    wxButton* ambientAndDiffuseMaterial;
-    wxButton* specularMaterial;
-    wxButton* emissionMaterial;
-    vec4 colorFromDialog;
-    const vec4 GetDialog(Material *m, int i);
+    QColorButton* ambientMaterial;
+    QColorButton* diffuseMaterial;
+    QColorButton* specularMaterial;
+    QColorButton* emissionMaterial;
+
     //void IncorrectFormat(wxString str);
 };

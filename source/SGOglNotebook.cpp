@@ -47,29 +47,30 @@
 #include "SGOglTextureEnvNBPage.h"
 #include "SGFixedGLState.h"
 #include "SGTextures.h"
+#include "SGFrame.h"
 
-SGOglNotebook::SGOglNotebook( wxWindow *parent, wxWindowID id)
-: wxNotebook(parent, id, wxDefaultPosition, wxSize(800,300))
+SGOglNotebook::SGOglNotebook(SGFrame * parent)
+: QTabWidget(parent)
 {
+    m_parent = parent;
+
     glState = new SGFixedGLState();
-    textures = new SGTextures(this);
+    textures = new SGTextures(glState);
 
-    lightPage        = new SGOglLightNBPage        (this, wxID_ANY);
-    materialPage     = new SGOglMaterialNBPage     (this, wxID_ANY);
-    fogPage          = new SGOglFogNBPage          (this, wxID_ANY);
-    textureCoordPage = new SGOglTextureCoordNBPage (this, wxID_ANY);
-    textureEnvPage   = new SGOglTextureEnvNBPage   (this, wxID_ANY);
+    lightPage        = new SGOglLightNBPage        (this);
+    materialPage     = new SGOglMaterialNBPage     (this);
+    fogPage          = new SGOglFogNBPage          (this);
+    textureCoordPage = new SGOglTextureCoordNBPage (this);
+    textureEnvPage   = new SGOglTextureEnvNBPage   (this);
 
-    AddPage(lightPage   , wxT("LIGHT"),   true );
-    AddPage(materialPage, wxT("MATERIAL"), false);
-    AddPage(fogPage     , wxT("FOG"), false);
-    AddPage(textureCoordPage, wxT("TEXTURE COORDINATE SET"), false);
-    AddPage(textureEnvPage, wxT("TEXTURE ENVIRONMENT SET"), false);
-
-    SetAutoLayout(TRUE);
+    addTab(lightPage   , tr("LIGHT"));
+    addTab(materialPage, tr("MATERIAL"));
+    addTab(fogPage     , tr("FOG"));
+    addTab(textureCoordPage, tr("TEXTURE COORDINATE SET"));
+    addTab(textureEnvPage, tr("TEXTURE ENVIRONMENT SET"));
 }
 
-void SGOglNotebook::Clean()
+SGOglNotebook::~SGOglNotebook()
 {
     delete glState;
     delete textures;

@@ -188,7 +188,7 @@ void SGFixedGLState::InitTexture(int num)
     m_texture[num]->textureCombineOperand0 = GL_SRC_COLOR;
     m_texture[num]->textureCombineOperand1 = GL_SRC_COLOR;
     m_texture[num]->textureCombineOperand2 = GL_SRC_COLOR;
-    m_texture[num]->textureCurrentSelection = Id::TexturesStart + num;   
+    m_texture[num]->textureCurrentSelection = (SGTextures::TextureId)num;
     m_texture[num]->texEnvColor = DEFAULT_TEX_ENV_COLOR;
     m_texture[num]->eyePlaneCoeffS = DEFAULT_EYE_PLANE_COEFF_S;
     m_texture[num]->eyePlaneCoeffT = DEFAULT_EYE_PLANE_COEFF_T;

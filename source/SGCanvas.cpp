@@ -39,6 +39,9 @@
 *                                                                       *
 ************************************************************************/
 
+#include <QMessageBox>
+#include <QKeyEvent>
+
 #include "App.h"
 #include "SGCanvas.h"
 #include "SGFixedGLState.h"
@@ -47,48 +50,19 @@
 #include "SGFrame.h"
 #include "SGShaderTextWindow.h"
 #include "SGTextures.h"
-#include <wx/textctrl.h>
-#include <png/png.h>
-
-BEGIN_EVENT_TABLE(SGCanvas, wxGLCanvas)
-EVT_PAINT(SGCanvas::OnPaint)
-EVT_MOUSE_EVENTS(SGCanvas::OnMouse)
-EVT_KEY_DOWN(SGCanvas::OnKey)
-EVT_SIZE(SGCanvas::OnSize)
-EVT_ERASE_BACKGROUND(SGCanvas::OnEventEraseBackground)
-END_EVENT_TABLE()
 
 const float SGCanvas::CameraZ = -5;
 
-SGCanvas::SGCanvas(SGFrame *frame, SGCanvasWrapper *parent, wxWindowID id,const wxPoint& pos, const wxSize& size)
-:wxGLCanvas(parent, id, pos, size, wxCLIP_CHILDREN)
+SGCanvas::SGCanvas(SGFrame *frame, SGCanvasWrapper *parent)
+:QGLWidget(parent)
 {
     m_parent = parent;
     this->m_frame = frame;
-    SetBackgroundColour(*wxBLUE);
     m_zoom= 0.8f;
     mouse.SetCanvas(this);
-    modelCurrent = Id::ModelTorus;
-    glReady = glCompiled = glLinked = gInit = false;
+    modelCurrent = SGModels::ModelTorus;
+    glReady = glCompiled = glLinked = false;
     prog = vertS = fragS = 0;
-
-    float versionString;
-    versionString = atof((char*)glGetString(GL_VERSION));
-
-    CheckGlImplementation();
-}
-
-void SGCanvas::OnEventEraseBackground(wxEraseEvent& event)
-{
-    //
-    // As this is an OpenGL window,
-    // Deliberately do nothing on an erase background event.
-    //
-}
-
-void SGCanvas::OnSize(wxSizeEvent& event)
-{
-    Update();
 }
 
 void SGCanvas::DrawLogo() const
@@ -115,18 +89,27 @@ void SGCanvas::DrawLogo() const
     glEnable(GL_LIGHTING);
 }
 
-
-void SGCanvas::OnPaint(wxPaintEvent& event)
+void SGCanvas::initializeGL()
 {
-    PrintOpenGLError();
-    wxPaintDC dc(this);
-    if (!GetContext())
-    {
-        return;
-    }
-    SetCurrent();
-    PrintOpenGLError();
+    float versionString;
+    versionString = atof((char*)glGetString(GL_VERSION));
 
+    CheckGlImplementation();
+
+    int initSuccess = glewInit();
+
+    if (initSuccess != GLEW_OK)
+    {
+        //TODO wxGetApp().Errorf("Unable to initialize GLEW.\n %s", glewGetErrorString(initSuccess));
+    }
+    else
+    {
+        glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+    }
+}
+
+void SGCanvas::paintGL()
+{
     glClearColor(0.0f,0.0f,0.0f,1.0f);
     glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
     PrintOpenGLError();
@@ -170,14 +153,13 @@ void SGCanvas::OnPaint(wxPaintEvent& event)
     glPopAttrib();
 
     glFinish();
-    SwapBuffers();
-    event.Skip();
     PrintOpenGLError();
 }
 
 void SGCanvas::GLSetup()
 {
-    GetClientSize(&m_width, &m_height);
+    m_width = width();
+    m_height = height();
     float aspect = (float) m_width / (float) m_height;
     float vp = 0.8f;
     m_left = -vp;
@@ -187,27 +169,12 @@ void SGCanvas::GLSetup()
     m_znear = 2;
     m_zfar = 10;
 
-    if(!gInit)
-    {
-        int initSuccess = glewInit();
-     
-        if (initSuccess != GLEW_OK)
-        {
-            wxGetApp().Errorf(wxT("Unable to initialize GLEW.\n %s"), glewGetErrorString(initSuccess));
-        }
-        else
-        {
-            glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-            gInit = true;
-        }
-    }
-
     SGFixedGLState *glState = GetGLState();
     glViewport(0, 0, m_width, m_height);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     PrintOpenGLError();
-    if (wxGetApp().GetFrame()->IsChecked(Id::ViewPerspective))
+    if (m_frame->isPerspective())
     {
         glFrustum(m_left * m_zoom, m_right * m_zoom, m_bottom * m_zoom, m_top * m_zoom, m_znear, m_zfar);
     }
@@ -233,7 +200,7 @@ void SGCanvas::GLSetup()
 
     PrintOpenGLError();
 
-    if(m_parent->GetMode() == Id::GLModeChoiceFixed)
+    if(m_parent->GetMode() == SGCanvasWrapper::GLModeChoiceFixed)
     {
         glUseProgram(0);
         SetupFromFixedState();
@@ -353,30 +320,42 @@ vec3 SGCanvas::GetWorldSpace(int x, int y)
     return v;
 }
 
-void SGCanvas::OnMouse(wxMouseEvent &event)
+void SGCanvas::keyPressEvent(QKeyEvent * event)
 {
-    mouse.OnMouse(event);
-    Update();
-}
-
-void SGCanvas::OnKey(wxKeyEvent &event)
-{
-    switch(event.GetKeyCode()){
-        case 312: //page down
+    switch(event->key()){
+        case Qt::Key_PageDown: //page down
             m_zoom -= 0.1f;
             break;
-        case 313: //page up
+        case Qt::Key_PageUp: //page up
             m_zoom += 0.1f;
             break;
-        case 348:
+        case Qt::Key_F7:
             m_parent->SwitchMode();
             break;
     }
-    Update();
-    event.Skip();
+
+   updateGL();
 }
 
-bool SGCanvas::LinkShaders(const GLchar *vertexShader, const GLchar *fragmentShader)
+void SGCanvas::mousePressEvent(QMouseEvent * event)
+{
+    mouse.OnMousePress(event);
+    updateGL();
+}
+
+void SGCanvas::mouseMoveEvent(QMouseEvent * event)
+{
+    mouse.OnMouseMove(event);
+    updateGL();
+}
+
+void SGCanvas::mouseReleaseEvent(QMouseEvent * event)
+{
+    mouse.OnMouseRelease(event);
+    updateGL();
+}
+
+bool SGCanvas::LinkShaders(const QString & vertexShader, const QString & fragmentShader)
 {
     GLint linked;
     SGFixedGLState *glState = GetGLState();
@@ -393,7 +372,7 @@ bool SGCanvas::LinkShaders(const GLchar *vertexShader, const GLchar *fragmentSha
 
     if(glCompiled)
     {
-        WriteMessage(wxT("Attempting to link programs...."));
+        WriteMessage(tr("Attempting to link programs...."));
         if(glIsProgram(prog))
         {
             glDeleteProgram(prog);
@@ -406,7 +385,7 @@ bool SGCanvas::LinkShaders(const GLchar *vertexShader, const GLchar *fragmentSha
         PrintInfoLog(prog);
         if (!linked)
         {
-            WriteMessage(wxT("Error in linking programs!!"));
+            WriteMessage(tr("Error in linking programs!!"));
             glLinked = false;
             return false;
         }
@@ -444,14 +423,14 @@ bool SGCanvas::LinkShaders(const GLchar *vertexShader, const GLchar *fragmentSha
             }
         }
 
-        WriteMessage(wxT("Linked programs successfully"));
+        WriteMessage(tr("Linked programs successfully"));
 
         glLinked = true;
         return true;
     }
     else
     {
-        WriteMessage(wxT("Compilation failed, not attempting link, check shader code"));
+        WriteMessage(tr("Compilation failed, not attempting link, check shader code"));
         glLinked = false;
 
         glDeleteProgram(prog);
@@ -459,7 +438,7 @@ bool SGCanvas::LinkShaders(const GLchar *vertexShader, const GLchar *fragmentSha
     }
 }
 
-bool SGCanvas::CompileShaders(const GLchar *vertexShader, const GLchar *fragmentShader)
+bool SGCanvas::CompileShaders(const QString & vertexShader, const QString & fragmentShader)
 {   
 
     GLint vertCompiled, fragCompiled;
@@ -473,32 +452,36 @@ bool SGCanvas::CompileShaders(const GLchar *vertexShader, const GLchar *fragment
     }
     vertS = glCreateShader(GL_VERTEX_SHADER);
     fragS = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(vertS, 1, (const GLchar **)&vertexShader, NULL);
-    glShaderSource(fragS, 1, (const GLchar **)&fragmentShader, NULL);
+    std::string vs = qPrintable(vertexShader);
+    std::string fs = qPrintable(fragmentShader);
+    const char *vertdata = vs.c_str();
+    const char *fragdata = fs.c_str();
+    glShaderSource(vertS, 1, (const GLchar **)&vertdata, NULL);
+    glShaderSource(fragS, 1, (const GLchar **)&fragdata, NULL);
     glCompileShader(vertS);
     glGetShaderiv(vertS, GL_COMPILE_STATUS, &vertCompiled);
     if(!vertCompiled)
     {
-        WriteMessage(wxT("Vertex shader failed to compile"));
+        WriteMessage(tr("Vertex shader failed to compile"));
         PrintInfoLog(vertS);
         glDeleteShader(vertS);
     }
     else
     {
-        WriteMessage(wxT("Vertex shader compiled successfully"));
+        WriteMessage(tr("Vertex shader compiled successfully"));
     }
     PrintInfoLog(vertS);
     glCompileShader(fragS);
     glGetShaderiv(fragS, GL_COMPILE_STATUS, &fragCompiled);
     if(!fragCompiled)
     {
-        WriteMessage(wxT("Fragment shader failed to compile"));
+        WriteMessage(tr("Fragment shader failed to compile"));
         PrintInfoLog(fragS);
         glDeleteShader(fragS);
     }
     else
     {
-        WriteMessage(wxT("Fragment shader compiled successfully"));
+        WriteMessage(tr("Fragment shader compiled successfully"));
     }
     PrintInfoLog(fragS);
 
@@ -516,9 +499,9 @@ void SGCanvas::PrintInfoLog(GLuint obj)
 {
     GLint infologLength = 0;
     int charsWritten  = 0;
-    wxString errors;
+    QString errors;
     GLchar *infoLog;
-    wxTextCtrl *text = m_frame->GetShaderTextWindow()->GetInfoBox();
+    QTextEdit *text = m_frame->GetShaderTextWindow()->GetInfoBox();
 
     if(glIsProgram(obj))
     {
@@ -530,7 +513,7 @@ void SGCanvas::PrintInfoLog(GLuint obj)
     }
     else
     {
-        text->SetValue(text->GetValue() + wxT("ERROR: No Shader or Program available"));
+        text->append(tr("ERROR: No Shader or Program available"));
     }
 
     PrintOpenGLError(); 
@@ -540,7 +523,7 @@ void SGCanvas::PrintInfoLog(GLuint obj)
         infoLog = new GLchar[infologLength];
         if (infoLog == NULL)
         {
-            text->SetValue(text->GetValue()+ wxT("ERROR: Could not allocate InfoLog buffer\n"));
+            text->append(tr("ERROR: Could not allocate InfoLog buffer\n"));
             return;
         }
         if(glIsProgram(obj))
@@ -553,12 +536,12 @@ void SGCanvas::PrintInfoLog(GLuint obj)
         }
         else
         {
-            text->SetValue(text->GetValue() + wxT("ERROR: No Shader or Program available"));
+            text->append(tr("ERROR: No Shader or Program available"));
         }
 
-        errors = wxString::Format(wxT("InfoLog:%s\n"), infoLog);
+        errors = tr("InfoLog:") + infoLog + "\n";
 
-        text->AppendText(errors);
+        text->append(errors);
 
         delete[] infoLog;
     }
@@ -568,20 +551,20 @@ int SGCanvas::SwitchToShaderMode()
 {   
     if( !m_frame->GetShaderTextWindow()->haveRefreshed)
     {
-        m_frame->GetShaderTextWindow()->Refresh();
+        m_frame->GetShaderTextWindow()->refresh();
     }
-    wxString vert= m_frame->GetShaderTextWindow()->GetVertexShaderBox()->GetValue();
-    wxString frag= m_frame->GetShaderTextWindow()->GetFragmentShaderBox()->GetValue();
+    QString vert= m_frame->GetShaderTextWindow()->GetVertexShaderBox()->toPlainText();
+    QString frag= m_frame->GetShaderTextWindow()->GetFragmentShaderBox()->toPlainText();
     LinkShaders(vert,frag);
-    Update();
+    updateGL();
     return 0;
 }
 
-void SGCanvas::WriteMessage(const wxString str)
+void SGCanvas::WriteMessage(const QString str)
 {
     m_frame->SetStatusText(str);
-    wxTextCtrl *text = m_frame->GetShaderTextWindow()->GetInfoBox();
-    text->SetValue(text->GetValue()+ str+wxT("\n"));
+    QTextEdit *text = m_frame->GetShaderTextWindow()->GetInfoBox();
+    text->append(str+tr("\n"));
 }
 
 GLint SGCanvas::GetUniLoc(unsigned int program, const GLchar *name)
@@ -590,7 +573,7 @@ GLint SGCanvas::GetUniLoc(unsigned int program, const GLchar *name)
     loc = glGetUniformLocation(program, name);
     if (loc == -1)
     {
-        WriteMessage(wxString::Format(wxT("No such uniform named \"%s\"\n"), name));
+        WriteMessage(tr("No such uniform named \"") + name + "\"\n");
     }
     PrintOpenGLError();
     return loc;
@@ -600,7 +583,7 @@ void SGCanvas::CheckGlImplementation()
 {
     int gl_major, gl_minor, gl_numTextures;
     GetGlVersion(&gl_major, &gl_minor);
-    glGetIntegerv(GL_MAX_TEXTURE_UNITS, &gl_numTextures);
+    glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS_ARB, &gl_numTextures);
     if(gl_major < 2.0)
     {
         UnsupportedOpenGLVersion();
@@ -614,27 +597,23 @@ void SGCanvas::CheckGlImplementation()
 void SGCanvas::GetGlVersion(int *major, int* minor)
 {
     const char* verstr = (const char*)glGetString(GL_VERSION);
-    if( (verstr == NULL) || (sscanf(verstr, wxT("%d.%d"), major, minor) != 2))
+    if( (verstr == NULL) || (sscanf(verstr, "%d.%d", major, minor) != 2))
     {
         *major = *minor = 0;
-        fprintf(stderr, wxT("Invalid GL_VERSION format!!!\n"));
+        fprintf(stderr, "Invalid GL_VERSION format!!!\n");
     }
 }
 
 void SGCanvas::UnsupportedOpenGLVersion()
 {
-    wxString errorString(wxString(wxT("You must have OpenGL 2.0 compliant drivers to run ShaderGen!")));
-    wxMessageDialog badValues(this, errorString, wxT("OpenGL 2.0 Driver Not Found"), wxOK | wxICON_EXCLAMATION, wxDefaultPosition);
-    if(badValues.ShowModal()==wxID_OK)
-    {
-        exit(1);
-    }
+    QString errorString(tr("You must have OpenGL 2.0 compliant drivers to run ShaderGen!"));
+    QMessageBox::critical(this, tr("OpenGL 2.0 Driver Not Found"), errorString);
+
+    exit(1);
 }
 
 void SGCanvas::NotEnoughTextureUnits(const int numTextures)
 {
-    wxString errorString;
-    errorString.Printf(wxT("Your OpenGL Graphics Card Only Supports %i Texture Units, Some ShaderGen Features May Not Work As Expected!"), numTextures);
-    wxMessageDialog insufficientTextures(this, errorString, wxT("Insufficient Texture Units"), wxOK | wxICON_EXCLAMATION, wxDefaultPosition);
-    insufficientTextures.ShowModal();
+    QString errorString(tr("Your OpenGL Graphics Card Only Supports %1 Texture Units, Some ShaderGen Features May Not Work As Expected!").arg(numTextures));
+    QMessageBox::critical(this, tr("Insufficient Texture Units"), errorString);
 }

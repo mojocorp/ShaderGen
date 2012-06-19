@@ -45,6 +45,8 @@
 
 #pragma once
 
+#include <GL/glew.h>
+
 static const float pi = 3.14159265358979323846f;
 static const float twopi = 6.28318530717958647692f;
 static const float sqrt2 = 1.4142135623730950488016887242097f;

@@ -41,8 +41,8 @@
 
 #pragma once
 
-#include "Compulsory.h"
 #include "Vector.h"
+#include "SGTextures.h"
 
 struct Light{
     bool  lightEnabled;
@@ -91,7 +91,7 @@ struct Texture{
     GLenum textureApplicationMethod;
     GLenum textureCoordinateGeneration;
     
-    Id textureCurrentSelection;
+    SGTextures::TextureId textureCurrentSelection;
 
     GLfloat textureCombineScale;
 

@@ -41,7 +41,6 @@
 
 #pragma once
 
-#include "Compulsory.h"
 #include "Vector.h"
 
 // Abstract base class representing a parametric surface.

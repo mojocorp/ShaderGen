@@ -39,130 +39,120 @@
 *                                                                       *
 ************************************************************************/
 
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QPushButton>
+
 #include "SGShaderTextWindow.h"
 #include "SGFrame.h"
-#include <wx/sizer.h>
-#include <wx/textctrl.h>
-#include <wx/notebook.h>
-#include <wx/file.h>
 #include "SGCanvas.h"
 
 const int FIXED_TYPE_POINT_SIZE = 8;
 
-BEGIN_EVENT_TABLE(SGShaderTextWindow, wxPanel)
-    EVT_COMMAND(Id::GenerateShaders, wxEVT_COMMAND_BUTTON_CLICKED, SGShaderTextWindow::Refresh)
-    EVT_COMMAND(Id::Link, wxEVT_COMMAND_BUTTON_CLICKED, SGShaderTextWindow::OnButtonLink)
-    EVT_COMMAND(Id::Compile, wxEVT_COMMAND_BUTTON_CLICKED, SGShaderTextWindow::OnButtonCompile)
-    EVT_COMMAND(Id::Build, wxEVT_COMMAND_BUTTON_CLICKED, SGShaderTextWindow::OnButtonBuild)
-    EVT_COMMAND(Id::ClearLog, wxEVT_COMMAND_BUTTON_CLICKED, SGShaderTextWindow::OnButtonClearLog)
-END_EVENT_TABLE()
-
-SGShaderTextWindow::SGShaderTextWindow(SGFrame *frame):wxPanel(frame, -1)
+SGShaderTextWindow::SGShaderTextWindow(SGFrame *frame):QFrame(frame)
 {
     m_frame = frame;
 
-    notebook = new wxNotebook(this, wxID_ANY);
+    notebook = new QTabWidget(this);
 
-    textBoxVert = new wxTextCtrl(notebook, wxID_ANY, wxT(""), wxDefaultPosition, wxSize(450,400), wxTE_MULTILINE | wxTE_RICH );
-    textBoxFrag = new wxTextCtrl(notebook, wxID_ANY, wxT(""), wxDefaultPosition, wxSize(450,400), wxTE_MULTILINE | wxTE_RICH );
-    textBoxInfo = new wxTextCtrl(notebook, wxID_ANY, "", wxDefaultPosition, wxSize(450,400), wxTE_MULTILINE | wxTE_RICH | wxTE_READONLY );
+    textBoxVert = new QTextEdit(notebook);
+    textBoxFrag = new QTextEdit(notebook);
+    textBoxInfo = new QTextEdit(notebook);
 
-    fixedFont = wxFont(FIXED_TYPE_POINT_SIZE, wxTELETYPE, wxNORMAL, wxNORMAL, false, wxT(""), wxFONTENCODING_SYSTEM );
+    QFont fixedFont("Monospace");
+    fixedFont.setStyleHint(QFont::TypeWriter);
 
-    textBoxVert->SetFont(fixedFont);
-    textBoxFrag->SetFont(fixedFont);
-    textBoxInfo->SetFont(fixedFont);
+    textBoxVert->setFont(fixedFont);
+    textBoxFrag->setFont(fixedFont);
+    textBoxInfo->setFont(fixedFont);
 
-    notebook->AddPage( textBoxVert, wxT("Vertex Shader"), TRUE);
-    notebook->AddPage( textBoxFrag, wxT("Fragment Shader"), FALSE);
-    notebook->AddPage( textBoxInfo, wxT("InfoLog"), FALSE);
+    notebook->addTab( textBoxVert, "Vertex Shader");
+    notebook->addTab( textBoxFrag, "Fragment Shader");
+    notebook->addTab( textBoxInfo, "InfoLog");
 
     haveRefreshed = haveCompiled = false;
 
-    wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
-    wxBoxSizer *button_sizer = new wxBoxSizer(wxHORIZONTAL);
+    QVBoxLayout *topSizer = new QVBoxLayout();
+    QHBoxLayout *button_sizer = new QHBoxLayout();
 
-    button_sizer->Add(new wxButton(this, Id::GenerateShaders, wxT("1. GENERATE SHADERS")),0 , wxALL | wxADJUST_MINSIZE, FIVE_PIXEL_BORDER);
-    button_sizer->Add(new wxButton(this, Id::Compile, wxT("2. COMPILE")),0 , wxALL | wxADJUST_MINSIZE, FIVE_PIXEL_BORDER);
-    button_sizer->Add(new wxButton(this, Id::Link, wxT("3. LINK")), 0, wxALL | wxADJUST_MINSIZE, FIVE_PIXEL_BORDER);
-    button_sizer->Add(new wxButton(this, Id::Build, wxT("BUILD")),0 ,wxALL | wxADJUST_MINSIZE, FIVE_PIXEL_BORDER);
-    button_sizer->Add(new wxButton(this, Id::ClearLog, wxT("CLEAR INFO LOG")),0 , wxALL | wxADJUST_MINSIZE, FIVE_PIXEL_BORDER);
+    QPushButton *pb;
+    pb = new QPushButton("1. GENERATE SHADERS", this);
+    connect(pb, SIGNAL(clicked()), SLOT(refresh()));
+    button_sizer->addWidget(pb);
 
-    topSizer->Add(notebook, 1, wxEXPAND | wxALL | wxADJUST_MINSIZE, TEN_PIXEL_BORDER);
-    topSizer->Add(button_sizer, 0, wxALIGN_CENTER | wxADJUST_MINSIZE);
+    pb = new QPushButton("2. COMPILE", this);
+    connect(pb, SIGNAL(clicked()), SLOT(compile()));
+    button_sizer->addWidget(pb);
 
-    SetAutoLayout(TRUE);
-    SetSizer(topSizer);
-    topSizer->SetSizeHints(this);
-    Show(TRUE);
-    topSizer->FitInside(frame);
+    pb = new QPushButton("3. LINK", this);
+    connect(pb, SIGNAL(clicked()), SLOT(link()));
+    button_sizer->addWidget(pb);
+
+    pb = new QPushButton("BUILD", this);
+    connect(pb, SIGNAL(clicked()), SLOT(build()));
+    button_sizer->addWidget(pb);
+
+    pb = new QPushButton("CLEAR INFO LOG", this);
+    connect(pb, SIGNAL(clicked()), SLOT(clearLog()));
+    button_sizer->addWidget(pb);
+
+    topSizer->addWidget(notebook);
+    topSizer->addLayout(button_sizer);
+
+    setLayout(topSizer);
 }
 
-void SGShaderTextWindow::OnButtonCompile(wxCommandEvent &event)
+void SGShaderTextWindow::compile()
 {
     if(haveRefreshed)
     {
-        haveCompiled = m_frame->GetCanvas()->CompileShaders(GetVertexShaderBox()->GetValue(),GetFragmentShaderBox()->GetValue());
+        haveCompiled = m_frame->GetCanvas()->CompileShaders(GetVertexShaderBox()->toPlainText(),GetFragmentShaderBox()->toPlainText());
     }
-    notebook->SetSelection(2);
+    notebook->setCurrentWidget(textBoxInfo);
 }
 
-void SGShaderTextWindow::OnButtonLink(wxCommandEvent &event)
+void SGShaderTextWindow::link()
 {
     if(haveCompiled)
     {
-        haveLinked = m_frame->GetCanvas()->LinkShaders(GetVertexShaderBox()->GetValue(),GetFragmentShaderBox()->GetValue());
-        notebook->SetSelection(2);
+        haveLinked = m_frame->GetCanvas()->LinkShaders(GetVertexShaderBox()->toPlainText(),GetFragmentShaderBox()->toPlainText());
+        notebook->setCurrentWidget(textBoxInfo);
         if(haveLinked)
         {
-            m_frame->SetCanvasMode(1);
+            m_frame->SetCanvasMode(SGCanvasWrapper::GLModeChoiceShader);
         }
 
-        bool bottomReached = false;
-
-        while(bottomReached)
-        {
-            bottomReached = textBoxInfo->ScrollLines(2);
-        }
+        textBoxInfo->textCursor().movePosition(QTextCursor::End);
     }
 }
 
-void SGShaderTextWindow::OnButtonBuild(wxCommandEvent &event)
+void SGShaderTextWindow::build()
 {
-    Refresh(event);
-    haveCompiled = m_frame->GetCanvas()->CompileShaders(GetVertexShaderBox()->GetValue(),GetFragmentShaderBox()->GetValue());
-    notebook->SetSelection(2);
+    refresh();
+    haveCompiled = m_frame->GetCanvas()->CompileShaders(GetVertexShaderBox()->toPlainText(),GetFragmentShaderBox()->toPlainText());
+    notebook->setCurrentWidget(textBoxInfo);
     if(haveCompiled)
     {
-        haveLinked = m_frame->GetCanvas()->LinkShaders(GetVertexShaderBox()->GetValue(),GetFragmentShaderBox()->GetValue());
+        haveLinked = m_frame->GetCanvas()->LinkShaders(GetVertexShaderBox()->toPlainText(),GetFragmentShaderBox()->toPlainText());
         if(haveLinked)
         {
-            m_frame->SetCanvasMode(1);
+            m_frame->SetCanvasMode(SGCanvasWrapper::GLModeChoiceShader);
         }
 
-        bool bottomReached = false;
-
-        while(bottomReached)
-        {
-            bottomReached = textBoxInfo->ScrollLines(2);
-        }
+        textBoxInfo->textCursor().movePosition(QTextCursor::End);
     }
 }
 
-void SGShaderTextWindow::Refresh(wxCommandEvent &event)
+void SGShaderTextWindow::refresh()
 {
-    Refresh();
-}
-
-void SGShaderTextWindow::Refresh()
-{
-    GetFragmentShaderBox()->SetValue(m_frame->GetFragmentShader());
-    GetVertexShaderBox()->SetValue(m_frame->GetVertexShader());
+    textBoxFrag->setPlainText(m_frame->GetFragmentShader());
+    textBoxVert->setPlainText(m_frame->GetVertexShader());
 
     haveRefreshed = true;
 }
 
-void SGShaderTextWindow::OnButtonClearLog(wxCommandEvent &event)
+void SGShaderTextWindow::clearLog()
 {
-    textBoxInfo->Clear();
+    textBoxInfo->clear();
 }
+

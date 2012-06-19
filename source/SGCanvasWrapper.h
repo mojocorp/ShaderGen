@@ -41,29 +41,34 @@
 
 #pragma once
 
-#include "Compulsory.h"
+#include <QFrame>
+#include <QButtonGroup>
 
 class SGFixedGLState;
 class SGCanvas;
 class SGFrame;
 
-class SGCanvasWrapper : public wxPanel{
+class SGCanvasWrapper : public QFrame{
+    Q_OBJECT
 public:
-    SGCanvasWrapper(SGFrame * parent, wxWindowID id= -1, const wxPoint& pos=wxDefaultPosition, const wxSize& size=wxSize(450,500));
-    int GetMode(){ return mode;}
+    //Mode for GL, Fixed or Shader
+    enum GLMode {
+        GLModeChoiceFixed,
+        GLModeChoiceShader
+    };
+
+    SGCanvasWrapper(SGFrame * parent);
+    GLMode GetMode(){ return mode;}
     SGFixedGLState* GetGLState();
     SGCanvas* GetCanvas() { return canvas; }
     void SwitchMode();
-    void OnKey(wxKeyEvent& event);
-    void SetMode(int a);
+    void SetMode(GLMode a);
 
-    void OnRadio(wxCommandEvent& event);
-
-    DECLARE_EVENT_TABLE()
-
+private slots:
+    void OnRadio(int);
 private:
     SGCanvas *canvas;
-    wxRadioBox* glModeChoice;
+    QButtonGroup* glModeChoice;
     SGFrame *m_parent;
-    int mode;
+    GLMode mode;
 };

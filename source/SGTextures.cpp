@@ -39,90 +39,38 @@
 *                                                                       *
 ************************************************************************/
 
+#include <QApplication>
+
 #include "SGTextures.h"
-#include <wx/image.h>
 #include "SGFixedGLState.h"
-#include "SGOglNotebook.h"
-#include "App.h"
-#include <png/png.h>
+
+#include <QGLWidget>
+
 #include "UtilityFunctions.h"
+#include <stdio.h>
 
-const wxString folder = "../textures/";
-
-SGTextures::SGTextures(SGOglNotebook *parent)
+SGTextures::SGTextures(SGFixedGLState *state)
 {
-    m_parent = parent;
-    TextureNames[0] = "3Dlabs.bmp";
-    TextureNames[1] = "3DlabsNormal.bmp";
-    TextureNames[2] = "rust.bmp";
-    TextureNames[3] = "leopard.bmp";
-    TextureNames[4] = "eyeball.bmp";
-    TextureNames[5] = "cobblestonesDiffuse.bmp";
-    TextureNames[6] = "cobblestonesNormal.bmp";
-    TextureNames[7] = "bricksDiffuse.bmp";
-    TextureNames[8] = "bricksNormal.bmp";
-    TextureNames[9] = "stonewallDiffuse.bmp";
-    TextureNames[10] = "stonewallNormal.bmp";
-    TextureNames[11] = "metalSheetDiffuse.bmp";
-    TextureNames[12] = "metalSheetNormal.bmp";
+    glState = state;
+    TextureNames[0] = "3DlabsLogo.png";
+    TextureNames[1] = "3DlabsNormal.png";
+    TextureNames[2] = "rust.png";
+    TextureNames[3] = "leopard.png";
+    TextureNames[4] = "eyeball.png";
+    TextureNames[5] = "cobblestonesDiffuse.png";
+    TextureNames[6] = "cobblestonesNormal.png";
+    TextureNames[7] = "bricksDiffuse.png";
+    TextureNames[8] = "bricksNormal.png";
+    TextureNames[9] = "stonewallDiffuse.png";
+    TextureNames[10] = "stonewallNormal.png";
+    TextureNames[11] = "metalSheetDiffuse.png";
+    TextureNames[12] = "metalSheetNormal.png";
     logo = 0;
     memset( textures, 0, sizeof(textures) );
 }
 
 SGTextures::~SGTextures()
 {
-}
-
-//Since wxWidgets does not handle alpha values correctly, we need this function.
-bool SGTextures::LoadPng(const char* filename)
-{
-    png_struct_def* png = png_create_read_struct(PNG_LIBPNG_VER_STRING, 0, 0, 0);
-    png_info_struct* info = png_create_info_struct(png);
-    png_info_struct* end = png_create_info_struct(png);
-
-    FILE* fp = fopen(filename, "rb");
-    if (!fp)
-    {
-        wxGetApp().Errorf("Unable to open texture file '%s'.\n", filename);
-        return false;
-    }
-    png_init_io(png, fp);
-    png_read_info(png, info);
-    int width = png_get_image_width(png, info);
-    int height = png_get_image_height(png, info);
-    png_byte colorType = png_get_color_type(png, info);
-    if (colorType != PNG_COLOR_TYPE_RGB_ALPHA && colorType != PNG_COLOR_TYPE_RGB)
-    {
-        wxGetApp().Errorf("Texture file '%s' uses an unsupported format.  For PNG files only RGB and RGBA are supported.\n", filename);
-        return false;
-    }
-
-    bool alpha = colorType == PNG_COLOR_TYPE_RGB_ALPHA;
-    int components = alpha ? 4 : 3;
-
-    if (png_get_bit_depth(png, info) != 8)
-    {
-        wxGetApp().Errorf("Texture file '%s' uses an unsupported bit depth.  For PNG files only 8 bpp is supported.\n", filename);
-        return false;
-    }
-
-    png_bytepp rows = new png_bytep[height];
-    png_bytep image = new png_byte[height * width * components];
-
-    for (int i = 0; i < height; i++)
-    {
-        rows[i] = image + i * width * components;
-    }
-
-    png_set_rows(png, info, rows);
-    png_read_image(png, rows);
-    gluBuild2DMipmaps(GL_TEXTURE_2D, components, width, height, alpha ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, image);
-
-    png_destroy_read_struct(&png, &info, &end);
-    fclose(fp);
-    delete[] image;
-    delete[] rows;
-    return alpha;
 }
 
 void SGTextures::ActivateLogo()
@@ -151,17 +99,18 @@ void SGTextures::ActivateLogo()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    if(!LoadPng(folder + "3Dlabs.png"))
+    QImage image( qApp->applicationDirPath() + "/textures/3DlabsLogo.png" );
+    if(image.isNull())
     {
-        wxGetApp().Errorf("Unable to load image 3Dlabs logo");
+        printf("Unable to load image 3Dlabs logo\n");
         return;
     }
+    image = QGLWidget::convertToGLFormat(image.mirrored());
+    gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGBA, image.width(), image.height(),GL_RGBA, GL_UNSIGNED_BYTE, image.bits());
 }
 
-void SGTextures::Activate(Id id, GLint unit)
+void SGTextures::Activate(TextureId id, GLint unit)
 {
-    PrintOpenGLError();
-    SGFixedGLState *glState = m_parent->GetGLState();
     PrintOpenGLError();
 
     glActiveTexture(GL_TEXTURE0 + unit);
@@ -220,7 +169,7 @@ void SGTextures::Activate(Id id, GLint unit)
 
     glEnable(GL_TEXTURE_2D);
 
-    int index = id - Id::TexturesStart;
+    int index = id;
 
     if( textures[index].glid )
     {
@@ -240,16 +189,14 @@ void SGTextures::Activate(Id id, GLint unit)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-    wxImage image( folder + TextureNames[index] );
-    image = image.Mirror(FALSE);
-
-    if( !image.Ok())
+    QImage image( qApp->applicationDirPath() + "/textures/" + TextureNames[index] );
+    if( image.isNull())
     {
-        wxGetApp().Errorf("Unable to load image %s", TextureNames[index].c_str());
+        //TODO wxGetApp().Errorf("Unable to load image %s", TextureNames[index].c_str());
         return;
     }
-    gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGBA, image.GetWidth(), image.GetHeight(), GL_RGB, GL_UNSIGNED_BYTE, image.GetData());
-
+    image = QGLWidget::convertToGLFormat(image.mirrored());
+    gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGBA, image.width(), image.height(),GL_RGBA, GL_UNSIGNED_BYTE, image.bits());
 }
 
 void SGTextures::Deactivate(GLint unit)

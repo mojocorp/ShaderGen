@@ -41,23 +41,26 @@
 
 #pragma once
 
-#include "Compulsory.h"
+#include <GL/glew.h>
+
+#include <QGLWidget>
+
 #include "SGCanvasMouseHandler.h"
 #include "Vector.h"
 #include "SGCanvasWrapper.h"
-#include <wx/glcanvas.h>
+#include "SGModels.h"
 
 class SGFrame;
 
-class SGCanvas : public wxGLCanvas
+class SGCanvas : public QGLWidget
 {
 public:
-    SGCanvas(SGFrame* frame, SGCanvasWrapper* parent, wxWindowID id= -1, const wxPoint& pos=wxDefaultPosition, const wxSize& size=wxDefaultSize);
+    SGCanvas(SGFrame* frame, SGCanvasWrapper* parent);
     SGFixedGLState* GetGLState() { return m_parent->GetGLState(); }
     SGFrame* GetFrame(){ return m_frame;}
 
-    bool LinkShaders(const GLchar *vertexShader, const GLchar *fragmentShader);
-    bool CompileShaders(const GLchar *vertexShader, const GLchar *fragmentShader);
+    bool LinkShaders(const QString & vertexShader, const QString & fragmentShader);
+    bool CompileShaders(const QString & vertexShader, const QString & fragmentShader);
 
     int GetMode() { return m_parent->GetMode();}
     int SwitchToShaderMode();
@@ -67,44 +70,37 @@ public:
 
     vec3 GetWorldSpace(int x, int y);
 
-    void OnPaint(wxPaintEvent& event);
+    void initializeGL();
+    void paintGL();
     void SetZoom(float zoom) { m_zoom = zoom;}
     void GLSetup();
-    void Update() { Refresh(FALSE); }
-    void SetModel(Id id) { modelCurrent = id;}
-    void OnKey(wxKeyEvent& event);
+    void SetModel(SGModels::ModelId id) { modelCurrent = id;}
     void PrintInfoLog(GLuint obj);
-    void OnEventEraseBackground(wxEraseEvent& event);
-    void OnSize(wxSizeEvent& event);
-    void OnMouse(wxMouseEvent &event);
 
     GLuint logo;
-    
+protected:
+    virtual void keyPressEvent(QKeyEvent * event);
+    virtual void mousePressEvent(QMouseEvent * event);
+    virtual void mouseMoveEvent(QMouseEvent * event);
+    virtual void mouseReleaseEvent(QMouseEvent * event);
 private:
     SGCanvasWrapper *m_parent;
     SGCanvasMouseHandler mouse;
-    Id modelCurrent;
+    SGModels::ModelId modelCurrent;
     SGFrame* m_frame;
     int m_width, m_height;
     float m_left, m_right, m_bottom, m_top, m_znear, m_zfar, m_zoom;
 
     GLint GetUniLoc(unsigned int program, const GLchar *name);
 
-    bool glReady, glCompiled, glLinked, gInit;
+    bool glReady, glCompiled, glLinked;
     unsigned int vertS, fragS, prog;
 
     void SetupFromFixedState();
-    void WriteMessage(const wxString str);
-    void SGCanvas::DrawLogo() const;
+    void WriteMessage(const QString str);
+    void DrawLogo() const;
     void UnsupportedOpenGLVersion(void);
     void GetGlVersion(int *major, int *minor);
     void CheckGlImplementation();
     void NotEnoughTextureUnits(const int numTextures);
-
-    void OnMouseLeftDown(wxMouseEvent &event);
-    void OnMouseLeftUp(wxMouseEvent &event);
-    void OnMouseRightDown(wxMouseEvent &event);
-    void OnMouseRightUp(wxMouseEvent &event);
-
-DECLARE_EVENT_TABLE()
 };

@@ -41,17 +41,19 @@
 
 #pragma once
 
-#include "Compulsory.h"
 #include "Vector.h"
 
 class SGCanvas;
+class QMouseEvent;
 
 class SGCanvasMouseHandler
 {
 public :
     SGCanvasMouseHandler();
     SGCanvasMouseHandler(SGCanvas * canvas);
-    void OnMouse(wxMouseEvent &event);
+    void OnMousePress(QMouseEvent *event);
+    void OnMouseMove(QMouseEvent *event);
+    void OnMouseRelease(QMouseEvent *event);
     void LoadMatrix() const;
     void MultMatrix() const { glMultMatrixf((float*) &xform); }
     void Reset();
@@ -62,15 +64,12 @@ public :
     static const int Delay;
 
 private:
-    long previous;
     int frames;
     SGCanvas* canvas;
     bool validStart;
     vec3 vStart;
     vec3 vPrev;
     vec3 vInc;
-    vec3 inertiaAxis;
-    float inertiaTheta;
     float startZoom;
     mat4 mStart;
     mat4 xform;
