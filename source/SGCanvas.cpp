@@ -50,6 +50,7 @@
 #include "SGFrame.h"
 #include "SGShaderTextWindow.h"
 #include "SGTextures.h"
+#include <stdio.h>
 
 const float SGCanvas::CameraZ = -5;
 
