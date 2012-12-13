@@ -57,7 +57,7 @@ int TParametricSurface::Draw(int slices)
     for (float u = 0; u < 1 - du / 2; u += du)
     {
         glBegin(GL_QUAD_STRIP);
-        if (flipped = Flip(vec2(u,0)))
+        if ((flipped = Flip(vec2(u,0))))
         {
             for (float v = 0; v < 1 + dv / 2; v += dv)
             {

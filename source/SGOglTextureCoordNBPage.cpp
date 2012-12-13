@@ -208,7 +208,7 @@ SGOglTextureCoordNBPage::SGOglTextureCoordNBPage(SGOglNotebook* parent)
     layout()->addWidget(texBox);
 }
 
-void SGOglTextureCoordNBPage::OnRadioTextureCoordUnit(int index)
+void SGOglTextureCoordNBPage::OnRadioTextureCoordUnit(int)
 {
     UpdateWidgets();
     m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);

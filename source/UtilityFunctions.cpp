@@ -46,7 +46,7 @@
 #include "SGFrame.h"
 
 // Returns 1 if an OpenGL error occurred, 0 otherwise.
-int printOglError(char *file, int line)
+int printOglError(const char *file, int line)
 {
     GLenum glErr;
     int    retCode = 0;

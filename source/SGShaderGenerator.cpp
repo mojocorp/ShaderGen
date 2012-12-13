@@ -54,7 +54,8 @@
 const float LOG2E = 1.442695f;
 
 SGShaderGenerator::SGShaderGenerator()
- : texturesEnabled(GL_FALSE), 
+ : fragShader(" "),
+   vertShader(" "),
    fLightPoint(false),
    fLightSpot(false),
    fLightDir(false),
@@ -67,8 +68,7 @@ SGShaderGenerator::SGShaderGenerator()
    texGenEye(GL_FALSE),
    texGenObject(GL_FALSE),
    texGenNormal(GL_FALSE),
-   fragShader(" "),
-   vertShader(" "),
+   texturesEnabled(GL_FALSE),
    currentTexture()
 {
     for(int i = 0; i < NUM_TEXTURES; i++)

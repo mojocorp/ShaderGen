@@ -162,7 +162,7 @@ void SGCanvasMouseHandler::OnMouseMove(QMouseEvent *event)
     }
 }
 
-void SGCanvasMouseHandler::OnMouseRelease(QMouseEvent *event)
+void SGCanvasMouseHandler::OnMouseRelease(QMouseEvent *)
 {
     validStart = false;
 }

@@ -92,9 +92,6 @@ void SGCanvas::DrawLogo() const
 
 void SGCanvas::initializeGL()
 {
-    float versionString;
-    versionString = atof((char*)glGetString(GL_VERSION));
-
     CheckGlImplementation();
 
     int initSuccess = glewInit();
@@ -139,7 +136,7 @@ void SGCanvas::paintGL()
     }
 
     PrintOpenGLError();
-    SGFixedGLState *glState = GetGLState();
+
     glViewport(0, 0, m_width, m_height);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
@@ -359,7 +356,6 @@ void SGCanvas::mouseReleaseEvent(QMouseEvent * event)
 bool SGCanvas::LinkShaders(const QString & vertexShader, const QString & fragmentShader)
 {
     GLint linked;
-    SGFixedGLState *glState = GetGLState();
 
     if(glLinked)
     {
