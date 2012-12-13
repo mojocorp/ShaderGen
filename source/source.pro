@@ -16,8 +16,7 @@ LIBS += -lGLU
 }
 
 # Input
-HEADERS += App.h \
-           AboutDialog.h \
+HEADERS += AboutDialog.h \
            SGCanvasWrapper.h \
            SGFrame.h \
            SGFixedGLState.h \

@@ -43,7 +43,6 @@
 #include <QGroupBox>
 #include <QRadioButton>
 
-#include "App.h"
 #include "SGCanvasWrapper.h"
 #include "SGCanvas.h"
 #include "SGFrame.h"

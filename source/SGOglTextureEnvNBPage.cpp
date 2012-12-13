@@ -49,7 +49,6 @@
 #include "SGOglNotebook.h"
 #include "SGFixedGLState.h"
 #include "UtilityFunctions.h"
-#include "App.h"
 #include "SGFrame.h"
 #include "SGCanvas.h"
 

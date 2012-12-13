@@ -42,7 +42,6 @@
 #include <QMessageBox>
 #include <QKeyEvent>
 
-#include "App.h"
 #include "SGCanvas.h"
 #include "SGFixedGLState.h"
 #include "SGCanvasMouseHandler.h"

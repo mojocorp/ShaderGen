@@ -46,7 +46,6 @@
 #include <QActionGroup>
 #include <QBoxLayout>
 
-#include "App.h"
 #include "AboutDialog.h"
 #include "SGFrame.h"
 #include "SGCanvasWrapper.h"
@@ -86,8 +85,6 @@ SGFrame::SGFrame(const QString& title)
     topSizer->addWidget(oglNotebook);
 
     setCentralWidget(topSizer);
-
-    //TODO SetIcon(wxIcon(wxT("IDI_ICON1"), wxBITMAP_TYPE_ICO_RESOURCE));
 }
 
 SGFrame::~SGFrame()
