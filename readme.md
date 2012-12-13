@@ -3,6 +3,8 @@ ShaderGen
 
 [![Build Status](https://secure.travis-ci.org/mojocorp/ShaderGen.png)](http://travis-ci.org/mojocorp/ShaderGen)
 
+<img src="https://raw.github.com/mojocorp/ShaderGen/master/screen-capture.jpg" >
+
 ### Description ###
 
 3DLabs' ShaderGen ported to Qt 4.
