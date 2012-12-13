@@ -125,7 +125,7 @@ private:
 
     QButtonGroup *texApplyGroup, *textureGroup, *texCheckBoxGroup;
     
-    QCheckBox *texEnable, *tex0CheckBox, *tex1CheckBox, *tex2CheckBox,
+    QCheckBox *tex0CheckBox, *tex1CheckBox, *tex2CheckBox,
     *tex3CheckBox, *tex4CheckBox;
     
     QComboBox  *texChoose, *texCombineModeChoose, *texCombineScaleChoose,

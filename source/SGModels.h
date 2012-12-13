@@ -56,7 +56,4 @@ public:
     SGModels();
     ~SGModels();
     void DrawModel(ModelId id);
-    ModelId CurrentId() {return currentId;}
-private:
-    ModelId currentId;
 };
