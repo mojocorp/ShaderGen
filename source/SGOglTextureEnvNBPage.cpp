@@ -54,7 +54,7 @@
 #include "SGCanvas.h"
 
 SGOglTextureEnvNBPage::SGOglTextureEnvNBPage(SGOglNotebook* parent)
-:QWidget(parent)
+    :QWidget(parent)
 {
     m_parent = parent;
     SGFixedGLState* glState = m_parent->GetGLState();
@@ -328,23 +328,23 @@ void SGOglTextureEnvNBPage::OnCheckbox(int index)
     glState->SetTextureChanged(true);
     glState->SetTextureEnable(texCheckBoxGroup->checkedId() != -1);
     switch(index){
-        case 0:
-            glState->GetTexture(0)->textureEnabled = tex0CheckBox->isChecked();
-            break;
-        case 1:
-            glState->GetTexture(1)->textureEnabled = tex1CheckBox->isChecked();
-            break;
-        case 2:
-            glState->GetTexture(2)->textureEnabled = tex2CheckBox->isChecked();
-            break;
-        case 3:
-            glState->GetTexture(3)->textureEnabled = tex3CheckBox->isChecked();
-            break;
-        case 4:
-            glState->GetTexture(4)->textureEnabled = tex4CheckBox->isChecked();
-            break;
-        default:
-            break;   
+    case 0:
+        glState->GetTexture(0)->textureEnabled = tex0CheckBox->isChecked();
+        break;
+    case 1:
+        glState->GetTexture(1)->textureEnabled = tex1CheckBox->isChecked();
+        break;
+    case 2:
+        glState->GetTexture(2)->textureEnabled = tex2CheckBox->isChecked();
+        break;
+    case 3:
+        glState->GetTexture(3)->textureEnabled = tex3CheckBox->isChecked();
+        break;
+    case 4:
+        glState->GetTexture(4)->textureEnabled = tex4CheckBox->isChecked();
+        break;
+    default:
+        break;
     }
     m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();
@@ -366,29 +366,29 @@ void SGOglTextureEnvNBPage::OnChoiceTextureCombineMode()
     glState->SetTextureChanged(true);
     Texture* texture = glState->GetTexture(textureGroup->checkedId());
     switch(texCombineModeChoose->currentIndex()){
-                case 0:
-                    texture->textureCombineMode = GL_REPLACE;
-                    break;
-                case 1:
-                    texture->textureCombineMode = GL_MODULATE;
-                    break;
-                case 2:
-                    texture->textureCombineMode = GL_ADD;
-                    break;
-                case 3:
-                    texture->textureCombineMode = GL_ADD_SIGNED;
-                    break;
-                case 4:
-                    texture->textureCombineMode = GL_INTERPOLATE;
-                    break;
-                case 5:
-                    texture->textureCombineMode = GL_SUBTRACT;
-                    break;
-                case 6:
-                    texture->textureCombineMode = GL_DOT3_RGB;
-                    break;
-                default:
-                    break;                        
+    case 0:
+        texture->textureCombineMode = GL_REPLACE;
+        break;
+    case 1:
+        texture->textureCombineMode = GL_MODULATE;
+        break;
+    case 2:
+        texture->textureCombineMode = GL_ADD;
+        break;
+    case 3:
+        texture->textureCombineMode = GL_ADD_SIGNED;
+        break;
+    case 4:
+        texture->textureCombineMode = GL_INTERPOLATE;
+        break;
+    case 5:
+        texture->textureCombineMode = GL_SUBTRACT;
+        break;
+    case 6:
+        texture->textureCombineMode = GL_DOT3_RGB;
+        break;
+    default:
+        break;
     }
     m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();
@@ -400,14 +400,14 @@ void SGOglTextureEnvNBPage::OnChoiceTextureCombineOperandArg0()
     glState->SetTextureChanged(true);
     Texture* texture = glState->GetTexture(textureGroup->checkedId());
     switch(texCombineOperandArg0Choose->currentIndex()){
-                case 0:
-                    texture->textureCombineOperand0 = GL_SRC_COLOR;
-                    break;
-                case 1:
-                    texture->textureCombineOperand0 = GL_ONE_MINUS_SRC_COLOR;
-                    break;
-                default:
-                    break;
+    case 0:
+        texture->textureCombineOperand0 = GL_SRC_COLOR;
+        break;
+    case 1:
+        texture->textureCombineOperand0 = GL_ONE_MINUS_SRC_COLOR;
+        break;
+    default:
+        break;
     }
     m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();
@@ -419,14 +419,14 @@ void SGOglTextureEnvNBPage::OnChoiceTextureCombineOperandArg1()
     glState->SetTextureChanged(true);
     Texture* texture = glState->GetTexture(textureGroup->checkedId());
     switch(texCombineOperandArg1Choose->currentIndex()){
-                case 0:
-                    texture->textureCombineOperand1 = GL_SRC_COLOR;
-                    break;
-                case 1:
-                    texture->textureCombineOperand1 = GL_ONE_MINUS_SRC_COLOR;
-                    break;
-                default:
-                    break;
+    case 0:
+        texture->textureCombineOperand1 = GL_SRC_COLOR;
+        break;
+    case 1:
+        texture->textureCombineOperand1 = GL_ONE_MINUS_SRC_COLOR;
+        break;
+    default:
+        break;
     }
     m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();
@@ -438,14 +438,14 @@ void SGOglTextureEnvNBPage::OnChoiceTextureCombineOperandArg2()
     glState->SetTextureChanged(true);
     Texture* texture = glState->GetTexture(textureGroup->checkedId());
     switch(texCombineOperandArg2Choose->currentIndex()){
-                case 0:
-                    texture->textureCombineOperand2 = GL_SRC_COLOR;
-                    break;
-                case 1:
-                    texture->textureCombineOperand2 = GL_ONE_MINUS_SRC_COLOR;
-                    break;
-                default:
-                    break;
+    case 0:
+        texture->textureCombineOperand2 = GL_SRC_COLOR;
+        break;
+    case 1:
+        texture->textureCombineOperand2 = GL_ONE_MINUS_SRC_COLOR;
+        break;
+    default:
+        break;
     }
     m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();
@@ -467,20 +467,20 @@ void SGOglTextureEnvNBPage::OnChoiceTextureCombineSrc0RGB()
     glState->SetTextureChanged(true);
     Texture* texture = glState->GetTexture(textureGroup->checkedId());
     switch(texCombineSrc0RGBChoose->currentIndex()){
-                case 0:
-                    texture->textureCombineSource0 = GL_TEXTURE;
-                    break;
-                case 1:
-                    texture->textureCombineSource0 = GL_CONSTANT;
-                    break;
-                case 2:
-                    texture->textureCombineSource0 = GL_PRIMARY_COLOR;
-                    break;
-                case 3:
-                    texture->textureCombineSource0 = GL_PREVIOUS;
-                    break;
-                default:
-                    break;
+    case 0:
+        texture->textureCombineSource0 = GL_TEXTURE;
+        break;
+    case 1:
+        texture->textureCombineSource0 = GL_CONSTANT;
+        break;
+    case 2:
+        texture->textureCombineSource0 = GL_PRIMARY_COLOR;
+        break;
+    case 3:
+        texture->textureCombineSource0 = GL_PREVIOUS;
+        break;
+    default:
+        break;
     }
     m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();
@@ -492,20 +492,20 @@ void SGOglTextureEnvNBPage::OnChoiceTextureCombineSrc1RGB()
     glState->SetTextureChanged(true);
     Texture* texture = glState->GetTexture(textureGroup->checkedId());
     switch(texCombineSrc1RGBChoose->currentIndex()){
-                case 0:
-                    texture->textureCombineSource1 = GL_TEXTURE;
-                    break;
-                case 1:
-                    texture->textureCombineSource1 = GL_CONSTANT;
-                    break;
-                case 2:
-                    texture->textureCombineSource1 = GL_PRIMARY_COLOR;
-                    break;
-                case 3:
-                    texture->textureCombineSource1 = GL_PREVIOUS;
-                    break;
-                default:
-                    break;
+    case 0:
+        texture->textureCombineSource1 = GL_TEXTURE;
+        break;
+    case 1:
+        texture->textureCombineSource1 = GL_CONSTANT;
+        break;
+    case 2:
+        texture->textureCombineSource1 = GL_PRIMARY_COLOR;
+        break;
+    case 3:
+        texture->textureCombineSource1 = GL_PREVIOUS;
+        break;
+    default:
+        break;
     }
     m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();
@@ -517,20 +517,20 @@ void SGOglTextureEnvNBPage::OnChoiceTextureCombineSrc2RGB()
     glState->SetTextureChanged(true);
     Texture* texture = glState->GetTexture(textureGroup->checkedId());
     switch(texCombineSrc2RGBChoose->currentIndex()){
-                case 0:
-                    texture->textureCombineSource2 = GL_TEXTURE;
-                    break;
-                case 1:
-                    texture->textureCombineSource2 = GL_CONSTANT;
-                    break;
-                case 2:
-                    texture->textureCombineSource2 = GL_PRIMARY_COLOR;
-                    break;
-                case 3:
-                    texture->textureCombineSource2 = GL_PREVIOUS;
-                    break;
-                default:
-                    break;
+    case 0:
+        texture->textureCombineSource2 = GL_TEXTURE;
+        break;
+    case 1:
+        texture->textureCombineSource2 = GL_CONSTANT;
+        break;
+    case 2:
+        texture->textureCombineSource2 = GL_PRIMARY_COLOR;
+        break;
+    case 3:
+        texture->textureCombineSource2 = GL_PREVIOUS;
+        break;
+    default:
+        break;
     }
     m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();
@@ -596,137 +596,137 @@ void SGOglTextureEnvNBPage::UpdateWidgets()
     }
 
     switch(texture->textureApplicationMethod){
-        case GL_REPLACE:
-            texApplyGroup->button(TEXTURE_APPLICATION_METHOD_REPLACE)->setChecked(true);
-            DisableCombine();
-            break;
-        case GL_MODULATE:
-            texApplyGroup->button(TEXTURE_APPLICATION_METHOD_MODULATE)->setChecked(true);
-            DisableCombine();
-            break;
-        case GL_DECAL:
-            texApplyGroup->button(TEXTURE_APPLICATION_METHOD_DECAL)->setChecked(true);
-            DisableCombine();
-            break;
-        case GL_BLEND:
-            texApplyGroup->button(TEXTURE_APPLICATION_METHOD_BLEND)->setChecked(true);
-            DisableCombine();
-            break;
-        case GL_ADD:
-            texApplyGroup->button(TEXTURE_APPLICATION_METHOD_ADD)->setChecked(true);
-            DisableCombine();
-            break;
-        case GL_COMBINE:
-            texApplyGroup->button(TEXTURE_APPLICATION_METHOD_COMBINE)->setChecked(true);
-            EnableCombine();
-            break;
-        default:
-            texApplyGroup->button(TEXTURE_APPLICATION_METHOD_MODULATE)->setChecked(true);
-            DisableCombine();
-            break;
+    case GL_REPLACE:
+        texApplyGroup->button(TEXTURE_APPLICATION_METHOD_REPLACE)->setChecked(true);
+        DisableCombine();
+        break;
+    case GL_MODULATE:
+        texApplyGroup->button(TEXTURE_APPLICATION_METHOD_MODULATE)->setChecked(true);
+        DisableCombine();
+        break;
+    case GL_DECAL:
+        texApplyGroup->button(TEXTURE_APPLICATION_METHOD_DECAL)->setChecked(true);
+        DisableCombine();
+        break;
+    case GL_BLEND:
+        texApplyGroup->button(TEXTURE_APPLICATION_METHOD_BLEND)->setChecked(true);
+        DisableCombine();
+        break;
+    case GL_ADD:
+        texApplyGroup->button(TEXTURE_APPLICATION_METHOD_ADD)->setChecked(true);
+        DisableCombine();
+        break;
+    case GL_COMBINE:
+        texApplyGroup->button(TEXTURE_APPLICATION_METHOD_COMBINE)->setChecked(true);
+        EnableCombine();
+        break;
+    default:
+        texApplyGroup->button(TEXTURE_APPLICATION_METHOD_MODULATE)->setChecked(true);
+        DisableCombine();
+        break;
     }
     switch(texture->textureCombineMode){
-        case GL_REPLACE:
-            texCombineModeChoose->setCurrentIndex(COMBINE_MODE_REPLACE);
-            break;
-        case GL_MODULATE:
-            texCombineModeChoose->setCurrentIndex(COMBINE_MODE_MODULATE);
-            break;
-        case GL_ADD:
-            texCombineModeChoose->setCurrentIndex(COMBINE_MODE_ADD);
-            break;
-        case GL_ADD_SIGNED:
-            texCombineModeChoose->setCurrentIndex(COMBINE_MODE_ADD_SIGNED);
-            break;
-        case GL_INTERPOLATE:
-            texCombineModeChoose->setCurrentIndex(COMBINE_MODE_INTERPOLATE);
-            break;
-        case GL_SUBTRACT:
-            texCombineModeChoose->setCurrentIndex(COMBINE_MODE_SUBTRACT);
-            break;
-        case GL_DOT3_RGB:
-            texCombineModeChoose->setCurrentIndex(COMBINE_MODE_DOT3_RGB);
-            break;
-        default:
-            texCombineModeChoose->setCurrentIndex(COMBINE_MODE_MODULATE);
+    case GL_REPLACE:
+        texCombineModeChoose->setCurrentIndex(COMBINE_MODE_REPLACE);
+        break;
+    case GL_MODULATE:
+        texCombineModeChoose->setCurrentIndex(COMBINE_MODE_MODULATE);
+        break;
+    case GL_ADD:
+        texCombineModeChoose->setCurrentIndex(COMBINE_MODE_ADD);
+        break;
+    case GL_ADD_SIGNED:
+        texCombineModeChoose->setCurrentIndex(COMBINE_MODE_ADD_SIGNED);
+        break;
+    case GL_INTERPOLATE:
+        texCombineModeChoose->setCurrentIndex(COMBINE_MODE_INTERPOLATE);
+        break;
+    case GL_SUBTRACT:
+        texCombineModeChoose->setCurrentIndex(COMBINE_MODE_SUBTRACT);
+        break;
+    case GL_DOT3_RGB:
+        texCombineModeChoose->setCurrentIndex(COMBINE_MODE_DOT3_RGB);
+        break;
+    default:
+        texCombineModeChoose->setCurrentIndex(COMBINE_MODE_MODULATE);
     }
     switch(texture->textureCombineSource0){
-        case GL_TEXTURE:
-            texCombineSrc0RGBChoose->setCurrentIndex(COMBINE_SOURCE_TEXTURE);
-            break;
-        case GL_CONSTANT:
-            texCombineSrc0RGBChoose->setCurrentIndex(COMBINE_SOURCE_CONSTANT);
-            break;
-        case GL_PRIMARY_COLOR:
-            texCombineSrc0RGBChoose->setCurrentIndex(COMBINE_SOURCE_PRIMARY_COLOR);
-            break;
-        case GL_PREVIOUS:
-            texCombineSrc0RGBChoose->setCurrentIndex(COMBINE_SOURCE_PREVIOUS);
-            break;
-        default:
-            break;
+    case GL_TEXTURE:
+        texCombineSrc0RGBChoose->setCurrentIndex(COMBINE_SOURCE_TEXTURE);
+        break;
+    case GL_CONSTANT:
+        texCombineSrc0RGBChoose->setCurrentIndex(COMBINE_SOURCE_CONSTANT);
+        break;
+    case GL_PRIMARY_COLOR:
+        texCombineSrc0RGBChoose->setCurrentIndex(COMBINE_SOURCE_PRIMARY_COLOR);
+        break;
+    case GL_PREVIOUS:
+        texCombineSrc0RGBChoose->setCurrentIndex(COMBINE_SOURCE_PREVIOUS);
+        break;
+    default:
+        break;
     }
     switch(texture->textureCombineSource1){
-        case GL_TEXTURE:
-            texCombineSrc1RGBChoose->setCurrentIndex(COMBINE_SOURCE_TEXTURE);
-            break;
-        case GL_CONSTANT:
-            texCombineSrc1RGBChoose->setCurrentIndex(COMBINE_SOURCE_CONSTANT);
-            break;
-        case GL_PRIMARY_COLOR:
-            texCombineSrc1RGBChoose->setCurrentIndex(COMBINE_SOURCE_PRIMARY_COLOR);
-            break;
-        case GL_PREVIOUS:
-            texCombineSrc1RGBChoose->setCurrentIndex(COMBINE_SOURCE_PREVIOUS);
-            break;
-        default:
-            break;
+    case GL_TEXTURE:
+        texCombineSrc1RGBChoose->setCurrentIndex(COMBINE_SOURCE_TEXTURE);
+        break;
+    case GL_CONSTANT:
+        texCombineSrc1RGBChoose->setCurrentIndex(COMBINE_SOURCE_CONSTANT);
+        break;
+    case GL_PRIMARY_COLOR:
+        texCombineSrc1RGBChoose->setCurrentIndex(COMBINE_SOURCE_PRIMARY_COLOR);
+        break;
+    case GL_PREVIOUS:
+        texCombineSrc1RGBChoose->setCurrentIndex(COMBINE_SOURCE_PREVIOUS);
+        break;
+    default:
+        break;
     }
     switch(texture->textureCombineSource2){
-        case GL_TEXTURE:
-            texCombineSrc2RGBChoose->setCurrentIndex(COMBINE_SOURCE_TEXTURE);
-            break;
-        case GL_CONSTANT:
-            texCombineSrc2RGBChoose->setCurrentIndex(COMBINE_SOURCE_CONSTANT);
-            break;
-        case GL_PRIMARY_COLOR:
-            texCombineSrc2RGBChoose->setCurrentIndex(COMBINE_SOURCE_PRIMARY_COLOR);
-            break;
-        case GL_PREVIOUS:
-            texCombineSrc2RGBChoose->setCurrentIndex(COMBINE_SOURCE_PREVIOUS);
-            break;
-        default:
-            break;
+    case GL_TEXTURE:
+        texCombineSrc2RGBChoose->setCurrentIndex(COMBINE_SOURCE_TEXTURE);
+        break;
+    case GL_CONSTANT:
+        texCombineSrc2RGBChoose->setCurrentIndex(COMBINE_SOURCE_CONSTANT);
+        break;
+    case GL_PRIMARY_COLOR:
+        texCombineSrc2RGBChoose->setCurrentIndex(COMBINE_SOURCE_PRIMARY_COLOR);
+        break;
+    case GL_PREVIOUS:
+        texCombineSrc2RGBChoose->setCurrentIndex(COMBINE_SOURCE_PREVIOUS);
+        break;
+    default:
+        break;
     }
     switch(texture->textureCombineOperand0){
-        case GL_SRC_COLOR:
-            texCombineOperandArg0Choose->setCurrentIndex(COMBINE_OPERAND_SRC_COLOR);
-            break;
-        case GL_ONE_MINUS_SRC_COLOR:
-            texCombineOperandArg0Choose->setCurrentIndex(COMBINE_OPERAND_ONE_MINUS_SRC_COLOR);
-            break;
-        default:
-            break;
+    case GL_SRC_COLOR:
+        texCombineOperandArg0Choose->setCurrentIndex(COMBINE_OPERAND_SRC_COLOR);
+        break;
+    case GL_ONE_MINUS_SRC_COLOR:
+        texCombineOperandArg0Choose->setCurrentIndex(COMBINE_OPERAND_ONE_MINUS_SRC_COLOR);
+        break;
+    default:
+        break;
     }
     switch(texture->textureCombineOperand1){
-        case GL_SRC_COLOR:
-            texCombineOperandArg1Choose->setCurrentIndex(COMBINE_OPERAND_SRC_COLOR);
-            break;
-        case GL_ONE_MINUS_SRC_COLOR:
-            texCombineOperandArg1Choose->setCurrentIndex(COMBINE_OPERAND_ONE_MINUS_SRC_COLOR);
-            break;
-        default:
-            break;
+    case GL_SRC_COLOR:
+        texCombineOperandArg1Choose->setCurrentIndex(COMBINE_OPERAND_SRC_COLOR);
+        break;
+    case GL_ONE_MINUS_SRC_COLOR:
+        texCombineOperandArg1Choose->setCurrentIndex(COMBINE_OPERAND_ONE_MINUS_SRC_COLOR);
+        break;
+    default:
+        break;
     }
     switch(texture->textureCombineOperand2){
-        case GL_SRC_COLOR:
-            texCombineOperandArg2Choose->setCurrentIndex(COMBINE_OPERAND_SRC_COLOR);
-            break;
-        case GL_ONE_MINUS_SRC_COLOR:
-            texCombineOperandArg2Choose->setCurrentIndex(COMBINE_OPERAND_ONE_MINUS_SRC_COLOR);
-            break;
-        default:
-            break;
+    case GL_SRC_COLOR:
+        texCombineOperandArg2Choose->setCurrentIndex(COMBINE_OPERAND_SRC_COLOR);
+        break;
+    case GL_ONE_MINUS_SRC_COLOR:
+        texCombineOperandArg2Choose->setCurrentIndex(COMBINE_OPERAND_ONE_MINUS_SRC_COLOR);
+        break;
+    default:
+        break;
     }
     texEnvColorButton->setColor(ToQtColor(glState->GetTexture(textureGroup->checkedId())->texEnvColor));
 }

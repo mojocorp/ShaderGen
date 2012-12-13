@@ -83,8 +83,8 @@ void SGTextures::ActivateLogo()
     glActiveTexture(GL_TEXTURE0);
     glDisable(GL_TEXTURE_GEN_S);
     glDisable(GL_TEXTURE_GEN_T);
-    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE); 
-    glEnable(GL_TEXTURE_2D); 
+    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+    glEnable(GL_TEXTURE_2D);
 
     if(logo)
     {
@@ -131,8 +131,8 @@ void SGTextures::Activate(TextureId id, GLint unit)
         PrintOpenGLError();
         if(glState->GetTexture(unit)->textureCoordinateGeneration == GL_OBJECT_LINEAR)
         {
-            glTexGenfv(GL_S, GL_OBJECT_PLANE, glState->GetTexture(unit)->objectPlaneCoeffS); 
-            glTexGenfv(GL_T, GL_OBJECT_PLANE, glState->GetTexture(unit)->objectPlaneCoeffT);        
+            glTexGenfv(GL_S, GL_OBJECT_PLANE, glState->GetTexture(unit)->objectPlaneCoeffS);
+            glTexGenfv(GL_T, GL_OBJECT_PLANE, glState->GetTexture(unit)->objectPlaneCoeffT);
         }
         PrintOpenGLError();
         if(glState->GetTexture(unit)->textureCoordinateGeneration == GL_EYE_LINEAR)
@@ -173,7 +173,7 @@ void SGTextures::Activate(TextureId id, GLint unit)
 
     if( textures[index].glid )
     {
-        glBindTexture( GL_TEXTURE_2D, textures[index].glid); 
+        glBindTexture( GL_TEXTURE_2D, textures[index].glid);
         return;
     }
     else

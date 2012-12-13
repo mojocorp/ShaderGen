@@ -56,7 +56,7 @@
 #include "SGCanvas.h"
 
 SGOglLightNBPage::SGOglLightNBPage(SGOglNotebook* parent)
-: QWidget(parent)
+    : QWidget(parent)
 {
     m_parent = parent;
     SGFixedGLState* glState = m_parent->GetGLState();
@@ -268,41 +268,41 @@ void SGOglLightNBPage::OnCheckbox(int index)
     SGFixedGLState* glState = m_parent->GetGLState();
     glState->SetLightChanged(true);
     switch(index){
-        case 0:
-            glState->GetLight(0)->lightEnabled = lcb0->isChecked();
-            break;
-        case 1:
-            glState->GetLight(1)->lightEnabled = lcb1->isChecked();
-            break;
-        case 2:
-            glState->GetLight(2)->lightEnabled = lcb2->isChecked();
-            break;
-        case 3:
-            glState->GetLight(3)->lightEnabled = lcb3->isChecked();
-            break;
-        case 4:
-            glState->GetLight(4)->lightEnabled = lcb4->isChecked();
-            break;
-        case 5:
-            glState->GetLight(5)->lightEnabled = lcb5->isChecked();
-            break;
-        case 6:
-            glState->GetLight(6)->lightEnabled = lcb6->isChecked();
-            break;
-        case 7:
-            glState->GetLight(7)->lightEnabled = lcb7->isChecked();
-            break;
-        case 8:
-            glState->SetLightingEnable(lightingCheckBox->isChecked());
-            break;
-        case 9:
-            glState->SetNormalizeEnable(normalizeCheckBox->isChecked());
-            break;
-        case 10:
-            glState->SetSeparateSpecularColorEnable(separateSpecularColorCheckBox->isChecked());
-            break;
-        default:
-            break;
+    case 0:
+        glState->GetLight(0)->lightEnabled = lcb0->isChecked();
+        break;
+    case 1:
+        glState->GetLight(1)->lightEnabled = lcb1->isChecked();
+        break;
+    case 2:
+        glState->GetLight(2)->lightEnabled = lcb2->isChecked();
+        break;
+    case 3:
+        glState->GetLight(3)->lightEnabled = lcb3->isChecked();
+        break;
+    case 4:
+        glState->GetLight(4)->lightEnabled = lcb4->isChecked();
+        break;
+    case 5:
+        glState->GetLight(5)->lightEnabled = lcb5->isChecked();
+        break;
+    case 6:
+        glState->GetLight(6)->lightEnabled = lcb6->isChecked();
+        break;
+    case 7:
+        glState->GetLight(7)->lightEnabled = lcb7->isChecked();
+        break;
+    case 8:
+        glState->SetLightingEnable(lightingCheckBox->isChecked());
+        break;
+    case 9:
+        glState->SetNormalizeEnable(normalizeCheckBox->isChecked());
+        break;
+    case 10:
+        glState->SetSeparateSpecularColorEnable(separateSpecularColorCheckBox->isChecked());
+        break;
+    default:
+        break;
     }
     m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();

@@ -50,7 +50,7 @@
 #include "SGFrame.h"
 
 SGOglNotebook::SGOglNotebook(SGFrame * parent)
-: QTabWidget(parent)
+    : QTabWidget(parent)
 {
     m_parent = parent;
 

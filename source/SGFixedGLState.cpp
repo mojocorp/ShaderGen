@@ -111,31 +111,31 @@ void SGFixedGLState::InitLight(int num)
     m_light[num]->lightEnabled = false;
 
     switch(num){
-        case 1:
-            m_light[num]->lightPositionVector = DEFAULT_LIGHT_POSITION_ONE;
-            m_light[num]->lightAmbientColorVector = DEFAULT_LIGHT_AMBIENT_COLOR_ONE;
-            m_light[num]->lightDiffuseColorVector = DEFAULT_LIGHT_DIFFUSE_COLOR_ONE;
-            m_light[num]->lightSpecularColorVector = DEFAULT_LIGHT_SPECULAR_COLOR_ONE;
-            break;
-        case 2:
-            m_light[num]->lightPositionVector = DEFAULT_LIGHT_POSITION_TWO;
-            m_light[num]->lightAmbientColorVector  = DEFAULT_LIGHT_AMBIENT_COLOR_TWO;
-            m_light[num]->lightDiffuseColorVector  = DEFAULT_LIGHT_DIFFUSE_COLOR_TWO;
-            m_light[num]->lightSpecularColorVector = DEFAULT_LIGHT_SPECULAR_COLOR_TWO;
-            break;
-        case 3:
-            m_light[num]->lightPositionVector = DEFAULT_LIGHT_POSITION_THREE;
-            m_light[num]->lightAmbientColorVector  = DEFAULT_LIGHT_AMBIENT_COLOR_THREE;
-            m_light[num]->lightDiffuseColorVector  = DEFAULT_LIGHT_DIFFUSE_COLOR_THREE;
-            m_light[num]->lightSpecularColorVector = DEFAULT_LIGHT_SPECULAR_COLOR_THREE;
-            break;
-        default:
-            m_light[num]->lightPositionVector = DEFAULT_LIGHT_POSITION_OTHER;
-            m_light[num]->lightAmbientColorVector  = DEFAULT_LIGHT_AMBIENT_COLOR_OTHER;
-            m_light[num]->lightDiffuseColorVector  = DEFAULT_LIGHT_DIFFUSE_COLOR_OTHER;
-            m_light[num]->lightSpecularColorVector = DEFAULT_LIGHT_SPECULAR_COLOR_OTHER;
-            break;
-}
+    case 1:
+        m_light[num]->lightPositionVector = DEFAULT_LIGHT_POSITION_ONE;
+        m_light[num]->lightAmbientColorVector = DEFAULT_LIGHT_AMBIENT_COLOR_ONE;
+        m_light[num]->lightDiffuseColorVector = DEFAULT_LIGHT_DIFFUSE_COLOR_ONE;
+        m_light[num]->lightSpecularColorVector = DEFAULT_LIGHT_SPECULAR_COLOR_ONE;
+        break;
+    case 2:
+        m_light[num]->lightPositionVector = DEFAULT_LIGHT_POSITION_TWO;
+        m_light[num]->lightAmbientColorVector  = DEFAULT_LIGHT_AMBIENT_COLOR_TWO;
+        m_light[num]->lightDiffuseColorVector  = DEFAULT_LIGHT_DIFFUSE_COLOR_TWO;
+        m_light[num]->lightSpecularColorVector = DEFAULT_LIGHT_SPECULAR_COLOR_TWO;
+        break;
+    case 3:
+        m_light[num]->lightPositionVector = DEFAULT_LIGHT_POSITION_THREE;
+        m_light[num]->lightAmbientColorVector  = DEFAULT_LIGHT_AMBIENT_COLOR_THREE;
+        m_light[num]->lightDiffuseColorVector  = DEFAULT_LIGHT_DIFFUSE_COLOR_THREE;
+        m_light[num]->lightSpecularColorVector = DEFAULT_LIGHT_SPECULAR_COLOR_THREE;
+        break;
+    default:
+        m_light[num]->lightPositionVector = DEFAULT_LIGHT_POSITION_OTHER;
+        m_light[num]->lightAmbientColorVector  = DEFAULT_LIGHT_AMBIENT_COLOR_OTHER;
+        m_light[num]->lightDiffuseColorVector  = DEFAULT_LIGHT_DIFFUSE_COLOR_OTHER;
+        m_light[num]->lightSpecularColorVector = DEFAULT_LIGHT_SPECULAR_COLOR_OTHER;
+        break;
+    }
     m_light[num]->lightSpotDirectionVector = DEFAULT_LIGHT_SPOT_DIRECTION;
     
     m_light[num]->lightSpotCutoff = DEFAULT_SPOT_CUT;

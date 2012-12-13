@@ -52,8 +52,8 @@ int TParametricSurface::Draw(int slices)
     du = 1.0f / (float) slices;
     dv = 1.0f / (float) stacks;
 
- GLboolean isNormalize = glIsEnabled(GL_NORMALIZE);
- 
+    GLboolean isNormalize = glIsEnabled(GL_NORMALIZE);
+
     for (float u = 0; u < 1 - du / 2; u += du)
     {
         glBegin(GL_QUAD_STRIP);
@@ -74,11 +74,11 @@ int TParametricSurface::Draw(int slices)
                 Vertex(vec2(u + du, v),isNormalize);
                 totalVerts += 2;
             }
-        } 
-        glEnd();    
+        }
+        glEnd();
     }
- 
-PrintOpenGLError(); 
+
+    PrintOpenGLError();
     return totalVerts;
 }
 
@@ -92,19 +92,19 @@ void TParametricSurface::Vertex(vec2 domain, GLboolean isNormalize)
 
     Eval(domain, p0);
     vec2 z1(u + du/2, v);
-    Eval(z1, p1);   
+    Eval(z1, p1);
     vec2 z2(u + du/2 + du, v);
     Eval(z2, p3);
 
     if (flipped)
     {
-    vec2 z3(u + du/2, v - dv);
-    Eval(z3, p2);
+        vec2 z3(u + du/2, v - dv);
+        Eval(z3, p2);
     }
     else
     {
-    vec2 z4(u + du/2, v + dv);
-    Eval(z4, p2);
+        vec2 z4(u + du/2, v + dv);
+        Eval(z4, p2);
     }
     if(isNormalize)
     {
@@ -119,8 +119,8 @@ void TParametricSurface::Vertex(vec2 domain, GLboolean isNormalize)
 
     for(int i=0; i<5; i++)
     {
-    glMultiTexCoord(domain, GL_TEXTURE0 + i);
-    }    
+        glMultiTexCoord(domain, GL_TEXTURE0 + i);
+    }
     glVertex(p0);
 }
 

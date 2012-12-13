@@ -156,8 +156,8 @@ private:
     void Clean();
 
     bool m_changeLight,m_changeMat, m_changeFog, m_changeTexture;
-    bool m_fogEn, m_lightingEn, m_normalizeEn, m_2sidedLightingEn, 
-         m_textureEn, m_texGenEnable, m_separateSpecularColorEn;
+    bool m_fogEn, m_lightingEn, m_normalizeEn, m_2sidedLightingEn,
+    m_textureEn, m_texGenEnable, m_separateSpecularColorEn;
     bool twosided;
     Light    *m_light[8];
     Texture  *m_texture[5];

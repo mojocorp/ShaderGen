@@ -64,8 +64,8 @@ The following two functions are used to convert color
     data back and forth between OpenGL and wxWidgets.
     Since wxWidgets uses integers from 0 to 255 to define
     colors, and OpenGL uses floats from 0.0 to 1.0, these
-    conversions are neeeded.  Since the wxColour type 
-    doesn't give us an alpha value, we are unable to 
+    conversions are neeeded.  Since the wxColour type
+    doesn't give us an alpha value, we are unable to
     get this from the color selection dialog box.  For
     this reason, the alpha value is passed as 1.0 for
     the OpenGL floating point color representation.

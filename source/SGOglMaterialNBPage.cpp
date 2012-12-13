@@ -52,7 +52,7 @@
 #include "SGCanvas.h"
 
 SGOglMaterialNBPage::SGOglMaterialNBPage(SGOglNotebook* parent)
-:QWidget(parent)
+    :QWidget(parent)
 {
     m_parent = parent;
     SGFixedGLState* glState = m_parent->GetGLState();

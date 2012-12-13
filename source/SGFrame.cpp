@@ -189,7 +189,7 @@ void SGFrame::SetCanvasMode(SGCanvasWrapper::GLMode a)
 
 void SGFrame::SetStatusText(const QString &text)
 {
-   statusBar()->showMessage(text);
+    statusBar()->showMessage(text);
 }
 
 bool SGFrame::isPerspective() const
@@ -229,36 +229,36 @@ void SGFrame::help()
     QTextEdit *txtEdit = new QTextEdit();
     txtEdit->setReadOnly(true);
     txtEdit->setPlainText(tr("\n"
-        "GLSL ShaderGen\n\n"
-        "INTENDED PURPOSE:\n\n"
-        "The purpose of ShaderGen is to show the user how to emulate fixed functionality\n"
-        "by using the OpenGL Shading Language.\n\n"
-        "ShaderGen is intended to be educational, with the focus being on clarity of\n"
-        "generated code rather than efficiency.\n"
-        " \n"
-        " \n"
-        "USAGE:\n\n"
-        "The tool has three major parts:\n"
-        "* OpenGL Window : Displays rendered output.\n"
-        "* OpenGL State : Configure the OpenGL State using the tabs.\n"
-        "* Shader Text Windows : Use the tabs to look through the generated shaders\n\n"
-        "Operation:\n\n"
-        "1. Using the tabs, setup the OpenGL state.  You will see your results updated"
-        " in the OpenGL Window as you make state changes.  If you make a change requiring text"
-        " entry, be sure to press the enter key to update the current state.\n"
-        "2. Click the \"GENERATE SHADERS\" button on the Shader Windows panel to generate Vertex and Fragment Shaders\n"
-        "3. Click \"COMPILE\" to compile the shaders, then check the \"Infolog\" text window for compilation results\n"
-        "4. Click \"LINK\" to link the compilers, then see the \"Infolog\" window for results\n"
-        "5. To switch the OpenGL Window to display the shaded model, click the \"Shader"
-        " Equivalent\" mode radio button.\n"
-        "6. Click \"BUILD\" to do steps 2 through 5 together.\n\n\n"
-        "Note: The text boxes only accept values when enter key is pressed\n"
-        "Note: You can edit the shaders in the text windows, and then press \"COMPILE\" and then \"LINK\" to"
-        " to see the results of your edited shaders.\n"
-        "Note: The eye coordinate distance between the model center and the viewpoint is 6.0.  The model is"
-        " drawn with it's center at (0.0,0.0,6.0) in eye-coordinates and diagonals at (-1.0, -1.0, 5.0)"
-        " and (1.0, 1.0, 7.0).\n"
-        "                 "));
+                             "GLSL ShaderGen\n\n"
+                             "INTENDED PURPOSE:\n\n"
+                             "The purpose of ShaderGen is to show the user how to emulate fixed functionality\n"
+                             "by using the OpenGL Shading Language.\n\n"
+                             "ShaderGen is intended to be educational, with the focus being on clarity of\n"
+                             "generated code rather than efficiency.\n"
+                             " \n"
+                             " \n"
+                             "USAGE:\n\n"
+                             "The tool has three major parts:\n"
+                             "* OpenGL Window : Displays rendered output.\n"
+                             "* OpenGL State : Configure the OpenGL State using the tabs.\n"
+                             "* Shader Text Windows : Use the tabs to look through the generated shaders\n\n"
+                             "Operation:\n\n"
+                             "1. Using the tabs, setup the OpenGL state.  You will see your results updated"
+                             " in the OpenGL Window as you make state changes.  If you make a change requiring text"
+                             " entry, be sure to press the enter key to update the current state.\n"
+                             "2. Click the \"GENERATE SHADERS\" button on the Shader Windows panel to generate Vertex and Fragment Shaders\n"
+                             "3. Click \"COMPILE\" to compile the shaders, then check the \"Infolog\" text window for compilation results\n"
+                             "4. Click \"LINK\" to link the compilers, then see the \"Infolog\" window for results\n"
+                             "5. To switch the OpenGL Window to display the shaded model, click the \"Shader"
+                             " Equivalent\" mode radio button.\n"
+                             "6. Click \"BUILD\" to do steps 2 through 5 together.\n\n\n"
+                             "Note: The text boxes only accept values when enter key is pressed\n"
+                             "Note: You can edit the shaders in the text windows, and then press \"COMPILE\" and then \"LINK\" to"
+                             " to see the results of your edited shaders.\n"
+                             "Note: The eye coordinate distance between the model center and the viewpoint is 6.0.  The model is"
+                             " drawn with it's center at (0.0,0.0,6.0) in eye-coordinates and diagonals at (-1.0, -1.0, 5.0)"
+                             " and (1.0, 1.0, 7.0).\n"
+                             "                 "));
 
     layout->addWidget(txtEdit);
     help.resize(600, 600);

@@ -46,54 +46,54 @@
 // Abstract base class representing a parametric surface.
 class TParametricSurface
 {
-  public:
+public:
     int Draw(int slices);
     virtual void Eval(vec2& domain, vec3& range) = 0;
     virtual void Vertex(vec2 domain, GLboolean isNormalize);
     virtual bool Flip(const vec2& /*domain*/) { return false; }
     virtual int CustomAttributeLocation() { return -1; }
     virtual float CustomAttributeValue(const vec2& /*domain*/) { return 0; }
-  protected:
+protected:
     bool flipped;
     float du, dv;
 };
 
 class TSphere : public TParametricSurface
 {
-  public:
+public:
     void Eval(vec2& domain, vec3& range);
 };
 
 class TTorus : public TParametricSurface
 {
-  public:
+public:
     void Eval(vec2& domain, vec3& range);
 };
 
 class TConic : public TParametricSurface
 {
-  public:
+public:
     void Eval(vec2& domain, vec3& range);
 };
 
 class TTrefoil : public TParametricSurface
 {
-  public:
+public:
     void Eval(vec2& domain, vec3& range);
 };
 
 class TKlein : public TParametricSurface
 {
-  public:
+public:
     void Eval(vec2& domain, vec3& range);
     bool Flip(const vec2& domain);
 };
 
 class TPlane : public TParametricSurface
 {
-  public:
+public:
     TPlane(float z = 0, float width = 2) : z(z), width(width) {}
     void Eval(vec2& domain, vec3& range);
-  protected:
+protected:
     float z, width;
 };

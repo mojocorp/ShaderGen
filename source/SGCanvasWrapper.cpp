@@ -51,7 +51,7 @@
 #include "UtilityFunctions.h"
 
 SGCanvasWrapper::SGCanvasWrapper(SGFrame *parent)
-:QFrame(parent)
+    :QFrame(parent)
 {
     m_parent = parent;
     mode = GLModeChoiceFixed;

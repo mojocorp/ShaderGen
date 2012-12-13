@@ -55,7 +55,7 @@
 const float SGCanvas::CameraZ = -5;
 
 SGCanvas::SGCanvas(SGFrame *frame, SGCanvasWrapper *parent)
-:QGLWidget(parent)
+    :QGLWidget(parent)
 {
     m_parent = parent;
     this->m_frame = frame;
@@ -77,7 +77,7 @@ void SGCanvas::DrawLogo() const
 
     glBegin(GL_QUADS);
     glTexCoord2f(1.0f, 0.0f);
-    glVertex2i(xPadding + logoWidth, m_height - yPadding - logoHeight);    
+    glVertex2i(xPadding + logoWidth, m_height - yPadding - logoHeight);
     glTexCoord2f(0.0f, 0.0f);
     glVertex2i(xPadding, m_height - yPadding - logoHeight);
     glTexCoord2f(0.0f, 1.0f);
@@ -130,7 +130,7 @@ void SGCanvas::paintGL()
 
     glDisable(GL_DEPTH_TEST);
 
-    if(glIsEnabled(GL_FOG)) 
+    if(glIsEnabled(GL_FOG))
     {
         glDisable(GL_FOG);
     }
@@ -321,18 +321,18 @@ vec3 SGCanvas::GetWorldSpace(int x, int y)
 void SGCanvas::keyPressEvent(QKeyEvent * event)
 {
     switch(event->key()){
-        case Qt::Key_PageDown: //page down
-            m_zoom -= 0.1f;
-            break;
-        case Qt::Key_PageUp: //page up
-            m_zoom += 0.1f;
-            break;
-        case Qt::Key_F7:
-            m_parent->SwitchMode();
-            break;
+    case Qt::Key_PageDown: //page down
+        m_zoom -= 0.1f;
+        break;
+    case Qt::Key_PageUp: //page up
+        m_zoom += 0.1f;
+        break;
+    case Qt::Key_F7:
+        m_parent->SwitchMode();
+        break;
     }
 
-   updateGL();
+    updateGL();
 }
 
 void SGCanvas::mousePressEvent(QMouseEvent * event)
@@ -394,28 +394,28 @@ bool SGCanvas::LinkShaders(const QString & vertexShader, const QString & fragmen
                 GLint uniformLocation;
 
                 switch(i){
-                    case 0: 
-                        uniformLocation = glGetUniformLocation(prog, "texUnit0");
-                        glUniform1i(uniformLocation, 0);
-                        break;
-                    case 1:
-                        uniformLocation = glGetUniformLocation(prog, "texUnit1");
-                        glUniform1i(uniformLocation, 1);
-                        break;
-                    case 2:
-                        uniformLocation = glGetUniformLocation(prog, "texUnit2");
-                        glUniform1i(uniformLocation, 2);
-                        break;
-                    case 3:
-                        uniformLocation = glGetUniformLocation(prog, "texUnit3");
-                        glUniform1i(uniformLocation, 3);
-                        break;
-                    case 4:
-                        uniformLocation = glGetUniformLocation(prog, "texUnit4");
-                        glUniform1i(uniformLocation, 4);
-                        break;
-                    default:
-                        break;
+                case 0:
+                    uniformLocation = glGetUniformLocation(prog, "texUnit0");
+                    glUniform1i(uniformLocation, 0);
+                    break;
+                case 1:
+                    uniformLocation = glGetUniformLocation(prog, "texUnit1");
+                    glUniform1i(uniformLocation, 1);
+                    break;
+                case 2:
+                    uniformLocation = glGetUniformLocation(prog, "texUnit2");
+                    glUniform1i(uniformLocation, 2);
+                    break;
+                case 3:
+                    uniformLocation = glGetUniformLocation(prog, "texUnit3");
+                    glUniform1i(uniformLocation, 3);
+                    break;
+                case 4:
+                    uniformLocation = glGetUniformLocation(prog, "texUnit4");
+                    glUniform1i(uniformLocation, 4);
+                    break;
+                default:
+                    break;
                 }
             }
         }
@@ -513,7 +513,7 @@ void SGCanvas::PrintInfoLog(GLuint obj)
         text->append(tr("ERROR: No Shader or Program available"));
     }
 
-    PrintOpenGLError(); 
+    PrintOpenGLError();
 
     if (infologLength > 0)
     {

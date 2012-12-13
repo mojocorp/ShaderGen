@@ -126,12 +126,12 @@ private:
     QButtonGroup *texApplyGroup, *textureGroup, *texCheckBoxGroup;
     
     QCheckBox *texEnable, *tex0CheckBox, *tex1CheckBox, *tex2CheckBox,
-               *tex3CheckBox, *tex4CheckBox;
+    *tex3CheckBox, *tex4CheckBox;
     
     QComboBox  *texChoose, *texCombineModeChoose, *texCombineScaleChoose,
-               *texCombineSrc0RGBChoose, *texCombineSrc1RGBChoose, 
-               *texCombineSrc2RGBChoose, *texCombineOperandArg0Choose,
-               *texCombineOperandArg1Choose, *texCombineOperandArg2Choose;   
+    *texCombineSrc0RGBChoose, *texCombineSrc1RGBChoose,
+    *texCombineSrc2RGBChoose, *texCombineOperandArg0Choose,
+    *texCombineOperandArg1Choose, *texCombineOperandArg2Choose;
 
     QColorButton *texEnvColorButton;
 };
