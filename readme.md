@@ -7,9 +7,11 @@ ShaderGen
 
 3DLabs' ShaderGen ported to Qt 4.
 
-### Downloading ###
+### Download ###
 
-Recent binary releases can be found at https://github.com/mojocorp/ShaderGen/downloads
+[ShaderGen 3.0 Windows](https://dl.dropbox.com/u/1273801/ShaderGen/ShaderGen-3.0.exe)  
+[ShaderGen 3.1.0 Mac OS X Intel 64bit DMG](https://dl.dropbox.com/u/1273801/ShaderGen/ShaderGen-3.1.0.dmg)  
+[ShaderGen 3.1.0 Linux Ubuntu i386](https://dl.dropbox.com/u/1273801/ShaderGen/ShaderGen-3.1.0.tar.gz)  
 
 ### Compiling ###
 
