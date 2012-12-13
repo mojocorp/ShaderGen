@@ -41,6 +41,7 @@
 
 #include <QApplication>
 
+#include "SGFrame.h"
 #include "SGTextures.h"
 #include "SGFixedGLState.h"
 
@@ -192,7 +193,7 @@ void SGTextures::Activate(TextureId id, GLint unit)
     QImage image( qApp->applicationDirPath() + "/textures/" + TextureNames[index] );
     if( image.isNull())
     {
-        //TODO wxGetApp().Errorf("Unable to load image %s", TextureNames[index].c_str());
+        SGFrame::instance->Errorf("Unable to load image %s", qPrintable(TextureNames[index]));
         return;
     }
     image = QGLWidget::convertToGLFormat(image.mirrored());

@@ -57,7 +57,7 @@ SGCanvas::SGCanvas(SGFrame *frame, SGCanvasWrapper *parent)
     :QGLWidget(parent)
 {
     m_parent = parent;
-    this->m_frame = frame;
+    m_frame = frame;
     m_zoom= 0.8f;
     mouse.SetCanvas(this);
     modelCurrent = SGModels::ModelTorus;
@@ -97,7 +97,7 @@ void SGCanvas::initializeGL()
 
     if (initSuccess != GLEW_OK)
     {
-        //TODO wxGetApp().Errorf("Unable to initialize GLEW.\n %s", glewGetErrorString(initSuccess));
+        m_frame->Errorf("Unable to initialize GLEW.\n %s", glewGetErrorString(initSuccess));
     }
     else
     {

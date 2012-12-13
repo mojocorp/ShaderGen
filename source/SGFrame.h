@@ -81,6 +81,10 @@ public:
     const QString & GetVertexShader() { return shaderGen->BuildVertexShader(); }
     const QString & GetFragmentShader() { return shaderGen->BuildFragmentShader(); }
 
+    // C-style output methods
+    //Callers of Errorf should include a period and a linefeed
+    void Errorf(const char* format, ...);
+
     static SGFrame *instance;
 private slots:
     void modelActionTriggered(QAction *action);

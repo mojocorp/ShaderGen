@@ -194,6 +194,15 @@ bool SGFrame::isPerspective() const
     return perspAct->isChecked();
 }
 
+void SGFrame::Errorf(const char* format, ...)
+{
+    QString message;
+    va_list marker;
+    va_start(marker, format);
+    message.vsprintf(format, marker);
+    statusBar()->showMessage(message);
+}
+
 void SGFrame::modelActionTriggered(QAction *action)
 {
     if (action == torusAct) {
