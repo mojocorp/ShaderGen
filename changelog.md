@@ -1,3 +1,4 @@
+<pre>
 /************************************************************************
 *                                                                       *
 *               Copyright (C) 2002-2005  3Dlabs Inc. Ltd.               *
@@ -34,11 +35,17 @@
 * POSSIBILITY OF SUCH DAMAGE.                                           *
 *                                                                       *
 ************************************************************************/
+</pre>
 
-                              readme.txt
-                     3Dlabs GLSL ShaderGen v3.0
 
-Changes from ShaderGen v2.0 (in reverse chronological order)
+# 3Dlabs GLSL ShaderGen v3.1
+
+## Changes from ShaderGen v3.0 (in reverse chronological order)
+
+* Ported from WxWidget to Qt
+
+## Changes from ShaderGen v2.0 (in reverse chronological order)
+
 * Added ability to clear the infolog text window.
 * Name Changed from ShaderGen to 3Dlabs GLSL ShaderGen
 * Added Header to generated shaders
