@@ -11,7 +11,7 @@ ICON = ShaderGen.icns
 QMAKE_INFO_PLIST = Info.plist
 }
 
-linux-g++ {
+unix:!macx {
 LIBS += -lGLU
 }
 
