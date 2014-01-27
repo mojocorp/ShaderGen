@@ -6,6 +6,10 @@ QT += opengl
 DEPENDPATH += .
 INCLUDEPATH += . ../3rdparty/glew-1.7.0/include
 
+win32 {
+RC_FILE = info.rc
+}
+
 macx {
 ICON = ShaderGen.icns
 QMAKE_INFO_PLIST = Info.plist
