@@ -1,5 +1,16 @@
 language: cpp
-compiler:
-  - gcc
-  - clang
-script: ./configure && make
+matrix:
+  include:
+  - compiler: clang
+    os: linux
+    env: QMAKESPEC=unsupported/linux-clang
+  - compiler: gcc
+    os: linux
+    env: QMAKESPEC=linux-g++
+#  - compiler: clang
+#    os: osx
+#    env: QMAKESPEC=unsupported/macx-clang
+#  - compiler: gcc
+#    os: osx
+#    env: QMAKESPEC=macx-g++
+script: qmake -r && make
