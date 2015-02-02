@@ -56,7 +56,7 @@ class QWidget;
 
 int printOglError(const char *file, int line);
 
-void IncorrectFormat(QString str, QWidget *errorWindow);
+void IncorrectFormat(const QString& str, QWidget *errorWindow);
 
 
 /******************************************************
@@ -71,18 +71,18 @@ The following two functions are used to convert color
     the OpenGL floating point color representation.
 ******************************************************/
 
-inline const QColor ToQtColor( const vec4 fpColor)
+inline const QColor ToQtColor( const vec4& fpColor)
 {
     return QColor::fromRgbF(fpColor.x, fpColor.y, fpColor.z);
 }
 
-inline const vec4 ToGLFPColor(const QColor color)
+inline const vec4 ToGLFPColor(const QColor& color)
 {
     return vec4(color.redF(), color.greenF(), color.blueF(), 1.0f);
 }
 
-inline QString FloatToString3(const float *v) { return QString().sprintf("%.1f,%.1f,%.1f",v[0],v[1],v[2]); }
-inline QString FloatToString4(const float *v) { return QString().sprintf("%.1f,%.1f,%.1f,%.1f",v[0],v[1],v[2],v[3]); }
+inline QString FloatToString3(const vec3& v) { return QString().sprintf("%.1f,%.1f,%.1f",v.x,v.y,v.z); }
+inline QString FloatToString4(const vec4& v) { return QString().sprintf("%.1f,%.1f,%.1f,%.1f",v.x,v.y,v.z,v.w); }
 
 inline QStringList parseVector(QString userEntry)
 {

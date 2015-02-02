@@ -70,7 +70,7 @@ int printOglError(const char *file, int line)
     return retCode;
 }
 
-void IncorrectFormat(QString str, QWidget *errorWindow)
+void IncorrectFormat(const QString& str, QWidget *errorWindow)
 {
     QString errorString("Enter data in the correct format, you need ");
     errorString += str;
