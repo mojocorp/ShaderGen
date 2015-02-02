@@ -68,8 +68,7 @@ SGShaderGenerator::SGShaderGenerator()
       texGenEye(GL_FALSE),
       texGenObject(GL_FALSE),
       texGenNormal(GL_FALSE),
-      texturesEnabled(GL_FALSE),
-      currentTexture()
+      texturesEnabled(GL_FALSE)
 {
     for(int i = 0; i < NUM_TEXTURES; i++)
     {
