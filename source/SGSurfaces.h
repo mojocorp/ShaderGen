@@ -48,12 +48,10 @@ class TParametricSurface
 {
 public:
     int Draw(int slices);
+protected:
     virtual void Eval(vec2& domain, vec3& range) = 0;
     virtual void Vertex(vec2 domain, GLboolean isNormalize);
     virtual bool Flip(const vec2& /*domain*/) { return false; }
-    virtual int CustomAttributeLocation() { return -1; }
-    virtual float CustomAttributeValue(const vec2& /*domain*/) { return 0; }
-protected:
     bool flipped;
     float du, dv;
 };
