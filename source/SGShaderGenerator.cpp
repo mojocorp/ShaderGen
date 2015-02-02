@@ -63,11 +63,6 @@ SGShaderGenerator::SGShaderGenerator()
       fMapSphere(false),
       fMapReflection(false),
       vTexGenEnable(false),
-      texGenReflection(GL_FALSE),
-      texGenSphereMap(GL_FALSE),
-      texGenEye(GL_FALSE),
-      texGenObject(GL_FALSE),
-      texGenNormal(GL_FALSE),
       texturesEnabled(GL_FALSE)
 {
     for(int i = 0; i < NUM_TEXTURES; i++)

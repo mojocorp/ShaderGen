@@ -47,8 +47,6 @@
 #include "SGFrame.h"
 #include "SGCanvas.h"
 
-const int FIXED_TYPE_POINT_SIZE = 8;
-
 SGShaderTextWindow::SGShaderTextWindow(SGFrame *frame):QFrame(frame)
 {
     m_frame = frame;

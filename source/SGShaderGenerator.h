@@ -73,15 +73,7 @@ private:
     bool fLightPoint, fLightSpot, fLightDir, fLightDirSpot;
     bool fMapSphere, fMapReflection, vTexGenEnable;
 
-    GLboolean texGenReflection;
-    GLboolean texGenSphereMap;
-    GLboolean texGenEye;
-    GLboolean texGenObject;
-    GLboolean texGenNormal;
     GLboolean texturesEnabled;
-
-    //NUKE!!!!!!!!!!!
-    GLboolean texGenEnableArray[NUM_TEXTURE_COORDS];
     
     CurrentTextureState currentTexture[NUM_TEXTURES];
 
