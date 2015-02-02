@@ -49,18 +49,20 @@ int TParametricSurface::Draw(int slices)
 {
     int totalVerts = 0;
     int stacks = slices / 2;
-    du = 1.0f / (float) slices;
-    dv = 1.0f / (float) stacks;
+    du = 1.0f / (float) (slices-1);
+    dv = 1.0f / (float) (stacks-1);
 
     GLboolean isNormalize = glIsEnabled(GL_NORMALIZE);
 
-    for (float u = 0; u < 1 - du / 2; u += du)
+    for (int i=0; i<slices; i++)
     {
+        float u = i * du;
         glBegin(GL_QUAD_STRIP);
         if ((flipped = Flip(vec2(u,0))))
         {
-            for (float v = 0; v < 1 + dv / 2; v += dv)
+            for (int j=0; j<stacks; j++)
             {
+                float v = j * dv;
                 Vertex(vec2(u + du, v),isNormalize);
                 Vertex(vec2(u, v),isNormalize);
                 totalVerts += 2;
@@ -68,8 +70,9 @@ int TParametricSurface::Draw(int slices)
         }
         else
         {
-            for (float v = 0; v < 1 + dv / 2; v += dv)
+            for (int j=0; j<stacks; j++)
             {
+                float v = j * dv;
                 Vertex(vec2(u, v),isNormalize);
                 Vertex(vec2(u + du, v),isNormalize);
                 totalVerts += 2;
