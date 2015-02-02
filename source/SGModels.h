@@ -41,6 +41,8 @@
 
 #pragma once
 
+class TParametricSurface;
+
 class SGModels
 {
 public:
@@ -56,4 +58,6 @@ public:
     SGModels();
     ~SGModels();
     void DrawModel(ModelId id);
+private:
+    TParametricSurface* surface[6];
 };

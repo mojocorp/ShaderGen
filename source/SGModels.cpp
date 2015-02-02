@@ -44,41 +44,23 @@
 
 SGModels::SGModels()
 {
+    surface[ModelTorus] = new TTorus();
+    surface[ModelPlane] = new TPlane();
+    surface[ModelSphere] = new TSphere();
+    surface[ModelConic] = new TConic();
+    surface[ModelTrefoil] = new TTrefoil();
+    surface[ModelKlein] = new TKlein();
 }
 
 SGModels::~SGModels()
 {
+    for (int i=0; i<6; i++)
+    {
+        delete surface[i];
+    }
 }
 
 void SGModels::DrawModel(ModelId id)
 {
-    int slices = 100;
-    switch(id){
-
-    case ModelPlane:
-        TPlane().Draw(slices);
-        break;
-    case ModelTorus:
-        TTorus().Draw(slices);
-        break;
-
-    case ModelSphere:
-        TSphere().Draw(slices);
-        break;
-
-    case ModelConic:
-        TConic().Draw(slices);
-        break;
-
-    case ModelTrefoil:
-        TTrefoil().Draw(slices);
-        break;
-
-    case ModelKlein:
-        TKlein().Draw(slices);
-        break;
-
-    default:
-        break;
-    }
+    surface[id]->Draw();
 }

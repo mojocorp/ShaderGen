@@ -44,8 +44,19 @@
 #include <cmath>
 #include "UtilityFunctions.h"
 
+TParametricSurface::TParametricSurface()
+    : slices(100)
+{
+
+}
+
+TParametricSurface::~TParametricSurface()
+{
+
+}
+
 // Draw a parametric surface.  'slices' is the tesselation factor.  Returns the number of vertices.
-int TParametricSurface::Draw(int slices)
+int TParametricSurface::Draw()
 {
     int totalVerts = 0;
     int stacks = slices / 2;
