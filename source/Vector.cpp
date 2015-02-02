@@ -90,13 +90,6 @@ mat4 operator*(const mat4& a, const mat4& b)
     return retval;
 }
 
-vec2 operator*(const vec2& v, const mat4& m)
-{
-    float x = m.data[0] * v.x + m.data[4] * v.y + m.data[12];
-    float y = m.data[1] * v.x + m.data[5] * v.y + m.data[13];
-    return vec2(x, y);
-}
-
 vec3 blend(const vec3& v, const mat4& m0, const mat4& m1, float w0, float w1)
 {
     return v * m0 * w0 + v * m1 * w1;
@@ -124,19 +117,9 @@ void glVertex(const vec3& v)
     glVertex3fv((float*) &v);
 }
 
-void glVertex(const vec2& v)
-{
-    glVertex2fv((float*) &v);
-}
-
 void glNormal(const vec3& v)
 {
     glNormal3fv((float*) &v);
-}
-
-void glColor(const vec3& v)
-{
-    glColor4f(v.x, v.y, v.z, 1.0f);
 }
 
 void glColor(const vec4& v)
@@ -144,17 +127,7 @@ void glColor(const vec4& v)
     glColor4f(v.x, v.y, v.z, v.w);
 }
 
-void glTexCoord(const vec2& v)
-{
-    glTexCoord2f(v.x, v.y);
-}
-
 void glMultiTexCoord(const vec2& v, const GLint u)
 {
     glMultiTexCoord2f(u, v.x, v.y);
-}
-
-void glTranslate(const vec3& v)
-{
-    glTranslatef(v.x, v.y, v.z);
 }

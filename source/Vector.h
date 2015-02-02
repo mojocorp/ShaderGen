@@ -49,13 +49,6 @@
 
 static const float pi = 3.14159265358979323846f;
 static const float twopi = 6.28318530717958647692f;
-static const float sqrt2 = 1.4142135623730950488016887242097f;
-
-struct ivec2 {
-    ivec2() : x(0), y(0) {}
-    ivec2(int x, int y) : x(x), y(y) {}
-    int x, y;
-};
 
 struct vec2 {
     vec2() : x(0), y(0) {}
@@ -69,12 +62,6 @@ struct vec2 {
     union { float x, u, s; };
     union { float y, v, t; };
     void flip() { float temp = x; x = y; y = temp; }
-};
-
-struct ivec3 {
-    ivec3() : x(0), y(0), z(0) {}
-    ivec3(int x, int y, int z) : x(x), y(y), z(z) {}
-    int x, y, z;
 };
 
 struct vec3 {
@@ -109,10 +96,6 @@ struct vec4 {
     float x, y, z, w;
 };
 
-struct mat2 { float data[4]; };
-
-struct mat3 { float data[9]; };
-
 struct mat4 {
     float data[16];
     void identity();
@@ -120,15 +103,9 @@ struct mat4 {
 
 mat4 operator*(const mat4& a, const mat4& b);
 
-void glVertex(const vec2& v);
 void glVertex(const vec3& v);
 void glNormal(const vec3& v);
-void glColor(const vec3& v);
-void glTexCoord(const vec2& v);
 void glMultiTexCoord(const vec2& v, GLint u);
-void glTranslate(const vec3& v);
 
-vec3 blend(const vec3& v, const mat4& m0, const mat4& m1, float w0, float w1);
 vec3 cross(const vec3& a, const vec3& b);
-vec2 operator*(const vec2& v, const mat4& m);
 vec3 operator*(const vec3& v, const mat4& m);
