@@ -4,7 +4,9 @@ DESTDIR  = ../build
 
 QT += opengl
 DEPENDPATH += .
-INCLUDEPATH += . ../3rdparty/glew-1.7.0/include
+INCLUDEPATH += . ../3rdparty/glew/include
+
+DEFINES += GLEW_STATIC
 
 win32 {
 RC_FILE = info.rc
