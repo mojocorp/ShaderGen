@@ -50,7 +50,7 @@ public:
     int Draw(int slices);
 protected:
     virtual void Eval(vec2& domain, vec3& range) = 0;
-    virtual void Vertex(vec2 domain, GLboolean isNormalize);
+    virtual void Vertex(vec2& domain, vec3& normal, vec3& p0, bool isNormalize);
     virtual bool Flip(const vec2& /*domain*/) { return false; }
     bool flipped;
     float du, dv;

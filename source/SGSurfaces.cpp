@@ -52,31 +52,38 @@ int TParametricSurface::Draw(int slices)
     du = 1.0f / (float) (slices-1);
     dv = 1.0f / (float) (stacks-1);
 
-    GLboolean isNormalize = glIsEnabled(GL_NORMALIZE);
+    bool isNormalize = glIsEnabled(GL_NORMALIZE);
 
     for (int i=0; i<slices; i++)
     {
         float u = i * du;
         glBegin(GL_QUAD_STRIP);
-        if ((flipped = Flip(vec2(u,0))))
+        flipped = Flip(vec2(u,0));
+
+        for (int j=0; j<stacks; j++)
         {
-            for (int j=0; j<stacks; j++)
+            float v = j * dv;
+            vec3 normal, p0;
+            vec2 domain = flipped ? vec2(u + du, v) : vec2(u, v);
+            Vertex(domain, normal, p0, isNormalize);
+            if (isNormalize)
+                glNormal(normal);
+            for(int i=0; i<5; i++)
             {
-                float v = j * dv;
-                Vertex(vec2(u + du, v),isNormalize);
-                Vertex(vec2(u, v),isNormalize);
-                totalVerts += 2;
+                glMultiTexCoord(domain, GL_TEXTURE0 + i);
             }
-        }
-        else
-        {
-            for (int j=0; j<stacks; j++)
+            glVertex(p0);
+            domain =  flipped ? vec2(u, v) : vec2(u + du, v);
+            Vertex(domain, normal, p0, isNormalize);
+            if (isNormalize)
+                glNormal(normal);
+            for(int i=0; i<5; i++)
             {
-                float v = j * dv;
-                Vertex(vec2(u, v),isNormalize);
-                Vertex(vec2(u + du, v),isNormalize);
-                totalVerts += 2;
+                glMultiTexCoord(domain, GL_TEXTURE0 + i);
             }
+
+            glVertex(p0);
+            totalVerts += 2;
         }
         glEnd();
     }
@@ -86,10 +93,9 @@ int TParametricSurface::Draw(int slices)
 }
 
 // Send out a normal, texture coordinate, vertex coordinate, and an optional custom attribute.
-void TParametricSurface::Vertex(vec2 domain, GLboolean isNormalize)
+void TParametricSurface::Vertex(vec2& domain, vec3& normal, vec3& p0, bool isNormalize)
 {
-    vec3 p0, p1, p2, p3;
-    vec3 normal;
+    vec3 p1, p2, p3;
     float u = domain.u;
     float v = domain.v;
 
@@ -117,14 +123,7 @@ void TParametricSurface::Vertex(vec2 domain, GLboolean isNormalize)
             normal = p0;
         }
         normal.unitize();
-        glNormal(normal);
     }
-
-    for(int i=0; i<5; i++)
-    {
-        glMultiTexCoord(domain, GL_TEXTURE0 + i);
-    }
-    glVertex(p0);
 }
 
 void TKlein::Eval(vec2& domain, vec3& range)
