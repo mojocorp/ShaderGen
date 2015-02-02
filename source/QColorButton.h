@@ -1,5 +1,4 @@
-#ifndef QCOLORBUTTON_H
-#define QCOLORBUTTON_H
+#pragma once
 
 #include <QPushButton>
 
@@ -24,5 +23,3 @@ protected:
 private:
     QColor col;
 };
-
-#endif // QCOLORBUTTON_H
