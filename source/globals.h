@@ -41,19 +41,9 @@
 
 #pragma once
 
-//TODO #include "SGCanvas.h"
 #include "Vector.h"
 
 const bool DEBUG_ON = true;
-
-const long ZERO_PIXEL_BORDER = 0;
-const long FIVE_PIXEL_BORDER = 5;
-const long SEVEN_PIXEL_BORDER = 7;
-const long TEN_PIXEL_BORDER = 7;
-const long FIFTEEN_PIXEL_BORDER = 15;
-const long TWENTY_PIXEL_BORDER = 20;
-const long TWENTY_FIVE_PIXEL_BORDER = 25;
-const long FIFTY_PIXEL_BORDER = 50;
 
 const int NUM_TEXTURES = 5;
 
