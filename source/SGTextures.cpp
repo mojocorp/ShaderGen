@@ -50,9 +50,10 @@
 #include "UtilityFunctions.h"
 #include <stdio.h>
 
-SGTextures::SGTextures(SGFixedGLState *state)
+SGTextures::SGTextures(SGFrame *frame, SGFixedGLState *state)
+    : m_frame(frame),
+      glState(state)
 {
-    glState = state;
     TextureNames[0] = "3Dlabs.png";
     TextureNames[1] = "3DlabsNormal.png";
     TextureNames[2] = "rust.png";
@@ -157,7 +158,7 @@ void SGTextures::Activate(TextureId id, GLint unit)
     QImage image( ":/textures/" + TextureNames[index] );
     if (image.isNull())
     {
-        SGFrame::instance->Errorf("Unable to load image %s", qPrintable(TextureNames[index]));
+        m_frame->Errorf("Unable to load image %s", qPrintable(TextureNames[index]));
         return;
     }
     image = QGLWidget::convertToGLFormat(image.mirrored());

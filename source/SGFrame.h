@@ -58,6 +58,8 @@ class SGShaderGenerator;
 class SGTextures;
 class QSplitter;
 
+#define PrintOpenGLError() SGFrame::printOglError(__FILE__, __LINE__)
+
 class SGFrame : public QMainWindow
 {
     Q_OBJECT
@@ -86,7 +88,8 @@ public:
     //Callers of Errorf should include a period and a linefeed
     void Errorf(const char* format, ...);
 
-    static SGFrame *instance;
+    /// Returns 1 if an OpenGL error occurred, 0 otherwise.
+    static int printOglError(const char *file, int line);
 
     void readSettings();
 protected:

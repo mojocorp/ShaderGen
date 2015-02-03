@@ -39,6 +39,7 @@
 *                                                                       *
 ************************************************************************/
 
+#include "SGFrame.h"
 #include "SGSurfaces.h"
 #define _USE_MATH_DEFINES
 #include <cmath>

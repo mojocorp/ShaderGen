@@ -55,7 +55,7 @@ SGOglNotebook::SGOglNotebook(SGFrame * parent)
     m_parent = parent;
 
     glState = new SGFixedGLState();
-    textures = new SGTextures(glState);
+    textures = new SGTextures(parent, glState);
 
     lightPage        = new SGOglLightNBPage        (this);
     materialPage     = new SGOglMaterialNBPage     (this);

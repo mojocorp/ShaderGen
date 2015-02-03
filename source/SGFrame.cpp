@@ -53,13 +53,11 @@
 #include "SGCanvas.h"
 #include "SGShaderTextWindow.h"
 
-SGFrame *SGFrame::instance = 0;
+SGFrame *sgframe_instance = 0;
 
 SGFrame::SGFrame(const QString& title)
     : QMainWindow()
 {
-    instance = this;
-
     setWindowTitle(title);
 
     models = new SGModels();
@@ -86,10 +84,14 @@ SGFrame::SGFrame(const QString& title)
     topSizer->addWidget(oglNotebook);
 
     setCentralWidget(topSizer);
+
+    sgframe_instance = this;
 }
 
 SGFrame::~SGFrame()
 {
+    sgframe_instance = 0;
+
     if(models != NULL)
     {
         delete models;
@@ -202,6 +204,31 @@ void SGFrame::Errorf(const char* format, ...)
     va_start(marker, format);
     message.vsprintf(format, marker);
     statusBar()->showMessage(message);
+}
+
+int SGFrame::printOglError(const char *file, int line)
+{
+    if (!sgframe_instance)
+        return 0;
+
+    int    retCode = 0;
+
+    QTextEdit *text = sgframe_instance->GetShaderTextWindow()->GetInfoBox();
+    text->textCursor().movePosition(QTextCursor::End);
+
+    GLenum glErr = glGetError();
+
+    if(DEBUG_ON)
+    {
+        while (glErr != GL_NO_ERROR)
+        {
+            QString str = QString("\nglError in file %1 @ line %2: %3\n").arg(file).arg(line).arg( (const char*)gluErrorString(glErr));
+            text->append(str);
+            retCode = 1;
+            glErr = glGetError();
+        }
+    }
+    return retCode;
 }
 
 void SGFrame::readSettings()

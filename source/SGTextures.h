@@ -46,6 +46,7 @@
 #include <QImage>
 
 class SGFixedGLState;
+class SGFrame;
 
 struct ITexture
 {
@@ -73,13 +74,14 @@ public:
         TextureMetalSheetNormal
     };
 
-    SGTextures(SGFixedGLState *state);
+    SGTextures(SGFrame *frame, SGFixedGLState *state);
     ~SGTextures();
     void Load(const char* filename);
     void Activate(TextureId id, GLint unit);
     void Deactivate(GLint unit);
 
 private:
+    SGFrame* m_frame;
     SGFixedGLState *glState;
     ITexture textures[13] ;
     QString TextureNames[13];

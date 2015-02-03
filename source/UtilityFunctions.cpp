@@ -45,31 +45,6 @@
 #include "SGShaderTextWindow.h"
 #include "SGFrame.h"
 
-// Returns 1 if an OpenGL error occurred, 0 otherwise.
-int printOglError(const char *file, int line)
-{
-    GLenum glErr;
-    int    retCode = 0;
-
-    QString str ;
-    QTextEdit *text = SGFrame::instance->GetShaderTextWindow()->GetInfoBox();
-    text->textCursor().movePosition(QTextCursor::End);
-
-    glErr = glGetError();
-
-    if(DEBUG_ON)
-    {
-        while (glErr != GL_NO_ERROR)
-        {
-            str = QString("\nglError in file %1 @ line %2: %3\n").arg(file).arg(line).arg( (const char*)gluErrorString(glErr));
-            text->append(str);
-            retCode = 1;
-            glErr = glGetError();
-        }
-    }
-    return retCode;
-}
-
 void IncorrectFormat(const QString& str, QWidget *errorWindow)
 {
     QString errorString("Enter data in the correct format, you need ");
