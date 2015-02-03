@@ -76,8 +76,7 @@ AboutDialog::AboutDialog(QWidget *parent)
                           "   Morgan Leborgne\n\n"
                           "Community Contributor(s):\n"
                           "   Ajoy Das\n"
-                          "   Michael M. Morrison\n\n"
-                          "3Dlabs thanks the developers of wxWidgets, Glew and Inno Setup.\n");
+                          "   Michael M. Morrison\n\n");
 
     QLabel *textt = new QLabel( textStr, this);
     sideSizer->addWidget(textt);
