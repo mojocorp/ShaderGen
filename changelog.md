@@ -40,11 +40,17 @@
 
 # 3Dlabs GLSL ShaderGen v3.1
 
-## Changes from ShaderGen v3.0 (in reverse chronological order)
+## Changes from ShaderGen v3.1.1 (in reverse chronological order)
+
+* Fix the mirrored textures
+* Update to glew 1.12.0
+* Fix a texture name that couldn't be loaded on case sentive OS
+
+## Changes from ShaderGen v3.1.0 (in reverse chronological order)
 
 * Ported from WxWidget to Qt
 
-## Changes from ShaderGen v2.0 (in reverse chronological order)
+## Changes from ShaderGen v3.0 (in reverse chronological order)
 
 * Added ability to clear the infolog text window.
 * Name Changed from ShaderGen to 3Dlabs GLSL ShaderGen
