@@ -67,3 +67,6 @@ SOURCES += App.cpp \
     QColorButton.cpp
 
 LIBS += -L../build -lGLEW
+
+RESOURCES += \
+    textures.qrc

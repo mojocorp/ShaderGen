@@ -154,8 +154,8 @@ void SGTextures::Activate(TextureId id, GLint unit)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-    QImage image( qApp->applicationDirPath() + "/textures/" + TextureNames[index] );
-    if( image.isNull())
+    QImage image( ":/textures/" + TextureNames[index] );
+    if (image.isNull())
     {
         SGFrame::instance->Errorf("Unable to load image %s", qPrintable(TextureNames[index]));
         return;

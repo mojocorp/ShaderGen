@@ -52,7 +52,7 @@ AboutDialog::AboutDialog(QWidget *parent)
 {
     QHBoxLayout* sideSizer = new QHBoxLayout(this);
     QLabel* bmp = new QLabel(this);
-    QPixmap splash(qApp->applicationDirPath() + "/textures/BrickWall.png");
+    QPixmap splash(":/textures/BrickWall.png");
     bmp->setPixmap(splash.scaled(splash.width(), splash.width()));
     bmp->setMargin(0);
     sideSizer->addWidget(bmp);

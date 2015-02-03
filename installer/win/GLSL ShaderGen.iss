@@ -35,7 +35,6 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 
 [Files]
 Source: "../../build/ShaderGen.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "../../textures/*"; DestDir: "{app}/textures"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
