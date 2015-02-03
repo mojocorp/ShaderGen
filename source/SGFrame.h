@@ -56,6 +56,7 @@ class SGCanvas;
 class SGFixedGLState;
 class SGShaderGenerator;
 class SGTextures;
+class QSplitter;
 
 class SGFrame : public QMainWindow
 {
@@ -86,6 +87,10 @@ public:
     void Errorf(const char* format, ...);
 
     static SGFrame *instance;
+
+    void readSettings();
+protected:
+    virtual void closeEvent(QCloseEvent * event);
 private slots:
     void modelActionTriggered(QAction *action);
     void viewActionTriggered();
@@ -117,4 +122,6 @@ private:
     SGShaderTextWindow* shaderText;
     SGModels *models;
     SGShaderGenerator *shaderGen;
+    QSplitter *topSizer;
+    QSplitter *horizSizer;
 };

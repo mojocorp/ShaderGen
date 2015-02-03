@@ -45,6 +45,7 @@
 #include <QSplitter>
 #include <QActionGroup>
 #include <QBoxLayout>
+#include <QSettings>
 
 #include "AboutDialog.h"
 #include "SGFrame.h"
@@ -75,8 +76,8 @@ SGFrame::SGFrame(const QString& title)
     shaderText  = new SGShaderTextWindow(this);
     shaderText->resize(450, 400);
 
-    QSplitter *topSizer = new QSplitter(Qt::Vertical);
-    QSplitter *horizSizer = new QSplitter(Qt::Horizontal);
+    topSizer = new QSplitter(Qt::Vertical);
+    horizSizer = new QSplitter(Qt::Horizontal);
 
     horizSizer->addWidget(canvas);
     horizSizer->addWidget(shaderText);
@@ -201,6 +202,26 @@ void SGFrame::Errorf(const char* format, ...)
     va_start(marker, format);
     message.vsprintf(format, marker);
     statusBar()->showMessage(message);
+}
+
+void SGFrame::readSettings()
+{
+    QSettings settings;
+    restoreGeometry(settings.value("app/geometry").toByteArray());
+    restoreState(settings.value("app/windowState").toByteArray());
+    topSizer->restoreState(settings.value("app/topSizer").toByteArray());
+    horizSizer->restoreState(settings.value("app/horizSizer").toByteArray());
+}
+
+void SGFrame::closeEvent(QCloseEvent * event)
+{
+    QSettings settings;
+    settings.setValue("app/geometry", saveGeometry());
+    settings.setValue("app/windowState", saveState());
+    settings.setValue("app/topSizer", topSizer->saveState());
+    settings.setValue("app/horizSizer", horizSizer->saveState());
+
+    QMainWindow::closeEvent(event);
 }
 
 void SGFrame::modelActionTriggered(QAction *action)

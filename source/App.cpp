@@ -11,6 +11,7 @@ int main (int argc, char* argv[])
 
     SGFrame mainWin(QApplication::applicationName());
     mainWin.resize(800, 800);
+    mainWin.readSettings();
     mainWin.show();
 
     return app.exec();;
