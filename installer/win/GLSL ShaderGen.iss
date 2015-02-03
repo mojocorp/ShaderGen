@@ -39,6 +39,7 @@ Source: "../../build/QtCore4.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "../../build/QtGui4.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "../../build/QtOpenGL4.dll"; DestDir: "{app}"; Flags: ignoreversion
 
+Source: "C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Bootstrapper\Packages\vcredist_x64\vcredist_x64.exe"; DestDir: {tmp}; Flags: deleteafterinstall
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
@@ -46,5 +47,6 @@ Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
 Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
 
 [Run]
+Filename: "{tmp}\vcredist_x64.exe"; Parameters: "/q"; Description: "Install ""Redistributable Package"""; WorkingDir: {tmp}; Flags: skipifdoesntexist runascurrentuser;
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, "&", "&&")}}"; Flags: nowait postinstall skipifsilent
 
