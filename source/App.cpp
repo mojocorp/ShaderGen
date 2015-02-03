@@ -5,9 +5,13 @@
 int main (int argc, char* argv[])
 {
     QApplication app(argc, argv);
+    QApplication::setApplicationName("GLSL ShaderGen");
+    QApplication::setOrganizationName("mojocorp");
     QApplication::setQuitOnLastWindowClosed (true);
-    SGFrame mainWin("3Dlabs GLSL ShaderGen");
+
+    SGFrame mainWin(QApplication::applicationName());
     mainWin.resize(800, 800);
     mainWin.show();
+
     return app.exec();;
 }
