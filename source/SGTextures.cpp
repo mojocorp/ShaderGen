@@ -53,10 +53,10 @@
 SGTextures::SGTextures(SGFixedGLState *state)
 {
     glState = state;
-    TextureNames[0] = "3DlabsLogo.png";
+    TextureNames[0] = "3Dlabs.png";
     TextureNames[1] = "3DlabsNormal.png";
     TextureNames[2] = "rust.png";
-    TextureNames[3] = "leopard.png";
+    TextureNames[3] = "Leopard.png";
     TextureNames[4] = "eyeball.png";
     TextureNames[5] = "cobblestonesDiffuse.png";
     TextureNames[6] = "cobblestonesNormal.png";
