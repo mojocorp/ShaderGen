@@ -11,9 +11,9 @@ ShaderGen
 
 ### Download ###
 
-[ShaderGen 3.0 Windows](https://dl.dropbox.com/u/1273801/ShaderGen/ShaderGen-3.0.exe)  
-[ShaderGen 3.1.0 Mac OS X Intel 64bit DMG](https://dl.dropbox.com/u/1273801/ShaderGen/ShaderGen-3.1.0.dmg)  
-[ShaderGen 3.1.0 Linux Ubuntu i386](https://dl.dropbox.com/u/1273801/ShaderGen/ShaderGen-3.1.0.tar.gz)  
+[ShaderGen 3.1.0 Windows](https://github.com/mojocorp/ShaderGen/releases/download/v3.1.0/ShaderGen-3.1.0.exe)  
+[ShaderGen 3.1.0 Mac OS X Intel 64bit DMG](https://github.com/mojocorp/ShaderGen/releases/download/v3.1.0/ShaderGen-3.1.0.dmg)  
+[ShaderGen 3.1.0 Linux Ubuntu i386](https://github.com/mojocorp/ShaderGen/releases/download/v3.1.0/ShaderGen-3.1.0.tar.gz)  
 
 ### Compiling ###
 
