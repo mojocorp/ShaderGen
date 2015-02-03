@@ -7,13 +7,13 @@ ShaderGen
 
 ### Description ###
 
-3DLabs' ShaderGen ported to Qt 4.
+ShaderGen is a tool that automatically generates OpenGL Shading Language shaders that duplicate fixed function OpenGL behavior.
 
 ### Download ###
 
-[ShaderGen 3.1.0 Windows](https://github.com/mojocorp/ShaderGen/releases/download/v3.1.0/ShaderGen-3.1.0.exe)  
-[ShaderGen 3.1.0 Mac OS X Intel 64bit DMG](https://github.com/mojocorp/ShaderGen/releases/download/v3.1.0/ShaderGen-3.1.0.dmg)  
-[ShaderGen 3.1.0 Linux Ubuntu i386](https://github.com/mojocorp/ShaderGen/releases/download/v3.1.0/ShaderGen-3.1.0.tar.gz)  
+[ShaderGen 3.1.1 Windows](https://github.com/mojocorp/ShaderGen/releases/download/v3.1.1/ShaderGen-3.1.1.exe)  
+[ShaderGen 3.1.1 Mac OS X Intel 64bit DMG](https://github.com/mojocorp/ShaderGen/releases/download/v3.1.1/ShaderGen-3.1.1.dmg)  
+[ShaderGen 3.1.1 Linux Ubuntu x64](https://github.com/mojocorp/ShaderGen/releases/download/v3.1.1/ShaderGen-3.1.1.tar.gz)  
 
 ### Compiling ###
 
