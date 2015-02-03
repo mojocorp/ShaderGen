@@ -78,7 +78,6 @@ public:
     void Load(const char* filename);
     void Activate(TextureId id, GLint unit);
     void Deactivate(GLint unit);
-    void ActivateLogo();
 
 private:
     SGFixedGLState *glState;

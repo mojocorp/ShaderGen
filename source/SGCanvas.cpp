@@ -136,17 +136,6 @@ void SGCanvas::paintGL()
 
     PrintOpenGLError();
 
-    glViewport(0, 0, m_width, m_height);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glOrtho(0, m_width, m_height, 0, -2, 2);
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-
-    m_frame->GetTextures()->ActivateLogo();
-
-    DrawLogo();
-
     glPopAttrib();
 
     glFinish();

@@ -74,42 +74,6 @@ SGTextures::~SGTextures()
 {
 }
 
-void SGTextures::ActivateLogo()
-{
-    for(int i=0;i<5;i++)
-    {
-        glActiveTexture(GL_TEXTURE0+i);
-        glDisable(GL_TEXTURE_2D);
-    }
-    glActiveTexture(GL_TEXTURE0);
-    glDisable(GL_TEXTURE_GEN_S);
-    glDisable(GL_TEXTURE_GEN_T);
-    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-    glEnable(GL_TEXTURE_2D);
-
-    if(logo)
-    {
-        glBindTexture( GL_TEXTURE_2D, logo);
-        return;
-    }
-    else
-    {
-        glGenTextures(1, &logo);
-        glBindTexture( GL_TEXTURE_2D, logo);
-    }
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    QImage image( qApp->applicationDirPath() + "/textures/3DlabsLogo.png" );
-    if(image.isNull())
-    {
-        printf("Unable to load image 3Dlabs logo\n");
-        return;
-    }
-    image = QGLWidget::convertToGLFormat(image.mirrored());
-    gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGBA, image.width(), image.height(),GL_RGBA, GL_UNSIGNED_BYTE, image.bits());
-}
-
 void SGTextures::Activate(TextureId id, GLint unit)
 {
     PrintOpenGLError();
