@@ -988,7 +988,7 @@ void SGShaderGenerator::BuildVertMain( QString &str)
     str +=  "    // Eye-coordinate position of vertex, needed in various calculations\n"
             "    vec4 ecPosition = gl_ModelViewMatrix * gl_Vertex;\n\n"
             "    // Do fixed functionality vertex transform\n"
-            "    gl_Position = ftransform();\n";
+            "    gl_Position = gl_ProjectionMatrix * gl_ModelViewMatrix * gl_Vertex;\n";
 
     for(int i=0; i<5; i++)
     {
