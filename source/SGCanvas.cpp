@@ -482,11 +482,9 @@ bool SGCanvas::CompileShaders(const QString & vertexShader, const QString & frag
 
 void SGCanvas::PrintInfoLog(GLuint obj)
 {
-    GLint infologLength = 0;
-    int charsWritten  = 0;
-    GLchar *infoLog;
     QTextEdit *text = m_frame->GetShaderTextWindow()->GetInfoBox();
 
+    GLint infologLength = 0;
     if(glIsProgram(obj))
     {
         glGetProgramiv(obj, GL_INFO_LOG_LENGTH, &infologLength);
@@ -504,30 +502,25 @@ void SGCanvas::PrintInfoLog(GLuint obj)
 
     if (infologLength > 0)
     {
-        infoLog = new GLchar[infologLength];
-        if (infoLog == NULL)
-        {
-            text->append(tr("ERROR: Could not allocate InfoLog buffer\n"));
-            return;
-        }
+        int charsWritten  = 0;
+        QVector<GLchar> infoLog(infologLength);
+
         if(glIsProgram(obj))
         {
-            glGetProgramInfoLog(obj, infologLength, &charsWritten, infoLog);
+            glGetProgramInfoLog(obj, infologLength, &charsWritten, infoLog.data());
         }
         else if(glIsShader(obj))
         {
-            glGetShaderInfoLog(obj, infologLength, &charsWritten, infoLog);
+            glGetShaderInfoLog(obj, infologLength, &charsWritten, infoLog.data());
         }
         else
         {
             text->append(tr("ERROR: No Shader or Program available"));
         }
 
-        QString errors = tr("InfoLog:") + infoLog;
+        QString errors = tr("InfoLog:") + infoLog.data();
 
         text->append(errors);
-
-        delete[] infoLog;
     }
 }
 
