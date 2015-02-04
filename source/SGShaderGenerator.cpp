@@ -711,9 +711,9 @@ void SGShaderGenerator::BuildLightCode(QString &str)
             }
         }
 
-        str +=     "    color = gl_FrontLightModelProduct.sceneColor +\n"
-                "      Ambient  * gl_FrontMaterial.ambient +\n"
-                "      Diffuse  * gl_FrontMaterial.diffuse;\n";
+        str +=  "    color = gl_FrontLightModelProduct.sceneColor +\n"
+                "            Ambient  * gl_FrontMaterial.ambient +\n"
+                "            Diffuse  * gl_FrontMaterial.diffuse;\n";
 
         if(separateSpecInt == GL_SEPARATE_SPECULAR_COLOR)
         {
@@ -1078,8 +1078,8 @@ void SGShaderGenerator::AddFuncLightPoint(QString &str) const
             "   VP = normalize(VP);\n\n"
             "   // Compute attenuation\n"
             "   attenuation = 1.0 / (gl_LightSource[i].constantAttenuation +\n"
-            "       gl_LightSource[i].linearAttenuation * d +\n"
-            "       gl_LightSource[i].quadraticAttenuation * d * d);\n\n"
+            "                        gl_LightSource[i].linearAttenuation * d +\n"
+            "                        gl_LightSource[i].quadraticAttenuation * d * d);\n\n"
             "   halfVector = normalize(VP + eye);\n\n"
             "   nDotVP = max(0.0, dot(normal, VP));\n"
             "   nDotHV = max(0.0, dot(normal, halfVector));\n\n"
