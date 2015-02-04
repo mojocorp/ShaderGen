@@ -43,7 +43,8 @@ HEADERS += globals.h\
            SGOglTextureEnvNBPage.h \
            Vector.h \
            QColorButton.h \
-           QVectorEdit.h
+           QVectorEdit.h \
+           QCodeEditor.h
 
 SOURCES += App.cpp \
            AboutDialog.cpp \
@@ -65,7 +66,8 @@ SOURCES += App.cpp \
            SGOglTextureEnvNBPage.cpp \
            Vector.cpp \
            QColorButton.cpp \
-           QVectorEdit.cpp
+           QVectorEdit.cpp \
+           QCodeEditor.cpp
 
 LIBS += -L../build -lGLEW
 

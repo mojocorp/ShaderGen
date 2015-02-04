@@ -46,6 +46,7 @@
 #include "SGShaderTextWindow.h"
 #include "SGFrame.h"
 #include "SGCanvas.h"
+#include "QCodeEditor.h"
 
 SGShaderTextWindow::SGShaderTextWindow(SGFrame *frame):QFrame(frame)
 {
@@ -53,8 +54,8 @@ SGShaderTextWindow::SGShaderTextWindow(SGFrame *frame):QFrame(frame)
 
     notebook = new QTabWidget(this);
 
-    textBoxVert = new QTextEdit(notebook);
-    textBoxFrag = new QTextEdit(notebook);
+    textBoxVert = new QCodeEditor(notebook);
+    textBoxFrag = new QCodeEditor(notebook);
     textBoxInfo = new QTextEdit(notebook);
 
     QFont fixedFont("Monospace");

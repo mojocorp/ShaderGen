@@ -43,6 +43,7 @@
 
 #include <QTabWidget>
 #include <QTextEdit>
+#include <QPlainTextEdit>
 
 class SGFrame;
 
@@ -51,8 +52,8 @@ class SGShaderTextWindow: public QFrame
     Q_OBJECT
 public:
     SGShaderTextWindow(SGFrame *frame);
-    QTextEdit* GetVertexShaderBox(){ return textBoxVert; }
-    QTextEdit* GetFragmentShaderBox(){ return textBoxFrag ;}
+    QPlainTextEdit* GetVertexShaderBox(){ return textBoxVert; }
+    QPlainTextEdit* GetFragmentShaderBox(){ return textBoxFrag ;}
     QTextEdit* GetInfoBox(){ return textBoxInfo ;}
     bool haveRefreshed, haveCompiled, haveLinked;
 public slots:
@@ -62,8 +63,8 @@ public slots:
     void build();
     void clearLog();
 private:
-    QTextEdit *textBoxVert, *textBoxFrag, *textBoxInfo;
-    QTextEdit *textFieldRow, *textFieldCol;
+    QPlainTextEdit *textBoxVert, *textBoxFrag;
+    QTextEdit  *textBoxInfo;
     QTabWidget *notebook;
     SGFrame *m_frame;
 };
