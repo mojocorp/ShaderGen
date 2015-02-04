@@ -72,6 +72,4 @@ private:
     QColorButton* diffuseMaterial;
     QColorButton* specularMaterial;
     QColorButton* emissionMaterial;
-
-    //void IncorrectFormat(wxString str);
 };

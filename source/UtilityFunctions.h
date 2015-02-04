@@ -41,20 +41,9 @@
 
 #pragma once
 
-#include <GL/glew.h>
-
-#include <QString>
 #include <QColor>
-#include <QStringList>
 
 #include "Vector.h"
-#include "globals.h"
-
-class QWidget;
-
-void IncorrectFormat(const QString& str, QWidget *errorWindow);
-
-
 /******************************************************
 The following two functions are used to convert color
     data back and forth between OpenGL and wxWidgets.
@@ -75,12 +64,4 @@ inline const QColor ToQtColor( const vec4& fpColor)
 inline const vec4 ToGLFPColor(const QColor& color)
 {
     return vec4(color.redF(), color.greenF(), color.blueF(), 1.0f);
-}
-
-inline QString FloatToString3(const vec3& v) { return QString().sprintf("%.1f,%.1f,%.1f",v.x,v.y,v.z); }
-inline QString FloatToString4(const vec4& v) { return QString().sprintf("%.1f,%.1f,%.1f,%.1f",v.x,v.y,v.z,v.w); }
-
-inline QStringList parseVector(QString userEntry)
-{
-    return userEntry.split(",");
 }

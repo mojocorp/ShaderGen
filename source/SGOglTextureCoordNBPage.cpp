@@ -44,6 +44,7 @@
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QRadioButton>
+#include "QVectorEdit.h"
 
 #include "SGOglTextureCoordNBPage.h"
 #include "SGOglNotebook.h"
@@ -73,11 +74,11 @@ SGOglTextureCoordNBPage::SGOglTextureCoordNBPage(SGOglNotebook* parent)
     QLabel* eyePlaneCoeffLabelS = new QLabel(tr("GL_S"), this);
     QLabel* eyePlaneCoeffLabelT = new QLabel(tr("GL_T"), this);
     
-    eyePlaneCoeffTextS = new QLineEdit(FloatToString4(glState->GetTexture(0)->eyePlaneCoeffS), this);
-    connect(eyePlaneCoeffTextS, SIGNAL(returnPressed()), SLOT(OnTextEnterEyeCoeffS()));
+    eyePlaneCoeffTextS = new QVectorEdit(glState->GetTexture(0)->eyePlaneCoeffS, this);
+    connect(eyePlaneCoeffTextS, SIGNAL(valueChanged()), SLOT(OnTextEnterEyeCoeffS()));
 
-    eyePlaneCoeffTextT = new QLineEdit(FloatToString4(glState->GetTexture(0)->eyePlaneCoeffT), this);
-    connect(eyePlaneCoeffTextT, SIGNAL(returnPressed()), SLOT(OnTextEnterEyeCoeffT()));
+    eyePlaneCoeffTextT = new QVectorEdit(glState->GetTexture(0)->eyePlaneCoeffT, this);
+    connect(eyePlaneCoeffTextT, SIGNAL(valueChanged()), SLOT(OnTextEnterEyeCoeffT()));
 
     eyePlaneLabelSizer->addWidget(eyePlaneCoeffLabelS);
     eyePlaneLabelSizer->addWidget(eyePlaneCoeffLabelT);
@@ -97,11 +98,11 @@ SGOglTextureCoordNBPage::SGOglTextureCoordNBPage(SGOglNotebook* parent)
     QLabel* objectPlaneCoeffLabelS = new QLabel(tr("GL_S"), this);
     QLabel* objectPlaneCoeffLabelT = new QLabel(tr("GL_T"), this);
 
-    objectPlaneCoeffTextS = new QLineEdit(FloatToString4(glState->GetTexture(0)->objectPlaneCoeffS), this);
-    connect(objectPlaneCoeffTextS, SIGNAL(returnPressed()), SLOT(OnTextEnterObjCoeffS()));
+    objectPlaneCoeffTextS = new QVectorEdit(glState->GetTexture(0)->objectPlaneCoeffS, this);
+    connect(objectPlaneCoeffTextS, SIGNAL(valueChanged()), SLOT(OnTextEnterObjCoeffS()));
 
-    objectPlaneCoeffTextT = new QLineEdit(FloatToString4(glState->GetTexture(0)->objectPlaneCoeffT), this);
-    connect(objectPlaneCoeffTextT, SIGNAL(returnPressed()), SLOT(OnTextEnterObjCoeffT()));
+    objectPlaneCoeffTextT = new QVectorEdit(glState->GetTexture(0)->objectPlaneCoeffT, this);
+    connect(objectPlaneCoeffTextT, SIGNAL(valueChanged()), SLOT(OnTextEnterObjCoeffT()));
 
     objectPlaneLabelSizer->addWidget(objectPlaneCoeffLabelS);
     objectPlaneLabelSizer->addWidget(objectPlaneCoeffLabelT);
@@ -273,22 +274,10 @@ void SGOglTextureCoordNBPage::OnTextEnterEyeCoeffS()
     SGFixedGLState* glState = m_parent->GetGLState();
     glState->SetTextureChanged(true);
 
-    vec4 eyePlaneSVec;
+    vec4 eyePlaneSVec = eyePlaneCoeffTextS->getValue();
 
-    if((parseVector(eyePlaneCoeffTextS->text())).size() == 4)
-    {
-        QStringList userEnteredValues = parseVector(eyePlaneCoeffTextS->text());
-        for(int i = 0; i < 4; i++)
-        {
-            eyePlaneSVec[i] = userEnteredValues[i].toFloat();
-        }
-        glState->GetTexture(texCoordUnitGroup->checkedId())->eyePlaneCoeffS = eyePlaneSVec;
-    }
-    else
-    {
-        IncorrectFormat(tr("four floating point values, with each value seperated by a comma."), this);
-        return;
-    }
+    glState->GetTexture(texCoordUnitGroup->checkedId())->eyePlaneCoeffS = eyePlaneSVec;
+
     m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();
 }
@@ -298,22 +287,10 @@ void SGOglTextureCoordNBPage::OnTextEnterEyeCoeffT()
     SGFixedGLState* glState = m_parent->GetGLState();
     glState->SetTextureChanged(true);
 
-    vec4 eyePlaneTVec;
+    vec4 eyePlaneTVec = eyePlaneCoeffTextT->getValue();
 
-    if((parseVector(eyePlaneCoeffTextT->text())).size() == 4)
-    {
-        QStringList userEnteredValues = parseVector(eyePlaneCoeffTextT->text());
-        for(int i = 0; i < 4; i++)
-        {
-            eyePlaneTVec[i] = userEnteredValues[i].toFloat();
-        }
-        glState->GetTexture(texCoordUnitGroup->checkedId())->eyePlaneCoeffT = eyePlaneTVec;
-    }
-    else
-    {
-        IncorrectFormat(tr("four floating point values, with each value seperated by a comma."), this);
-        return;
-    }
+    glState->GetTexture(texCoordUnitGroup->checkedId())->eyePlaneCoeffT = eyePlaneTVec;
+
     m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();
 }
@@ -323,22 +300,10 @@ void SGOglTextureCoordNBPage::OnTextEnterObjCoeffS()
     SGFixedGLState* glState = m_parent->GetGLState();
     glState->SetTextureChanged(true);
 
-    vec4 objPlaneSVec;
+    vec4 objPlaneSVec = objectPlaneCoeffTextS->getValue();
 
-    if((parseVector(objectPlaneCoeffTextS->text())).size() == 4)
-    {
-        QStringList userEnteredValues = parseVector(objectPlaneCoeffTextS->text());
-        for(int i = 0; i < 4; i++)
-        {
-            objPlaneSVec[i] = userEnteredValues[i].toFloat();
-        }
-        glState->GetTexture(texCoordUnitGroup->checkedId())->objectPlaneCoeffS = objPlaneSVec;
-    }
-    else
-    {
-        IncorrectFormat(tr("four floating point values, with each value seperated by a comma."), this);
-        return;
-    }
+    glState->GetTexture(texCoordUnitGroup->checkedId())->objectPlaneCoeffS = objPlaneSVec;
+
     m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();
 }
@@ -348,22 +313,10 @@ void SGOglTextureCoordNBPage::OnTextEnterObjCoeffT()
     SGFixedGLState* glState = m_parent->GetGLState();
     glState->SetTextureChanged(true);
 
-    vec4 objPlaneTVec;
+    vec4 objPlaneTVec = objectPlaneCoeffTextT->getValue();
 
-    if((parseVector(objectPlaneCoeffTextT->text())).size() == 4)
-    {
-        QStringList userEnteredValues = parseVector(objectPlaneCoeffTextT->text());
-        for(int i = 0; i < 4; i++)
-        {
-            objPlaneTVec[i] = userEnteredValues[i].toFloat();
-        }
-        glState->GetTexture(texCoordUnitGroup->checkedId())->objectPlaneCoeffT = objPlaneTVec;
-    }
-    else
-    {
-        IncorrectFormat("four floating point values, with each value seperated by a comma.", this);
-        return;
-    }
+    glState->GetTexture(texCoordUnitGroup->checkedId())->objectPlaneCoeffT = objPlaneTVec;
+
     m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();
 }
@@ -394,9 +347,9 @@ void SGOglTextureCoordNBPage::UpdateWidgets()
         break;
     }
 
-    eyePlaneCoeffTextS->setText(FloatToString4(texture->eyePlaneCoeffS));
-    eyePlaneCoeffTextT->setText(FloatToString4(texture->eyePlaneCoeffT));
-    objectPlaneCoeffTextS->setText(FloatToString4(texture->objectPlaneCoeffS));
-    objectPlaneCoeffTextT->setText(FloatToString4(texture->objectPlaneCoeffT));
+    eyePlaneCoeffTextS->setValue(texture->eyePlaneCoeffS);
+    eyePlaneCoeffTextT->setValue(texture->eyePlaneCoeffT);
+    objectPlaneCoeffTextS->setValue(texture->objectPlaneCoeffS);
+    objectPlaneCoeffTextT->setValue(texture->objectPlaneCoeffT);
 }
 

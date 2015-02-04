@@ -47,6 +47,7 @@
 #include <QLineEdit>
 
 class SGOglNotebook;
+class QVectorEdit;
 
 class SGOglTextureCoordNBPage: public QWidget
 {
@@ -79,7 +80,7 @@ private:
     
     QButtonGroup *coordGenGroup, *texCoordSelGroup, *texCoordUnitGroup;
     
-    QLineEdit *eyePlaneCoeffTextS, *eyePlaneCoeffTextT, *objectPlaneCoeffTextS, *objectPlaneCoeffTextT;
+    QVectorEdit *eyePlaneCoeffTextS, *eyePlaneCoeffTextT, *objectPlaneCoeffTextS, *objectPlaneCoeffTextT;
 
     void UpdateWidgets();
 };

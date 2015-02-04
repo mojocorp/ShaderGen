@@ -65,7 +65,6 @@ protected slots:
     void OnRadio(int index);
 
 private:
-    //void IncorrectFormat(wxString str);
     SGOglNotebook *m_parent;
 
     QButtonGroup* fogModeChoice;

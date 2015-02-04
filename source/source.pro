@@ -42,7 +42,8 @@ HEADERS += globals.h\
            SGOglTextureCoordNBPage.h \
            SGOglTextureEnvNBPage.h \
            Vector.h \
-           QColorButton.h
+           QColorButton.h \
+           QVectorEdit.h
 
 SOURCES += App.cpp \
            AboutDialog.cpp \
@@ -58,15 +59,14 @@ SOURCES += App.cpp \
            SGShaderTextWindow.cpp \
            SGOglFogNBPage.cpp \
            SGOglMaterialNBPage.cpp \
-           UtilityFunctions.cpp \
            SGTextures.cpp \
            SGOglLightNBPage.cpp \
            SGOglTextureCoordNBPage.cpp \
            SGOglTextureEnvNBPage.cpp \
            Vector.cpp \
-    QColorButton.cpp
+           QColorButton.cpp \
+           QVectorEdit.cpp
 
 LIBS += -L../build -lGLEW
 
-RESOURCES += \
-    textures.qrc
+RESOURCES += textures.qrc

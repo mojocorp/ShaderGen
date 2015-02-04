@@ -46,6 +46,7 @@
 #include <QMessageBox>
 
 #include "QColorButton.h"
+#include "QVectorEdit.h"
 
 #include "SGOglLightNBPage.h"
 #include "SGOglNotebook.h"
@@ -120,11 +121,11 @@ SGOglLightNBPage::SGOglLightNBPage(SGOglNotebook* parent)
 
     Light *light = glState->GetLight(lightSelectionGroup->checkedId());
 
-    lightPosition = new QLineEdit(FloatToString4(light->lightPositionVector), this);
-    connect(lightPosition, SIGNAL(returnPressed()), SLOT(lightPositionChanged()));
+    lightPosition = new QVectorEdit(light->lightPositionVector, this);
+    connect(lightPosition, SIGNAL(valueChanged()), SLOT(lightPositionChanged()));
 
-    spotDirection = new QLineEdit(FloatToString3(light->lightSpotDirectionVector), this);
-    connect(spotDirection, SIGNAL(returnPressed()), SLOT(spotDirectionChanged()));
+    spotDirection = new QVectorEdit(light->lightSpotDirectionVector, this);
+    connect(spotDirection, SIGNAL(valueChanged()), SLOT(spotDirectionChanged()));
 
     spotExponent  = new QDoubleSpinBox(this);
     spotExponent->setRange(-1000, 1000);
@@ -359,29 +360,7 @@ void SGOglLightNBPage::linearAttenuationChanged()
 
 void SGOglLightNBPage::lightPositionChanged()
 {
-    QStringList userEnteredValues;
-    if(!(lightPosition->text()).isEmpty())
-    {
-        if((parseVector(lightPosition->text())).size() == 4)
-        {
-            userEnteredValues = parseVector(lightPosition->text());
-        }
-        else
-        {
-            IncorrectFormat(tr("four floating point values, with each value separated by a comma."), this);
-            return;
-        }
-    }
-    else
-    {
-        IncorrectFormat(tr("four floating point values, with each value separated by a comma."), this);
-        return;
-    }
-    vec4 tempLightPosVector;
-    for(int i = 0; i < 4; i++)
-    {
-        tempLightPosVector[i] = userEnteredValues[i].toFloat();
-    }
+    vec4 tempLightPosVector = lightPosition->getValue();
     if(tempLightPosVector[3] != 1 && tempLightPosVector[3] != 0.0)
     {
         QMessageBox::warning(this, tr(""), tr("The w component of GL_POSITION must be 0.0 or 1.0"));
@@ -397,36 +376,13 @@ void SGOglLightNBPage::lightPositionChanged()
 
 void SGOglLightNBPage::spotDirectionChanged()
 {
-    QStringList userEnteredValues;
-    if(!(spotDirection->text()).isEmpty())
-    {
-        if((parseVector(spotDirection->text())).size() == 3)
-        {
-            userEnteredValues = parseVector(spotDirection->text());
-        }
-        else
-        {
-            IncorrectFormat(tr("three floating point values, with each value separated by a comma."), this);
-            return;
-        }
-    }
-    else
-    {
-        IncorrectFormat(tr("three floating point values, with each value separated by a comma."), this);
-        return;
-    }
-    userEnteredValues = parseVector(spotDirection->text());
-
-    vec3 tempLightSpotDirectionVector;
-    for(int i = 0; i < 3; i++)
-    {
-        tempLightSpotDirectionVector[i] = userEnteredValues[i].toFloat();
-    }
-
+    vec4 tempLightSpotDirectionVector = spotDirection->getValue();
     int lightSelected = lightSelectionGroup->checkedId();
     SGFixedGLState* glState = m_parent->GetGLState();
     glState->SetLightChanged(true);
-    glState->GetLight(lightSelected)->lightSpotDirectionVector = tempLightSpotDirectionVector;
+    glState->GetLight(lightSelected)->lightSpotDirectionVector = vec3(tempLightSpotDirectionVector.x,
+                                                                      tempLightSpotDirectionVector.y,
+                                                                      tempLightSpotDirectionVector.z);
     m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();
 }
@@ -440,8 +396,7 @@ void SGOglLightNBPage::OnRadio(int index)
     ambientLight ->setColor(ToQtColor(light->lightAmbientColorVector ));
     diffuseLight ->setColor(ToQtColor(light->lightDiffuseColorVector ));
     specularLight->setColor(ToQtColor(light->lightSpecularColorVector));
-
-    spotDirection->setText(FloatToString3( light->lightSpotDirectionVector ));
+    spotDirection->setValue(light->lightSpotDirectionVector);
     spotExponent ->setValue(light->lightSpotExponent);
     spotCutoff   ->setValue(light->lightSpotCutoff);
 
@@ -449,7 +404,7 @@ void SGOglLightNBPage::OnRadio(int index)
     quadraticAttenuation->setValue(light->lightQuadraticAttenuation);
     linearAttenuation->setValue(light->lightLinearAttenuation);
 
-    lightPosition->setText(FloatToString4(light->lightPositionVector));
+    lightPosition->setValue(light->lightPositionVector);
 
     m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();

@@ -49,6 +49,7 @@
 
 class SGOglNotebook;
 class QColorButton;
+class QVectorEdit;
 
 class SGOglLightNBPage : public QWidget
 {
@@ -79,9 +80,9 @@ private:
     QCheckBox *lcb4, *lcb5, *lcb6, *lcb7;
     QCheckBox *lightingCheckBox, *normalizeCheckBox, *separateSpecularColorCheckBox;
 
-    QLineEdit* lightPosition;
+    QVectorEdit* lightPosition;
 
-    QLineEdit* spotDirection;
+    QVectorEdit* spotDirection;
     QDoubleSpinBox* spotExponent;
     QDoubleSpinBox* spotCutoff;
 
