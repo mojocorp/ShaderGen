@@ -484,7 +484,6 @@ void SGCanvas::PrintInfoLog(GLuint obj)
 {
     GLint infologLength = 0;
     int charsWritten  = 0;
-    QString errors;
     GLchar *infoLog;
     QTextEdit *text = m_frame->GetShaderTextWindow()->GetInfoBox();
 
@@ -524,7 +523,7 @@ void SGCanvas::PrintInfoLog(GLuint obj)
             text->append(tr("ERROR: No Shader or Program available"));
         }
 
-        errors = tr("InfoLog:") + infoLog + "\n";
+        QString errors = tr("InfoLog:") + infoLog;
 
         text->append(errors);
 
@@ -549,7 +548,7 @@ void SGCanvas::WriteMessage(const QString str)
 {
     m_frame->SetStatusText(str);
     QTextEdit *text = m_frame->GetShaderTextWindow()->GetInfoBox();
-    text->append(str+tr("\n"));
+    text->append(str);
 }
 
 GLint SGCanvas::GetUniLoc(unsigned int program, const GLchar *name)
@@ -558,7 +557,7 @@ GLint SGCanvas::GetUniLoc(unsigned int program, const GLchar *name)
     loc = glGetUniformLocation(program, name);
     if (loc == -1)
     {
-        WriteMessage(tr("No such uniform named \"") + name + "\"\n");
+        WriteMessage(tr("No such uniform named \"") + name + "\"");
     }
     PrintOpenGLError();
     return loc;
