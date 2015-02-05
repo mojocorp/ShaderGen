@@ -65,20 +65,6 @@ vec3 cross(const vec3& u, const vec3& v)
     return vec3(u.y*v.z-u.z*v.y, u.z*v.x-u.x*v.z, u.x*v.y-u.y*v.x);
 }
 
-float vec4::length() const
-{
-    return sqrtf(x*x + y*y + z*z + w*w);
-}
-
-void vec4::normalize()
-{
-    float m = length();
-    x /= m;
-    y /= m;
-    z /= m;
-    w /= m;
-}
-
 vec3 operator*(const vec3& v, const mat4& m)
 {
     float x = m.data[0] * v.x + m.data[4] * v.y + m.data[8] * v.z  + m.data[12];
@@ -104,11 +90,6 @@ void glVertex(const vec3& v)
 void glNormal(const vec3& v)
 {
     glNormal3fv((float*) &v);
-}
-
-void glColor(const vec4& v)
-{
-    glColor4f(v.x, v.y, v.z, v.w);
 }
 
 void glMultiTexCoord(const vec2& v, const GLint u)

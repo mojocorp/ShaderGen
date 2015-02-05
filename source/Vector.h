@@ -80,22 +80,6 @@ struct vec3 {
     float x, y, z;
 };
 
-struct vec4 {
-    vec4() : x(0), y(0), z(0), w(0) {}
-    vec4(float x, float y, float z, float w) : x(x), y(y), z(z), w(w) {}
-    vec4 operator-(const vec4& v) { return vec4(x-v.x, y-v.y, z-v.z, w-v.w); }
-    vec4 operator+(const vec4& v) { return vec4(x+v.x, y+v.y, z+v.z, w+v.w); }
-    vec4 operator-() const { return vec4(-x, -y, -z, -w); }
-    vec4 operator/(float f) const { return vec4(x / f, y / f, z / f, w / f); }
-    vec4 operator*(float f) const { return vec4(x * f, y * f, z * f, w * f); }
-    void operator*=(float scale) { x *= scale; y *= scale; z *= scale; w *= scale; }
-    void operator/=(float f) { x /= f; y /= f; z /= f; w /= f; }
-    float length() const;
-    void normalize();
-    operator float*() { return &x; }
-    float x, y, z, w;
-};
-
 struct mat4 {
     float data[16];
     void identity();
