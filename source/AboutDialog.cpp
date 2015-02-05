@@ -61,7 +61,7 @@ AboutDialog::AboutDialog(QWidget *parent)
     sideSizer->addWidget(line);
 
     QString textStr =  tr("\n"
-                          "GLSL ShaderGen v3.1.1\n"
+                          "GLSL ShaderGen v3.2.0\n"
                           "Copyright (c) 2005 3Dlabs. All rights reserved\n\n"
                           "http://www.3dlabs.com/contact \n\n"
                           "Lead Developer:\n"

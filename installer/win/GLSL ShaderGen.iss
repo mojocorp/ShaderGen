@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "GLSL ShaderGen"
-#define MyAppVersion "3.1.1"
+#define MyAppVersion "3.2.0"
 #define MyAppPublisher "mojocorp"
 #define MyAppURL "https://github.com/mojocorp/ShaderGen"
 #define MyAppExeName "ShaderGen.exe"
