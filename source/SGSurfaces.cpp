@@ -70,13 +70,13 @@ int TParametricSurface::Draw()
     {
         float u = i * du;
         glBegin(GL_QUAD_STRIP);
-        flipped = Flip(vec2(u,0));
+        flipped = Flip(QVector2D(u,0));
 
         for (int j=0; j<stacks; j++)
         {
             float v = j * dv;
             QVector3D normal, p0;
-            vec2 domain = flipped ? vec2(u + du, v) : vec2(u, v);
+            QVector2D domain = flipped ? QVector2D(u + du, v) : QVector2D(u, v);
             Vertex(domain, normal, p0, isNormalize);
             if (isNormalize)
                 glNormal(normal);
@@ -85,7 +85,7 @@ int TParametricSurface::Draw()
                 glMultiTexCoord(domain, GL_TEXTURE0 + i);
             }
             glVertex(p0);
-            domain =  flipped ? vec2(u, v) : vec2(u + du, v);
+            domain =  flipped ? QVector2D(u, v) : QVector2D(u + du, v);
             Vertex(domain, normal, p0, isNormalize);
             if (isNormalize)
                 glNormal(normal);
@@ -105,26 +105,26 @@ int TParametricSurface::Draw()
 }
 
 // Send out a normal, texture coordinate, vertex coordinate, and an optional custom attribute.
-void TParametricSurface::Vertex(vec2& domain, QVector3D& normal, QVector3D& p0, bool isNormalize)
+void TParametricSurface::Vertex(QVector2D& domain, QVector3D& normal, QVector3D& p0, bool isNormalize)
 {
     QVector3D p1, p2, p3;
-    float u = domain.u;
-    float v = domain.v;
+    float u = domain.x();
+    float v = domain.y();
 
     Eval(domain, p0);
-    vec2 z1(u + du/2, v);
+    QVector2D z1(u + du/2, v);
     Eval(z1, p1);
-    vec2 z2(u + du/2 + du, v);
+    QVector2D z2(u + du/2 + du, v);
     Eval(z2, p3);
 
     if (flipped)
     {
-        vec2 z3(u + du/2, v - dv);
+        QVector2D z3(u + du/2, v - dv);
         Eval(z3, p2);
     }
     else
     {
-        vec2 z4(u + du/2, v + dv);
+        QVector2D z4(u + du/2, v + dv);
         Eval(z4, p2);
     }
     if(isNormalize)
@@ -138,10 +138,10 @@ void TParametricSurface::Vertex(vec2& domain, QVector3D& normal, QVector3D& p0, 
     }
 }
 
-void TKlein::Eval(vec2& domain, QVector3D& range)
+void TKlein::Eval(QVector2D& domain, QVector3D& range)
 {
-    float u = (1 - domain.u) * twopi;
-    float v = domain.v * twopi;
+    float u = (1 - domain.x()) * twopi;
+    float v = domain.y() * twopi;
 
     float x0 = 3 * cosf(u) * (1 + sinf(u)) + (2 * (1 - cosf(u) / 2)) * cosf(u) * cosf(v);
     float y0  = 8 * sinf(u) + (2 * (1 - cosf(u) / 2)) * sinf(u) * cosf(v);
@@ -156,23 +156,23 @@ void TKlein::Eval(vec2& domain, QVector3D& range)
     range.setY(-range.y());
 
     // Tweak the texture coordinates.
-    domain.u *= 4;
+    domain.setX(domain.x() * 4);
 }
 
 // Flip the normals along a segment of the Klein bottle so that we don't need two-sided lighting.
-bool TKlein::Flip(const vec2& domain)
+bool TKlein::Flip(const QVector2D& domain)
 {
-    return (domain.u < .125);
+    return (domain.x() < .125);
 }
 
-void TTrefoil::Eval(vec2& domain, QVector3D& range)
+void TTrefoil::Eval(QVector2D& domain, QVector3D& range)
 {
     const float a = 0.5f;
     const float b = 0.3f;
     const float c = 0.5f;
     const float d = 0.1f;
-    float u = (1 - domain.u) * twopi * 2;
-    float v = domain.v * twopi;
+    float u = (1 - domain.x()) * twopi * 2;
+    float v = domain.y() * twopi;
 
     float r = a + b * cosf(1.5f * u);
     float x = r * cosf(u);
@@ -194,19 +194,19 @@ void TTrefoil::Eval(vec2& domain, QVector3D& range)
     range.setZ(z + d * ww.z() * sinf(v));
 
     // Tweak the texture coordinates.
-    domain.u *= 20;
+    domain.setX(domain.x() * 20);
     domain /= 3;
 }
 
-void TConic::Eval(vec2& domain, QVector3D& range)
+void TConic::Eval(QVector2D& domain, QVector3D& range)
 {
     const float a = 0.2f;
     const float b = 1.5f;
     const float c = 0.1f;
     const float n = 2;
 
-    float u = domain.u * twopi;
-    float v = domain.v * twopi;
+    float u = domain.x() * twopi;
+    float v = domain.y() * twopi;
 
     range.setX(a * (1 - v / twopi) * cosf(n * v) * (1 + cosf(u)) + c * cosf(n * v));
     range.setZ(a * (1 - v / twopi) * sinf(n * v) * (1 + cosf(u)) + c * sinf(n * v));
@@ -215,49 +215,49 @@ void TConic::Eval(vec2& domain, QVector3D& range)
     range.setY(range.y() + 0.125);
 
     // Tweak the texture coordinates.
-    domain.v *= 4;
+    domain.setY(domain.y() * 4);
 }
 
-void TTorus::Eval(vec2& domain, QVector3D& range)
+void TTorus::Eval(QVector2D& domain, QVector3D& range)
 {
     const float major = 0.8f;
     const float minor = 0.2f;
-    float u = domain.u * twopi;
-    float v = domain.v * twopi;
+    float u = domain.x() * twopi;
+    float v = domain.y() * twopi;
 
     range.setX((major + minor * cosf(v)) * cosf(u));
     range.setY((major + minor * cosf(v)) * sinf(u));
     range.setZ(minor * sinf(v));
 
     // Tweak the texture coordinates.
-    domain.u *= 4;
+    domain.setX(domain.x() * 4);
 }
 
-void TSphere::Eval(vec2& domain, QVector3D& range)
+void TSphere::Eval(QVector2D& domain, QVector3D& range)
 {
     const float radius = 1;
-    float u = fabsf(domain.v * pi);
-    float v = fabsf(domain.u * twopi);
+    float u = fabsf(domain.y() * pi);
+    float v = fabsf(domain.x() * twopi);
 
     range.setX(radius * cosf(v) * sinf(u));
     range.setZ(radius * sinf(v) * sinf(u));
     range.setY(radius * cosf(u));
 
-    domain.v = 1 - domain.v;
-    domain.u = 1 - domain.u;
+    domain.setY(1 - domain.y());
+    domain.setX(1 - domain.x());
 }
 
-void TPlane::Eval(vec2& domain, QVector3D& range)
+void TPlane::Eval(QVector2D& domain, QVector3D& range)
 {
     if (z < 0)
     {
-        range.setX(-width * (domain.u - 0.5f));
-        range.setY( width * (domain.v - 0.5f));
+        range.setX(-width * (domain.x() - 0.5f));
+        range.setY( width * (domain.y() - 0.5f));
     }
     else
     {
-        range.setX(width * (domain.u - 0.5f));
-        range.setY(width * (domain.v - 0.5f));
+        range.setX(width * (domain.x() - 0.5f));
+        range.setY(width * (domain.y() - 0.5f));
     }
     range.setZ(z);
 }

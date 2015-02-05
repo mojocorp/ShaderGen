@@ -55,7 +55,3 @@ void mat4::identity()
     data[15] = 1;
 }
 
-void glMultiTexCoord(const vec2& v, const GLint u)
-{
-    glMultiTexCoord2f(u, v.x, v.y);
-}

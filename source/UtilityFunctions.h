@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QColor>
+#include <QVector2D>
 #include <QVector3D>
 #include <QVector4D>
 #include <GL/glew.h>
@@ -32,6 +33,10 @@ inline void glTexEnvf(GLenum target, GLenum pname, const QColor& c) {
 inline void glTexGenf(GLenum coord, GLenum pname, const QVector4D& v) {
     const float vector[] = {v.x(), v.y(), v.z(), v.w()};
     glTexGenfv(coord, pname, vector);
+}
+
+inline void glMultiTexCoord(const QVector2D& v, GLint u) {
+    glMultiTexCoord2f(u, v.x(), v.y());
 }
 
 inline void glLightf(GLenum light, GLenum pname, const QVector3D& v) {

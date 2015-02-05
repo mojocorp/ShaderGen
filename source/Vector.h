@@ -50,24 +50,9 @@
 static const float pi = 3.14159265358979323846f;
 static const float twopi = 6.28318530717958647692f;
 
-struct vec2 {
-    vec2() : x(0), y(0) {}
-    vec2(float x, float y) : x(x), y(y) {}
-    vec2(const float p[]) : x(p[0]), y(p[1]) {}
-    vec2 operator/(float f) const { return vec2(x / f, y / f); }
-    vec2 operator*(float scale) const { return vec2(x * scale, y * scale); }
-    vec2 operator+(vec2 v) const { return vec2(v.x + x, v.y + y); }
-    void operator*=(float scale) { x *= scale; y *= scale; }
-    void operator/=(float scale) { x /= scale; y /= scale; }
-    union { float x, u, s; };
-    union { float y, v, t; };
-    void flip() { float temp = x; x = y; y = temp; }
-};
-
 struct mat4 {
     float data[16];
     void identity();
 };
 
-void glMultiTexCoord(const vec2& v, GLint u);
 
