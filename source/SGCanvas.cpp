@@ -224,17 +224,17 @@ void SGCanvas::SetupFromFixedState()
             light = glState->GetLight(i);
             if(light->lightEnabled)
             {
-                glLightfv(GL_LIGHT0+i, GL_POSITION,       light->lightPositionVector );
+                glLightf(GL_LIGHT0+i, GL_POSITION,       light->lightPositionVector );
                 glLightf(GL_LIGHT0+i, GL_AMBIENT,        light->lightAmbientColorVector );
                 glLightf(GL_LIGHT0+i, GL_DIFFUSE,        light->lightDiffuseColorVector );
                 glLightf(GL_LIGHT0+i, GL_SPECULAR,       light->lightSpecularColorVector );
-                glLightfv(GL_LIGHT0+i, GL_SPOT_DIRECTION, light->lightSpotDirectionVector );
-                glLightf (GL_LIGHT0+i, GL_SPOT_EXPONENT,  light->lightSpotExponent );
-                glLightf (GL_LIGHT0+i, GL_SPOT_CUTOFF,    light->lightSpotCutoff );
-                glLightf (GL_LIGHT0+i, GL_CONSTANT_ATTENUATION,  light->lightConstantAttenuation );
-                glLightf (GL_LIGHT0+i, GL_LINEAR_ATTENUATION,    light->lightLinearAttenuation );
-                glLightf (GL_LIGHT0+i, GL_QUADRATIC_ATTENUATION, light->lightQuadraticAttenuation );
-                glEnable (GL_LIGHT0+i );
+                glLightf(GL_LIGHT0+i, GL_SPOT_DIRECTION, light->lightSpotDirectionVector );
+                glLightf(GL_LIGHT0+i, GL_SPOT_EXPONENT,  light->lightSpotExponent );
+                glLightf(GL_LIGHT0+i, GL_SPOT_CUTOFF,    light->lightSpotCutoff );
+                glLightf(GL_LIGHT0+i, GL_CONSTANT_ATTENUATION,  light->lightConstantAttenuation );
+                glLightf(GL_LIGHT0+i, GL_LINEAR_ATTENUATION,    light->lightLinearAttenuation );
+                glLightf(GL_LIGHT0+i, GL_QUADRATIC_ATTENUATION, light->lightQuadraticAttenuation );
+                glEnable(GL_LIGHT0+i );
             }
             else
             {

@@ -42,6 +42,8 @@
 #pragma once
 
 #include <QColor>
+#include <QVector3D>
+#include <QVector4D>
 
 #include "Vector.h"
 #include "SGTextures.h"
@@ -55,8 +57,8 @@ struct Light{
     float lightLinearAttenuation;
     float lightQuadraticAttenuation;
 
-    vec3 lightSpotDirectionVector;
-    vec4 lightPositionVector;
+    QVector3D lightSpotDirectionVector;
+    QVector4D lightPositionVector;
     QColor lightAmbientColorVector;
     QColor lightDiffuseColorVector;
     QColor lightSpecularColorVector;
@@ -82,11 +84,11 @@ struct Texture{
     
     bool texGen;
 
-    vec4 eyePlaneCoeffS;
-    vec4 eyePlaneCoeffT;
+    QVector4D eyePlaneCoeffS;
+    QVector4D eyePlaneCoeffT;
 
-    vec4 objectPlaneCoeffS;
-    vec4 objectPlaneCoeffT;
+    QVector4D objectPlaneCoeffS;
+    QVector4D objectPlaneCoeffT;
 
     QColor texEnvColor;
 

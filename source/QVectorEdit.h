@@ -1,7 +1,8 @@
 #pragma once
 
 #include <QWidget>
-#include "Vector.h"
+#include <QVector3D>
+#include <QVector4D>
 
 class QDoubleSpinBox;
 
@@ -9,13 +10,13 @@ class QVectorEdit : public QWidget
 {
     Q_OBJECT
 public:
-    QVectorEdit(const vec3& vec, QWidget *parent = 0);
-    QVectorEdit(const vec4& vec, QWidget *parent = 0);
+    QVectorEdit(const QVector3D& vec, QWidget *parent = 0);
+    QVectorEdit(const QVector4D& vec, QWidget *parent = 0);
 
-    void setValue(const vec3& vec);
-    void setValue(const vec4& vec);
+    void setValue(const QVector3D& vec);
+    void setValue(const QVector4D& vec);
 
-    vec4 getValue() const;
+    QVector4D getValue() const;
 
     QSize sizeHint() const;
 signals:
@@ -23,7 +24,7 @@ signals:
 private slots:
     void onValueChange();
 private:
-    void init(const vec4& vec);
+    void init(const QVector4D& vec);
 
     QDoubleSpinBox* x;
     QDoubleSpinBox* y;

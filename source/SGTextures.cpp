@@ -97,16 +97,16 @@ void SGTextures::Activate(TextureId id, GLint unit)
         PrintOpenGLError();
         if(glState->GetTexture(unit)->textureCoordinateGeneration == GL_OBJECT_LINEAR)
         {
-            glTexGenfv(GL_S, GL_OBJECT_PLANE, glState->GetTexture(unit)->objectPlaneCoeffS);
-            glTexGenfv(GL_T, GL_OBJECT_PLANE, glState->GetTexture(unit)->objectPlaneCoeffT);
+            glTexGenf(GL_S, GL_OBJECT_PLANE, glState->GetTexture(unit)->objectPlaneCoeffS);
+            glTexGenf(GL_T, GL_OBJECT_PLANE, glState->GetTexture(unit)->objectPlaneCoeffT);
         }
         PrintOpenGLError();
         if(glState->GetTexture(unit)->textureCoordinateGeneration == GL_EYE_LINEAR)
         {
             PrintOpenGLError();
-            glTexGenfv(GL_S, GL_EYE_PLANE, glState->GetTexture(unit)->eyePlaneCoeffS);
+            glTexGenf(GL_S, GL_EYE_PLANE, glState->GetTexture(unit)->eyePlaneCoeffS);
             PrintOpenGLError();
-            glTexGenfv(GL_T, GL_EYE_PLANE, glState->GetTexture(unit)->eyePlaneCoeffT);
+            glTexGenf(GL_T, GL_EYE_PLANE, glState->GetTexture(unit)->eyePlaneCoeffT);
         }
         PrintOpenGLError();
         glEnable(GL_TEXTURE_GEN_S);

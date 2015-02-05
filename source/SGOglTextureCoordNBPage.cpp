@@ -274,7 +274,7 @@ void SGOglTextureCoordNBPage::OnTextEnterEyeCoeffS()
     SGFixedGLState* glState = m_parent->GetGLState();
     glState->SetTextureChanged(true);
 
-    vec4 eyePlaneSVec = eyePlaneCoeffTextS->getValue();
+    QVector4D eyePlaneSVec = eyePlaneCoeffTextS->getValue();
 
     glState->GetTexture(texCoordUnitGroup->checkedId())->eyePlaneCoeffS = eyePlaneSVec;
 
@@ -287,7 +287,7 @@ void SGOglTextureCoordNBPage::OnTextEnterEyeCoeffT()
     SGFixedGLState* glState = m_parent->GetGLState();
     glState->SetTextureChanged(true);
 
-    vec4 eyePlaneTVec = eyePlaneCoeffTextT->getValue();
+    QVector4D eyePlaneTVec = eyePlaneCoeffTextT->getValue();
 
     glState->GetTexture(texCoordUnitGroup->checkedId())->eyePlaneCoeffT = eyePlaneTVec;
 
@@ -300,7 +300,7 @@ void SGOglTextureCoordNBPage::OnTextEnterObjCoeffS()
     SGFixedGLState* glState = m_parent->GetGLState();
     glState->SetTextureChanged(true);
 
-    vec4 objPlaneSVec = objectPlaneCoeffTextS->getValue();
+    QVector4D objPlaneSVec = objectPlaneCoeffTextS->getValue();
 
     glState->GetTexture(texCoordUnitGroup->checkedId())->objectPlaneCoeffS = objPlaneSVec;
 
@@ -313,7 +313,7 @@ void SGOglTextureCoordNBPage::OnTextEnterObjCoeffT()
     SGFixedGLState* glState = m_parent->GetGLState();
     glState->SetTextureChanged(true);
 
-    vec4 objPlaneTVec = objectPlaneCoeffTextT->getValue();
+    QVector4D objPlaneTVec = objectPlaneCoeffTextT->getValue();
 
     glState->GetTexture(texCoordUnitGroup->checkedId())->objectPlaneCoeffT = objPlaneTVec;
 

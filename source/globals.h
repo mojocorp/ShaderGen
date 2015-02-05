@@ -42,7 +42,8 @@
 #pragma once
 
 #include <QColor>
-#include "Vector.h"
+#include <QVector3D>
+#include <QVector4D>
 
 const bool DEBUG_ON = true;
 
@@ -52,7 +53,7 @@ const int NUM_TEXTURES = 5;
 const int NUM_LIGHTS_ENABLED_AT_START = 3;
 const int NUM_LIGHTS = 8;
 
-const vec3 DEFAULT_LIGHT_SPOT_DIRECTION = vec3(0.0f, 0.0f, -1.0f);
+const QVector3D DEFAULT_LIGHT_SPOT_DIRECTION = QVector3D(0.0f, 0.0f, -1.0f);
 
 const float DEFAULT_SPOT_CUT = 180.0f;
 const float DEFAULT_SPOT_EXP = 0.0f;
@@ -60,22 +61,22 @@ const float DEFAULT_LIGHT_CONST_ATTEN = 1.0f;
 const float DEFAULT_LIGHT_LINEAR_ATTEN = 0.0f;
 const float DEFAULT_LIGHT_QUAD_ATTEN = 0.0f;
 
-const vec4 DEFAULT_LIGHT_POSITION_ONE = vec4(3.0f, -10.0f, 0.0f, 1.0f);
+const QVector4D DEFAULT_LIGHT_POSITION_ONE = QVector4D(3.0f, -10.0f, 0.0f, 1.0f);
 const QColor DEFAULT_LIGHT_AMBIENT_COLOR_ONE = QColor::fromRgbF(0.0f, 0.0f, 0.0f, 1.0f);
 const QColor DEFAULT_LIGHT_DIFFUSE_COLOR_ONE = QColor::fromRgbF(1.0f, 0.0f, 0.0f, 1.0f);
 const QColor DEFAULT_LIGHT_SPECULAR_COLOR_ONE = QColor::fromRgbF(0.5f, 0.5f, 0.5f, 1.0f);
 
-const vec4 DEFAULT_LIGHT_POSITION_TWO = vec4(-3.0f, -10.0f, 0.0f, 0.0f);
+const QVector4D DEFAULT_LIGHT_POSITION_TWO = QVector4D(-3.0f, -10.0f, 0.0f, 0.0f);
 const QColor DEFAULT_LIGHT_AMBIENT_COLOR_TWO = QColor::fromRgbF(0.0f, 0.0f, 0.0f, 1.0f);
 const QColor DEFAULT_LIGHT_DIFFUSE_COLOR_TWO = QColor::fromRgbF(0.0f, 0.0f, 1.0f, 1.0f);
 const QColor DEFAULT_LIGHT_SPECULAR_COLOR_TWO = QColor::fromRgbF(0.0f, 1.0f, 0.0f, 1.0f);
 
-const vec4 DEFAULT_LIGHT_POSITION_THREE = vec4(10.0f, 0.0f, 1.0f, 1.0f);
+const QVector4D DEFAULT_LIGHT_POSITION_THREE = QVector4D(10.0f, 0.0f, 1.0f, 1.0f);
 const QColor DEFAULT_LIGHT_AMBIENT_COLOR_THREE = QColor::fromRgbF(0.0f, 0.0f, 0.0f, 1.0f);
 const QColor DEFAULT_LIGHT_DIFFUSE_COLOR_THREE = QColor::fromRgbF(0.0f, 1.0f, 0.0f, 1.0f);
 const QColor DEFAULT_LIGHT_SPECULAR_COLOR_THREE = QColor::fromRgbF(0.0f, 1.0f, 0.0f, 1.0f);
 
-const vec4 DEFAULT_LIGHT_POSITION_OTHER = vec4(3.0f, 10.0f, 0.0f, 1.0f);
+const QVector4D DEFAULT_LIGHT_POSITION_OTHER = QVector4D(3.0f, 10.0f, 0.0f, 1.0f);
 const QColor DEFAULT_LIGHT_AMBIENT_COLOR_OTHER = QColor::fromRgbF(0.0f, 0.0f, 0.0f, 1.0f);
 const QColor DEFAULT_LIGHT_DIFFUSE_COLOR_OTHER = QColor::fromRgbF(1.0f, 1.0f, 0.0f, 1.0f);
 const QColor DEFAULT_LIGHT_SPECULAR_COLOR_OTHER = QColor::fromRgbF(0.5f, 0.5f, 0.5f, 1.0f);
@@ -101,7 +102,7 @@ const float DEFAULT_COMBINE_RGB_SCALE = 1.0f;
 const int NUM_TEXTURE_COORDS = 4; //s,t,r(p),q
 
 const QColor DEFAULT_TEX_ENV_COLOR = QColor::fromRgbF(1.0f, 1.0f, 1.0f, 1.0f);
-const vec4 DEFAULT_EYE_PLANE_COEFF_S = vec4(1.0f, 0.0f, 0.0f, 0.0f);
-const vec4 DEFAULT_EYE_PLANE_COEFF_T = vec4(0.0f, 1.0f, 0.0f, 0.0f);
-const vec4 DEFAULT_OBJ_PLANE_COEFF_S = vec4(1.0f, 0.0f, 0.0f, 0.0f);
-const vec4 DEFAULT_OBJ_PLANE_COEFF_T = vec4(0.0f, 1.0f, 0.0f, 0.0f);
+const QVector4D DEFAULT_EYE_PLANE_COEFF_S = QVector4D(1.0f, 0.0f, 0.0f, 0.0f);
+const QVector4D DEFAULT_EYE_PLANE_COEFF_T = QVector4D(0.0f, 1.0f, 0.0f, 0.0f);
+const QVector4D DEFAULT_OBJ_PLANE_COEFF_S = QVector4D(1.0f, 0.0f, 0.0f, 0.0f);
+const QVector4D DEFAULT_OBJ_PLANE_COEFF_T = QVector4D(0.0f, 1.0f, 0.0f, 0.0f);

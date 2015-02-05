@@ -360,8 +360,8 @@ void SGOglLightNBPage::linearAttenuationChanged()
 
 void SGOglLightNBPage::lightPositionChanged()
 {
-    vec4 tempLightPosVector = lightPosition->getValue();
-    if(tempLightPosVector[3] != 1 && tempLightPosVector[3] != 0.0)
+    QVector4D tempLightPosVector = lightPosition->getValue();
+    if(tempLightPosVector.w() != 1 && tempLightPosVector.w() != 0.0)
     {
         QMessageBox::warning(this, tr(""), tr("The w component of GL_POSITION must be 0.0 or 1.0"));
     }
@@ -376,13 +376,13 @@ void SGOglLightNBPage::lightPositionChanged()
 
 void SGOglLightNBPage::spotDirectionChanged()
 {
-    vec4 tempLightSpotDirectionVector = spotDirection->getValue();
+    QVector4D tempLightSpotDirectionVector = spotDirection->getValue();
     int lightSelected = lightSelectionGroup->checkedId();
     SGFixedGLState* glState = m_parent->GetGLState();
     glState->SetLightChanged(true);
-    glState->GetLight(lightSelected)->lightSpotDirectionVector = vec3(tempLightSpotDirectionVector.x,
-                                                                      tempLightSpotDirectionVector.y,
-                                                                      tempLightSpotDirectionVector.z);
+    glState->GetLight(lightSelected)->lightSpotDirectionVector = QVector3D(tempLightSpotDirectionVector.x(),
+                                                                           tempLightSpotDirectionVector.y(),
+                                                                           tempLightSpotDirectionVector.z());
     m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();
 }

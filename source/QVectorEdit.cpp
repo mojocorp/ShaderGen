@@ -4,39 +4,39 @@
 
 #include <limits>
 
-QVectorEdit::QVectorEdit(const vec3& vec, QWidget *parent) :
+QVectorEdit::QVectorEdit(const QVector3D& vec, QWidget *parent) :
     QWidget(parent)
 {
-    init(vec4(vec.x, vec.y, vec.z, 0.0f));
+    init(QVector4D(vec, 0.0f));
 
     w->hide();
 }
 
-QVectorEdit::QVectorEdit(const vec4& vec, QWidget *parent) :
+QVectorEdit::QVectorEdit(const QVector4D& vec, QWidget *parent) :
     QWidget(parent)
 {
     init(vec);
 }
 
-void QVectorEdit::setValue(const vec3& vec)
+void QVectorEdit::setValue(const QVector3D& vec)
 {
-    setValue(vec4(vec.x, vec.y, vec.z, 0.0f));
+    setValue(QVector4D(vec, 0.0f));
 }
 
-void QVectorEdit::setValue(const vec4& vec)
+void QVectorEdit::setValue(const QVector4D& vec)
 {
-    x->setValue(vec.x);
-    y->setValue(vec.y);
-    z->setValue(vec.z);
-    w->setValue(vec.w);
+    x->setValue(vec.x());
+    y->setValue(vec.y());
+    z->setValue(vec.z());
+    w->setValue(vec.w());
 }
 
-vec4 QVectorEdit::getValue() const
+QVector4D QVectorEdit::getValue() const
 {
-    return vec4(x->value(),
-                y->value(),
-                z->value(),
-                w->value());
+    return QVector4D(x->value(),
+                     y->value(),
+                     z->value(),
+                     w->value());
 }
 
 QSize QVectorEdit::sizeHint() const
@@ -50,10 +50,8 @@ void QVectorEdit::onValueChange()
     emit valueChanged();
 }
 
-void QVectorEdit::init(const vec4& vec)
+void QVectorEdit::init(const QVector4D& vec)
 {
-    //setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Preferred);
-
     QHBoxLayout* layout = new QHBoxLayout(this);
     layout->setSpacing(0);
     layout->setMargin(0);
