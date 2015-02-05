@@ -72,20 +72,20 @@ void SGCanvasMouseHandler::Reset()
         canvas->SetZoom(startZoom);
     }
     Stop();
-    vPrev = vec3(0.0f, 0.0f, 0.0f);
-    vInc = vec3(0.0f, 0.0f, 0.0f);
+    vPrev = QVector3D(0.0f, 0.0f, 0.0f);
+    vInc = QVector3D(0.0f, 0.0f, 0.0f);
     validStart = false;
     xform.identity();
 }
 
 void SGCanvasMouseHandler::Stop()
 {
-    vInc = vec3(0.0f, 0.0f, 0.0f);
+    vInc = QVector3D(0.0f, 0.0f, 0.0f);
 }
 
 void SGCanvasMouseHandler::OnMousePress(QMouseEvent *event)
 {
-    vec3 cursor = canvas->GetWorldSpace(event->x(), event->y());
+    QVector3D cursor = canvas->GetWorldSpace(event->x(), event->y());
 
     if (event->buttons() & Qt::LeftButton)
     {
@@ -110,19 +110,19 @@ void SGCanvasMouseHandler::OnMousePress(QMouseEvent *event)
 
 void SGCanvasMouseHandler::OnMouseMove(QMouseEvent *event)
 {
-    vec3 cursor = canvas->GetWorldSpace(event->x(), event->y());
+    QVector3D cursor = canvas->GetWorldSpace(event->x(), event->y());
 
     if (event->buttons() & Qt::LeftButton)
     {
         if (!validStart)
         {
-            vInc = vec3(0.0f, 0.0f, 0.0f);
+            vInc = QVector3D(0.0f, 0.0f, 0.0f);
         }
         else
         {
             if (event->modifiers() & Qt::ControlModifier)
             {
-                float delta = cursor.y - vStart.y;
+                float delta = cursor.y() - vStart.y();
                 if (delta)
                 {
                     canvas->SetZoom(startZoom + delta);
@@ -134,11 +134,11 @@ void SGCanvasMouseHandler::OnMouseMove(QMouseEvent *event)
                 float theta = 180 * (cursor - vStart).length();
                 if (theta)
                 {
-                    vec3 axis = cross(vStart, cursor);
+                    QVector3D axis = QVector3D::crossProduct(vStart, cursor);
                     axis.normalize();
 
                     glLoadIdentity();
-                    glRotatef(-theta, axis.x, axis.y, axis.z);
+                    glRotatef(-theta, axis.x(), axis.y(), axis.z());
                     glMultMatrixf((float*) &mStart);
                     glGetFloatv(GL_MODELVIEW_MATRIX, (float*) &xform);
                     canvas->updateGL();
@@ -152,7 +152,7 @@ void SGCanvasMouseHandler::OnMouseMove(QMouseEvent *event)
     {
         if (validStart)
         {
-            float delta = cursor.y - vStart.y;
+            float delta = cursor.y() - vStart.y();
             if (delta)
             {
                 canvas->SetZoom(startZoom + delta);

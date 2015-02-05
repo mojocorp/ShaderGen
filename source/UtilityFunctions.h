@@ -43,3 +43,11 @@ inline void glLightf(GLenum light, GLenum pname, const QVector4D& v) {
     const float vector[] = {v.x(), v.y(), v.z(), v.w()};
     glLightfv(light, pname, vector);
 }
+
+inline void glVertex(const QVector3D& v) {
+    glVertex3f(v.x(), v.y(), v.z());
+}
+
+inline void glNormal(const QVector3D& v) {
+    glNormal3f(v.x(), v.y(), v.z());
+}

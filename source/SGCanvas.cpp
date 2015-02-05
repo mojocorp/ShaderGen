@@ -293,16 +293,17 @@ void SGCanvas::SetupFromFixedState()
     }
 }
 
-vec3 SGCanvas::GetWorldSpace(int x, int y)
+QVector3D SGCanvas::GetWorldSpace(int x, int y)
 {
-    vec3 v;
-    v.x = (float) x / (float) m_width;
-    v.y = 1 - (float) y / (float) m_height;
-    v.x *= (m_right - m_left);
-    v.y *= (m_top - m_bottom);
-    v.x += m_left;
-    v.y += m_bottom;
-    v.z = CameraZ;
+    QVector3D v;
+    v.setX((float) x / (float) m_width);
+    v.setY(1 - (float) y / (float) m_height);
+    v.setZ(CameraZ);
+    v.setX(v.x() * (m_right - m_left));
+    v.setY(v.y() * (m_top - m_bottom));
+    v.setX(v.x() + m_left);
+    v.setY(v.y() + m_bottom);
+
     return v;
 }
 

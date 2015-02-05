@@ -46,33 +46,6 @@
 #include "Vector.h"
 
 // Basic vector math.  This is by no means complete; add to this file as necessary.
-
-float vec3::length() const
-{
-    return sqrtf(x*x + y*y + z*z);
-}
-
-void vec3::normalize()
-{
-    float m = length();
-    x /= m;
-    y /= m;
-    z /= m;
-}
-
-vec3 cross(const vec3& u, const vec3& v)
-{
-    return vec3(u.y*v.z-u.z*v.y, u.z*v.x-u.x*v.z, u.x*v.y-u.y*v.x);
-}
-
-vec3 operator*(const vec3& v, const mat4& m)
-{
-    float x = m.data[0] * v.x + m.data[4] * v.y + m.data[8] * v.z  + m.data[12];
-    float y = m.data[1] * v.x + m.data[5] * v.y + m.data[9] * v.z  + m.data[13];
-    float z = m.data[2] * v.x + m.data[6] * v.y + m.data[10] * v.z + m.data[14];
-    return vec3(x, y, z);
-}
-
 void mat4::identity()
 {
     memset(data, 0, sizeof(data));
@@ -80,16 +53,6 @@ void mat4::identity()
     data[5] = 1;
     data[10] = 1;
     data[15] = 1;
-}
-
-void glVertex(const vec3& v)
-{
-    glVertex3fv((float*) &v);
-}
-
-void glNormal(const vec3& v)
-{
-    glNormal3fv((float*) &v);
 }
 
 void glMultiTexCoord(const vec2& v, const GLint u)

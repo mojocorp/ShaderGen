@@ -64,30 +64,10 @@ struct vec2 {
     void flip() { float temp = x; x = y; y = temp; }
 };
 
-struct vec3 {
-    vec3() : x(0), y(0), z(0) {}
-    vec3(float x, float y, float z) : x(x), y(y), z(z) {}
-    vec3 operator-(const vec3& v) { return vec3(x - v.x, y - v.y, z - v.z); }
-    vec3 operator+(const vec3& v) { return vec3(x + v.x, y + v.y, z + v.z); }
-    vec3 operator-() const { return vec3(-x, -y, -z); }
-    vec3 operator/(float f) const { return vec3(x / f, y / f, z / f); }
-    vec3 operator*(float f) const { return vec3(x * f, y * f, z * f); }
-    void operator*=(float scale) { x *= scale; y *= scale; z *= scale; }
-    void operator/=(float f) { x /= f; y /= f; z /= f; }
-    float length() const;
-    void normalize();
-    operator float*() {return &x; }
-    float x, y, z;
-};
-
 struct mat4 {
     float data[16];
     void identity();
 };
 
-void glVertex(const vec3& v);
-void glNormal(const vec3& v);
 void glMultiTexCoord(const vec2& v, GLint u);
 
-vec3 cross(const vec3& a, const vec3& b);
-vec3 operator*(const vec3& v, const mat4& m);

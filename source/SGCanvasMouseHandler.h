@@ -41,6 +41,7 @@
 
 #pragma once
 
+#include <QVector3D>
 #include "Vector.h"
 
 class SGCanvas;
@@ -67,9 +68,9 @@ private:
     int frames;
     SGCanvas* canvas;
     bool validStart;
-    vec3 vStart;
-    vec3 vPrev;
-    vec3 vInc;
+    QVector3D vStart;
+    QVector3D vPrev;
+    QVector3D vInc;
     float startZoom;
     mat4 mStart;
     mat4 xform;

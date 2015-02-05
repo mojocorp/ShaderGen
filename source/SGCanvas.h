@@ -68,7 +68,7 @@ public:
     static const float CameraZ;
     float GetZoom() { return m_zoom; }
 
-    vec3 GetWorldSpace(int x, int y);
+    QVector3D GetWorldSpace(int x, int y);
 
     void initializeGL();
     void paintGL();
