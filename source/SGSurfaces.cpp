@@ -130,11 +130,11 @@ void TParametricSurface::Vertex(vec2& domain, vec3& normal, vec3& p0, bool isNor
     if(isNormalize)
     {
         normal = cross(p3 - p1, p2 - p1);
-        if (normal.magnitude() < 0.00001f)
+        if (normal.length() < 0.00001f)
         {
             normal = p0;
         }
-        normal.unitize();
+        normal.normalize();
     }
 }
 
@@ -184,9 +184,9 @@ void TTrefoil::Eval(vec2& domain, vec3& range)
     dv.y = -1.5f * b * sinf(1.5f * u) * sinf(u) + (a + b * cosf(1.5f * u)) * cosf(u);
     dv.z = 1.5f * c * cosf(1.5f * u);
 
-    vec3 q = dv; q.unitize();
+    vec3 q = dv; q.normalize();
     vec3 qvn(q.y, -q.x, 0);
-    qvn.unitize();
+    qvn.normalize();
     vec3 ww = cross(q,qvn);
 
     range.x = x + d * (qvn.x * cosf(v) + ww.x * sinf(v));

@@ -47,14 +47,14 @@
 
 // Basic vector math.  This is by no means complete; add to this file as necessary.
 
-float vec3::magnitude() const
+float vec3::length() const
 {
     return sqrtf(x*x + y*y + z*z);
 }
 
-void vec3::unitize()
+void vec3::normalize()
 {
-    float m = magnitude();
+    float m = length();
     x /= m;
     y /= m;
     z /= m;
@@ -65,14 +65,14 @@ vec3 cross(const vec3& u, const vec3& v)
     return vec3(u.y*v.z-u.z*v.y, u.z*v.x-u.x*v.z, u.x*v.y-u.y*v.x);
 }
 
-float vec4::magnitude() const
+float vec4::length() const
 {
     return sqrtf(x*x + y*y + z*z + w*w);
 }
 
-void vec4::unitize()
+void vec4::normalize()
 {
-    float m = magnitude();
+    float m = length();
     x /= m;
     y /= m;
     z /= m;

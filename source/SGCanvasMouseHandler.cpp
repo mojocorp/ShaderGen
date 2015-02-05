@@ -131,11 +131,11 @@ void SGCanvasMouseHandler::OnMouseMove(QMouseEvent *event)
             }
             else
             {
-                float theta = 180 * (cursor - vStart).magnitude();
+                float theta = 180 * (cursor - vStart).length();
                 if (theta)
                 {
                     vec3 axis = cross(vStart, cursor);
-                    axis.unitize();
+                    axis.normalize();
 
                     glLoadIdentity();
                     glRotatef(-theta, axis.x, axis.y, axis.z);

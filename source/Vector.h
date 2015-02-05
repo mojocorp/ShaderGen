@@ -74,8 +74,8 @@ struct vec3 {
     vec3 operator*(float f) const { return vec3(x * f, y * f, z * f); }
     void operator*=(float scale) { x *= scale; y *= scale; z *= scale; }
     void operator/=(float f) { x /= f; y /= f; z /= f; }
-    float magnitude() const;
-    void unitize();
+    float length() const;
+    void normalize();
     operator float*() {return &x; }
     float x, y, z;
 };
@@ -90,8 +90,8 @@ struct vec4 {
     vec4 operator*(float f) const { return vec4(x * f, y * f, z * f, w * f); }
     void operator*=(float scale) { x *= scale; y *= scale; z *= scale; w *= scale; }
     void operator/=(float f) { x /= f; y /= f; z /= f; w /= f; }
-    float magnitude() const;
-    void unitize();
+    float length() const;
+    void normalize();
     operator float*() { return &x; }
     float x, y, z, w;
 };
