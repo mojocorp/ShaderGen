@@ -112,7 +112,7 @@ SGOglTextureEnvNBPage::SGOglTextureEnvNBPage(SGOglNotebook* parent)
     connect(texChoose, SIGNAL(activated(int)), SLOT(OnChoiceTextureChoose()));
 
     texEnvColorButton = new QColorButton(this);
-    texEnvColorButton->setColor(ToQtColor(glState->GetTexture(textureGroup->checkedId())->texEnvColor));
+    texEnvColorButton->setColor(glState->GetTexture(textureGroup->checkedId())->texEnvColor);
     connect(texEnvColorButton, SIGNAL(clicked()), SLOT(OnButton()));
 
     QLabel *texEnvButtonLabel = new QLabel(tr("GL_TEX_ENV_COLOR"), this);
@@ -543,7 +543,7 @@ void SGOglTextureEnvNBPage::OnButton()
     int textureSelected = textureGroup->checkedId();
 
     QColor texEnvColor = texEnvColorButton->color();
-    glState->GetTexture(textureSelected)->texEnvColor = ToGLFPColor(texEnvColor);
+    glState->GetTexture(textureSelected)->texEnvColor = texEnvColor;
 
     m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();
@@ -727,5 +727,5 @@ void SGOglTextureEnvNBPage::UpdateWidgets()
     default:
         break;
     }
-    texEnvColorButton->setColor(ToQtColor(glState->GetTexture(textureGroup->checkedId())->texEnvColor));
+    texEnvColorButton->setColor(glState->GetTexture(textureGroup->checkedId())->texEnvColor);
 }

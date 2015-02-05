@@ -117,7 +117,7 @@ void SGTextures::Activate(TextureId id, GLint unit)
 
     glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, glState->GetTexture(unit)->textureApplicationMethod);
 
-    glTexEnvfv(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, glState->GetTexture(unit)->texEnvColor);
+    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, glState->GetTexture(unit)->texEnvColor);
 
     PrintOpenGLError();
 

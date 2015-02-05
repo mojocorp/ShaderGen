@@ -117,7 +117,7 @@ SGOglFogNBPage::SGOglFogNBPage(SGOglNotebook* parent)
     connect(fogEnd, SIGNAL(valueChanged(double)), SLOT(fogDensityChanged(double)));
 
     fogColor   = new QColorButton  (this);
-    fogColor->setColor(ToQtColor(fog->fogColorVector));
+    fogColor->setColor(fog->fogColorVector);
     connect(fogColor, SIGNAL(selected(QColor)), SLOT(fogColorChanged(QColor)));
 
     QLabel* fogDensityLbl      = new QLabel(tr("GL_FOG_DENSITY"), this);
@@ -156,7 +156,7 @@ void SGOglFogNBPage::fogColorChanged(const QColor & color)
     SGFixedGLState* glState = m_parent->GetGLState();
     glState->SetFogChanged(true);
 
-    glState->GetFog()->fogColorVector = ToGLFPColor(color);
+    glState->GetFog()->fogColorVector = color;
 
     m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();

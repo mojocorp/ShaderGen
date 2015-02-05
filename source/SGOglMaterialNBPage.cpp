@@ -66,19 +66,19 @@ SGOglMaterialNBPage::SGOglMaterialNBPage(SGOglNotebook* parent)
     connect(shininessMaterial, SIGNAL(valueChanged(double)), SLOT(shininessChanged()));
 
     ambientMaterial = new QColorButton(this);
-    ambientMaterial->setColor(ToQtColor(mat->materialAmbientColorVector));
+    ambientMaterial->setColor(mat->materialAmbientColorVector);
     connect(ambientMaterial, SIGNAL(selected(QColor)), SLOT(ambientChanged()));
 
     diffuseMaterial = new QColorButton(this);
-    diffuseMaterial->setColor(ToQtColor(mat->materialDiffuseColorVector));
+    diffuseMaterial->setColor(mat->materialDiffuseColorVector);
     connect(diffuseMaterial, SIGNAL(selected(QColor)), SLOT(diffuseChanged()));
 
     specularMaterial = new QColorButton(this);
-    specularMaterial->setColor(ToQtColor(mat->materialSpecularColorVector));
+    specularMaterial->setColor(mat->materialSpecularColorVector);
     connect(specularMaterial, SIGNAL(selected(QColor)), SLOT(specularChanged()));
 
     emissionMaterial = new QColorButton(this);
-    emissionMaterial->setColor(ToQtColor(mat->materialEmissionColorVector));
+    emissionMaterial->setColor(mat->materialEmissionColorVector);
     connect(emissionMaterial, SIGNAL(selected(QColor)), SLOT(emissionChanged()));
 
     QLabel* ambientMatLbl = new QLabel(tr("GL_AMBIENT"), this);
@@ -114,7 +114,7 @@ void SGOglMaterialNBPage::ambientChanged()
     Material* mat = glState->GetMaterial();
     glState->SetMaterialChanged(true);
 
-    mat->materialAmbientColorVector = ToGLFPColor(ambientMaterial->color());
+    mat->materialAmbientColorVector = ambientMaterial->color();
 
     m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();
@@ -126,7 +126,7 @@ void SGOglMaterialNBPage::diffuseChanged()
     Material* mat = glState->GetMaterial();
     glState->SetMaterialChanged(true);
 
-    mat->materialDiffuseColorVector = ToGLFPColor(diffuseMaterial->color());
+    mat->materialDiffuseColorVector = diffuseMaterial->color();
 
     m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();
@@ -138,7 +138,7 @@ void SGOglMaterialNBPage::specularChanged()
     Material* mat = glState->GetMaterial();
     glState->SetMaterialChanged(true);
 
-    mat->materialSpecularColorVector = ToGLFPColor(specularMaterial->color());
+    mat->materialSpecularColorVector = specularMaterial->color();
 
     m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();
@@ -150,7 +150,7 @@ void SGOglMaterialNBPage::emissionChanged()
     Material* mat = glState->GetMaterial();
     glState->SetMaterialChanged(true);
 
-    mat->materialEmissionColorVector = ToGLFPColor(emissionMaterial->color());
+    mat->materialEmissionColorVector = emissionMaterial->color();
 
     m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();

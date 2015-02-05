@@ -41,6 +41,8 @@
 
 #pragma once
 
+#include <QColor>
+
 #include "Vector.h"
 #include "SGTextures.h"
 
@@ -55,23 +57,23 @@ struct Light{
 
     vec3 lightSpotDirectionVector;
     vec4 lightPositionVector;
-    vec4 lightAmbientColorVector;
-    vec4 lightDiffuseColorVector;
-    vec4 lightSpecularColorVector;
+    QColor lightAmbientColorVector;
+    QColor lightDiffuseColorVector;
+    QColor lightSpecularColorVector;
 };
 
 struct Material{
-    vec4 materialDiffuseColorVector;
-    vec4 materialAmbientColorVector;
-    vec4 materialSpecularColorVector;
-    vec4 materialEmissionColorVector;
+    QColor materialDiffuseColorVector;
+    QColor materialAmbientColorVector;
+    QColor materialSpecularColorVector;
+    QColor materialEmissionColorVector;
     float materialShininess;
     GLenum faceSelection;
 };
 
 struct Fog{
     float fogStart, fogEnd, fogDensity;
-    vec4 fogColorVector;
+    QColor fogColorVector;
     GLenum fogMode;
 };
 
@@ -86,7 +88,7 @@ struct Texture{
     vec4 objectPlaneCoeffS;
     vec4 objectPlaneCoeffT;
 
-    vec4 texEnvColor;
+    QColor texEnvColor;
 
     GLenum textureApplicationMethod;
     GLenum textureCoordinateGeneration;

@@ -153,15 +153,15 @@ SGOglLightNBPage::SGOglLightNBPage(SGOglNotebook* parent)
     connect(quadraticAttenuation, SIGNAL(valueChanged(double)), SLOT(quadraticAttenuationChanged()));
 
     ambientLight  = new QColorButton(this);
-    ambientLight->setColor(ToQtColor(light->lightAmbientColorVector));
+    ambientLight->setColor(light->lightAmbientColorVector);
     connect(ambientLight, SIGNAL(clicked()), SLOT(ambientLightChanged()));
 
     specularLight = new QColorButton(this);
-    specularLight->setColor(ToQtColor(light->lightSpecularColorVector));
+    specularLight->setColor(light->lightSpecularColorVector);
     connect(specularLight, SIGNAL(clicked()), SLOT(specularLightChanged()));
 
     diffuseLight  = new QColorButton(this);
-    diffuseLight->setColor(ToQtColor(light->lightDiffuseColorVector));
+    diffuseLight->setColor(light->lightDiffuseColorVector);
     connect(diffuseLight, SIGNAL(clicked()), SLOT(diffuseLightChanged()));
 
     QLabel* positionLbl = new QLabel(tr("GL_POSITION"), this);
@@ -235,7 +235,7 @@ void SGOglLightNBPage::ambientLightChanged()
     SGFixedGLState* glState = m_parent->GetGLState();
     int lightSelected = lightSelectionGroup->checkedId();
     glState->SetLightChanged(true);
-    glState->GetLight(lightSelected)->lightAmbientColorVector = ToGLFPColor(ambientLight->color());
+    glState->GetLight(lightSelected)->lightAmbientColorVector = ambientLight->color();
 
     m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();
@@ -246,7 +246,7 @@ void SGOglLightNBPage::specularLightChanged()
     SGFixedGLState* glState = m_parent->GetGLState();
     int lightSelected = lightSelectionGroup->checkedId();
     glState->SetLightChanged(true);
-    glState->GetLight(lightSelected)->lightSpecularColorVector = ToGLFPColor(specularLight->color());
+    glState->GetLight(lightSelected)->lightSpecularColorVector = specularLight->color();
 
     m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();
@@ -257,7 +257,7 @@ void SGOglLightNBPage::diffuseLightChanged()
     SGFixedGLState* glState = m_parent->GetGLState();
     int lightSelected = lightSelectionGroup->checkedId();
     glState->SetLightChanged(true);
-    glState->GetLight(lightSelected)->lightDiffuseColorVector = ToGLFPColor(diffuseLight->color());
+    glState->GetLight(lightSelected)->lightDiffuseColorVector = diffuseLight->color();
 
     m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();
@@ -393,9 +393,9 @@ void SGOglLightNBPage::OnRadio(int index)
     glState->SetLightChanged(true);
     Light* light = glState->GetLight(index);
 
-    ambientLight ->setColor(ToQtColor(light->lightAmbientColorVector ));
-    diffuseLight ->setColor(ToQtColor(light->lightDiffuseColorVector ));
-    specularLight->setColor(ToQtColor(light->lightSpecularColorVector));
+    ambientLight ->setColor(light->lightAmbientColorVector);
+    diffuseLight ->setColor(light->lightDiffuseColorVector);
+    specularLight->setColor(light->lightSpecularColorVector);
     spotDirection->setValue(light->lightSpotDirectionVector);
     spotExponent ->setValue(light->lightSpotExponent);
     spotCutoff   ->setValue(light->lightSpotCutoff);
