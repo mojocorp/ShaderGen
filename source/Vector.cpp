@@ -79,22 +79,6 @@ void vec4::normalize()
     w /= m;
 }
 
-mat4 operator*(const mat4& a, const mat4& b)
-{
-    mat4 retval;
-    glPushMatrix();
-    glLoadMatrixf(a.data);
-    glMultMatrixf(b.data);
-    glGetFloatv(GL_MODELVIEW_MATRIX, retval.data);
-    glPopMatrix();
-    return retval;
-}
-
-vec3 blend(const vec3& v, const mat4& m0, const mat4& m1, float w0, float w1)
-{
-    return v * m0 * w0 + v * m1 * w1;
-}
-
 vec3 operator*(const vec3& v, const mat4& m)
 {
     float x = m.data[0] * v.x + m.data[4] * v.y + m.data[8] * v.z  + m.data[12];

@@ -101,8 +101,6 @@ struct mat4 {
     void identity();
 };
 
-mat4 operator*(const mat4& a, const mat4& b);
-
 void glVertex(const vec3& v);
 void glNormal(const vec3& v);
 void glMultiTexCoord(const vec2& v, GLint u);
