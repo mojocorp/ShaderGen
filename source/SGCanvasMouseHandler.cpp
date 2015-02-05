@@ -41,6 +41,7 @@
 
 #include <QTime>
 #include <QMouseEvent>
+#include <GL/glew.h>
 
 #include "SGCanvasMouseHandler.h"
 #include "SGCanvas.h"
@@ -49,6 +50,15 @@
 const float SGCanvasMouseHandler::StartZoom = 0.8f;
 const float SGCanvasMouseHandler::InertiaThreshold = 1.0f;
 const int SGCanvasMouseHandler::Delay = 10;
+
+void SGCanvasMouseHandler::mat4::identity()
+{
+    memset(data, 0, sizeof(data));
+    data[0] = 1;
+    data[5] = 1;
+    data[10] = 1;
+    data[15] = 1;
+}
 
 SGCanvasMouseHandler::SGCanvasMouseHandler()
 {
@@ -183,3 +193,9 @@ void SGCanvasMouseHandler::LoadMatrix() const
     glRotatef(20.0f, 1.0f, 0.0f, 0.0f);
     MultMatrix();
 }
+
+void SGCanvasMouseHandler::MultMatrix() const
+{
+    glMultMatrixf((float*) &xform);
+}
+

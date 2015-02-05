@@ -42,7 +42,6 @@
 #pragma once
 
 #include <QVector3D>
-#include "Vector.h"
 
 class SGCanvas;
 class QMouseEvent;
@@ -56,7 +55,7 @@ public :
     void OnMouseMove(QMouseEvent *event);
     void OnMouseRelease(QMouseEvent *event);
     void LoadMatrix() const;
-    void MultMatrix() const { glMultMatrixf((float*) &xform); }
+    void MultMatrix() const;
     void Reset();
     void SetCanvas(SGCanvas *canvas1) { canvas = canvas1; }
     void Stop();
@@ -72,6 +71,10 @@ private:
     QVector3D vPrev;
     QVector3D vInc;
     float startZoom;
+    struct mat4 {
+        float data[16];
+        void identity();
+    };
     mat4 mStart;
     mat4 xform;
 };

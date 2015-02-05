@@ -43,7 +43,6 @@
 
 #include <QMainWindow>
 
-#include "Vector.h"
 #include "SGOglNotebook.h"
 #include "SGModels.h"
 #include "SGShaderGenerator.h"

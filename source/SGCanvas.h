@@ -46,7 +46,6 @@
 #include <QGLWidget>
 
 #include "SGCanvasMouseHandler.h"
-#include "Vector.h"
 #include "SGCanvasWrapper.h"
 #include "SGModels.h"
 

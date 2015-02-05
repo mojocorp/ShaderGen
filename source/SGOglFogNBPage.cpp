@@ -52,7 +52,6 @@
 #include "UtilityFunctions.h"
 #include "SGFrame.h"
 #include "SGCanvas.h"
-#include "Vector.h"
 
 SGOglFogNBPage::SGOglFogNBPage(SGOglNotebook* parent)
     :QWidget(parent)

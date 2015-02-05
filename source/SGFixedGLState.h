@@ -45,7 +45,6 @@
 #include <QVector3D>
 #include <QVector4D>
 
-#include "Vector.h"
 #include "SGTextures.h"
 
 struct Light{

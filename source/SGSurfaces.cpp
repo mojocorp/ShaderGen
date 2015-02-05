@@ -45,6 +45,9 @@
 #include <cmath>
 #include "UtilityFunctions.h"
 
+static const float pi = 3.14159265358979323846f;
+static const float twopi = 6.28318530717958647692f;
+
 TParametricSurface::TParametricSurface()
     : slices(100)
 {

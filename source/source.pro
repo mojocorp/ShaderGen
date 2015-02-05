@@ -41,7 +41,6 @@ HEADERS += globals.h\
            SGOglLightNBPage.h \
            SGOglTextureCoordNBPage.h \
            SGOglTextureEnvNBPage.h \
-           Vector.h \
            QColorButton.h \
            QVectorEdit.h \
            QCodeEditor.h
@@ -64,7 +63,6 @@ SOURCES += App.cpp \
            SGOglLightNBPage.cpp \
            SGOglTextureCoordNBPage.cpp \
            SGOglTextureEnvNBPage.cpp \
-           Vector.cpp \
            QColorButton.cpp \
            QVectorEdit.cpp \
            QCodeEditor.cpp

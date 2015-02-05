@@ -43,7 +43,6 @@
 
 #include <QVector2D>
 #include <QVector3D>
-#include "Vector.h"
 
 // Abstract base class representing a parametric surface.
 class TParametricSurface
