@@ -85,6 +85,5 @@ private:
     SGFixedGLState *glState;
     ITexture textures[13] ;
     QString TextureNames[13];
-    GLuint logo;
     QImage image1;
 };

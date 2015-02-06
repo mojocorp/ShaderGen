@@ -197,12 +197,8 @@ bool SGFrame::isPerspective() const
     return perspAct->isChecked();
 }
 
-void SGFrame::Errorf(const char* format, ...)
+void SGFrame::Errorf(const QString & message)
 {
-    QString message;
-    va_list marker;
-    va_start(marker, format);
-    message.vsprintf(format, marker);
     statusBar()->showMessage(message);
 }
 

@@ -67,7 +67,7 @@ SGTextures::SGTextures(SGFrame *frame, SGFixedGLState *state)
     TextureNames[10] = "stonewallNormal.png";
     TextureNames[11] = "metalSheetDiffuse.png";
     TextureNames[12] = "metalSheetNormal.png";
-    logo = 0;
+
     memset( textures, 0, sizeof(textures) );
 }
 
@@ -158,7 +158,7 @@ void SGTextures::Activate(TextureId id, GLint unit)
     QImage image = QImage(":/textures/" + TextureNames[index]).mirrored();
     if (image.isNull())
     {
-        m_frame->Errorf("Unable to load image %s", qPrintable(TextureNames[index]));
+        m_frame->Errorf(QString("Unable to load image %1").arg(TextureNames[index]));
         return;
     }
     image = QGLWidget::convertToGLFormat(image.mirrored());
