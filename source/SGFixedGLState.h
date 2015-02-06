@@ -117,10 +117,10 @@ public:
     ~SGFixedGLState();
     void Init();
 
-    Light*    GetLight(int num){ return m_light[num] ;}
-    Material* GetMaterial()    { return m_material   ;}
-    Fog*      GetFog()         { return m_fog        ;}
-    Texture * GetTexture(int num) {return m_texture[num] ;}
+    Light&    GetLight(int num){ return m_light[num] ;}
+    Material& GetMaterial()    { return m_material   ;}
+    Fog&      GetFog()         { return m_fog        ;}
+    Texture&  GetTexture(int num) {return m_texture[num] ;}
 
     bool GetLightingEnable()    const { return m_lightingEn  ;}
     bool GetFogEnable()         const { return m_fogEn       ;}
@@ -157,14 +157,13 @@ private:
     void InitMaterial();
     void InitFog();
     void InitTexture(int num);
-    void Clean();
 
     bool m_changeLight,m_changeMat, m_changeFog, m_changeTexture;
     bool m_fogEn, m_lightingEn, m_normalizeEn, m_2sidedLightingEn,
     m_textureEn, m_texGenEnable, m_separateSpecularColorEn;
-    Light    *m_light[NUM_LIGHTS];
-    Texture  *m_texture[NUM_TEXTURES];
-    Material *m_material;
-    Fog      *m_fog;
+    Light    m_light[NUM_LIGHTS];
+    Texture  m_texture[NUM_TEXTURES];
+    Material m_material;
+    Fog      m_fog;
 
 };

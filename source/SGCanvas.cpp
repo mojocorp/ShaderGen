@@ -174,9 +174,9 @@ void SGCanvas::GLSetup()
 
     for(GLint i=0;i<5;i++)
     {
-        if(glState->GetTexture(i)->textureEnabled)
+        if(glState->GetTexture(i).textureEnabled)
         {
-            m_frame->GetTextures()->Activate(glState->GetTexture(i)->textureCurrentSelection, i);
+            m_frame->GetTextures()->Activate(glState->GetTexture(i).textureCurrentSelection, i);
         }
         else
         {
@@ -209,8 +209,7 @@ void SGCanvas::SetupFromFixedState()
 {
     PrintOpenGLError();
     SGFixedGLState *glState = GetGLState();
-    Light *light;
-    Material* material;
+
     glEnable(GL_AUTO_NORMAL);
 
     glState->SetLightChanged(false);
@@ -221,19 +220,19 @@ void SGCanvas::SetupFromFixedState()
 
         for(int i = 0; i < 8; i++)
         {
-            light = glState->GetLight(i);
-            if(light->lightEnabled)
+            const Light &light = glState->GetLight(i);
+            if(light.lightEnabled)
             {
-                glLightf(GL_LIGHT0+i, GL_POSITION,       light->lightPositionVector );
-                glLightf(GL_LIGHT0+i, GL_AMBIENT,        light->lightAmbientColorVector );
-                glLightf(GL_LIGHT0+i, GL_DIFFUSE,        light->lightDiffuseColorVector );
-                glLightf(GL_LIGHT0+i, GL_SPECULAR,       light->lightSpecularColorVector );
-                glLightf(GL_LIGHT0+i, GL_SPOT_DIRECTION, light->lightSpotDirectionVector );
-                glLightf(GL_LIGHT0+i, GL_SPOT_EXPONENT,  light->lightSpotExponent );
-                glLightf(GL_LIGHT0+i, GL_SPOT_CUTOFF,    light->lightSpotCutoff );
-                glLightf(GL_LIGHT0+i, GL_CONSTANT_ATTENUATION,  light->lightConstantAttenuation );
-                glLightf(GL_LIGHT0+i, GL_LINEAR_ATTENUATION,    light->lightLinearAttenuation );
-                glLightf(GL_LIGHT0+i, GL_QUADRATIC_ATTENUATION, light->lightQuadraticAttenuation );
+                glLightf(GL_LIGHT0+i, GL_POSITION,       light.lightPositionVector );
+                glLightf(GL_LIGHT0+i, GL_AMBIENT,        light.lightAmbientColorVector );
+                glLightf(GL_LIGHT0+i, GL_DIFFUSE,        light.lightDiffuseColorVector );
+                glLightf(GL_LIGHT0+i, GL_SPECULAR,       light.lightSpecularColorVector );
+                glLightf(GL_LIGHT0+i, GL_SPOT_DIRECTION, light.lightSpotDirectionVector );
+                glLightf(GL_LIGHT0+i, GL_SPOT_EXPONENT,  light.lightSpotExponent );
+                glLightf(GL_LIGHT0+i, GL_SPOT_CUTOFF,    light.lightSpotCutoff );
+                glLightf(GL_LIGHT0+i, GL_CONSTANT_ATTENUATION,  light.lightConstantAttenuation );
+                glLightf(GL_LIGHT0+i, GL_LINEAR_ATTENUATION,    light.lightLinearAttenuation );
+                glLightf(GL_LIGHT0+i, GL_QUADRATIC_ATTENUATION, light.lightQuadraticAttenuation );
                 glEnable(GL_LIGHT0+i );
             }
             else
@@ -267,12 +266,12 @@ void SGCanvas::SetupFromFixedState()
     glState->SetMaterialChanged(false);
     glDepthFunc(GL_LESS);
     glEnable(GL_DEPTH_TEST);
-    material = glState->GetMaterial();
-    glMaterialf(GL_FRONT, GL_DIFFUSE,  material->materialDiffuseColorVector);
-    glMaterialf(GL_FRONT, GL_SPECULAR, material->materialSpecularColorVector);
-    glMaterialf(GL_FRONT, GL_AMBIENT,  material->materialAmbientColorVector);
-    glMaterialf(GL_FRONT, GL_SHININESS,material->materialShininess);
-    glMaterialf(GL_FRONT, GL_EMISSION, material->materialEmissionColorVector);
+    const Material& material = glState->GetMaterial();
+    glMaterialf(GL_FRONT, GL_DIFFUSE,  material.materialDiffuseColorVector);
+    glMaterialf(GL_FRONT, GL_SPECULAR, material.materialSpecularColorVector);
+    glMaterialf(GL_FRONT, GL_AMBIENT,  material.materialAmbientColorVector);
+    glMaterialf(GL_FRONT, GL_SHININESS,material.materialShininess);
+    glMaterialf(GL_FRONT, GL_EMISSION, material.materialEmissionColorVector);
 
     if(glState->GetFogChanged())
     {
@@ -280,11 +279,11 @@ void SGCanvas::SetupFromFixedState()
         if(glState->GetFogEnable())
         {
             glEnable(GL_FOG);
-            glFogi(GL_FOG_MODE,    glState->GetFog()->fogMode);
-            glFogf(GL_FOG_COLOR,   glState->GetFog()->fogColorVector);
-            glFogf(GL_FOG_DENSITY, glState->GetFog()->fogDensity);
-            glFogf(GL_FOG_START,   glState->GetFog()->fogStart);
-            glFogf(GL_FOG_END,     glState->GetFog()->fogEnd);
+            glFogi(GL_FOG_MODE,    glState->GetFog().fogMode);
+            glFogf(GL_FOG_COLOR,   glState->GetFog().fogColorVector);
+            glFogf(GL_FOG_DENSITY, glState->GetFog().fogDensity);
+            glFogf(GL_FOG_START,   glState->GetFog().fogStart);
+            glFogf(GL_FOG_END,     glState->GetFog().fogEnd);
         }
         else
         {

@@ -58,7 +58,7 @@ SGOglFogNBPage::SGOglFogNBPage(SGOglNotebook* parent)
 {
     m_parent = parent;
     SGFixedGLState* glState = m_parent->GetGLState();
-    Fog *fog = glState->GetFog();
+    const Fog &fog = glState->GetFog();
 
     QGroupBox* fogBox            = new QGroupBox(tr("Fog Parameters"),  this);
     QGridLayout* fogSizer     = new QGridLayout(fogBox);
@@ -80,7 +80,7 @@ SGOglFogNBPage::SGOglFogNBPage(SGOglNotebook* parent)
     fogModeChoice->addButton(fogExp2, 2);
     connect(fogModeChoice, SIGNAL(buttonClicked(int)), SLOT(OnRadio(int)));
 
-    GLenum aa = glState->GetFog()->fogMode;
+    GLenum aa = glState->GetFog().fogMode;
     
     if( aa == GL_LINEAR )
     {
@@ -103,20 +103,20 @@ SGOglFogNBPage::SGOglFogNBPage(SGOglNotebook* parent)
 
     fogDensity = new QDoubleSpinBox(this);
     fogDensity->setRange(0, 100);
-    fogDensity->setValue(fog->fogDensity);
+    fogDensity->setValue(fog.fogDensity);
     fogStart   = new QDoubleSpinBox(this);
     fogStart->setRange(-1000, 1000);
-    fogStart->setValue(fog->fogStart);
+    fogStart->setValue(fog.fogStart);
     fogEnd     = new QDoubleSpinBox(this);
     fogEnd->setRange(-1000, 1000);
-    fogEnd->setValue(fog->fogEnd);
+    fogEnd->setValue(fog.fogEnd);
 
     connect(fogDensity, SIGNAL(valueChanged(double)), SLOT(fogDensityChanged(double)));
     connect(fogStart, SIGNAL(valueChanged(double)), SLOT(fogDensityChanged(double)));
     connect(fogEnd, SIGNAL(valueChanged(double)), SLOT(fogDensityChanged(double)));
 
     fogColor   = new QColorButton  (this);
-    fogColor->setColor(fog->fogColorVector);
+    fogColor->setColor(fog.fogColorVector);
     connect(fogColor, SIGNAL(selected(QColor)), SLOT(fogColorChanged(QColor)));
 
     QLabel* fogDensityLbl      = new QLabel(tr("GL_FOG_DENSITY"), this);
@@ -155,7 +155,7 @@ void SGOglFogNBPage::fogColorChanged(const QColor & color)
     SGFixedGLState* glState = m_parent->GetGLState();
     glState->SetFogChanged(true);
 
-    glState->GetFog()->fogColorVector = color;
+    glState->GetFog().fogColorVector = color;
 
     m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();
@@ -176,7 +176,7 @@ void SGOglFogNBPage::fogDensityChanged(double density)
 {
     SGFixedGLState* glState = m_parent->GetGLState();
     glState->SetFogChanged(true);
-    glState->GetFog()->fogDensity = density;
+    glState->GetFog().fogDensity = density;
     m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();
 }
@@ -185,7 +185,7 @@ void SGOglFogNBPage::fogStartChanged(double start)
 {
     SGFixedGLState* glState = m_parent->GetGLState();
     glState->SetFogChanged(true);
-    glState->GetFog()->fogStart   = start;
+    glState->GetFog().fogStart   = start;
     m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();
 }
@@ -194,7 +194,7 @@ void SGOglFogNBPage::fogEndChanged(double end)
 {
     SGFixedGLState* glState = m_parent->GetGLState();
     glState->SetFogChanged(true);
-    glState->GetFog()->fogEnd   = end;
+    glState->GetFog().fogEnd   = end;
     m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();
 }
@@ -205,13 +205,13 @@ void SGOglFogNBPage::OnRadio(int index)
     glState->SetFogChanged(true);
     switch(index){
     case 0:
-        glState->GetFog()->fogMode = GL_LINEAR;
+        glState->GetFog().fogMode = GL_LINEAR;
         break;
     case 1:
-        glState->GetFog()->fogMode = GL_EXP;
+        glState->GetFog().fogMode = GL_EXP;
         break;
     case 2:
-        glState->GetFog()->fogMode = GL_EXP2;
+        glState->GetFog().fogMode = GL_EXP2;
         break;
     default:
         break;
