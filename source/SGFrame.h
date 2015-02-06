@@ -69,7 +69,6 @@ public:
     SGOglNotebook* GetOglNotebook(){ return oglNotebook; }
 
     SGShaderTextWindow* GetShaderTextWindow(){ return shaderText; }
-    SGCanvasWrapper* GetCanvasWrapper(){ return canvas; }
     SGCanvas* GetCanvas() { return canvas->GetCanvas(); }
 
     SGFixedGLState* GetGLState() { return oglNotebook->GetGLState(); }
