@@ -45,6 +45,7 @@
 #include <QVector3D>
 #include <QVector4D>
 
+#include "globals.h"
 #include "SGTextures.h"
 
 struct Light{
@@ -161,8 +162,8 @@ private:
     bool m_changeLight,m_changeMat, m_changeFog, m_changeTexture;
     bool m_fogEn, m_lightingEn, m_normalizeEn, m_2sidedLightingEn,
     m_textureEn, m_texGenEnable, m_separateSpecularColorEn;
-    Light    *m_light[8];
-    Texture  *m_texture[5];
+    Light    *m_light[NUM_LIGHTS];
+    Texture  *m_texture[NUM_TEXTURES];
     Material *m_material;
     Fog      *m_fog;
 
