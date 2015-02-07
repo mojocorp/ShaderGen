@@ -122,19 +122,19 @@ public:
     Fog&      GetFog()         { return m_fog        ;}
     Texture&  GetTexture(int num) {return m_texture[num] ;}
 
-    bool GetLightingEnable()    const { return m_lightingEn  ;}
-    bool GetFogEnable()         const { return m_fogEn       ;}
-    bool GetNormalizeEnable()   const { return m_normalizeEn ;}
-    bool GetSeparateSpecularColorEnable() const { return m_separateSpecularColorEn ;}
-    bool Get2SidedLightingEnable() const { return m_2sidedLightingEn;}
-    bool GetTextureEnable()     const { return m_textureEn;}
+    bool GetLightingEnable()    const { return m_lightingEnable  ;}
+    bool GetFogEnable()         const { return m_fogEnable       ;}
+    bool GetNormalizeEnable()   const { return m_normalizeEnable ;}
+    bool GetSeparateSpecularColorEnable() const { return m_separateSpecularColorEnable ;}
+    bool Get2SidedLightingEnable() const { return m_2sidedLightingEnable;}
+    bool GetTextureEnable()     const { return m_textureEnable;}
 
-    void SetLightingEnable ( bool en ) { m_lightingEn  = en   ;}
-    void SetFogEnable      ( bool en ) { m_fogEn       = en   ;}
-    void SetNormalizeEnable( bool en ) { m_normalizeEn = en   ;}
-    void SetSeparateSpecularColorEnable ( bool en ) { m_separateSpecularColorEn = en;}
-    void Set2SidedLightingEnable( bool en ) { m_2sidedLightingEn = en ;}
-    void SetTextureEnable  ( bool en ) { m_textureEn   = en   ;}
+    void SetLightingEnable ( bool en ) { m_lightingEnable  = en   ;}
+    void SetFogEnable      ( bool en ) { m_fogEnable       = en   ;}
+    void SetNormalizeEnable( bool en ) { m_normalizeEnable = en   ;}
+    void SetSeparateSpecularColorEnable ( bool en ) { m_separateSpecularColorEnable = en;}
+    void Set2SidedLightingEnable( bool en ) { m_2sidedLightingEnable = en ;}
+    void SetTextureEnable  ( bool en ) { m_textureEnable   = en   ;}
     GLenum GetLightEnum(int a) const { return GL_LIGHT0 + a; }
     GLenum GetTexEnum(int a) const { return GL_TEXTURE0 + a; }
 
@@ -148,8 +148,8 @@ private:
     void InitFog();
     void InitTexture(int num);
 
-    bool m_fogEn, m_lightingEn, m_normalizeEn, m_2sidedLightingEn,
-    m_textureEn, m_texGenEnable, m_separateSpecularColorEn;
+    bool m_fogEnable, m_lightingEnable, m_normalizeEnable, m_2sidedLightingEnable,
+    m_textureEnable, m_texGenEnable, m_separateSpecularColorEnable;
     Light    m_light[NUM_LIGHTS];
     Texture  m_texture[NUM_TEXTURES];
     Material m_material;
