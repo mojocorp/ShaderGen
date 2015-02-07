@@ -212,8 +212,6 @@ void SGCanvas::SetupFromFixedState()
 
     glEnable(GL_AUTO_NORMAL);
 
-    glState->SetLightChanged(false);
-
     if(glState->GetLightingEnable())
     {
         glEnable(GL_LIGHTING);
@@ -263,7 +261,6 @@ void SGCanvas::SetupFromFixedState()
         glLightModeli(GL_LIGHT_MODEL_COLOR_CONTROL, GL_SINGLE_COLOR);
     }
 
-    glState->SetMaterialChanged(false);
     glDepthFunc(GL_LESS);
     glEnable(GL_DEPTH_TEST);
     const Material& material = glState->GetMaterial();
@@ -273,22 +270,18 @@ void SGCanvas::SetupFromFixedState()
     glMaterialf(GL_FRONT, GL_SHININESS,material.materialShininess);
     glMaterialf(GL_FRONT, GL_EMISSION, material.materialEmissionColorVector);
 
-    if(glState->GetFogChanged())
+    if(glState->GetFogEnable())
     {
-        glState->SetFogChanged(false);
-        if(glState->GetFogEnable())
-        {
-            glEnable(GL_FOG);
-            glFogi(GL_FOG_MODE,    glState->GetFog().fogMode);
-            glFogf(GL_FOG_COLOR,   glState->GetFog().fogColorVector);
-            glFogf(GL_FOG_DENSITY, glState->GetFog().fogDensity);
-            glFogf(GL_FOG_START,   glState->GetFog().fogStart);
-            glFogf(GL_FOG_END,     glState->GetFog().fogEnd);
-        }
-        else
-        {
-            glDisable(GL_FOG);
-        }
+        glEnable(GL_FOG);
+        glFogi(GL_FOG_MODE,    glState->GetFog().fogMode);
+        glFogf(GL_FOG_COLOR,   glState->GetFog().fogColorVector);
+        glFogf(GL_FOG_DENSITY, glState->GetFog().fogDensity);
+        glFogf(GL_FOG_START,   glState->GetFog().fogStart);
+        glFogf(GL_FOG_END,     glState->GetFog().fogEnd);
+    }
+    else
+    {
+        glDisable(GL_FOG);
     }
 }
 

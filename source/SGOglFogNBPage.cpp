@@ -153,7 +153,6 @@ SGOglFogNBPage::SGOglFogNBPage(SGOglNotebook* parent)
 void SGOglFogNBPage::fogColorChanged(const QColor & color)
 {
     SGFixedGLState* glState = m_parent->GetGLState();
-    glState->SetFogChanged(true);
 
     glState->GetFog().fogColorVector = color;
 
@@ -164,7 +163,6 @@ void SGOglFogNBPage::fogColorChanged(const QColor & color)
 void SGOglFogNBPage::OnCheckbox()
 {
     SGFixedGLState* glState = m_parent->GetGLState();
-    glState->SetFogChanged(true);
 
     glState->SetFogEnable(fogCheckBox->isChecked());
 
@@ -175,7 +173,6 @@ void SGOglFogNBPage::OnCheckbox()
 void SGOglFogNBPage::fogDensityChanged(double density)
 {
     SGFixedGLState* glState = m_parent->GetGLState();
-    glState->SetFogChanged(true);
     glState->GetFog().fogDensity = density;
     m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();
@@ -184,7 +181,6 @@ void SGOglFogNBPage::fogDensityChanged(double density)
 void SGOglFogNBPage::fogStartChanged(double start)
 {
     SGFixedGLState* glState = m_parent->GetGLState();
-    glState->SetFogChanged(true);
     glState->GetFog().fogStart   = start;
     m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();
@@ -193,7 +189,6 @@ void SGOglFogNBPage::fogStartChanged(double start)
 void SGOglFogNBPage::fogEndChanged(double end)
 {
     SGFixedGLState* glState = m_parent->GetGLState();
-    glState->SetFogChanged(true);
     glState->GetFog().fogEnd   = end;
     m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();
@@ -202,7 +197,6 @@ void SGOglFogNBPage::fogEndChanged(double end)
 void SGOglFogNBPage::OnRadio(int index)
 {
     SGFixedGLState* glState = m_parent->GetGLState();
-    glState->SetFogChanged(true);
     switch(index){
     case 0:
         glState->GetFog().fogMode = GL_LINEAR;

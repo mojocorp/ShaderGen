@@ -276,7 +276,6 @@ SGOglTextureEnvNBPage::SGOglTextureEnvNBPage(SGOglNotebook* parent)
 void SGOglTextureEnvNBPage::OnRadioTexApply()
 {
     SGFixedGLState* glState = m_parent->GetGLState();
-    glState->SetTextureChanged(true);
     Texture& texture = glState->GetTexture(textureGroup->checkedId());
 
     switch(texApplyGroup->checkedId()){
@@ -324,7 +323,6 @@ void SGOglTextureEnvNBPage::OnRadioTextureNum()
 void SGOglTextureEnvNBPage::OnCheckbox(int index)
 {
     SGFixedGLState* glState = m_parent->GetGLState();
-    glState->SetTextureChanged(true);
     glState->SetTextureEnable(texCheckBoxGroup->checkedId() != -1);
     switch(index){
     case 0:
@@ -352,7 +350,6 @@ void SGOglTextureEnvNBPage::OnCheckbox(int index)
 void SGOglTextureEnvNBPage::OnChoiceTextureChoose()
 {
     SGFixedGLState* glState = m_parent->GetGLState();
-    glState->SetTextureChanged(true);
     Texture& texture = glState->GetTexture(textureGroup->checkedId());
     texture.textureCurrentSelection = (SGTextures::TextureId)texChoose->currentIndex();
     m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
@@ -362,7 +359,6 @@ void SGOglTextureEnvNBPage::OnChoiceTextureChoose()
 void SGOglTextureEnvNBPage::OnChoiceTextureCombineMode()
 {
     SGFixedGLState* glState = m_parent->GetGLState();
-    glState->SetTextureChanged(true);
     Texture& texture = glState->GetTexture(textureGroup->checkedId());
     switch(texCombineModeChoose->currentIndex()){
     case 0:
@@ -396,7 +392,6 @@ void SGOglTextureEnvNBPage::OnChoiceTextureCombineMode()
 void SGOglTextureEnvNBPage::OnChoiceTextureCombineOperandArg0()
 {
     SGFixedGLState* glState = m_parent->GetGLState();
-    glState->SetTextureChanged(true);
     Texture& texture = glState->GetTexture(textureGroup->checkedId());
     switch(texCombineOperandArg0Choose->currentIndex()){
     case 0:
@@ -415,7 +410,6 @@ void SGOglTextureEnvNBPage::OnChoiceTextureCombineOperandArg0()
 void SGOglTextureEnvNBPage::OnChoiceTextureCombineOperandArg1()
 {
     SGFixedGLState* glState = m_parent->GetGLState();
-    glState->SetTextureChanged(true);
     Texture& texture = glState->GetTexture(textureGroup->checkedId());
     switch(texCombineOperandArg1Choose->currentIndex()){
     case 0:
@@ -434,7 +428,6 @@ void SGOglTextureEnvNBPage::OnChoiceTextureCombineOperandArg1()
 void SGOglTextureEnvNBPage::OnChoiceTextureCombineOperandArg2()
 {
     SGFixedGLState* glState = m_parent->GetGLState();
-    glState->SetTextureChanged(true);
     Texture& texture = glState->GetTexture(textureGroup->checkedId());
     switch(texCombineOperandArg2Choose->currentIndex()){
     case 0:
@@ -453,7 +446,6 @@ void SGOglTextureEnvNBPage::OnChoiceTextureCombineOperandArg2()
 void SGOglTextureEnvNBPage::OnChoiceTextureCombineScale()
 {
     SGFixedGLState* glState = m_parent->GetGLState();
-    glState->SetTextureChanged(true);
     Texture& texture = glState->GetTexture(textureGroup->checkedId());
     texture.textureCombineScale = (float)(1 << texCombineScaleChoose->currentIndex());
     m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
@@ -463,7 +455,6 @@ void SGOglTextureEnvNBPage::OnChoiceTextureCombineScale()
 void SGOglTextureEnvNBPage::OnChoiceTextureCombineSrc0RGB()
 {
     SGFixedGLState* glState = m_parent->GetGLState();
-    glState->SetTextureChanged(true);
     Texture& texture = glState->GetTexture(textureGroup->checkedId());
     switch(texCombineSrc0RGBChoose->currentIndex()){
     case 0:
@@ -488,7 +479,6 @@ void SGOglTextureEnvNBPage::OnChoiceTextureCombineSrc0RGB()
 void SGOglTextureEnvNBPage::OnChoiceTextureCombineSrc1RGB()
 {
     SGFixedGLState* glState = m_parent->GetGLState();
-    glState->SetTextureChanged(true);
     Texture& texture = glState->GetTexture(textureGroup->checkedId());
     switch(texCombineSrc1RGBChoose->currentIndex()){
     case 0:
@@ -513,7 +503,6 @@ void SGOglTextureEnvNBPage::OnChoiceTextureCombineSrc1RGB()
 void SGOglTextureEnvNBPage::OnChoiceTextureCombineSrc2RGB()
 {
     SGFixedGLState* glState = m_parent->GetGLState();
-    glState->SetTextureChanged(true);
     Texture& texture = glState->GetTexture(textureGroup->checkedId());
     switch(texCombineSrc2RGBChoose->currentIndex()){
     case 0:
@@ -538,7 +527,6 @@ void SGOglTextureEnvNBPage::OnChoiceTextureCombineSrc2RGB()
 void SGOglTextureEnvNBPage::OnButton()
 {
     SGFixedGLState* glState = m_parent->GetGLState();
-    glState->SetTextureChanged(true);
 
     int textureSelected = textureGroup->checkedId();
 
@@ -576,7 +564,6 @@ void SGOglTextureEnvNBPage::EnableCombine()
 void SGOglTextureEnvNBPage::UpdateWidgets()
 {
     SGFixedGLState* glState = m_parent->GetGLState();
-    glState->SetTextureChanged(true);
     Texture& texture = glState->GetTexture(textureGroup->checkedId());
 
     texChoose->setCurrentIndex(texture.textureCurrentSelection);

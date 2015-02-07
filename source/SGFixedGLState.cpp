@@ -70,8 +70,6 @@ void SGFixedGLState::Init()
     SetTextureEnable(false);
     SetTexGenEnable(false);
     SetNormalizeEnable(true);
-
-    m_changeFog = m_changeLight = m_changeMat = m_changeTexture = true;
 }
 
 SGFixedGLState::~SGFixedGLState()

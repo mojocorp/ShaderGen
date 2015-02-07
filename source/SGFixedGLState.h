@@ -138,17 +138,7 @@ public:
     GLenum GetLightEnum(int a) const { return GL_LIGHT0 + a; }
     GLenum GetTexEnum(int a) const { return GL_TEXTURE0 + a; }
 
-    bool GetLightChanged()    { return m_changeLight  ;}
-    bool GetMaterialChanged() { return m_changeMat    ;}
-    bool GetFogChanged()      { return m_changeFog    ;}
-    bool GetTextureChanged()  { return m_changeTexture;}
-
     bool GetTexGenEnable()    { return m_texGenEnable;}
-
-    void SetLightChanged( bool en )    { m_changeLight  = en;}
-    void SetMaterialChanged( bool en ) { m_changeMat    = en;}
-    void SetFogChanged( bool en )      { m_changeFog    = en;}
-    void SetTextureChanged( bool en )  { m_changeTexture= en;}
 
     void SetTexGenEnable( bool en ) { m_texGenEnable= en;}
 
@@ -158,7 +148,6 @@ private:
     void InitFog();
     void InitTexture(int num);
 
-    bool m_changeLight,m_changeMat, m_changeFog, m_changeTexture;
     bool m_fogEn, m_lightingEn, m_normalizeEn, m_2sidedLightingEn,
     m_textureEn, m_texGenEnable, m_separateSpecularColorEn;
     Light    m_light[NUM_LIGHTS];
