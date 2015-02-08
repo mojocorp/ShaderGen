@@ -62,6 +62,7 @@ SGFrame::SGFrame(const QString& title)
     setWindowTitle(title);
 
     glState = new SGFixedGLState();
+    textures = new SGTextures(this, glState);
     models = new SGModels();
     shaderGen = new SGShaderGenerator();
 
@@ -96,6 +97,7 @@ SGFrame::~SGFrame()
 
     delete models;
     delete shaderGen;
+    delete textures;
     delete glState;
 } 
 

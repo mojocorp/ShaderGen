@@ -53,8 +53,6 @@ SGOglNotebook::SGOglNotebook(SGFrame * parent)
     : QTabWidget(parent),
       m_parent(parent)
 {
-    textures = new SGTextures(parent, m_parent->GetGLState());
-
     lightPage        = new SGOglLightNBPage        (this);
     materialPage     = new SGOglMaterialNBPage     (this);
     fogPage          = new SGOglFogNBPage          (this);
@@ -70,7 +68,6 @@ SGOglNotebook::SGOglNotebook(SGFrame * parent)
 
 SGOglNotebook::~SGOglNotebook()
 {
-    delete textures;
 }
 
 SGFixedGLState* SGOglNotebook::GetGLState()

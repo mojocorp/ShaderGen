@@ -58,7 +58,6 @@ public:
     SGOglNotebook(SGFrame * parent = 0);
     ~SGOglNotebook();
     SGFixedGLState* GetGLState();
-    SGTextures* GetTextures() { return textures; }
     SGFrame* GetFrame() { return m_parent; }
 private:
     SGFrame              *m_parent;
@@ -67,5 +66,4 @@ private:
     SGOglFogNBPage       *fogPage;
     SGOglTextureCoordNBPage *textureCoordPage;
     SGOglTextureEnvNBPage *textureEnvPage;
-    SGTextures *textures;
 };

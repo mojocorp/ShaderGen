@@ -67,12 +67,10 @@ public:
     ~SGFrame();
 
     SGFixedGLState* GetGLState(){ return glState; }
-    SGOglNotebook* GetOglNotebook(){ return oglNotebook; }
+    SGTextures* GetTextures() { return textures; }
 
     SGShaderTextWindow* GetShaderTextWindow(){ return shaderText; }
     SGCanvas* GetCanvas() { return canvas->GetCanvas(); }
-
-    SGTextures* GetTextures() { return oglNotebook->GetTextures(); }
 
     void DrawModel(SGModels::ModelId model) { models->DrawModel(model); }
     void SetCanvasMode(SGCanvasWrapper::GLMode a);
@@ -119,6 +117,7 @@ private:
     QAction *helpAct;
 
     SGFixedGLState *glState;
+    SGTextures *textures;
     SGOglNotebook *oglNotebook;
     SGCanvasWrapper *canvas;
     SGShaderTextWindow* shaderText;
