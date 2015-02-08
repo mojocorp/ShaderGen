@@ -71,7 +71,7 @@ SGOglLightNBPage::SGOglLightNBPage(SGOglNotebook* parent)
     QGridLayout* h3             = new QGridLayout(selectedLightBox);
 
     lightSelectionGroup = new QButtonGroup(this);
-    for (int i=0; i<8; i++) {
+    for (int i=0; i<NUM_LIGHTS; i++) {
         QRadioButton *lrb = new QRadioButton(QString("L%1  ").arg(i), this);
         h2->addWidget(lrb);
         lightSelectionGroup->addButton(lrb, i);
@@ -79,45 +79,31 @@ SGOglLightNBPage::SGOglLightNBPage(SGOglNotebook* parent)
     lightSelectionGroup->button(0)->setChecked(true);
     connect(lightSelectionGroup, SIGNAL(buttonClicked(int)), SLOT(OnRadio(int)));
 
-    lcb0 = new QCheckBox(tr("L0"), this);
-    lcb1 = new QCheckBox(tr("L1"), this);
-    lcb2 = new QCheckBox(tr("L2"), this);
-    lcb3 = new QCheckBox(tr("L3"), this);
-    lcb4 = new QCheckBox(tr("L4"), this);
-    lcb5 = new QCheckBox(tr("L5"), this);
-    lcb6 = new QCheckBox(tr("L6"), this);
-    lcb7 = new QCheckBox(tr("L7"), this);
-    lightingCheckBox  = new QCheckBox(tr("GL_LIGHTING"), this);
-    normalizeCheckBox = new QCheckBox(tr("GL_NORMALIZE"), this);
-    separateSpecularColorCheckBox = new QCheckBox(tr("GL_SEPARATE_SPECULAR_COLOR"), this);
-
-    lcb0->setChecked(glState->GetLight(0).lightEnabled);
-    lcb1->setChecked(glState->GetLight(1).lightEnabled);
-    lcb2->setChecked(glState->GetLight(2).lightEnabled);
-    lcb3->setChecked(glState->GetLight(3).lightEnabled);
-    lcb4->setChecked(glState->GetLight(4).lightEnabled);
-    lcb5->setChecked(glState->GetLight(5).lightEnabled);
-    lcb6->setChecked(glState->GetLight(6).lightEnabled);
-    lcb7->setChecked(glState->GetLight(7).lightEnabled);
-
     lightCheckGroup = new QButtonGroup(this);
     lightCheckGroup->setExclusive(false);
-    lightCheckGroup->addButton(lcb0, 0);
-    lightCheckGroup->addButton(lcb1, 1);
-    lightCheckGroup->addButton(lcb2, 2);
-    lightCheckGroup->addButton(lcb3, 3);
-    lightCheckGroup->addButton(lcb4, 4);
-    lightCheckGroup->addButton(lcb5, 5);
-    lightCheckGroup->addButton(lcb6, 6);
-    lightCheckGroup->addButton(lcb7, 7);
-    lightCheckGroup->addButton(lightingCheckBox, 8);
-    lightCheckGroup->addButton(normalizeCheckBox, 9);
-    lightCheckGroup->addButton(separateSpecularColorCheckBox, 10);
+    for (int i=0; i<NUM_LIGHTS; i++) {
+        QCheckBox *lcb = new QCheckBox(QString("L%1").arg(i), this);
+        lcb->setChecked(glState->GetLight(i).lightEnabled);
+        h1->addWidget(lcb);
+        lightCheckGroup->addButton(lcb, i);
+    }
     connect(lightCheckGroup, SIGNAL(buttonClicked(int)), SLOT(OnCheckbox(int)));
 
+    lightingCheckBox  = new QCheckBox(tr("GL_LIGHTING"), this);
     lightingCheckBox->setChecked(glState->GetLightingEnable());
+    connect(lightingCheckBox, SIGNAL(clicked()), SLOT(lightingChanged()));
+
+    normalizeCheckBox = new QCheckBox(tr("GL_NORMALIZE"), this);
     normalizeCheckBox->setChecked(glState->GetNormalizeEnable());
+    connect(normalizeCheckBox, SIGNAL(clicked()), SLOT(normalizeChanged()));
+
+    separateSpecularColorCheckBox = new QCheckBox(tr("GL_SEPARATE_SPECULAR_COLOR"), this);
     separateSpecularColorCheckBox->setChecked(glState->GetSeparateSpecularColorEnable());
+    connect(separateSpecularColorCheckBox, SIGNAL(clicked()), SLOT(separateSpecularChanged()));
+
+    h1->addWidget(lightingCheckBox);
+    h1->addWidget(normalizeCheckBox);
+    h1->addWidget(separateSpecularColorCheckBox);
 
     const Light &light = glState->GetLight(lightSelectionGroup->checkedId());
 
@@ -178,19 +164,6 @@ SGOglLightNBPage::SGOglLightNBPage(SGOglNotebook* parent)
     QLabel* linearAttenLbl    = new QLabel(tr("GL_LINEAR_ATTENUATION"),    this);
     QLabel* quadraticAttenLbl = new QLabel(tr("GL_QUADRATIC_ATTENUATION"), this);
 
-
-    h1->addWidget(lcb0);
-    h1->addWidget(lcb1);
-    h1->addWidget(lcb2);
-    h1->addWidget(lcb3);
-    h1->addWidget(lcb4);
-    h1->addWidget(lcb5);
-    h1->addWidget(lcb6);
-    h1->addWidget(lcb7);
-    h1->addWidget(lightingCheckBox);
-    h1->addWidget(normalizeCheckBox);
-    h1->addWidget(separateSpecularColorCheckBox);
-
     h3->addWidget(positionLbl, 0, 0);
 
     h3->addWidget(lightPosition, 0, 1);
@@ -230,6 +203,31 @@ SGOglLightNBPage::SGOglLightNBPage(SGOglNotebook* parent)
     layout()->addWidget(lightBox);
 }
 
+void SGOglLightNBPage::lightingChanged()
+{
+    SGFixedGLState* glState = m_parent->GetGLState();
+    glState->SetLightingEnable(lightingCheckBox->isChecked());
+    m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
+    m_parent->GetFrame()->GetCanvas()->updateGL();
+}
+
+void SGOglLightNBPage::normalizeChanged()
+{
+    SGFixedGLState* glState = m_parent->GetGLState();
+    glState->SetNormalizeEnable(normalizeCheckBox->isChecked());
+    m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
+    m_parent->GetFrame()->GetCanvas()->updateGL();
+}
+
+void SGOglLightNBPage::separateSpecularChanged()
+{
+    SGFixedGLState* glState = m_parent->GetGLState();
+    glState->SetSeparateSpecularColorEnable(separateSpecularColorCheckBox->isChecked());
+    m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
+    m_parent->GetFrame()->GetCanvas()->updateGL();
+}
+
+void lightPositionChanged();
 void SGOglLightNBPage::ambientLightChanged()
 {
     SGFixedGLState* glState = m_parent->GetGLState();
@@ -263,43 +261,9 @@ void SGOglLightNBPage::diffuseLightChanged()
 void SGOglLightNBPage::OnCheckbox(int index)
 {
     SGFixedGLState* glState = m_parent->GetGLState();
-    switch(index){
-    case 0:
-        glState->GetLight(0).lightEnabled = lcb0->isChecked();
-        break;
-    case 1:
-        glState->GetLight(1).lightEnabled = lcb1->isChecked();
-        break;
-    case 2:
-        glState->GetLight(2).lightEnabled = lcb2->isChecked();
-        break;
-    case 3:
-        glState->GetLight(3).lightEnabled = lcb3->isChecked();
-        break;
-    case 4:
-        glState->GetLight(4).lightEnabled = lcb4->isChecked();
-        break;
-    case 5:
-        glState->GetLight(5).lightEnabled = lcb5->isChecked();
-        break;
-    case 6:
-        glState->GetLight(6).lightEnabled = lcb6->isChecked();
-        break;
-    case 7:
-        glState->GetLight(7).lightEnabled = lcb7->isChecked();
-        break;
-    case 8:
-        glState->SetLightingEnable(lightingCheckBox->isChecked());
-        break;
-    case 9:
-        glState->SetNormalizeEnable(normalizeCheckBox->isChecked());
-        break;
-    case 10:
-        glState->SetSeparateSpecularColorEnable(separateSpecularColorCheckBox->isChecked());
-        break;
-    default:
-        break;
-    }
+    const QAbstractButton* btn = lightCheckGroup->button(index);
+    glState->GetLight(index).lightEnabled = btn->isChecked();
+
     m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();
 }

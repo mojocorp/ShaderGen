@@ -60,6 +60,9 @@ public:
 private slots:
     void OnCheckbox(int index);
     void OnRadio(int index);
+    void lightingChanged();
+    void normalizeChanged();
+    void separateSpecularChanged();
     void lightPositionChanged();
     void spotDirectionChanged();
     void spotExponentChanged();
@@ -76,8 +79,6 @@ private:
 
     QButtonGroup *lightSelectionGroup, *lightCheckGroup;
 
-    QCheckBox *lcb0, *lcb1, *lcb2, *lcb3;
-    QCheckBox *lcb4, *lcb5, *lcb6, *lcb7;
     QCheckBox *lightingCheckBox, *normalizeCheckBox, *separateSpecularColorCheckBox;
 
     QVectorEdit* lightPosition;
