@@ -81,22 +81,12 @@ SGOglFogNBPage::SGOglFogNBPage(SGOglNotebook* parent)
     connect(fogModeChoice, SIGNAL(buttonClicked(int)), SLOT(OnRadio(int)));
 
     GLenum aa = glState->GetFog().fogMode;
-    
-    if( aa == GL_LINEAR )
+    switch(aa)
     {
-        aa = 0;
-    }
-    else if( aa == GL_EXP )
-    {
-        aa = 1;
-    }
-    else if ( aa == GL_EXP2 )
-    {
-        aa = 2;
-    }
-    else
-    {
-        aa = 1;
+    case GL_LINEAR: aa = 0; break;
+    case GL_EXP:    aa = 1; break;
+    case GL_EXP2:   aa = 2; break;
+    default:        aa = 1; break;
     }
     
     fogModeChoice->button(aa)->setChecked(true);
