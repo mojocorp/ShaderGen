@@ -50,12 +50,10 @@
 #include "SGFrame.h"
 
 SGOglNotebook::SGOglNotebook(SGFrame * parent)
-    : QTabWidget(parent)
+    : QTabWidget(parent),
+      m_parent(parent)
 {
-    m_parent = parent;
-
-    glState = new SGFixedGLState();
-    textures = new SGTextures(parent, glState);
+    textures = new SGTextures(parent, m_parent->GetGLState());
 
     lightPage        = new SGOglLightNBPage        (this);
     materialPage     = new SGOglMaterialNBPage     (this);
@@ -72,6 +70,10 @@ SGOglNotebook::SGOglNotebook(SGFrame * parent)
 
 SGOglNotebook::~SGOglNotebook()
 {
-    delete glState;
     delete textures;
+}
+
+SGFixedGLState* SGOglNotebook::GetGLState()
+{
+    return m_parent->GetGLState();
 }

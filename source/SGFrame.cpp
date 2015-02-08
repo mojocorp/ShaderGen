@@ -49,6 +49,7 @@
 
 #include "AboutDialog.h"
 #include "SGFrame.h"
+#include "SGFixedGLState.h"
 #include "SGCanvasWrapper.h"
 #include "SGCanvas.h"
 #include "SGShaderTextWindow.h"
@@ -60,6 +61,7 @@ SGFrame::SGFrame(const QString& title)
 {
     setWindowTitle(title);
 
+    glState = new SGFixedGLState();
     models = new SGModels();
     shaderGen = new SGShaderGenerator();
 
@@ -92,16 +94,9 @@ SGFrame::~SGFrame()
 {
     sgframe_instance = 0;
 
-    if(models != NULL)
-    {
-        delete models;
-        models = NULL;
-    }
-    if(shaderGen != NULL)
-    {
-        delete shaderGen;
-        shaderGen = NULL;
-    }
+    delete models;
+    delete shaderGen;
+    delete glState;
 } 
 
 void SGFrame::createActions()

@@ -48,7 +48,6 @@ class   SGOglLightNBPage;
 class   SGOglMaterialNBPage;
 class   SGOglFogNBPage;
 class   SGFixedGLState;
-//class   SGOglTextureNBPage;
 class   SGOglTextureCoordNBPage;
 class   SGOglTextureEnvNBPage;
 class   SGTextures;
@@ -58,7 +57,7 @@ class SGOglNotebook: public QTabWidget
 public:
     SGOglNotebook(SGFrame * parent = 0);
     ~SGOglNotebook();
-    SGFixedGLState* GetGLState(){ return glState; }
+    SGFixedGLState* GetGLState();
     SGTextures* GetTextures() { return textures; }
     SGFrame* GetFrame() { return m_parent; }
 private:
@@ -66,9 +65,7 @@ private:
     SGOglLightNBPage     *lightPage;
     SGOglMaterialNBPage  *materialPage;
     SGOglFogNBPage       *fogPage;
-    //SGOglTextureNBPage   *texturePage;
     SGOglTextureCoordNBPage *textureCoordPage;
     SGOglTextureEnvNBPage *textureEnvPage;
-    SGFixedGLState       *glState;
     SGTextures *textures;
 };
