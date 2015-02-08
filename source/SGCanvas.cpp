@@ -58,11 +58,17 @@ SGCanvas::SGCanvas(SGFrame *frame, SGCanvasWrapper *parent)
 {
     m_parent = parent;
     m_frame = frame;
+    models = new SGModels();
     m_zoom= 0.8f;
     mouse.SetCanvas(this);
     modelCurrent = SGModels::ModelTorus;
     glReady = glCompiled = glLinked = false;
     prog = vertS = fragS = 0;
+}
+
+SGCanvas::~SGCanvas()
+{
+    delete models;
 }
 
 void SGCanvas::DrawLogo() const
@@ -115,7 +121,7 @@ void SGCanvas::paintGL()
     PrintOpenGLError();
     glPushMatrix();
     mouse.LoadMatrix();
-    m_frame->DrawModel(modelCurrent);
+    models->DrawModel(modelCurrent);
     PrintOpenGLError();
     glPopMatrix();
 

@@ -44,13 +44,11 @@
 #include <QMainWindow>
 
 #include "SGOglNotebook.h"
-#include "SGModels.h"
 #include "SGShaderGenerator.h"
 #include "SGCanvasWrapper.h"
 
 class SGOglNotebook;
 class SGShaderTextWindow;
-class SGModels;
 class SGCanvas;
 class SGFixedGLState;
 class SGShaderGenerator;
@@ -72,7 +70,6 @@ public:
     SGShaderTextWindow* GetShaderTextWindow(){ return shaderText; }
     SGCanvas* GetCanvas() { return canvas->GetCanvas(); }
 
-    void DrawModel(SGModels::ModelId model) { models->DrawModel(model); }
     void SetCanvasMode(SGCanvasWrapper::GLMode a);
     void SetStatusText(const QString &text);
     bool isPerspective() const;
@@ -121,7 +118,6 @@ private:
     SGOglNotebook *oglNotebook;
     SGCanvasWrapper *canvas;
     SGShaderTextWindow* shaderText;
-    SGModels *models;
     SGShaderGenerator *shaderGen;
     QSplitter *topSizer;
     QSplitter *horizSizer;

@@ -55,6 +55,8 @@ class SGCanvas : public QGLWidget
 {
 public:
     SGCanvas(SGFrame* frame, SGCanvasWrapper* parent);
+    ~SGCanvas();
+
     SGFixedGLState* GetGLState() { return m_parent->GetGLState(); }
     SGFrame* GetFrame(){ return m_frame;}
 
@@ -84,6 +86,7 @@ protected:
     virtual void mouseReleaseEvent(QMouseEvent * event);
 private:
     SGCanvasWrapper *m_parent;
+    SGModels *models;
     SGCanvasMouseHandler mouse;
     SGModels::ModelId modelCurrent;
     SGFrame* m_frame;
