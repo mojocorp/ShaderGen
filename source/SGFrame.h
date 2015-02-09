@@ -90,6 +90,7 @@ protected:
 private slots:
     void modelActionTriggered(QAction *action);
     void viewActionTriggered();
+    void switchGLModeTriggered();
     void help();
     void about();
 private:
@@ -104,6 +105,7 @@ private:
 
     QAction *exitAct;
     QAction *perspAct;
+    QAction *switchGLModeAct;
     QAction *torusAct;
     QAction *sphereAct;
     QAction *trefoilAct;

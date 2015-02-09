@@ -315,9 +315,7 @@ void SGCanvas::keyPressEvent(QKeyEvent * event)
     case Qt::Key_PageUp: //page up
         m_zoom += 0.1f;
         break;
-    case Qt::Key_F7:
-        m_parent->SwitchMode();
-        break;
+    default: break;
     }
 
     updateGL();

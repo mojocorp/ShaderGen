@@ -111,6 +111,10 @@ void SGFrame::createActions()
     perspAct->setChecked(true);
     connect(perspAct, SIGNAL(triggered()), SLOT(viewActionTriggered()));
 
+    switchGLModeAct = new QAction(tr("Switch GL mode"), this);
+    switchGLModeAct->setShortcut(Qt::Key_F7);
+    connect(switchGLModeAct, SIGNAL(triggered()), SLOT(switchGLModeTriggered()));
+
     torusAct = new QAction(tr("Torus"), this);
     torusAct->setCheckable(true);
     torusAct->setChecked(true);
@@ -157,6 +161,9 @@ void SGFrame::createMenus()
 
     viewMenu = menuBar()->addMenu(tr("&View"));
     viewMenu->addAction(perspAct);
+    viewMenu->addSeparator();
+    viewMenu->addAction(switchGLModeAct);
+
 
     modelMenu = menuBar()->addMenu(tr("&Model"));
     modelMenu->addAction(torusAct);
@@ -264,6 +271,11 @@ void SGFrame::modelActionTriggered(QAction *action)
 void SGFrame::viewActionTriggered()
 {
     GetCanvas()->updateGL();
+}
+
+void SGFrame::switchGLModeTriggered()
+{
+    canvas->SwitchMode();
 }
 
 void SGFrame::help()
