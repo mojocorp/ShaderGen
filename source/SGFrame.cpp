@@ -157,11 +157,6 @@ bool SGFrame::isPerspective() const
     return perspAct->isChecked();
 }
 
-void SGFrame::Errorf(const QString & message)
-{
-    statusBar()->showMessage(message);
-}
-
 int SGFrame::printOglError(const char *file, int line)
 {
     if (!sgframe_instance)

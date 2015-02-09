@@ -40,6 +40,7 @@
 ************************************************************************/
 
 #include <QApplication>
+#include <QMessageBox>
 
 #include "SGFrame.h"
 #include "SGTextures.h"
@@ -158,7 +159,7 @@ void SGTextures::Activate(TextureId id, GLint unit)
     QImage image = QImage(":/textures/" + TextureNames[index]).mirrored();
     if (image.isNull())
     {
-        m_frame->Errorf(QString("Unable to load image %1").arg(TextureNames[index]));
+        QMessageBox::critical(m_frame, "GLSL ShaderGen", QString("Unable to load image %1").arg(TextureNames[index]));
         return;
     }
     image = QGLWidget::convertToGLFormat(image.mirrored());

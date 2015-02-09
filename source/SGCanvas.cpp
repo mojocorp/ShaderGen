@@ -104,7 +104,8 @@ void SGCanvas::initializeGL()
 
     if (initSuccess != GLEW_OK)
     {
-        m_frame->Errorf(QString("Unable to initialize GLEW.\n %1").arg((char*)glewGetErrorString(initSuccess)));
+        QMessageBox::critical(this, "GLSL ShaderGen",
+                               QString("Unable to initialize GLEW.\n %1").arg((char*)glewGetErrorString(initSuccess)));
     }
     else
     {

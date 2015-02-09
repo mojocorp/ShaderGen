@@ -77,10 +77,6 @@ public:
     const QString & GetVertexShader() { return shaderGen->BuildVertexShader(); }
     const QString & GetFragmentShader() { return shaderGen->BuildFragmentShader(); }
 
-    // C-style output methods
-    //Callers of Errorf should include a period and a linefeed
-    void Errorf(const QString & message);
-
     /// Returns 1 if an OpenGL error occurred, 0 otherwise.
     static int printOglError(const char *file, int line);
 
