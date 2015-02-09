@@ -56,6 +56,7 @@ const float SGCanvas::CameraZ = -5;
 SGCanvas::SGCanvas(SGFrame *frame, SGCanvasWrapper *parent)
     :QGLWidget(parent)
 {
+    setFocusPolicy(Qt::StrongFocus);
     m_parent = parent;
     m_frame = frame;
     models = new SGModels();
