@@ -46,7 +46,6 @@ HEADERS += globals.h\
            QCodeEditor.h
 
 SOURCES += App.cpp \
-           AboutDialog.cpp \
            SGCanvasWrapper.cpp \
            SGFrame.cpp \
            SGFixedGLState.cpp \

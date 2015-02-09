@@ -47,7 +47,6 @@
 #include <QBoxLayout>
 #include <QSettings>
 
-#include "AboutDialog.h"
 #include "SGFrame.h"
 #include "SGFixedGLState.h"
 #include "SGCanvasWrapper.h"
@@ -324,6 +323,9 @@ void SGFrame::help()
 
 void SGFrame::about()
 {
-    AboutDialog about(this);
-    about.exec();
+    QMessageBox::about(this, "GLSL ShaderGen", "<center>"
+                                               "<p><img src=\":textures/3Dlabs.png\"></p>"
+                                               "<p><b>GLSL ShaderGen</b></p>"
+                                               "<p>Version 3.2.0</p>"
+                                               "</center>");
 }
