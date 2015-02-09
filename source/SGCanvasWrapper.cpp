@@ -53,7 +53,6 @@ SGCanvasWrapper::SGCanvasWrapper(SGFrame *parent)
     :QFrame(parent)
 {
     m_parent = parent;
-    mode = GLModeChoiceFixed;
 
     setFocusPolicy(Qt::StrongFocus);
 
@@ -82,7 +81,7 @@ SGCanvasWrapper::SGCanvasWrapper(SGFrame *parent)
 
 void SGCanvasWrapper::OnRadio(int id)
 {
-    SetMode((GLMode)id);
+    canvas->SetMode((SGCanvas::GLMode)id);
 }
 
 SGFixedGLState* SGCanvasWrapper::GetGLState() 
@@ -92,27 +91,17 @@ SGFixedGLState* SGCanvasWrapper::GetGLState()
 
 void SGCanvasWrapper::SwitchMode()
 {
-    if(mode == GLModeChoiceFixed)
+    if(canvas->GetMode() == SGCanvas::GLModeChoiceFixed)
     {
         glModeChoice->button(1)->setChecked(true);
-        canvas->SwitchToShaderMode();
-        mode = GLModeChoiceShader;
+        canvas->SetMode(SGCanvas::GLModeChoiceShader);
     }
-    else if(mode == GLModeChoiceShader)
+    else
     {
         glModeChoice->button(0)->setChecked(true);
-        mode = GLModeChoiceFixed;
+        canvas->SetMode(SGCanvas::GLModeChoiceFixed);
     }
-    canvas->updateGL();
 }
 
-void SGCanvasWrapper::SetMode(GLMode a)
-{
-    if(mode == a)
-    {
-        return;
-    }
-    SwitchMode();
-}
 
 

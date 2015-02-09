@@ -308,7 +308,7 @@ void SGOglTextureEnvNBPage::OnRadioTexApply()
         DisableCombine();
         break;
     }
-    m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
+    m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();
 }
 
@@ -316,7 +316,7 @@ void SGOglTextureEnvNBPage::OnRadioTextureNum()
 {
     UpdateWidgets();
 
-    m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
+    m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();
 }
 
@@ -343,7 +343,7 @@ void SGOglTextureEnvNBPage::OnCheckbox(int index)
     default:
         break;
     }
-    m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
+    m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();
 }
 
@@ -352,7 +352,7 @@ void SGOglTextureEnvNBPage::OnChoiceTextureChoose()
     SGFixedGLState* glState = m_parent->GetGLState();
     Texture& texture = glState->GetTexture(textureGroup->checkedId());
     texture.textureCurrentSelection = (SGTextures::TextureId)texChoose->currentIndex();
-    m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
+    m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();
 }
 
@@ -385,7 +385,7 @@ void SGOglTextureEnvNBPage::OnChoiceTextureCombineMode()
     default:
         break;
     }
-    m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
+    m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();
 }
 
@@ -403,7 +403,7 @@ void SGOglTextureEnvNBPage::OnChoiceTextureCombineOperandArg0()
     default:
         break;
     }
-    m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
+    m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();
 }
 
@@ -421,7 +421,7 @@ void SGOglTextureEnvNBPage::OnChoiceTextureCombineOperandArg1()
     default:
         break;
     }
-    m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
+    m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();
 }
 
@@ -439,7 +439,7 @@ void SGOglTextureEnvNBPage::OnChoiceTextureCombineOperandArg2()
     default:
         break;
     }
-    m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
+    m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();
 }
 
@@ -448,7 +448,7 @@ void SGOglTextureEnvNBPage::OnChoiceTextureCombineScale()
     SGFixedGLState* glState = m_parent->GetGLState();
     Texture& texture = glState->GetTexture(textureGroup->checkedId());
     texture.textureCombineScale = (float)(1 << texCombineScaleChoose->currentIndex());
-    m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
+    m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();
 }
 
@@ -472,7 +472,7 @@ void SGOglTextureEnvNBPage::OnChoiceTextureCombineSrc0RGB()
     default:
         break;
     }
-    m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
+    m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();
 }
 
@@ -496,7 +496,7 @@ void SGOglTextureEnvNBPage::OnChoiceTextureCombineSrc1RGB()
     default:
         break;
     }
-    m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
+    m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();
 }
 
@@ -520,7 +520,7 @@ void SGOglTextureEnvNBPage::OnChoiceTextureCombineSrc2RGB()
     default:
         break;
     }
-    m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
+    m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();
 }
 
@@ -533,7 +533,7 @@ void SGOglTextureEnvNBPage::OnButton()
     QColor texEnvColor = texEnvColorButton->color();
     glState->GetTexture(textureSelected).texEnvColor = texEnvColor;
 
-    m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
+    m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();
 }
 

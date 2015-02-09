@@ -46,24 +46,30 @@
 #include <QGLWidget>
 
 #include "SGCanvasMouseHandler.h"
-#include "SGCanvasWrapper.h"
 #include "SGModels.h"
 
 class SGFrame;
+class SGFixedGLState;
 
 class SGCanvas : public QGLWidget
 {
 public:
-    SGCanvas(SGFrame* frame, SGCanvasWrapper* parent);
+    SGCanvas(SGFrame* frame, QWidget* parent=0);
     ~SGCanvas();
 
-    SGFixedGLState* GetGLState() { return m_parent->GetGLState(); }
     SGFrame* GetFrame(){ return m_frame;}
 
     bool LinkShaders(const QString & vertexShader, const QString & fragmentShader);
     bool CompileShaders(const QString & vertexShader, const QString & fragmentShader);
 
-    int GetMode() { return m_parent->GetMode();}
+    //Mode for GL, Fixed or Shader
+    enum GLMode {
+        GLModeChoiceFixed,
+        GLModeChoiceShader
+    };
+    void SetMode(GLMode a);
+    GLMode GetMode() { return mode;}
+
     int SwitchToShaderMode();
 
     static const float CameraZ;
@@ -85,7 +91,9 @@ protected:
     virtual void mouseMoveEvent(QMouseEvent * event);
     virtual void mouseReleaseEvent(QMouseEvent * event);
 private:
-    SGCanvasWrapper *m_parent;
+    SGFixedGLState* GetGLState();
+
+    GLMode mode;
     SGModels *models;
     SGCanvasMouseHandler mouse;
     SGModels::ModelId modelCurrent;

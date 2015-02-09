@@ -141,7 +141,7 @@ void SGFrame::createStatusBar()
     statusBar()->showMessage(windowTitle());
 }
 
-void SGFrame::SetCanvasMode(SGCanvasWrapper::GLMode a)
+void SGFrame::SetCanvasMode(SGCanvas::GLMode a)
 {
     canvas->SetMode(a);
     GetCanvas()->updateGL();

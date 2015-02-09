@@ -118,7 +118,7 @@ void SGShaderTextWindow::link()
         notebook->setCurrentWidget(textBoxInfo);
         if(haveLinked)
         {
-            m_frame->SetCanvasMode(SGCanvasWrapper::GLModeChoiceShader);
+            m_frame->SetCanvasMode(SGCanvas::GLModeChoiceShader);
         }
 
         textBoxInfo->textCursor().movePosition(QTextCursor::End);
@@ -135,7 +135,7 @@ void SGShaderTextWindow::build()
         haveLinked = m_frame->GetCanvas()->LinkShaders(GetVertexShaderBox()->toPlainText(),GetFragmentShaderBox()->toPlainText());
         if(haveLinked)
         {
-            m_frame->SetCanvasMode(SGCanvasWrapper::GLModeChoiceShader);
+            m_frame->SetCanvasMode(SGCanvas::GLModeChoiceShader);
         }
 
         textBoxInfo->textCursor().movePosition(QTextCursor::End);

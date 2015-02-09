@@ -146,7 +146,7 @@ void SGOglFogNBPage::fogColorChanged(const QColor & color)
 
     glState->GetFog().fogColorVector = color;
 
-    m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
+    m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();
 }
 
@@ -156,7 +156,7 @@ void SGOglFogNBPage::OnCheckbox()
 
     glState->SetFogEnable(fogCheckBox->isChecked());
 
-    m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
+    m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();
 }
 
@@ -164,7 +164,7 @@ void SGOglFogNBPage::fogDensityChanged(double density)
 {
     SGFixedGLState* glState = m_parent->GetGLState();
     glState->GetFog().fogDensity = density;
-    m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
+    m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();
 }
 
@@ -172,7 +172,7 @@ void SGOglFogNBPage::fogStartChanged(double start)
 {
     SGFixedGLState* glState = m_parent->GetGLState();
     glState->GetFog().fogStart   = start;
-    m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
+    m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();
 }
 
@@ -180,7 +180,7 @@ void SGOglFogNBPage::fogEndChanged(double end)
 {
     SGFixedGLState* glState = m_parent->GetGLState();
     glState->GetFog().fogEnd   = end;
-    m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
+    m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();
 }
 
@@ -200,6 +200,6 @@ void SGOglFogNBPage::OnRadio(int index)
     default:
         break;
     }
-    m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
+    m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();
 }

@@ -44,25 +44,20 @@
 #include <QFrame>
 #include <QButtonGroup>
 
+#include "SGCanvas.h"
+
 class SGFixedGLState;
-class SGCanvas;
 class SGFrame;
 
 class SGCanvasWrapper : public QFrame{
     Q_OBJECT
 public:
-    //Mode for GL, Fixed or Shader
-    enum GLMode {
-        GLModeChoiceFixed,
-        GLModeChoiceShader
-    };
-
     SGCanvasWrapper(SGFrame * parent);
-    GLMode GetMode(){ return mode;}
+    SGCanvas::GLMode GetMode(){ return canvas->GetMode();}
     SGFixedGLState* GetGLState();
     SGCanvas* GetCanvas() { return canvas; }
     void SwitchMode();
-    void SetMode(GLMode a);
+    void SetMode(SGCanvas::GLMode a) { canvas->SetMode(a); }
 
 private slots:
     void OnRadio(int);
@@ -70,5 +65,4 @@ private:
     SGCanvas *canvas;
     QButtonGroup* glModeChoice;
     SGFrame *m_parent;
-    GLMode mode;
 };

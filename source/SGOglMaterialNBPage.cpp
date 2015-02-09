@@ -115,7 +115,7 @@ void SGOglMaterialNBPage::ambientChanged()
 
     mat.materialAmbientColorVector = ambientMaterial->color();
 
-    m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
+    m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();
 }
 
@@ -126,7 +126,7 @@ void SGOglMaterialNBPage::diffuseChanged()
 
     mat.materialDiffuseColorVector = diffuseMaterial->color();
 
-    m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
+    m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();
 }
 
@@ -137,7 +137,7 @@ void SGOglMaterialNBPage::specularChanged()
 
     mat.materialSpecularColorVector = specularMaterial->color();
 
-    m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
+    m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();
 }
 
@@ -148,7 +148,7 @@ void SGOglMaterialNBPage::emissionChanged()
 
     mat.materialEmissionColorVector = emissionMaterial->color();
 
-    m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
+    m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();
 }
 
@@ -157,7 +157,7 @@ void SGOglMaterialNBPage::shininessChanged()
     SGFixedGLState* glState = m_parent->GetGLState();
     glState->GetMaterial().materialShininess = shininessMaterial->value();
 
-    m_parent->GetFrame()->SetCanvasMode(SGCanvasWrapper::GLModeChoiceFixed);
+    m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();
 }
 

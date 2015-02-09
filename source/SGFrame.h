@@ -70,7 +70,7 @@ public:
     SGShaderTextWindow* GetShaderTextWindow(){ return shaderText; }
     SGCanvas* GetCanvas() { return canvas->GetCanvas(); }
 
-    void SetCanvasMode(SGCanvasWrapper::GLMode a);
+    void SetCanvasMode(SGCanvas::GLMode a);
     void SetStatusText(const QString &text);
     bool isPerspective() const;
 

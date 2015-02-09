@@ -53,11 +53,11 @@
 
 const float SGCanvas::CameraZ = -5;
 
-SGCanvas::SGCanvas(SGFrame *frame, SGCanvasWrapper *parent)
+SGCanvas::SGCanvas(SGFrame *frame, QWidget *parent)
     :QGLWidget(parent)
 {
     setFocusPolicy(Qt::StrongFocus);
-    m_parent = parent;
+    mode = GLModeChoiceFixed;
     m_frame = frame;
     models = new SGModels();
     m_zoom= 0.8f;
@@ -70,6 +70,11 @@ SGCanvas::SGCanvas(SGFrame *frame, SGCanvasWrapper *parent)
 SGCanvas::~SGCanvas()
 {
     delete models;
+}
+
+SGFixedGLState* SGCanvas::GetGLState()
+{
+    return m_frame->GetGLState();
 }
 
 void SGCanvas::DrawLogo() const
@@ -194,7 +199,7 @@ void SGCanvas::GLSetup()
 
     PrintOpenGLError();
 
-    if(m_parent->GetMode() == SGCanvasWrapper::GLModeChoiceFixed)
+    if(mode == SGCanvas::GLModeChoiceFixed)
     {
         glUseProgram(0);
         SetupFromFixedState();
@@ -477,6 +482,18 @@ bool SGCanvas::CompileShaders(const QString & vertexShader, const QString & frag
     glCompiled = true;
 
     return true;
+}
+
+void SGCanvas::SetMode(GLMode m)
+{
+    if(mode == m)
+        return;
+
+    mode = m;
+    if(mode == GLModeChoiceFixed) {
+        SwitchToShaderMode();
+    }
+    updateGL();
 }
 
 void SGCanvas::PrintInfoLog(GLuint obj)
