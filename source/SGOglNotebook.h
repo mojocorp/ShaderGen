@@ -43,22 +43,19 @@
 
 #include <QTabWidget>
 
-class   SGFrame;
 class   SGOglLightNBPage;
 class   SGOglMaterialNBPage;
 class   SGOglFogNBPage;
 class   SGFixedGLState;
 class   SGOglTextureCoordNBPage;
 class   SGOglTextureEnvNBPage;
-class   SGTextures;
 
 class SGOglNotebook: public QTabWidget
 {
     Q_OBJECT
 public:
-    SGOglNotebook(SGFixedGLState* glState, SGFrame * parent = 0);
+    SGOglNotebook(SGFixedGLState* glState, QWidget* parent = 0);
     ~SGOglNotebook();
-    SGFrame* getFrame() { return m_parent; }
 
     void setup();
 signals:
@@ -66,7 +63,6 @@ signals:
 private slots:
     void onValueChange();
 private:
-    SGFrame              *m_parent;
     SGOglLightNBPage     *lightPage;
     SGOglMaterialNBPage  *materialPage;
     SGOglFogNBPage       *fogPage;

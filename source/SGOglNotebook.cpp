@@ -49,9 +49,8 @@
 #include "SGTextures.h"
 #include "SGFrame.h"
 
-SGOglNotebook::SGOglNotebook(SGFixedGLState* glState, SGFrame * parent)
-    : QTabWidget(parent),
-      m_parent(parent)
+SGOglNotebook::SGOglNotebook(SGFixedGLState* glState, QWidget* parent)
+    : QTabWidget(parent)
 {
     lightPage = new SGOglLightNBPage(glState, this);
     materialPage = new SGOglMaterialNBPage(glState, this);
