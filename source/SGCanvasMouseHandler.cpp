@@ -42,19 +42,11 @@
 #include "SGCanvasMouseHandler.h"
 #include "SGCanvas.h"
 #include "SGFrame.h"
+#include "UtilityFunctions.h"
 
 const float SGCanvasMouseHandler::StartZoom = 0.8f;
 const float SGCanvasMouseHandler::InertiaThreshold = 1.0f;
 const int SGCanvasMouseHandler::Delay = 10;
-
-void SGCanvasMouseHandler::mat4::identity()
-{
-    memset(data, 0, sizeof(data));
-    data[0] = 1;
-    data[5] = 1;
-    data[10] = 1;
-    data[15] = 1;
-}
 
 SGCanvasMouseHandler::SGCanvasMouseHandler()
 {
@@ -81,7 +73,7 @@ void SGCanvasMouseHandler::reset()
     vPrev = QVector3D(0.0f, 0.0f, 0.0f);
     vInc = QVector3D(0.0f, 0.0f, 0.0f);
     validStart = false;
-    xform.identity();
+    xform.setToIdentity();
 }
 
 void SGCanvasMouseHandler::stop()
@@ -100,7 +92,7 @@ void SGCanvasMouseHandler::onMousePress(QMouseEvent *event)
             stop();
         }
         vStart = cursor;
-        memcpy((float*) &mStart, (float*) &xform, sizeof(xform));
+        mStart = xform;
         startZoom = canvas->getZoom();
         vPrev = cursor;
         validStart = true;
@@ -145,8 +137,8 @@ void SGCanvasMouseHandler::onMouseMove(QMouseEvent *event)
 
                     glLoadIdentity();
                     glRotatef(-theta, axis.x(), axis.y(), axis.z());
-                    glMultMatrixf((float*) &mStart);
-                    glGetFloatv(GL_MODELVIEW_MATRIX, (float*) &xform);
+                    glMultMatrix(mStart);
+                    glGet(GL_MODELVIEW_MATRIX, xform);
                     canvas->updateGL();
                 }
             }
@@ -192,6 +184,6 @@ void SGCanvasMouseHandler::loadMatrix() const
 
 void SGCanvasMouseHandler::multMatrix() const
 {
-    glMultMatrixf((float*) &xform);
+    glMultMatrix(xform);
 }
 

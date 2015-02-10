@@ -4,6 +4,8 @@
 #include <QVector2D>
 #include <QVector3D>
 #include <QVector4D>
+#include <QMatrix4x4>
+
 #include <GL/glew.h>
 
 /******************************************************
@@ -56,3 +58,11 @@ inline void glVertex(const QVector3D& v) {
 inline void glNormal(const QVector3D& v) {
     glNormal3f(v.x(), v.y(), v.z());
 }
+
+inline void glMultMatrix(const GLfloat  *m) { glMultMatrixf(m); }
+inline void glMultMatrix(const GLdouble *m) { glMultMatrixd(m); }
+inline void glMultMatrix(const QMatrix4x4 &m) { glMultMatrix(m.constData()); }
+
+inline void glGet(GLenum pname, GLdouble *params) { glGetDoublev(pname, params); }
+inline void glGet(GLenum pname, GLfloat *params) { glGetFloatv(pname, params); }
+inline void glGet(GLenum pname, QMatrix4x4 &m){ glGet(pname, m.data()); }

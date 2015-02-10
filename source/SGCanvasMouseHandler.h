@@ -38,6 +38,7 @@
 #pragma once
 
 #include <QVector3D>
+#include <QMatrix4x4>
 
 class SGCanvas;
 class QMouseEvent;
@@ -67,10 +68,6 @@ private:
     QVector3D vPrev;
     QVector3D vInc;
     float startZoom;
-    struct mat4 {
-        float data[16];
-        void identity();
-    };
-    mat4 mStart;
-    mat4 xform;
+    QMatrix4x4 mStart;
+    QMatrix4x4 xform;
 };
