@@ -46,15 +46,11 @@
 #include "SGCanvasWrapper.h"
 #include "SGCanvas.h"
 #include "SGFrame.h"
-#include "SGFixedGLState.h"
-#include "UtilityFunctions.h"
 
 SGCanvasWrapper::SGCanvasWrapper(SGFrame *parent)
     :QFrame(parent)
 {
     m_parent = parent;
-
-    setFocusPolicy(Qt::StrongFocus);
 
     QVBoxLayout *topSizer = new QVBoxLayout();
 
@@ -82,11 +78,6 @@ SGCanvasWrapper::SGCanvasWrapper(SGFrame *parent)
 void SGCanvasWrapper::OnRadio(int id)
 {
     canvas->SetMode((SGCanvas::GLMode)id);
-}
-
-SGFixedGLState* SGCanvasWrapper::GetGLState() 
-{
-    return m_parent->GetGLState();
 }
 
 void SGCanvasWrapper::SwitchMode()

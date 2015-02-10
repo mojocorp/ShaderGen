@@ -46,7 +46,6 @@
 
 #include "SGCanvas.h"
 
-class SGFixedGLState;
 class SGFrame;
 
 class SGCanvasWrapper : public QFrame{
@@ -54,7 +53,6 @@ class SGCanvasWrapper : public QFrame{
 public:
     SGCanvasWrapper(SGFrame * parent);
     SGCanvas::GLMode GetMode(){ return canvas->GetMode();}
-    SGFixedGLState* GetGLState();
     SGCanvas* GetCanvas() { return canvas; }
     void SwitchMode();
     void SetMode(SGCanvas::GLMode a) { canvas->SetMode(a); }
