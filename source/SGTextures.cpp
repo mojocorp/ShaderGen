@@ -76,7 +76,7 @@ SGTextures::~SGTextures()
 {
 }
 
-void SGTextures::Activate(TextureId id, GLint unit)
+void SGTextures::activate(TextureId id, GLint unit)
 {
     PrintOpenGLError();
 
@@ -91,23 +91,23 @@ void SGTextures::Activate(TextureId id, GLint unit)
     int tempInteger;
     glGetIntegerv(GL_MAX_TEXTURE_UNITS_ARB, &tempInteger);
 
-    if(glState->GetTexture(unit).texGen)
+    if(glState->getTexture(unit).texGen)
     {
-        glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, glState->GetTexture(unit).textureCoordinateGeneration);
-        glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, glState->GetTexture(unit).textureCoordinateGeneration);
+        glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, glState->getTexture(unit).textureCoordinateGeneration);
+        glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, glState->getTexture(unit).textureCoordinateGeneration);
         PrintOpenGLError();
-        if(glState->GetTexture(unit).textureCoordinateGeneration == GL_OBJECT_LINEAR)
+        if(glState->getTexture(unit).textureCoordinateGeneration == GL_OBJECT_LINEAR)
         {
-            glTexGenf(GL_S, GL_OBJECT_PLANE, glState->GetTexture(unit).objectPlaneCoeffS);
-            glTexGenf(GL_T, GL_OBJECT_PLANE, glState->GetTexture(unit).objectPlaneCoeffT);
+            glTexGenf(GL_S, GL_OBJECT_PLANE, glState->getTexture(unit).objectPlaneCoeffS);
+            glTexGenf(GL_T, GL_OBJECT_PLANE, glState->getTexture(unit).objectPlaneCoeffT);
         }
         PrintOpenGLError();
-        if(glState->GetTexture(unit).textureCoordinateGeneration == GL_EYE_LINEAR)
+        if(glState->getTexture(unit).textureCoordinateGeneration == GL_EYE_LINEAR)
         {
             PrintOpenGLError();
-            glTexGenf(GL_S, GL_EYE_PLANE, glState->GetTexture(unit).eyePlaneCoeffS);
+            glTexGenf(GL_S, GL_EYE_PLANE, glState->getTexture(unit).eyePlaneCoeffS);
             PrintOpenGLError();
-            glTexGenf(GL_T, GL_EYE_PLANE, glState->GetTexture(unit).eyePlaneCoeffT);
+            glTexGenf(GL_T, GL_EYE_PLANE, glState->getTexture(unit).eyePlaneCoeffT);
         }
         PrintOpenGLError();
         glEnable(GL_TEXTURE_GEN_S);
@@ -116,22 +116,22 @@ void SGTextures::Activate(TextureId id, GLint unit)
 
     PrintOpenGLError();
 
-    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, glState->GetTexture(unit).textureApplicationMethod);
+    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, glState->getTexture(unit).textureApplicationMethod);
 
-    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, glState->GetTexture(unit).texEnvColor);
+    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, glState->getTexture(unit).texEnvColor);
 
     PrintOpenGLError();
 
-    if(glState->GetTexture(unit).textureApplicationMethod == GL_COMBINE)
+    if(glState->getTexture(unit).textureApplicationMethod == GL_COMBINE)
     {
-        glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, glState->GetTexture(unit).textureCombineMode);
-        glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_RGB, glState->GetTexture(unit).textureCombineSource0);
-        glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_RGB, glState->GetTexture(unit).textureCombineSource1);
-        glTexEnvi(GL_TEXTURE_ENV, GL_SRC2_RGB, glState->GetTexture(unit).textureCombineSource2);
-        glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_RGB, glState->GetTexture(unit).textureCombineOperand0);
-        glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_RGB, glState->GetTexture(unit).textureCombineOperand1);
-        glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND2_RGB, glState->GetTexture(unit).textureCombineOperand2);
-        glTexEnvf(GL_TEXTURE_ENV, GL_RGB_SCALE, glState->GetTexture(unit).textureCombineScale);
+        glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, glState->getTexture(unit).textureCombineMode);
+        glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_RGB, glState->getTexture(unit).textureCombineSource0);
+        glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_RGB, glState->getTexture(unit).textureCombineSource1);
+        glTexEnvi(GL_TEXTURE_ENV, GL_SRC2_RGB, glState->getTexture(unit).textureCombineSource2);
+        glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_RGB, glState->getTexture(unit).textureCombineOperand0);
+        glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_RGB, glState->getTexture(unit).textureCombineOperand1);
+        glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND2_RGB, glState->getTexture(unit).textureCombineOperand2);
+        glTexEnvf(GL_TEXTURE_ENV, GL_RGB_SCALE, glState->getTexture(unit).textureCombineScale);
     }
 
     glEnable(GL_TEXTURE_2D);
@@ -166,7 +166,7 @@ void SGTextures::Activate(TextureId id, GLint unit)
     gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGBA, image.width(), image.height(),GL_RGBA, GL_UNSIGNED_BYTE, image.bits());
 }
 
-void SGTextures::Deactivate(GLint unit)
+void SGTextures::deactivate(GLint unit)
 {
     glActiveTexture(GL_TEXTURE0 + unit);
     glDisable(GL_TEXTURE_2D);

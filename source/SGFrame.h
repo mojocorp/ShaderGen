@@ -64,18 +64,18 @@ public:
     SGFrame(const QString& title);
     ~SGFrame();
 
-    SGFixedGLState* GetGLState(){ return glState; }
-    SGTextures* GetTextures() { return textures; }
+    SGFixedGLState* getGLState(){ return glState; }
+    SGTextures* getTextures() { return textures; }
 
-    SGShaderTextWindow* GetShaderTextWindow(){ return shaderText; }
-    SGCanvas* GetCanvas() { return canvas->GetCanvas(); }
+    SGShaderTextWindow* getShaderTextWindow(){ return shaderText; }
+    SGCanvas* getCanvas() { return canvas->getCanvas(); }
 
-    void SetCanvasMode(SGCanvas::GLMode a);
-    void SetStatusText(const QString &text);
+    void setCanvasMode(SGCanvas::GLMode a);
+    void setStatusText(const QString &text);
     bool isPerspective() const;
 
-    const QString & GetVertexShader() { return shaderGen->BuildVertexShader(); }
-    const QString & GetFragmentShader() { return shaderGen->BuildFragmentShader(); }
+    const QString & getVertexShader() { return shaderGen->buildVertexShader(); }
+    const QString & getFragmentShader() { return shaderGen->buildFragmentShader(); }
 
     /// Returns 1 if an OpenGL error occurred, 0 otherwise.
     static int printOglError(const char *file, int line);

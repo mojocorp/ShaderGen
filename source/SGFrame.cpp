@@ -158,13 +158,13 @@ void SGFrame::createStatusBar()
     statusBar()->showMessage(windowTitle());
 }
 
-void SGFrame::SetCanvasMode(SGCanvas::GLMode a)
+void SGFrame::setCanvasMode(SGCanvas::GLMode a)
 {
-    canvas->SetMode(a);
-    GetCanvas()->updateGL();
+    canvas->setMode(a);
+    getCanvas()->updateGL();
 }
 
-void SGFrame::SetStatusText(const QString &text)
+void SGFrame::setStatusText(const QString &text)
 {
     statusBar()->showMessage(text);
 }
@@ -181,7 +181,7 @@ int SGFrame::printOglError(const char *file, int line)
 
     int    retCode = 0;
 
-    QTextEdit *text = sgframe_instance->GetShaderTextWindow()->GetInfoBox();
+    QTextEdit *text = sgframe_instance->getShaderTextWindow()->getInfoBox();
     text->textCursor().movePosition(QTextCursor::End);
 
     GLenum glErr = glGetError();
@@ -213,7 +213,7 @@ bool SGFrame::loadFile(const QString& filename)
     QJsonDocument loadDoc(QJsonDocument::fromJson(saveData));
     glState->read(loadDoc.object());
     oglNotebook->setup();
-    GetCanvas()->updateGL();
+    getCanvas()->updateGL();
 
     return true;
 }
@@ -256,37 +256,37 @@ void SGFrame::closeEvent(QCloseEvent * event)
 void SGFrame::modelActionTriggered(QAction *action)
 {
     if (action == torusAct) {
-        GetCanvas()->SetModel(SGModels::ModelTorus);
+        getCanvas()->setModel(SGModels::ModelTorus);
     } else if (action == sphereAct) {
-        GetCanvas()->SetModel(SGModels::ModelSphere);
+        getCanvas()->setModel(SGModels::ModelSphere);
     } else if (action == trefoilAct) {
-        GetCanvas()->SetModel(SGModels::ModelTrefoil);
+        getCanvas()->setModel(SGModels::ModelTrefoil);
     } else if (action == kleinAct) {
-        GetCanvas()->SetModel(SGModels::ModelKlein);
+        getCanvas()->setModel(SGModels::ModelKlein);
     } else if (action == conicAct) {
-        GetCanvas()->SetModel(SGModels::ModelConic);
+        getCanvas()->setModel(SGModels::ModelConic);
     } else if (action == planeAct) {
-        GetCanvas()->SetModel(SGModels::ModelPlane);
+        getCanvas()->setModel(SGModels::ModelPlane);
     }
 
-    GetCanvas()->updateGL();
+    getCanvas()->updateGL();
 }
 
 void SGFrame::viewActionTriggered()
 {
-    GetCanvas()->updateGL();
+    getCanvas()->updateGL();
 }
 
 void SGFrame::switchGLModeTriggered()
 {
-    canvas->SwitchMode();
-    GetCanvas()->updateGL();
+    canvas->switchMode();
+    getCanvas()->updateGL();
 }
 
 void SGFrame::setFixedGLMode()
 {
-    canvas->SetMode(SGCanvas::GLModeChoiceFixed);
-    GetCanvas()->updateGL();
+    canvas->setMode(SGCanvas::GLModeChoiceFixed);
+    getCanvas()->updateGL();
 }
 
 void SGFrame::help()

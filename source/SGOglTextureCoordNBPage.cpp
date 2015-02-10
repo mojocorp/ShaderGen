@@ -70,10 +70,10 @@ SGOglTextureCoordNBPage::SGOglTextureCoordNBPage(SGFixedGLState* glState, QWidge
     QLabel* eyePlaneCoeffLabelT = new QLabel(tr("GL_T"), this);
     
     eyePlaneCoeffTextS = new QVectorEdit(QVector4D(), this);
-    connect(eyePlaneCoeffTextS, SIGNAL(valueChanged()), SLOT(OnTextEnterEyeCoeffS()));
+    connect(eyePlaneCoeffTextS, SIGNAL(valueChanged()), SLOT(onTextEnterEyeCoeffS()));
 
     eyePlaneCoeffTextT = new QVectorEdit(QVector4D(), this);
-    connect(eyePlaneCoeffTextT, SIGNAL(valueChanged()), SLOT(OnTextEnterEyeCoeffT()));
+    connect(eyePlaneCoeffTextT, SIGNAL(valueChanged()), SLOT(onTextEnterEyeCoeffT()));
 
     eyePlaneLabelSizer->addWidget(eyePlaneCoeffLabelS);
     eyePlaneLabelSizer->addWidget(eyePlaneCoeffLabelT);
@@ -94,10 +94,10 @@ SGOglTextureCoordNBPage::SGOglTextureCoordNBPage(SGFixedGLState* glState, QWidge
     QLabel* objectPlaneCoeffLabelT = new QLabel(tr("GL_T"), this);
 
     objectPlaneCoeffTextS = new QVectorEdit(QVector4D(), this);
-    connect(objectPlaneCoeffTextS, SIGNAL(valueChanged()), SLOT(OnTextEnterObjCoeffS()));
+    connect(objectPlaneCoeffTextS, SIGNAL(valueChanged()), SLOT(onTextEnterObjCoeffS()));
 
     objectPlaneCoeffTextT = new QVectorEdit(QVector4D(), this);
-    connect(objectPlaneCoeffTextT, SIGNAL(valueChanged()), SLOT(OnTextEnterObjCoeffT()));
+    connect(objectPlaneCoeffTextT, SIGNAL(valueChanged()), SLOT(onTextEnterObjCoeffT()));
 
     objectPlaneLabelSizer->addWidget(objectPlaneCoeffLabelS);
     objectPlaneLabelSizer->addWidget(objectPlaneCoeffLabelT);
@@ -130,7 +130,7 @@ SGOglTextureCoordNBPage::SGOglTextureCoordNBPage(SGFixedGLState* glState, QWidge
     texCoordUnitGroup->addButton(tex3TexSelRadioButton, 3);
     texCoordUnitGroup->addButton(tex4TexSelRadioButton, 4);
     texCoordUnitGroup->button(0)->setChecked(true);
-    connect(texCoordUnitGroup, SIGNAL(buttonClicked(int)), SLOT(OnRadioTextureCoordUnit(int)));
+    connect(texCoordUnitGroup, SIGNAL(buttonClicked(int)), SLOT(onRadioTextureCoordUnit(int)));
 
     tex0TexGenEnableCheckBox = new QCheckBox(tr("T0"), this);
     tex1TexGenEnableCheckBox = new QCheckBox(tr("T1"), this);
@@ -154,7 +154,7 @@ SGOglTextureCoordNBPage::SGOglTextureCoordNBPage(SGFixedGLState* glState, QWidge
     texCoordSelGroup->addButton(tex2TexGenEnableCheckBox, 2);
     texCoordSelGroup->addButton(tex3TexGenEnableCheckBox, 3);
     texCoordSelGroup->addButton(tex4TexGenEnableCheckBox, 4);
-    connect(texCoordSelGroup, SIGNAL(buttonClicked(int)), SLOT(OnCheckbox(int)));
+    connect(texCoordSelGroup, SIGNAL(buttonClicked(int)), SLOT(onCheckbox(int)));
 
     QGroupBox *coordGenBox      = new QGroupBox(tr("Texture Coordinate Generation Method (Vertex Shader)"), this);
     QVBoxLayout *coordGenSizer = new QVBoxLayout(coordGenBox);
@@ -178,7 +178,7 @@ SGOglTextureCoordNBPage::SGOglTextureCoordNBPage(SGFixedGLState* glState, QWidge
     coordGenGroup->addButton(reflecmCoordGenRadioButton, 3);
     coordGenGroup->addButton(normalmCoordGenRadioButton, 4);
     coordGenGroup->button(0)->setChecked(true);
-    connect(coordGenGroup, SIGNAL(buttonClicked(int)), SLOT(OnRadioTexCoordGen(int)));
+    connect(coordGenGroup, SIGNAL(buttonClicked(int)), SLOT(onRadioTexCoordGen(int)));
 
     selectedTexPropertiesSizer->addWidget(coordGenBox,         0, 0, 2, 1);
     selectedTexPropertiesSizer->addWidget(eyePlaneCoeffBox,    0, 1);
@@ -198,43 +198,43 @@ SGOglTextureCoordNBPage::SGOglTextureCoordNBPage(SGFixedGLState* glState, QWidge
 
 void SGOglTextureCoordNBPage::setup()
 {
-    eyePlaneCoeffTextS->setValue(m_glState->GetTexture(0).eyePlaneCoeffS);
-    eyePlaneCoeffTextT->setValue(m_glState->GetTexture(0).eyePlaneCoeffT);
-    objectPlaneCoeffTextS->setValue(m_glState->GetTexture(0).objectPlaneCoeffS);
-    objectPlaneCoeffTextT->setValue(m_glState->GetTexture(0).objectPlaneCoeffT);
+    eyePlaneCoeffTextS->setValue(m_glState->getTexture(0).eyePlaneCoeffS);
+    eyePlaneCoeffTextT->setValue(m_glState->getTexture(0).eyePlaneCoeffT);
+    objectPlaneCoeffTextS->setValue(m_glState->getTexture(0).objectPlaneCoeffS);
+    objectPlaneCoeffTextT->setValue(m_glState->getTexture(0).objectPlaneCoeffT);
 
-    tex0TexGenEnableCheckBox->setChecked(m_glState->GetTexture(0).texGen);
-    tex1TexGenEnableCheckBox->setChecked(m_glState->GetTexture(1).texGen);
-    tex2TexGenEnableCheckBox->setChecked(m_glState->GetTexture(2).texGen);
-    tex3TexGenEnableCheckBox->setChecked(m_glState->GetTexture(3).texGen);
-    tex4TexGenEnableCheckBox->setChecked(m_glState->GetTexture(4).texGen);
+    tex0TexGenEnableCheckBox->setChecked(m_glState->getTexture(0).texGen);
+    tex1TexGenEnableCheckBox->setChecked(m_glState->getTexture(1).texGen);
+    tex2TexGenEnableCheckBox->setChecked(m_glState->getTexture(2).texGen);
+    tex3TexGenEnableCheckBox->setChecked(m_glState->getTexture(3).texGen);
+    tex4TexGenEnableCheckBox->setChecked(m_glState->getTexture(4).texGen);
 }
 
-void SGOglTextureCoordNBPage::OnRadioTextureCoordUnit(int)
+void SGOglTextureCoordNBPage::onRadioTextureCoordUnit(int)
 {
-    UpdateWidgets();
+    updateWidgets();
     emit valueChanged();
 }
 
-void SGOglTextureCoordNBPage::OnRadioTexCoordGen(int index)
+void SGOglTextureCoordNBPage::onRadioTexCoordGen(int index)
 {
     int workingTextureCoords = texCoordUnitGroup->checkedId();
 
     switch(index){
     case TEXTURE_COORDINATE_OBJECT_LINEAR:
-        m_glState->GetTexture(workingTextureCoords).textureCoordinateGeneration = GL_OBJECT_LINEAR;
+        m_glState->getTexture(workingTextureCoords).textureCoordinateGeneration = GL_OBJECT_LINEAR;
         break;
     case TEXTURE_COORDINATE_EYE_LINEAR:
-        m_glState->GetTexture(workingTextureCoords).textureCoordinateGeneration = GL_EYE_LINEAR;
+        m_glState->getTexture(workingTextureCoords).textureCoordinateGeneration = GL_EYE_LINEAR;
         break;
     case TEXTURE_COORDINATE_SPHERE_MAP:
-        m_glState->GetTexture(workingTextureCoords).textureCoordinateGeneration = GL_SPHERE_MAP;
+        m_glState->getTexture(workingTextureCoords).textureCoordinateGeneration = GL_SPHERE_MAP;
         break;
     case TEXTURE_COORDINATE_REFLECTION_MAP:
-        m_glState->GetTexture(workingTextureCoords).textureCoordinateGeneration = GL_REFLECTION_MAP;
+        m_glState->getTexture(workingTextureCoords).textureCoordinateGeneration = GL_REFLECTION_MAP;
         break;
     case TEXTURE_COORDINATE_NORMAL_MAP:
-        m_glState->GetTexture(workingTextureCoords).textureCoordinateGeneration = GL_NORMAL_MAP;
+        m_glState->getTexture(workingTextureCoords).textureCoordinateGeneration = GL_NORMAL_MAP;
         break;
     default:
         break;
@@ -242,67 +242,67 @@ void SGOglTextureCoordNBPage::OnRadioTexCoordGen(int index)
     emit valueChanged();
 }
 
-void SGOglTextureCoordNBPage::OnCheckbox(int index)
+void SGOglTextureCoordNBPage::onCheckbox(int index)
 {
     switch(index){
     case 0:
-        m_glState->GetTexture(0).texGen = tex0TexGenEnableCheckBox->isChecked();
+        m_glState->getTexture(0).texGen = tex0TexGenEnableCheckBox->isChecked();
         break;
     case 1:
-        m_glState->GetTexture(1).texGen = tex1TexGenEnableCheckBox->isChecked();
+        m_glState->getTexture(1).texGen = tex1TexGenEnableCheckBox->isChecked();
         break;
     case 2:
-        m_glState->GetTexture(2).texGen = tex2TexGenEnableCheckBox->isChecked();
+        m_glState->getTexture(2).texGen = tex2TexGenEnableCheckBox->isChecked();
         break;
     case 3:
-        m_glState->GetTexture(3).texGen = tex3TexGenEnableCheckBox->isChecked();
+        m_glState->getTexture(3).texGen = tex3TexGenEnableCheckBox->isChecked();
         break;
     case 4:
-        m_glState->GetTexture(4).texGen = tex4TexGenEnableCheckBox->isChecked();
+        m_glState->getTexture(4).texGen = tex4TexGenEnableCheckBox->isChecked();
         break;
     }
     emit valueChanged();
 }
 
-void SGOglTextureCoordNBPage::OnTextEnterEyeCoeffS()
+void SGOglTextureCoordNBPage::onTextEnterEyeCoeffS()
 {
     QVector4D eyePlaneSVec = eyePlaneCoeffTextS->getValue();
 
-    m_glState->GetTexture(texCoordUnitGroup->checkedId()).eyePlaneCoeffS = eyePlaneSVec;
+    m_glState->getTexture(texCoordUnitGroup->checkedId()).eyePlaneCoeffS = eyePlaneSVec;
 
     emit valueChanged();
 }
 
-void SGOglTextureCoordNBPage::OnTextEnterEyeCoeffT()
+void SGOglTextureCoordNBPage::onTextEnterEyeCoeffT()
 {
     QVector4D eyePlaneTVec = eyePlaneCoeffTextT->getValue();
 
-    m_glState->GetTexture(texCoordUnitGroup->checkedId()).eyePlaneCoeffT = eyePlaneTVec;
+    m_glState->getTexture(texCoordUnitGroup->checkedId()).eyePlaneCoeffT = eyePlaneTVec;
 
     emit valueChanged();
 }
 
-void SGOglTextureCoordNBPage::OnTextEnterObjCoeffS()
+void SGOglTextureCoordNBPage::onTextEnterObjCoeffS()
 {
     QVector4D objPlaneSVec = objectPlaneCoeffTextS->getValue();
 
-    m_glState->GetTexture(texCoordUnitGroup->checkedId()).objectPlaneCoeffS = objPlaneSVec;
+    m_glState->getTexture(texCoordUnitGroup->checkedId()).objectPlaneCoeffS = objPlaneSVec;
 
     emit valueChanged();
 }
 
-void SGOglTextureCoordNBPage::OnTextEnterObjCoeffT()
+void SGOglTextureCoordNBPage::onTextEnterObjCoeffT()
 {
     QVector4D objPlaneTVec = objectPlaneCoeffTextT->getValue();
 
-    m_glState->GetTexture(texCoordUnitGroup->checkedId()).objectPlaneCoeffT = objPlaneTVec;
+    m_glState->getTexture(texCoordUnitGroup->checkedId()).objectPlaneCoeffT = objPlaneTVec;
 
     emit valueChanged();
 }
 
-void SGOglTextureCoordNBPage::UpdateWidgets()
+void SGOglTextureCoordNBPage::updateWidgets()
 {
-    const Texture& texture = m_glState->GetTexture(texCoordUnitGroup->checkedId());
+    const Texture& texture = m_glState->getTexture(texCoordUnitGroup->checkedId());
 
     switch(texture.textureCoordinateGeneration){
     case GL_OBJECT_LINEAR:

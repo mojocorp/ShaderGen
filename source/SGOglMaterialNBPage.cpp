@@ -102,7 +102,7 @@ SGOglMaterialNBPage::SGOglMaterialNBPage(SGFixedGLState* glState, QWidget* paren
 
 void SGOglMaterialNBPage::setup()
 {
-    const Material& mat = m_glState->GetMaterial();
+    const Material& mat = m_glState->getMaterial();
     shininessMaterial->setValue(mat.materialShininess);
     ambientMaterial->setColor(mat.materialAmbientColorVector);
     diffuseMaterial->setColor(mat.materialDiffuseColorVector);
@@ -112,7 +112,7 @@ void SGOglMaterialNBPage::setup()
 
 void SGOglMaterialNBPage::ambientChanged()
 {
-    Material& mat = m_glState->GetMaterial();
+    Material& mat = m_glState->getMaterial();
 
     mat.materialAmbientColorVector = ambientMaterial->color();
 
@@ -121,7 +121,7 @@ void SGOglMaterialNBPage::ambientChanged()
 
 void SGOglMaterialNBPage::diffuseChanged()
 {
-    Material& mat = m_glState->GetMaterial();
+    Material& mat = m_glState->getMaterial();
 
     mat.materialDiffuseColorVector = diffuseMaterial->color();
 
@@ -130,7 +130,7 @@ void SGOglMaterialNBPage::diffuseChanged()
 
 void SGOglMaterialNBPage::specularChanged()
 {
-    Material& mat = m_glState->GetMaterial();
+    Material& mat = m_glState->getMaterial();
 
     mat.materialSpecularColorVector = specularMaterial->color();
 
@@ -139,7 +139,7 @@ void SGOglMaterialNBPage::specularChanged()
 
 void SGOglMaterialNBPage::emissionChanged()
 {
-    Material& mat = m_glState->GetMaterial();
+    Material& mat = m_glState->getMaterial();
 
     mat.materialEmissionColorVector = emissionMaterial->color();
 
@@ -148,7 +148,7 @@ void SGOglMaterialNBPage::emissionChanged()
 
 void SGOglMaterialNBPage::shininessChanged()
 {
-    m_glState->GetMaterial().materialShininess = shininessMaterial->value();
+    m_glState->getMaterial().materialShininess = shininessMaterial->value();
 
     emit valueChanged();
 }

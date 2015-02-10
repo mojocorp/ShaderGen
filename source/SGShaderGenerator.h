@@ -53,8 +53,8 @@ class SGShaderGenerator
 public:
     SGShaderGenerator();
     ~SGShaderGenerator();
-    const QString & BuildVertexShader();
-    const QString & BuildFragmentShader();
+    const QString & buildVertexShader();
+    const QString & buildFragmentShader();
 
 private:
     typedef struct _currentTextureState{
@@ -77,23 +77,23 @@ private:
     
     CurrentTextureState currentTexture[NUM_TEXTURES];
 
-    void InitTextures();
-    void BuildFragFog(QString &str);
-    void BuildFragTex(QString &str);
+    void initTextures();
+    void buildFragFog(QString &str);
+    void buildFragTex(QString &str);
 
-    void BuildFragSeparateSpecularColor(QString &str);
+    void buildFragSeparateSpecularColor(QString &str);
 
-    void BuildLightCode  ( QString &str );
-    void BuildVertMain   ( QString &str );
-    void BuildFuncFnormal( QString &str );
-    void BuildFuncFog    ( QString &str );
-    void BuildFuncPoint  ( QString &str );
-    void BuildTexCoord   ( QString &str );
+    void buildLightCode  ( QString &str );
+    void buildVertMain   ( QString &str );
+    void buildFuncFnormal( QString &str );
+    void buildFuncFog    ( QString &str );
+    void buildFuncPoint  ( QString &str );
+    void buildTexCoord   ( QString &str );
 
-    void AddFuncLightDirectional   (QString &str) const;
-    void AddFuncLightPoint         (QString &str) const;
-    void AddFuncLightSpot          (QString &str) const;
-    void AddFuncSphereMap          (QString &str) const;
-    void AddFuncReflectionMap      (QString &str) const;
-    void AddFuncLightSpotDirection (QString &str) const;
+    void addFuncLightDirectional   (QString &str) const;
+    void addFuncLightPoint         (QString &str) const;
+    void addFuncLightSpot          (QString &str) const;
+    void addFuncSphereMap          (QString &str) const;
+    void addFuncReflectionMap      (QString &str) const;
+    void addFuncLightSpotDirection (QString &str) const;
 };

@@ -60,7 +60,7 @@ SGModels::~SGModels()
     }
 }
 
-void SGModels::DrawModel(ModelId id)
+void SGModels::drawModel(ModelId id)
 {
     surface[id]->Draw();
 }

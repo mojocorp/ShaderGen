@@ -48,7 +48,7 @@ void SGFixedGLState::Init()
 {
     for(int i=0; i< NUM_LIGHTS; i++)
     {
-        InitLight(i);
+        initLight(i);
     }
 
     for(int i=0; i<NUM_LIGHTS_ENABLED_AT_START; i++)
@@ -58,20 +58,20 @@ void SGFixedGLState::Init()
 
     for(int i=0; i<NUM_TEXTURES; i++)
     {
-        InitTexture(i);
+        initTexture(i);
     }
 
-    InitMaterial();
-    InitFog();
+    initMaterial();
+    initFog();
 
-    SetLightingEnable(true);
-    SetFogEnable(false);
-    SetSeparateSpecularColorEnable(false);
-    Set2SidedLightingEnable(false);
+    setLightingEnable(true);
+    setFogEnable(false);
+    setSeparateSpecularColorEnable(false);
+    set2SidedLightingEnable(false);
     
-    SetTextureEnable(false);
-    SetTexGenEnable(false);
-    SetNormalizeEnable(true);
+    setTextureEnable(false);
+    setTexGenEnable(false);
+    setNormalizeEnable(true);
 }
 
 SGFixedGLState::~SGFixedGLState()
@@ -79,7 +79,7 @@ SGFixedGLState::~SGFixedGLState()
 
 }
 
-void SGFixedGLState::InitLight(int num)
+void SGFixedGLState::initLight(int num)
 {
     m_light[num].lightEnabled = false;
 
@@ -118,7 +118,7 @@ void SGFixedGLState::InitLight(int num)
     m_light[num].lightQuadraticAttenuation = DEFAULT_LIGHT_QUAD_ATTEN;
 }
 
-void SGFixedGLState::InitMaterial()
+void SGFixedGLState::initMaterial()
 {
     m_material.materialAmbientColorVector = DEFAULT_MATERIAL_AMBIENT_COLOR;
     m_material.materialDiffuseColorVector = DEFAULT_MATERIAL_DIFFUSE_COLOR;
@@ -129,7 +129,7 @@ void SGFixedGLState::InitMaterial()
     m_material.materialEmissionColorVector = DEFAULT_MATERIAL_EMISSION_COLOR;
 }
 
-void SGFixedGLState::InitFog()
+void SGFixedGLState::initFog()
 {
     m_fog.fogMode    = GL_LINEAR;
 
@@ -140,7 +140,7 @@ void SGFixedGLState::InitFog()
     m_fog.fogColorVector = DEFAULT_FOG_COLOR;
 }
 
-void SGFixedGLState::InitTexture(int num)
+void SGFixedGLState::initTexture(int num)
 {
     m_texture[num].textureEnabled = false;
 

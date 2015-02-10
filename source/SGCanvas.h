@@ -57,32 +57,32 @@ public:
     SGCanvas(SGFrame* frame, QWidget* parent=0);
     ~SGCanvas();
 
-    SGFrame* GetFrame(){ return m_frame;}
+    SGFrame* getFrame(){ return m_frame;}
 
-    bool LinkShaders(const QString & vertexShader, const QString & fragmentShader);
-    bool CompileShaders(const QString & vertexShader, const QString & fragmentShader);
+    bool linkShaders(const QString & vertexShader, const QString & fragmentShader);
+    bool compileShaders(const QString & vertexShader, const QString & fragmentShader);
 
     //Mode for GL, Fixed or Shader
     enum GLMode {
         GLModeChoiceFixed,
         GLModeChoiceShader
     };
-    void SetMode(GLMode a);
-    GLMode GetMode() { return mode;}
+    void setMode(GLMode a);
+    GLMode getMode() { return mode;}
 
-    int SwitchToShaderMode();
+    int switchToShaderMode();
 
     static const float CameraZ;
-    float GetZoom() { return m_zoom; }
+    float getZoom() { return m_zoom; }
 
-    QVector3D GetWorldSpace(int x, int y);
+    QVector3D getWorldSpace(int x, int y);
 
     void initializeGL();
     void paintGL();
     void SetZoom(float zoom) { m_zoom = zoom;}
     void GLSetup();
-    void SetModel(SGModels::ModelId id) { modelCurrent = id;}
-    void PrintInfoLog(GLuint obj);
+    void setModel(SGModels::ModelId id) { modelCurrent = id;}
+    void printInfoLog(GLuint obj);
 
     GLuint logo;
 protected:
@@ -91,7 +91,7 @@ protected:
     virtual void mouseMoveEvent(QMouseEvent * event);
     virtual void mouseReleaseEvent(QMouseEvent * event);
 private:
-    SGFixedGLState* GetGLState();
+    SGFixedGLState* getGLState();
 
     GLMode mode;
     SGModels *models;
@@ -101,16 +101,15 @@ private:
     int m_width, m_height;
     float m_left, m_right, m_bottom, m_top, m_znear, m_zfar, m_zoom;
 
-    GLint GetUniLoc(unsigned int program, const GLchar *name);
+    GLint getUniLoc(unsigned int program, const GLchar *name);
 
     bool glReady, glCompiled, glLinked;
     unsigned int vertS, fragS, prog;
 
-    void SetupFromFixedState();
-    void WriteMessage(const QString str);
-    void DrawLogo() const;
-    void UnsupportedOpenGLVersion(void);
-    void GetGlVersion(int *major, int *minor);
-    void CheckGlImplementation();
-    void NotEnoughTextureUnits(const int numTextures);
+    void setupFromFixedState();
+    void writeMessage(const QString str);
+    void unsupportedOpenGLVersion(void);
+    void getGlVersion(int *major, int *minor);
+    void checkGlImplementation();
+    void notEnoughTextureUnits(const int numTextures);
 };

@@ -105,7 +105,7 @@ void SGShaderTextWindow::compile()
 {
     if(haveRefreshed)
     {
-        haveCompiled = m_frame->GetCanvas()->CompileShaders(GetVertexShaderBox()->toPlainText(),GetFragmentShaderBox()->toPlainText());
+        haveCompiled = m_frame->getCanvas()->compileShaders(getVertexShaderBox()->toPlainText(),getFragmentShaderBox()->toPlainText());
     }
     notebook->setCurrentWidget(textBoxInfo);
 }
@@ -114,11 +114,11 @@ void SGShaderTextWindow::link()
 {
     if(haveCompiled)
     {
-        haveLinked = m_frame->GetCanvas()->LinkShaders(GetVertexShaderBox()->toPlainText(),GetFragmentShaderBox()->toPlainText());
+        haveLinked = m_frame->getCanvas()->linkShaders(getVertexShaderBox()->toPlainText(),getFragmentShaderBox()->toPlainText());
         notebook->setCurrentWidget(textBoxInfo);
         if(haveLinked)
         {
-            m_frame->SetCanvasMode(SGCanvas::GLModeChoiceShader);
+            m_frame->setCanvasMode(SGCanvas::GLModeChoiceShader);
         }
 
         textBoxInfo->textCursor().movePosition(QTextCursor::End);
@@ -128,14 +128,14 @@ void SGShaderTextWindow::link()
 void SGShaderTextWindow::build()
 {
     refresh();
-    haveCompiled = m_frame->GetCanvas()->CompileShaders(GetVertexShaderBox()->toPlainText(),GetFragmentShaderBox()->toPlainText());
+    haveCompiled = m_frame->getCanvas()->compileShaders(getVertexShaderBox()->toPlainText(),getFragmentShaderBox()->toPlainText());
     notebook->setCurrentWidget(textBoxInfo);
     if(haveCompiled)
     {
-        haveLinked = m_frame->GetCanvas()->LinkShaders(GetVertexShaderBox()->toPlainText(),GetFragmentShaderBox()->toPlainText());
+        haveLinked = m_frame->getCanvas()->linkShaders(getVertexShaderBox()->toPlainText(),getFragmentShaderBox()->toPlainText());
         if(haveLinked)
         {
-            m_frame->SetCanvasMode(SGCanvas::GLModeChoiceShader);
+            m_frame->setCanvasMode(SGCanvas::GLModeChoiceShader);
         }
 
         textBoxInfo->textCursor().movePosition(QTextCursor::End);
@@ -144,8 +144,8 @@ void SGShaderTextWindow::build()
 
 void SGShaderTextWindow::refresh()
 {
-    textBoxFrag->setPlainText(m_frame->GetFragmentShader());
-    textBoxVert->setPlainText(m_frame->GetVertexShader());
+    textBoxFrag->setPlainText(m_frame->getFragmentShader());
+    textBoxVert->setPlainText(m_frame->getVertexShader());
 
     haveRefreshed = true;
 }

@@ -58,13 +58,13 @@ class SGOglNotebook: public QTabWidget
 public:
     SGOglNotebook(SGFixedGLState* glState, SGFrame * parent = 0);
     ~SGOglNotebook();
-    SGFrame* GetFrame() { return m_parent; }
+    SGFrame* getFrame() { return m_parent; }
 
     void setup();
 signals:
     void valueChanged();
 private slots:
-    void OnValueChange();
+    void onValueChange();
 private:
     SGFrame              *m_parent;
     SGOglLightNBPage     *lightPage;

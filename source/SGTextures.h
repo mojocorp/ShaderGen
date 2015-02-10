@@ -76,9 +76,9 @@ public:
 
     SGTextures(SGFrame *frame, SGFixedGLState *state);
     ~SGTextures();
-    void Load(const char* filename);
-    void Activate(TextureId id, GLint unit);
-    void Deactivate(GLint unit);
+    void load(const char* filename);
+    void activate(TextureId id, GLint unit);
+    void deactivate(GLint unit);
 
 private:
     SGFrame* m_frame;

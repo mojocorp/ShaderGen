@@ -72,9 +72,9 @@ SGOglFogNBPage::SGOglFogNBPage(SGFixedGLState* glState, QWidget* parent)
     fogModeChoice->addButton(fogLinear, 0);
     fogModeChoice->addButton(fogExp, 1);
     fogModeChoice->addButton(fogExp2, 2);
-    connect(fogModeChoice, SIGNAL(buttonClicked(int)), SLOT(OnRadio(int)));
+    connect(fogModeChoice, SIGNAL(buttonClicked(int)), SLOT(onRadio(int)));
 
-    GLenum aa = glState->GetFog().fogMode;
+    GLenum aa = glState->getFog().fogMode;
     switch(aa)
     {
     case GL_LINEAR: aa = 0; break;
@@ -107,8 +107,8 @@ SGOglFogNBPage::SGOglFogNBPage(SGFixedGLState* glState, QWidget* parent)
     QLabel* fogColorLbl        = new QLabel(tr("GL_FOG_COLOR"), this);
 
     fogCheckBox              = new QCheckBox  (tr("GL_FOG_ENABLE"), this);
-    fogCheckBox->setChecked(glState->GetFogEnable());
-    connect(fogCheckBox, SIGNAL(clicked(bool)), SLOT(OnCheckbox()));
+    fogCheckBox->setChecked(glState->getFogEnable());
+    connect(fogCheckBox, SIGNAL(clicked(bool)), SLOT(onCheckbox()));
 
     fogSizer->addWidget(fogCheckBox, 0, 0);
 
@@ -136,7 +136,7 @@ SGOglFogNBPage::SGOglFogNBPage(SGFixedGLState* glState, QWidget* parent)
 
 void SGOglFogNBPage::setup()
 {
-    const Fog &fog = m_glState->GetFog();
+    const Fog &fog = m_glState->getFog();
     fogDensity->setValue(fog.fogDensity);
     fogStart->setValue(fog.fogStart);
     fogEnd->setValue(fog.fogEnd);
@@ -145,46 +145,46 @@ void SGOglFogNBPage::setup()
 
 void SGOglFogNBPage::fogColorChanged(const QColor & color)
 {
-    m_glState->GetFog().fogColorVector = color;
+    m_glState->getFog().fogColorVector = color;
 
     emit valueChanged();
 }
 
-void SGOglFogNBPage::OnCheckbox()
+void SGOglFogNBPage::onCheckbox()
 {
-    m_glState->SetFogEnable(fogCheckBox->isChecked());
+    m_glState->setFogEnable(fogCheckBox->isChecked());
     emit valueChanged();
 }
 
 void SGOglFogNBPage::fogDensityChanged(double density)
 {
-    m_glState->GetFog().fogDensity = density;
+    m_glState->getFog().fogDensity = density;
     emit valueChanged();
 }
 
 void SGOglFogNBPage::fogStartChanged(double start)
 {
-    m_glState->GetFog().fogStart   = start;
+    m_glState->getFog().fogStart   = start;
     emit valueChanged();
 }
 
 void SGOglFogNBPage::fogEndChanged(double end)
 {
-    m_glState->GetFog().fogEnd   = end;
+    m_glState->getFog().fogEnd   = end;
     emit valueChanged();
 }
 
-void SGOglFogNBPage::OnRadio(int index)
+void SGOglFogNBPage::onRadio(int index)
 {
     switch(index){
     case 0:
-        m_glState->GetFog().fogMode = GL_LINEAR;
+        m_glState->getFog().fogMode = GL_LINEAR;
         break;
     case 1:
-        m_glState->GetFog().fogMode = GL_EXP;
+        m_glState->getFog().fogMode = GL_EXP;
         break;
     case 2:
-        m_glState->GetFog().fogMode = GL_EXP2;
+        m_glState->getFog().fogMode = GL_EXP2;
         break;
     default:
         break;

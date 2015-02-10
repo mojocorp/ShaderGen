@@ -60,12 +60,12 @@ public:
 signals:
     void valueChanged();
 protected slots:
-    void OnCheckbox();
+    void onCheckbox();
     void fogColorChanged(const QColor & color);
     void fogDensityChanged(double);
     void fogStartChanged(double);
     void fogEndChanged(double);
-    void OnRadio(int index);
+    void onRadio(int index);
 
 private:
     SGFixedGLState* m_glState;

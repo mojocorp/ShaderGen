@@ -61,7 +61,7 @@ SGCanvas::SGCanvas(SGFrame *frame, QWidget *parent)
     m_frame = frame;
     models = new SGModels();
     m_zoom= 0.8f;
-    mouse.SetCanvas(this);
+    mouse.setCanvas(this);
     modelCurrent = SGModels::ModelTorus;
     glReady = glCompiled = glLinked = false;
     prog = vertS = fragS = 0;
@@ -72,38 +72,14 @@ SGCanvas::~SGCanvas()
     delete models;
 }
 
-SGFixedGLState* SGCanvas::GetGLState()
+SGFixedGLState* SGCanvas::getGLState()
 {
-    return m_frame->GetGLState();
-}
-
-void SGCanvas::DrawLogo() const
-{
-    const int logoWidth = 75;
-    const int logoHeight = 75;
-    const int xPadding = 5;
-    const int yPadding = 5;
-    glDisable(GL_LIGHTING);
-    glColor4f(1.0f,1.0f,1.0f,0.5f);
-
-    glBegin(GL_QUADS);
-    glTexCoord2f(1.0f, 0.0f);
-    glVertex2i(xPadding + logoWidth, m_height - yPadding - logoHeight);
-    glTexCoord2f(0.0f, 0.0f);
-    glVertex2i(xPadding, m_height - yPadding - logoHeight);
-    glTexCoord2f(0.0f, 1.0f);
-    glVertex2i(xPadding, m_height - yPadding);
-    glTexCoord2f(1.0f, 1.0f);
-    glVertex2i(xPadding + logoWidth, m_height - yPadding);
-    glEnd();
-
-    glDisable(GL_TEXTURE_2D);
-    glEnable(GL_LIGHTING);
+    return m_frame->getGLState();
 }
 
 void SGCanvas::initializeGL()
 {
-    CheckGlImplementation();
+    checkGlImplementation();
 
     int initSuccess = glewInit();
 
@@ -127,8 +103,8 @@ void SGCanvas::paintGL()
     GLSetup();
     PrintOpenGLError();
     glPushMatrix();
-    mouse.LoadMatrix();
-    models->DrawModel(modelCurrent);
+    mouse.loadMatrix();
+    models->drawModel(modelCurrent);
     PrintOpenGLError();
     glPopMatrix();
 
@@ -168,7 +144,7 @@ void SGCanvas::GLSetup()
     m_znear = 2;
     m_zfar = 10;
 
-    SGFixedGLState *glState = GetGLState();
+    SGFixedGLState *glState = getGLState();
     glViewport(0, 0, m_width, m_height);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
@@ -187,13 +163,13 @@ void SGCanvas::GLSetup()
 
     for(GLint i=0;i<5;i++)
     {
-        if(glState->GetTexture(i).textureEnabled)
+        if(glState->getTexture(i).textureEnabled)
         {
-            m_frame->GetTextures()->Activate(glState->GetTexture(i).textureCurrentSelection, i);
+            m_frame->getTextures()->activate(glState->getTexture(i).textureCurrentSelection, i);
         }
         else
         {
-            m_frame->GetTextures()->Deactivate(i);
+            m_frame->getTextures()->deactivate(i);
         }
     }
 
@@ -202,7 +178,7 @@ void SGCanvas::GLSetup()
     if(mode == SGCanvas::GLModeChoiceFixed)
     {
         glUseProgram(0);
-        SetupFromFixedState();
+        setupFromFixedState();
     }
     else
     {
@@ -218,20 +194,20 @@ void SGCanvas::GLSetup()
     glReady = true;
 }
 
-void SGCanvas::SetupFromFixedState()
+void SGCanvas::setupFromFixedState()
 {
     PrintOpenGLError();
-    SGFixedGLState *glState = GetGLState();
+    SGFixedGLState *glState = getGLState();
 
     glEnable(GL_AUTO_NORMAL);
 
-    if(glState->GetLightingEnable())
+    if(glState->getLightingEnable())
     {
         glEnable(GL_LIGHTING);
 
         for(int i = 0; i < 8; i++)
         {
-            const Light &light = glState->GetLight(i);
+            const Light &light = glState->getLight(i);
             if(light.lightEnabled)
             {
                 glLightf(GL_LIGHT0+i, GL_POSITION,       light.lightPositionVector );
@@ -256,7 +232,7 @@ void SGCanvas::SetupFromFixedState()
     {
         glDisable(GL_LIGHTING );
     }
-    if(glState->GetNormalizeEnable())
+    if(glState->getNormalizeEnable())
     {
         glEnable(GL_NORMALIZE);
     }
@@ -265,7 +241,7 @@ void SGCanvas::SetupFromFixedState()
         glDisable(GL_NORMALIZE);
     }
 
-    if(glState->GetSeparateSpecularColorEnable())
+    if(glState->getSeparateSpecularColorEnable())
     {
         glLightModeli(GL_LIGHT_MODEL_COLOR_CONTROL, GL_SEPARATE_SPECULAR_COLOR);
     }
@@ -276,21 +252,21 @@ void SGCanvas::SetupFromFixedState()
 
     glDepthFunc(GL_LESS);
     glEnable(GL_DEPTH_TEST);
-    const Material& material = glState->GetMaterial();
+    const Material& material = glState->getMaterial();
     glMaterialf(GL_FRONT, GL_DIFFUSE,  material.materialDiffuseColorVector);
     glMaterialf(GL_FRONT, GL_SPECULAR, material.materialSpecularColorVector);
     glMaterialf(GL_FRONT, GL_AMBIENT,  material.materialAmbientColorVector);
     glMaterialf(GL_FRONT, GL_SHININESS,material.materialShininess);
     glMaterialf(GL_FRONT, GL_EMISSION, material.materialEmissionColorVector);
 
-    if(glState->GetFogEnable())
+    if(glState->getFogEnable())
     {
         glEnable(GL_FOG);
-        glFogi(GL_FOG_MODE,    glState->GetFog().fogMode);
-        glFogf(GL_FOG_COLOR,   glState->GetFog().fogColorVector);
-        glFogf(GL_FOG_DENSITY, glState->GetFog().fogDensity);
-        glFogf(GL_FOG_START,   glState->GetFog().fogStart);
-        glFogf(GL_FOG_END,     glState->GetFog().fogEnd);
+        glFogi(GL_FOG_MODE,    glState->getFog().fogMode);
+        glFogf(GL_FOG_COLOR,   glState->getFog().fogColorVector);
+        glFogf(GL_FOG_DENSITY, glState->getFog().fogDensity);
+        glFogf(GL_FOG_START,   glState->getFog().fogStart);
+        glFogf(GL_FOG_END,     glState->getFog().fogEnd);
     }
     else
     {
@@ -298,7 +274,7 @@ void SGCanvas::SetupFromFixedState()
     }
 }
 
-QVector3D SGCanvas::GetWorldSpace(int x, int y)
+QVector3D SGCanvas::getWorldSpace(int x, int y)
 {
     QVector3D v;
     v.setX((float) x / (float) m_width);
@@ -329,23 +305,23 @@ void SGCanvas::keyPressEvent(QKeyEvent * event)
 
 void SGCanvas::mousePressEvent(QMouseEvent * event)
 {
-    mouse.OnMousePress(event);
+    mouse.onMousePress(event);
     updateGL();
 }
 
 void SGCanvas::mouseMoveEvent(QMouseEvent * event)
 {
-    mouse.OnMouseMove(event);
+    mouse.onMouseMove(event);
     updateGL();
 }
 
 void SGCanvas::mouseReleaseEvent(QMouseEvent * event)
 {
-    mouse.OnMouseRelease(event);
+    mouse.onMouseRelease(event);
     updateGL();
 }
 
-bool SGCanvas::LinkShaders(const QString & vertexShader, const QString & fragmentShader)
+bool SGCanvas::linkShaders(const QString & vertexShader, const QString & fragmentShader)
 {
     GLint linked;
 
@@ -356,12 +332,12 @@ bool SGCanvas::LinkShaders(const QString & vertexShader, const QString & fragmen
 
     if(!glCompiled)
     {
-        CompileShaders(vertexShader, fragmentShader);
+        compileShaders(vertexShader, fragmentShader);
     }
 
     if(glCompiled)
     {
-        WriteMessage(tr("Attempting to link programs...."));
+        writeMessage(tr("Attempting to link programs...."));
         if(glIsProgram(prog))
         {
             glDeleteProgram(prog);
@@ -371,10 +347,10 @@ bool SGCanvas::LinkShaders(const QString & vertexShader, const QString & fragmen
         glAttachShader(prog, fragS);
         glLinkProgram(prog);
         glGetProgramiv(prog, GL_LINK_STATUS, &linked);
-        PrintInfoLog(prog);
+        printInfoLog(prog);
         if (!linked)
         {
-            WriteMessage(tr("Error in linking programs!!"));
+            writeMessage(tr("Error in linking programs!!"));
             glLinked = false;
             return false;
         }
@@ -412,14 +388,14 @@ bool SGCanvas::LinkShaders(const QString & vertexShader, const QString & fragmen
             }
         }
 
-        WriteMessage(tr("Linked programs successfully"));
+        writeMessage(tr("Linked programs successfully"));
 
         glLinked = true;
         return true;
     }
     else
     {
-        WriteMessage(tr("Compilation failed, not attempting link, check shader code"));
+        writeMessage(tr("Compilation failed, not attempting link, check shader code"));
         glLinked = false;
 
         glDeleteProgram(prog);
@@ -427,7 +403,7 @@ bool SGCanvas::LinkShaders(const QString & vertexShader, const QString & fragmen
     }
 }
 
-bool SGCanvas::CompileShaders(const QString & vertexShader, const QString & fragmentShader)
+bool SGCanvas::compileShaders(const QString & vertexShader, const QString & fragmentShader)
 {   
 
     GLint vertCompiled, fragCompiled;
@@ -451,28 +427,28 @@ bool SGCanvas::CompileShaders(const QString & vertexShader, const QString & frag
     glGetShaderiv(vertS, GL_COMPILE_STATUS, &vertCompiled);
     if(!vertCompiled)
     {
-        WriteMessage(tr("Vertex shader failed to compile"));
-        PrintInfoLog(vertS);
+        writeMessage(tr("Vertex shader failed to compile"));
+        printInfoLog(vertS);
         glDeleteShader(vertS);
     }
     else
     {
-        WriteMessage(tr("Vertex shader compiled successfully"));
+        writeMessage(tr("Vertex shader compiled successfully"));
     }
-    PrintInfoLog(vertS);
+    printInfoLog(vertS);
     glCompileShader(fragS);
     glGetShaderiv(fragS, GL_COMPILE_STATUS, &fragCompiled);
     if(!fragCompiled)
     {
-        WriteMessage(tr("Fragment shader failed to compile"));
-        PrintInfoLog(fragS);
+        writeMessage(tr("Fragment shader failed to compile"));
+        printInfoLog(fragS);
         glDeleteShader(fragS);
     }
     else
     {
-        WriteMessage(tr("Fragment shader compiled successfully"));
+        writeMessage(tr("Fragment shader compiled successfully"));
     }
-    PrintInfoLog(fragS);
+    printInfoLog(fragS);
 
     if (!vertCompiled || !fragCompiled)
     {
@@ -484,21 +460,21 @@ bool SGCanvas::CompileShaders(const QString & vertexShader, const QString & frag
     return true;
 }
 
-void SGCanvas::SetMode(GLMode m)
+void SGCanvas::setMode(GLMode m)
 {
     if(mode == m)
         return;
 
     mode = m;
     if(mode == GLModeChoiceShader) {
-        SwitchToShaderMode();
+        switchToShaderMode();
     }
     updateGL();
 }
 
-void SGCanvas::PrintInfoLog(GLuint obj)
+void SGCanvas::printInfoLog(GLuint obj)
 {
-    QTextEdit *text = m_frame->GetShaderTextWindow()->GetInfoBox();
+    QTextEdit *text = m_frame->getShaderTextWindow()->getInfoBox();
 
     GLint infologLength = 0;
     if(glIsProgram(obj))
@@ -540,54 +516,54 @@ void SGCanvas::PrintInfoLog(GLuint obj)
     }
 }
 
-int SGCanvas::SwitchToShaderMode()
+int SGCanvas::switchToShaderMode()
 {   
-    if( !m_frame->GetShaderTextWindow()->haveRefreshed)
+    if( !m_frame->getShaderTextWindow()->haveRefreshed)
     {
-        m_frame->GetShaderTextWindow()->refresh();
+        m_frame->getShaderTextWindow()->refresh();
     }
-    QString vert= m_frame->GetShaderTextWindow()->GetVertexShaderBox()->toPlainText();
-    QString frag= m_frame->GetShaderTextWindow()->GetFragmentShaderBox()->toPlainText();
-    LinkShaders(vert,frag);
+    QString vert= m_frame->getShaderTextWindow()->getVertexShaderBox()->toPlainText();
+    QString frag= m_frame->getShaderTextWindow()->getFragmentShaderBox()->toPlainText();
+    linkShaders(vert,frag);
     updateGL();
     return 0;
 }
 
-void SGCanvas::WriteMessage(const QString str)
+void SGCanvas::writeMessage(const QString str)
 {
-    m_frame->SetStatusText(str);
-    QTextEdit *text = m_frame->GetShaderTextWindow()->GetInfoBox();
+    m_frame->setStatusText(str);
+    QTextEdit *text = m_frame->getShaderTextWindow()->getInfoBox();
     text->append(str);
 }
 
-GLint SGCanvas::GetUniLoc(unsigned int program, const GLchar *name)
+GLint SGCanvas::getUniLoc(unsigned int program, const GLchar *name)
 {
     GLint loc;
     loc = glGetUniformLocation(program, name);
     if (loc == -1)
     {
-        WriteMessage(tr("No such uniform named \"") + name + "\"");
+        writeMessage(tr("No such uniform named \"") + name + "\"");
     }
     PrintOpenGLError();
     return loc;
 }
 
-void SGCanvas::CheckGlImplementation()
+void SGCanvas::checkGlImplementation()
 {
     int gl_major, gl_minor, gl_numTextures;
-    GetGlVersion(&gl_major, &gl_minor);
+    getGlVersion(&gl_major, &gl_minor);
     glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS_ARB, &gl_numTextures);
     if(gl_major < 2.0)
     {
-        UnsupportedOpenGLVersion();
+        unsupportedOpenGLVersion();
     }
     else if(gl_numTextures < 5)
     {
-        NotEnoughTextureUnits(gl_numTextures);
+        notEnoughTextureUnits(gl_numTextures);
     }
 }
 
-void SGCanvas::GetGlVersion(int *major, int* minor)
+void SGCanvas::getGlVersion(int *major, int* minor)
 {
     const char* verstr = (const char*)glGetString(GL_VERSION);
     if( (verstr == NULL) || (sscanf(verstr, "%d.%d", major, minor) != 2))
@@ -597,7 +573,7 @@ void SGCanvas::GetGlVersion(int *major, int* minor)
     }
 }
 
-void SGCanvas::UnsupportedOpenGLVersion()
+void SGCanvas::unsupportedOpenGLVersion()
 {
     QString errorString(tr("You must have OpenGL 2.0 compliant drivers to run ShaderGen!"));
     QMessageBox::critical(this, tr("OpenGL 2.0 Driver Not Found"), errorString);
@@ -605,7 +581,7 @@ void SGCanvas::UnsupportedOpenGLVersion()
     exit(1);
 }
 
-void SGCanvas::NotEnoughTextureUnits(const int numTextures)
+void SGCanvas::notEnoughTextureUnits(const int numTextures)
 {
     QString errorString(tr("Your OpenGL Graphics Card Only Supports %1 Texture Units, Some ShaderGen Features May Not Work As Expected!").arg(numTextures));
     QMessageBox::critical(this, tr("Insufficient Texture Units"), errorString);

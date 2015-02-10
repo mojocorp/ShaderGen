@@ -53,9 +53,9 @@ public:
 
     int Draw();
 protected:
-    virtual void Eval(QVector2D& domain, QVector3D& range) = 0;
-    virtual void Vertex(QVector2D& domain, QVector3D& normal, QVector3D& p0, bool isNormalize);
-    virtual bool Flip(const QVector2D& /*domain*/) { return false; }
+    virtual void eval(QVector2D& domain, QVector3D& range) = 0;
+    virtual void vertex(QVector2D& domain, QVector3D& normal, QVector3D& p0, bool isNormalize);
+    virtual bool flip(const QVector2D& /*domain*/) { return false; }
 
     int slices;
     bool flipped;
@@ -65,39 +65,39 @@ protected:
 class TSphere : public TParametricSurface
 {
 public:
-    void Eval(QVector2D& domain, QVector3D& range);
+    void eval(QVector2D& domain, QVector3D& range);
 };
 
 class TTorus : public TParametricSurface
 {
 public:
-    void Eval(QVector2D& domain, QVector3D& range);
+    void eval(QVector2D& domain, QVector3D& range);
 };
 
 class TConic : public TParametricSurface
 {
 public:
-    void Eval(QVector2D& domain, QVector3D& range);
+    void eval(QVector2D& domain, QVector3D& range);
 };
 
 class TTrefoil : public TParametricSurface
 {
 public:
-    void Eval(QVector2D& domain, QVector3D& range);
+    void eval(QVector2D& domain, QVector3D& range);
 };
 
 class TKlein : public TParametricSurface
 {
 public:
-    void Eval(QVector2D& domain, QVector3D& range);
-    bool Flip(const QVector2D& domain);
+    void eval(QVector2D& domain, QVector3D& range);
+    bool flip(const QVector2D& domain);
 };
 
 class TPlane : public TParametricSurface
 {
 public:
     TPlane(float z = 0, float width = 2) : z(z), width(width) {}
-    void Eval(QVector2D& domain, QVector3D& range);
+    void eval(QVector2D& domain, QVector3D& range);
 protected:
     float z, width;
 };

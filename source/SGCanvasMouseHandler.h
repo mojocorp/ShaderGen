@@ -51,14 +51,14 @@ class SGCanvasMouseHandler
 public :
     SGCanvasMouseHandler();
     SGCanvasMouseHandler(SGCanvas * canvas);
-    void OnMousePress(QMouseEvent *event);
-    void OnMouseMove(QMouseEvent *event);
-    void OnMouseRelease(QMouseEvent *event);
-    void LoadMatrix() const;
-    void MultMatrix() const;
-    void Reset();
-    void SetCanvas(SGCanvas *canvas1) { canvas = canvas1; }
-    void Stop();
+    void onMousePress(QMouseEvent *event);
+    void onMouseMove(QMouseEvent *event);
+    void onMouseRelease(QMouseEvent *event);
+    void loadMatrix() const;
+    void multMatrix() const;
+    void reset();
+    void setCanvas(SGCanvas *canvas1) { canvas = canvas1; }
+    void stop();
     static const float StartZoom;
     static const float InertiaThreshold;
     static const int Delay;

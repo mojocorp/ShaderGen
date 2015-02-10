@@ -59,24 +59,22 @@ public:
 signals:
     void valueChanged();
 private slots:
-    void OnRadioTexApply();
-    void OnRadioTextureNum();
-    void OnCheckbox(int index);
+    void onRadioTexApply();
+    void onRadioTextureNum();
+    void onCheckbox(int index);
 
 
-    void OnChoiceTextureChoose();
-    void OnChoiceTextureCombineMode();
-    void OnChoiceTextureCombineOperandArg0();
-    void OnChoiceTextureCombineOperandArg1();
-    void OnChoiceTextureCombineOperandArg2();
-    void OnChoiceTextureCombineScale();
-    void OnChoiceTextureCombineSrc0RGB();
-    void OnChoiceTextureCombineSrc1RGB();
-    void OnChoiceTextureCombineSrc2RGB();
-    
-    //void OnChoice();
+    void onChoiceTextureChoose();
+    void onChoiceTextureCombineMode();
+    void onChoiceTextureCombineOperandArg0();
+    void onChoiceTextureCombineOperandArg1();
+    void onChoiceTextureCombineOperandArg2();
+    void onChoiceTextureCombineScale();
+    void onChoiceTextureCombineSrc0RGB();
+    void onChoiceTextureCombineSrc1RGB();
+    void onChoiceTextureCombineSrc2RGB();
 
-    void OnButton();
+    void onButton();
 
 private:
 
@@ -120,8 +118,8 @@ private:
         COMBINE_SCALE_4_0
     };
 
-    void DisableCombine();
-    void EnableCombine();
+    void disableCombine();
+    void enableCombine();
 
     SGFixedGLState* m_glState;
 

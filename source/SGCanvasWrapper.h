@@ -52,13 +52,13 @@ class SGCanvasWrapper : public QFrame{
     Q_OBJECT
 public:
     SGCanvasWrapper(SGFrame * parent);
-    SGCanvas::GLMode GetMode(){ return canvas->GetMode();}
-    SGCanvas* GetCanvas() { return canvas; }
-    void SwitchMode();
-    void SetMode(SGCanvas::GLMode a);
+    SGCanvas::GLMode getMode(){ return canvas->getMode();}
+    SGCanvas* getCanvas() { return canvas; }
+    void switchMode();
+    void setMode(SGCanvas::GLMode a);
 
 private slots:
-    void OnRadio(int);
+    void onRadio(int);
 private:
     SGCanvas *canvas;
     QButtonGroup* glModeChoice;

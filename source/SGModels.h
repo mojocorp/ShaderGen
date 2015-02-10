@@ -57,7 +57,7 @@ public:
 
     SGModels();
     ~SGModels();
-    void DrawModel(ModelId id);
+    void drawModel(ModelId id);
 private:
     TParametricSurface* surface[6];
 };

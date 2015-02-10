@@ -72,7 +72,7 @@ SGOglLightNBPage::SGOglLightNBPage(SGFixedGLState* glState, QWidget* parent)
         lightSelectionGroup->addButton(lrb, i);
     }
     lightSelectionGroup->button(0)->setChecked(true);
-    connect(lightSelectionGroup, SIGNAL(buttonClicked(int)), SLOT(OnRadio(int)));
+    connect(lightSelectionGroup, SIGNAL(buttonClicked(int)), SLOT(onRadio(int)));
 
     lightCheckGroup = new QButtonGroup(this);
     lightCheckGroup->setExclusive(false);
@@ -81,7 +81,7 @@ SGOglLightNBPage::SGOglLightNBPage(SGFixedGLState* glState, QWidget* parent)
         h1->addWidget(lcb);
         lightCheckGroup->addButton(lcb, i);
     }
-    connect(lightCheckGroup, SIGNAL(buttonClicked(int)), SLOT(OnCheckbox(int)));
+    connect(lightCheckGroup, SIGNAL(buttonClicked(int)), SLOT(onCheckbox(int)));
 
     lightingCheckBox  = new QCheckBox(tr("GL_LIGHTING"), this);
     connect(lightingCheckBox, SIGNAL(clicked()), SLOT(lightingChanged()));
@@ -189,13 +189,13 @@ SGOglLightNBPage::SGOglLightNBPage(SGFixedGLState* glState, QWidget* parent)
 void SGOglLightNBPage::setup()
 {
     for (int i=0; i<NUM_LIGHTS; i++) {
-        lightCheckGroup->button(i)->setChecked(m_glState->GetLight(i).lightEnabled);
+        lightCheckGroup->button(i)->setChecked(m_glState->getLight(i).lightEnabled);
     }
-    lightingCheckBox->setChecked(m_glState->GetLightingEnable());
-    normalizeCheckBox->setChecked(m_glState->GetNormalizeEnable());
-    separateSpecularColorCheckBox->setChecked(m_glState->GetSeparateSpecularColorEnable());
+    lightingCheckBox->setChecked(m_glState->getLightingEnable());
+    normalizeCheckBox->setChecked(m_glState->getNormalizeEnable());
+    separateSpecularColorCheckBox->setChecked(m_glState->getSeparateSpecularColorEnable());
 
-    const Light &light = m_glState->GetLight(lightSelectionGroup->checkedId());
+    const Light &light = m_glState->getLight(lightSelectionGroup->checkedId());
 
     lightPosition->setValue(light.lightPositionVector);
     spotDirection->setValue(light.lightSpotDirectionVector);
@@ -211,26 +211,26 @@ void SGOglLightNBPage::setup()
 
 void SGOglLightNBPage::lightingChanged()
 {
-    m_glState->SetLightingEnable(lightingCheckBox->isChecked());
+    m_glState->setLightingEnable(lightingCheckBox->isChecked());
     emit valueChanged();
 }
 
 void SGOglLightNBPage::normalizeChanged()
 {
-    m_glState->SetNormalizeEnable(normalizeCheckBox->isChecked());
+    m_glState->setNormalizeEnable(normalizeCheckBox->isChecked());
     emit valueChanged();
 }
 
 void SGOglLightNBPage::separateSpecularChanged()
 {
-    m_glState->SetSeparateSpecularColorEnable(separateSpecularColorCheckBox->isChecked());
+    m_glState->setSeparateSpecularColorEnable(separateSpecularColorCheckBox->isChecked());
     emit valueChanged();
 }
 
 void SGOglLightNBPage::ambientLightChanged()
 {
     int lightSelected = lightSelectionGroup->checkedId();
-    m_glState->GetLight(lightSelected).lightAmbientColorVector = ambientLight->color();
+    m_glState->getLight(lightSelected).lightAmbientColorVector = ambientLight->color();
 
     emit valueChanged();
 }
@@ -238,7 +238,7 @@ void SGOglLightNBPage::ambientLightChanged()
 void SGOglLightNBPage::specularLightChanged()
 {
     int lightSelected = lightSelectionGroup->checkedId();
-    m_glState->GetLight(lightSelected).lightSpecularColorVector = specularLight->color();
+    m_glState->getLight(lightSelected).lightSpecularColorVector = specularLight->color();
 
     emit valueChanged();
 }
@@ -246,15 +246,15 @@ void SGOglLightNBPage::specularLightChanged()
 void SGOglLightNBPage::diffuseLightChanged()
 {
     int lightSelected = lightSelectionGroup->checkedId();
-    m_glState->GetLight(lightSelected).lightDiffuseColorVector = diffuseLight->color();
+    m_glState->getLight(lightSelected).lightDiffuseColorVector = diffuseLight->color();
 
     emit valueChanged();
 }
 
-void SGOglLightNBPage::OnCheckbox(int index)
+void SGOglLightNBPage::onCheckbox(int index)
 {
     const QAbstractButton* btn = lightCheckGroup->button(index);
-    m_glState->GetLight(index).lightEnabled = btn->isChecked();
+    m_glState->getLight(index).lightEnabled = btn->isChecked();
 
     emit valueChanged();
 }
@@ -262,35 +262,35 @@ void SGOglLightNBPage::OnCheckbox(int index)
 void SGOglLightNBPage::spotExponentChanged()
 {
     int lightSelected = lightSelectionGroup->checkedId();
-    m_glState->GetLight(lightSelected).lightSpotExponent = spotExponent->value();
+    m_glState->getLight(lightSelected).lightSpotExponent = spotExponent->value();
     emit valueChanged();
 }
 
 void SGOglLightNBPage::spotCutoffChanged()
 {
     int lightSelected = lightSelectionGroup->checkedId();
-    m_glState->GetLight(lightSelected).lightSpotCutoff = spotCutoff->value();
+    m_glState->getLight(lightSelected).lightSpotCutoff = spotCutoff->value();
     emit valueChanged();
 }
 
 void SGOglLightNBPage::constantAttenuationChanged()
 {
     int lightSelected = lightSelectionGroup->checkedId();
-    m_glState->GetLight(lightSelected).lightConstantAttenuation = constantAttenuation ->value();
+    m_glState->getLight(lightSelected).lightConstantAttenuation = constantAttenuation ->value();
     emit valueChanged();
 }
 
 void SGOglLightNBPage::quadraticAttenuationChanged()
 {
     int lightSelected = lightSelectionGroup->checkedId();
-    m_glState->GetLight(lightSelected).lightQuadraticAttenuation = quadraticAttenuation->value();
+    m_glState->getLight(lightSelected).lightQuadraticAttenuation = quadraticAttenuation->value();
     emit valueChanged();
 }
 
 void SGOglLightNBPage::linearAttenuationChanged()
 {
     int lightSelected = lightSelectionGroup->checkedId();
-    m_glState->GetLight(lightSelected).lightLinearAttenuation = linearAttenuation->value();
+    m_glState->getLight(lightSelected).lightLinearAttenuation = linearAttenuation->value();
     emit valueChanged();
 }
 
@@ -303,7 +303,7 @@ void SGOglLightNBPage::lightPositionChanged()
     }
 
     int lightSelected = lightSelectionGroup->checkedId();
-    m_glState->GetLight(lightSelected).lightPositionVector = tempLightPosVector;
+    m_glState->getLight(lightSelected).lightPositionVector = tempLightPosVector;
     emit valueChanged();
 }
 
@@ -311,15 +311,15 @@ void SGOglLightNBPage::spotDirectionChanged()
 {
     QVector4D tempLightSpotDirectionVector = spotDirection->getValue();
     int lightSelected = lightSelectionGroup->checkedId();
-    m_glState->GetLight(lightSelected).lightSpotDirectionVector = QVector3D(tempLightSpotDirectionVector.x(),
+    m_glState->getLight(lightSelected).lightSpotDirectionVector = QVector3D(tempLightSpotDirectionVector.x(),
                                                                           tempLightSpotDirectionVector.y(),
                                                                           tempLightSpotDirectionVector.z());
     emit valueChanged();
 }
 
-void SGOglLightNBPage::OnRadio(int index)
+void SGOglLightNBPage::onRadio(int index)
 {
-    const Light& light = m_glState->GetLight(index);
+    const Light& light = m_glState->getLight(index);
 
     ambientLight ->setColor(light.lightAmbientColorVector);
     diffuseLight ->setColor(light.lightDiffuseColorVector);

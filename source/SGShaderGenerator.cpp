@@ -86,7 +86,7 @@ SGShaderGenerator::~SGShaderGenerator()
     vertShader.clear();
 }
 
-void SGShaderGenerator::InitTextures()
+void SGShaderGenerator::initTextures()
 {
     vTexGenEnable = false;
     texturesEnabled = false;
@@ -149,7 +149,7 @@ void SGShaderGenerator::InitTextures()
 * FRAGMENT SHADER
 **********************************************/
 
-const QString & SGShaderGenerator::BuildFragmentShader()
+const QString & SGShaderGenerator::buildFragmentShader()
 {    
     fragShader =    ""
             "/*******************************************************\n"
@@ -158,7 +158,7 @@ const QString & SGShaderGenerator::BuildFragmentShader()
             "*             http://developer.3dlabs.com              *\n"
             "*******************************************************/\n";
 
-    InitTextures();
+    initTextures();
 
     for(int i=0; i<NUM_TEXTURES; i++)
     {
@@ -176,12 +176,12 @@ const QString & SGShaderGenerator::BuildFragmentShader()
             "\n"
             "    color = gl_Color;\n\n";
 
-    BuildFragTex(fragShader);
+    buildFragTex(fragShader);
 
     //No GUI Support in ShaderGen 1.0/2.0/3.0
-    BuildFragSeparateSpecularColor(fragShader);
+    buildFragSeparateSpecularColor(fragShader);
 
-    BuildFragFog(fragShader);
+    buildFragFog(fragShader);
 
     fragShader +=   "    gl_FragColor = color;\n"
             "}\n";
@@ -189,7 +189,7 @@ const QString & SGShaderGenerator::BuildFragmentShader()
     return fragShader;
 }
 
-void SGShaderGenerator::BuildFragFog(QString &str)
+void SGShaderGenerator::buildFragFog(QString &str)
 {
     double fogDensity;
     double preComputedValue;
@@ -264,7 +264,7 @@ void SGShaderGenerator::BuildFragFog(QString &str)
     }
 }
 
-void SGShaderGenerator::BuildFragSeparateSpecularColor(QString &str)
+void SGShaderGenerator::buildFragSeparateSpecularColor(QString &str)
 {
     int sepSpecInt;
     
@@ -277,7 +277,7 @@ void SGShaderGenerator::BuildFragSeparateSpecularColor(QString &str)
     }
 }
 
-void SGShaderGenerator::BuildFragTex(QString & str)
+void SGShaderGenerator::buildFragTex(QString & str)
 {
     QString fragmentTextureString;
 
@@ -573,10 +573,10 @@ void SGShaderGenerator::BuildFragTex(QString & str)
 * VERTEX SHADER
 ********************************************/
 
-const QString & SGShaderGenerator::BuildVertexShader()
+const QString & SGShaderGenerator::buildVertexShader()
 {
     QString topVertShader, bottomVertShader;
-    InitTextures();
+    initTextures();
 
     topVertShader = ""
             "/*******************************************************\n"
@@ -591,7 +591,7 @@ const QString & SGShaderGenerator::BuildVertexShader()
 
     fLightPoint = fLightSpot = fLightDir = fMapSphere = fMapReflection = fLightDirSpot = false;
 
-    BuildFuncFnormal(bottomVertShader);
+    buildFuncFnormal(bottomVertShader);
 
     //The for loop counts DOWN to find last texture unit in use.
     //This is necessary for the BuildTexCoord function to handle
@@ -600,49 +600,49 @@ const QString & SGShaderGenerator::BuildVertexShader()
     {
         if(currentTexture[i].textureEnabled)
         {
-            BuildTexCoord(bottomVertShader);
+            buildTexCoord(bottomVertShader);
             texturesEnabled = true;
             break;
         }
     }
     if( glIsEnabled(GL_LIGHTING) )
-        BuildLightCode( bottomVertShader );
+        buildLightCode( bottomVertShader );
 
-    BuildVertMain( bottomVertShader );
+    buildVertMain( bottomVertShader );
 
     if(fLightPoint)
     {
-        AddFuncLightPoint(topVertShader);
+        addFuncLightPoint(topVertShader);
     }
     if(fLightSpot)
     {
-        AddFuncLightSpot(topVertShader);
+        addFuncLightSpot(topVertShader);
     }
     if(fLightDir)
     {
-        AddFuncLightDirectional(topVertShader);
+        addFuncLightDirectional(topVertShader);
     }
     if(fLightDirSpot)
     {
-        AddFuncLightSpotDirection(topVertShader);
+        addFuncLightSpotDirection(topVertShader);
     }
     if(fMapSphere)
     {
-        AddFuncSphereMap(topVertShader);
+        addFuncSphereMap(topVertShader);
     }
     if( fMapReflection)
     {
-        AddFuncReflectionMap(topVertShader);
+        addFuncReflectionMap(topVertShader);
     }
     if(glIsEnabled(GL_FOG))
     {
-        BuildFuncFog(topVertShader);
+        buildFuncFog(topVertShader);
     }
     vertShader =  topVertShader  +  bottomVertShader;
     return vertShader;
 }
 
-void SGShaderGenerator::BuildLightCode(QString &str)
+void SGShaderGenerator::buildLightCode(QString &str)
 {
     int separateSpecInt, lightModelTwoSidedInt, localViewInt;
 
@@ -793,7 +793,7 @@ void SGShaderGenerator::BuildLightCode(QString &str)
     }
 }
 
-void SGShaderGenerator::BuildFuncFnormal(QString &str)
+void SGShaderGenerator::buildFuncFnormal(QString &str)
 {
     if(glIsEnabled(GL_LIGHTING) || texturesEnabled)
     {
@@ -821,7 +821,7 @@ void SGShaderGenerator::BuildFuncFnormal(QString &str)
     }
 }
 
-void SGShaderGenerator::BuildFuncFog(QString &str)
+void SGShaderGenerator::buildFuncFog(QString &str)
 {
     int fogCoordSource;
 
@@ -842,7 +842,7 @@ void SGShaderGenerator::BuildFuncFog(QString &str)
     str += "}\n";
 }
 
-void SGShaderGenerator::BuildTexCoord(QString &str)
+void SGShaderGenerator::buildTexCoord(QString &str)
 {
     str += "\nvoid ftexgen(in vec3 normal, in vec4 ecPosition)\n"
             "{\n";
@@ -940,7 +940,7 @@ void SGShaderGenerator::BuildTexCoord(QString &str)
 //This functionality is not yet implemented in the GLSL ShaderGen GUI, it may
 //  be added at a later date.  There has been no testing done with regards to
 //  all "point" functions.
-void SGShaderGenerator::BuildFuncPoint(QString &str)
+void SGShaderGenerator::buildFuncPoint(QString &str)
 {
     str = "    float fpoint(in float ecDistance, out float fadeFactor)\n"
             "    {\n"
@@ -968,7 +968,7 @@ void SGShaderGenerator::BuildFuncPoint(QString &str)
     str += "    return derivedSize;\n    }\n";
 }
 
-void SGShaderGenerator::BuildVertMain( QString &str)
+void SGShaderGenerator::buildVertMain( QString &str)
 {    
     GLboolean lighting = glIsEnabled(GL_LIGHTING);
 
@@ -1036,7 +1036,7 @@ void SGShaderGenerator::BuildVertMain( QString &str)
 * STATIC METHODS TO ADD PREDEFINED FUNCTIONS
 *****************************************************************/
 
-void SGShaderGenerator::AddFuncLightDirectional(QString &str) const
+void SGShaderGenerator::addFuncLightDirectional(QString &str) const
 {
     str +=  "\nvoid directionalLight(in int i, in vec3 normal)\n"
             "{\n"
@@ -1059,7 +1059,7 @@ void SGShaderGenerator::AddFuncLightDirectional(QString &str) const
             "}\n";
 }
 
-void SGShaderGenerator::AddFuncLightPoint(QString &str) const
+void SGShaderGenerator::addFuncLightPoint(QString &str) const
 {
     str +=  "\nvoid pointLight(in int i, in vec3 normal, in vec3 eye, in vec3 ecPosition3)\n"
             "{\n"
@@ -1097,7 +1097,7 @@ void SGShaderGenerator::AddFuncLightPoint(QString &str) const
             "}\n";
 }
 
-void SGShaderGenerator::AddFuncLightSpot(QString &str) const
+void SGShaderGenerator::addFuncLightSpot(QString &str) const
 {
     str+=   "\nvoid spotLight(in int i, in vec3 normal, in vec3 eye, in vec3 ecPosition3)\n"
             "{\n"
@@ -1149,7 +1149,7 @@ void SGShaderGenerator::AddFuncLightSpot(QString &str) const
             "}\n";
 }
 
-void SGShaderGenerator::AddFuncLightSpotDirection(QString &str) const
+void SGShaderGenerator::addFuncLightSpotDirection(QString &str) const
 {
     str +=  "\nvoid infiniteSpotLight(in int i, in vec3 normal)\n"
             "{\n"
@@ -1178,7 +1178,7 @@ void SGShaderGenerator::AddFuncLightSpotDirection(QString &str) const
             "}\n";
 }
 
-void SGShaderGenerator::AddFuncSphereMap(QString &str) const
+void SGShaderGenerator::addFuncSphereMap(QString &str) const
 {
     str +=  "\nvec2 sphereMap(in vec3 normal, in vec3 ecPosition3)\n"
             "{\n"
@@ -1191,7 +1191,7 @@ void SGShaderGenerator::AddFuncSphereMap(QString &str) const
             "}\n";
 }
 
-void SGShaderGenerator::AddFuncReflectionMap(QString &str) const
+void SGShaderGenerator::addFuncReflectionMap(QString &str) const
 {
     str +=  "\nvec3 reflectionMap(in vec3 normal, in vec3 ecPosition3)\n"
             "{\n"

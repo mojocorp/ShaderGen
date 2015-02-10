@@ -59,13 +59,13 @@ public:
 signals:
     void valueChanged();
 private slots:
-    void OnRadioTexCoordGen(int index);
-    void OnRadioTextureCoordUnit(int index);
-    void OnCheckbox(int index);
-    void OnTextEnterEyeCoeffS();
-    void OnTextEnterEyeCoeffT();
-    void OnTextEnterObjCoeffS();
-    void OnTextEnterObjCoeffT();
+    void onRadioTexCoordGen(int index);
+    void onRadioTextureCoordUnit(int index);
+    void onCheckbox(int index);
+    void onTextEnterEyeCoeffS();
+    void onTextEnterEyeCoeffT();
+    void onTextEnterObjCoeffS();
+    void onTextEnterObjCoeffT();
 
 private:
 
@@ -85,5 +85,5 @@ private:
     
     QVectorEdit *eyePlaneCoeffTextS, *eyePlaneCoeffTextT, *objectPlaneCoeffTextS, *objectPlaneCoeffTextT;
 
-    void UpdateWidgets();
+    void updateWidgets();
 };

@@ -59,11 +59,11 @@ SGOglNotebook::SGOglNotebook(SGFixedGLState* glState, SGFrame * parent)
     textureCoordPage = new SGOglTextureCoordNBPage(glState, this);
     textureEnvPage = new SGOglTextureEnvNBPage(glState, this);
 
-    connect(lightPage, SIGNAL(valueChanged()), SLOT(OnValueChange()));
-    connect(materialPage, SIGNAL(valueChanged()), SLOT(OnValueChange()));
-    connect(fogPage, SIGNAL(valueChanged()), SLOT(OnValueChange()));
-    connect(textureCoordPage, SIGNAL(valueChanged()), SLOT(OnValueChange()));
-    connect(textureEnvPage, SIGNAL(valueChanged()), SLOT(OnValueChange()));
+    connect(lightPage, SIGNAL(valueChanged()), SLOT(onValueChange()));
+    connect(materialPage, SIGNAL(valueChanged()), SLOT(onValueChange()));
+    connect(fogPage, SIGNAL(valueChanged()), SLOT(onValueChange()));
+    connect(textureCoordPage, SIGNAL(valueChanged()), SLOT(onValueChange()));
+    connect(textureEnvPage, SIGNAL(valueChanged()), SLOT(onValueChange()));
 
     addTab(lightPage, tr("LIGHT"));
     addTab(materialPage, tr("MATERIAL"));
@@ -85,7 +85,7 @@ void SGOglNotebook::setup()
     textureEnvPage->setup();
 }
 
-void SGOglNotebook::OnValueChange()
+void SGOglNotebook::onValueChange()
 {
     emit valueChanged();
 }

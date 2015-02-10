@@ -68,30 +68,30 @@ SGCanvasWrapper::SGCanvasWrapper(SGFrame *parent)
     glModeChoice = new QButtonGroup(this);
     glModeChoice->addButton(fixed, 0);
     glModeChoice->addButton(shader, 1);
-    connect(glModeChoice, SIGNAL(buttonClicked(int)), SLOT(OnRadio(int)));
+    connect(glModeChoice, SIGNAL(buttonClicked(int)), SLOT(onRadio(int)));
 
     topSizer->addWidget(gb);
     topSizer->addWidget(canvas);
     setLayout(topSizer);
 }
 
-void SGCanvasWrapper::OnRadio(int id)
+void SGCanvasWrapper::onRadio(int id)
 {
-    canvas->SetMode((SGCanvas::GLMode)id);
+    canvas->setMode((SGCanvas::GLMode)id);
 }
 
-void SGCanvasWrapper::SwitchMode()
+void SGCanvasWrapper::switchMode()
 {
-    if(canvas->GetMode() == SGCanvas::GLModeChoiceFixed) {
-        canvas->SetMode(SGCanvas::GLModeChoiceShader);
+    if(canvas->getMode() == SGCanvas::GLModeChoiceFixed) {
+        canvas->setMode(SGCanvas::GLModeChoiceShader);
     } else {
-        canvas->SetMode(SGCanvas::GLModeChoiceFixed);
+        canvas->setMode(SGCanvas::GLModeChoiceFixed);
     }
 }
 
-void SGCanvasWrapper::SetMode(SGCanvas::GLMode mode)
+void SGCanvasWrapper::setMode(SGCanvas::GLMode mode)
 {
-    canvas->SetMode(mode);
+    canvas->setMode(mode);
     if(mode == SGCanvas::GLModeChoiceFixed) {
         glModeChoice->button(0)->setChecked(true);
     } else {

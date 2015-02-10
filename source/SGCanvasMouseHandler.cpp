@@ -63,16 +63,16 @@ void SGCanvasMouseHandler::mat4::identity()
 SGCanvasMouseHandler::SGCanvasMouseHandler()
 {
     canvas = 0;
-    Reset();
+    reset();
 }
 
 SGCanvasMouseHandler::SGCanvasMouseHandler(SGCanvas * canvas1)
 {
     canvas = canvas1;
-    Reset();
+    reset();
 }
 
-void SGCanvasMouseHandler::Reset()
+void SGCanvasMouseHandler::reset()
 {
     frames = 0.0f;
 
@@ -81,31 +81,31 @@ void SGCanvasMouseHandler::Reset()
     {
         canvas->SetZoom(startZoom);
     }
-    Stop();
+    stop();
     vPrev = QVector3D(0.0f, 0.0f, 0.0f);
     vInc = QVector3D(0.0f, 0.0f, 0.0f);
     validStart = false;
     xform.identity();
 }
 
-void SGCanvasMouseHandler::Stop()
+void SGCanvasMouseHandler::stop()
 {
     vInc = QVector3D(0.0f, 0.0f, 0.0f);
 }
 
-void SGCanvasMouseHandler::OnMousePress(QMouseEvent *event)
+void SGCanvasMouseHandler::onMousePress(QMouseEvent *event)
 {
-    QVector3D cursor = canvas->GetWorldSpace(event->x(), event->y());
+    QVector3D cursor = canvas->getWorldSpace(event->x(), event->y());
 
     if (event->buttons() & Qt::LeftButton)
     {
         if (!(event->modifiers() & Qt::ControlModifier))
         {
-            Stop();
+            stop();
         }
         vStart = cursor;
         memcpy((float*) &mStart, (float*) &xform, sizeof(xform));
-        startZoom = canvas->GetZoom();
+        startZoom = canvas->getZoom();
         vPrev = cursor;
         validStart = true;
     }
@@ -113,14 +113,14 @@ void SGCanvasMouseHandler::OnMousePress(QMouseEvent *event)
     else if (event->buttons() & Qt::RightButton)
     {
         vStart = cursor;
-        startZoom = canvas->GetZoom();
+        startZoom = canvas->getZoom();
         validStart = true;
     }
 }
 
-void SGCanvasMouseHandler::OnMouseMove(QMouseEvent *event)
+void SGCanvasMouseHandler::onMouseMove(QMouseEvent *event)
 {
-    QVector3D cursor = canvas->GetWorldSpace(event->x(), event->y());
+    QVector3D cursor = canvas->getWorldSpace(event->x(), event->y());
 
     if (event->buttons() & Qt::LeftButton)
     {
@@ -172,16 +172,16 @@ void SGCanvasMouseHandler::OnMouseMove(QMouseEvent *event)
     }
 }
 
-void SGCanvasMouseHandler::OnMouseRelease(QMouseEvent *)
+void SGCanvasMouseHandler::onMouseRelease(QMouseEvent *)
 {
     validStart = false;
 }
 
-void SGCanvasMouseHandler::LoadMatrix() const
+void SGCanvasMouseHandler::loadMatrix() const
 {
     glLoadIdentity();
 
-    if (canvas->GetFrame()->isPerspective())
+    if (canvas->getFrame()->isPerspective())
     {
         glTranslatef(0.0f, 0.0f, SGCanvas::CameraZ - 1.0f);
     }
@@ -191,10 +191,10 @@ void SGCanvasMouseHandler::LoadMatrix() const
     }
 
     glRotatef(20.0f, 1.0f, 0.0f, 0.0f);
-    MultMatrix();
+    multMatrix();
 }
 
-void SGCanvasMouseHandler::MultMatrix() const
+void SGCanvasMouseHandler::multMatrix() const
 {
     glMultMatrixf((float*) &xform);
 }

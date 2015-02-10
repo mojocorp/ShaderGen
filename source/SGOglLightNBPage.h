@@ -61,8 +61,8 @@ public:
 signals:
     void valueChanged();
 private slots:
-    void OnCheckbox(int index);
-    void OnRadio(int index);
+    void onCheckbox(int index);
+    void onRadio(int index);
     void lightingChanged();
     void normalizeChanged();
     void separateSpecularChanged();

@@ -118,38 +118,38 @@ public:
     ~SGFixedGLState();
     void Init();
 
-    Light&    GetLight(int num){ return m_light[num] ;}
-    Material& GetMaterial()    { return m_material   ;}
-    Fog&      GetFog()         { return m_fog        ;}
-    Texture&  GetTexture(int num) {return m_texture[num] ;}
+    Light&    getLight(int num){ return m_light[num] ;}
+    Material& getMaterial()    { return m_material   ;}
+    Fog&      getFog()         { return m_fog        ;}
+    Texture&  getTexture(int num) {return m_texture[num] ;}
 
-    bool GetLightingEnable()    const { return m_lightingEnable  ;}
-    bool GetFogEnable()         const { return m_fogEnable       ;}
-    bool GetNormalizeEnable()   const { return m_normalizeEnable ;}
-    bool GetSeparateSpecularColorEnable() const { return m_separateSpecularColorEnable ;}
-    bool Get2SidedLightingEnable() const { return m_2sidedLightingEnable;}
-    bool GetTextureEnable()     const { return m_textureEnable;}
+    bool getLightingEnable()    const { return m_lightingEnable  ;}
+    bool getFogEnable()         const { return m_fogEnable       ;}
+    bool getNormalizeEnable()   const { return m_normalizeEnable ;}
+    bool getSeparateSpecularColorEnable() const { return m_separateSpecularColorEnable ;}
+    bool get2SidedLightingEnable() const { return m_2sidedLightingEnable;}
+    bool getTextureEnable()     const { return m_textureEnable;}
 
-    void SetLightingEnable ( bool en ) { m_lightingEnable  = en   ;}
-    void SetFogEnable      ( bool en ) { m_fogEnable       = en   ;}
-    void SetNormalizeEnable( bool en ) { m_normalizeEnable = en   ;}
-    void SetSeparateSpecularColorEnable ( bool en ) { m_separateSpecularColorEnable = en;}
-    void Set2SidedLightingEnable( bool en ) { m_2sidedLightingEnable = en ;}
-    void SetTextureEnable  ( bool en ) { m_textureEnable   = en   ;}
-    GLenum GetLightEnum(int a) const { return GL_LIGHT0 + a; }
-    GLenum GetTexEnum(int a) const { return GL_TEXTURE0 + a; }
+    void setLightingEnable ( bool en ) { m_lightingEnable  = en   ;}
+    void setFogEnable      ( bool en ) { m_fogEnable       = en   ;}
+    void setNormalizeEnable( bool en ) { m_normalizeEnable = en   ;}
+    void setSeparateSpecularColorEnable ( bool en ) { m_separateSpecularColorEnable = en;}
+    void set2SidedLightingEnable( bool en ) { m_2sidedLightingEnable = en ;}
+    void setTextureEnable  ( bool en ) { m_textureEnable   = en   ;}
+    GLenum getLightEnum(int a) const { return GL_LIGHT0 + a; }
+    GLenum getTexEnum(int a) const { return GL_TEXTURE0 + a; }
 
-    bool GetTexGenEnable()    { return m_texGenEnable;}
+    bool getTexGenEnable()    { return m_texGenEnable;}
 
-    void SetTexGenEnable( bool en ) { m_texGenEnable= en;}
+    void setTexGenEnable( bool en ) { m_texGenEnable= en;}
 
     void read(const QJsonObject &json);
     void write(QJsonObject &json) const;
 private:
-    void InitLight(int num);
-    void InitMaterial();
-    void InitFog();
-    void InitTexture(int num);
+    void initLight(int num);
+    void initMaterial();
+    void initFog();
+    void initTexture(int num);
 
     bool m_fogEnable, m_lightingEnable, m_normalizeEnable, m_2sidedLightingEnable,
     m_textureEnable, m_texGenEnable, m_separateSpecularColorEnable;

@@ -52,9 +52,9 @@ class SGShaderTextWindow: public QFrame
     Q_OBJECT
 public:
     SGShaderTextWindow(SGFrame *frame);
-    QPlainTextEdit* GetVertexShaderBox(){ return textBoxVert; }
-    QPlainTextEdit* GetFragmentShaderBox(){ return textBoxFrag ;}
-    QTextEdit* GetInfoBox(){ return textBoxInfo ;}
+    QPlainTextEdit* getVertexShaderBox(){ return textBoxVert; }
+    QPlainTextEdit* getFragmentShaderBox(){ return textBoxFrag ;}
+    QTextEdit* getInfoBox(){ return textBoxInfo ;}
     bool haveRefreshed, haveCompiled, haveLinked;
 public slots:
     void refresh();
