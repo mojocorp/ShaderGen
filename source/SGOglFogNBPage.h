@@ -55,6 +55,8 @@ class SGOglFogNBPage : public QWidget
     Q_OBJECT
 public:
     SGOglFogNBPage(SGFixedGLState* m_glState, QWidget* parent);
+
+    void setup();
 signals:
     void valueChanged();
 protected slots:

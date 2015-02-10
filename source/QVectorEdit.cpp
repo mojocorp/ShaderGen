@@ -25,10 +25,12 @@ void QVectorEdit::setValue(const QVector3D& vec)
 
 void QVectorEdit::setValue(const QVector4D& vec)
 {
+    blockSignals(true);
     x->setValue(vec.x());
     y->setValue(vec.y());
     z->setValue(vec.z());
     w->setValue(vec.w());
+    blockSignals(false);
 }
 
 QVector4D QVectorEdit::getValue() const

@@ -52,6 +52,8 @@ class SGOglMaterialNBPage: public QWidget
     Q_OBJECT
 public:
     SGOglMaterialNBPage(SGFixedGLState* m_glState, QWidget* parent);
+
+    void setup();
 signals:
     void valueChanged();
 private slots:

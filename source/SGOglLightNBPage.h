@@ -56,6 +56,8 @@ class SGOglLightNBPage : public QWidget
     Q_OBJECT
 public:
     SGOglLightNBPage(SGFixedGLState* m_glState, QWidget* parent);
+
+     void setup();
 signals:
     void valueChanged();
 private slots:

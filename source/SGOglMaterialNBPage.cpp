@@ -52,30 +52,23 @@ SGOglMaterialNBPage::SGOglMaterialNBPage(SGFixedGLState* glState, QWidget* paren
     :QWidget(parent),
       m_glState(glState)
 {
-    const Material& mat = glState->GetMaterial();
-
     QGroupBox* materialBox  = new QGroupBox(tr("Material Properties"), this);
     QGridLayout* materialSizer = new QGridLayout(materialBox);
 
     shininessMaterial = new QDoubleSpinBox(this);
     shininessMaterial->setRange(0, 1000);
-    shininessMaterial->setValue(mat.materialShininess);
     connect(shininessMaterial, SIGNAL(valueChanged(double)), SLOT(shininessChanged()));
 
     ambientMaterial = new QColorButton(this);
-    ambientMaterial->setColor(mat.materialAmbientColorVector);
     connect(ambientMaterial, SIGNAL(selected(QColor)), SLOT(ambientChanged()));
 
     diffuseMaterial = new QColorButton(this);
-    diffuseMaterial->setColor(mat.materialDiffuseColorVector);
     connect(diffuseMaterial, SIGNAL(selected(QColor)), SLOT(diffuseChanged()));
 
     specularMaterial = new QColorButton(this);
-    specularMaterial->setColor(mat.materialSpecularColorVector);
     connect(specularMaterial, SIGNAL(selected(QColor)), SLOT(specularChanged()));
 
     emissionMaterial = new QColorButton(this);
-    emissionMaterial->setColor(mat.materialEmissionColorVector);
     connect(emissionMaterial, SIGNAL(selected(QColor)), SLOT(emissionChanged()));
 
     QLabel* ambientMatLbl = new QLabel(tr("GL_AMBIENT"), this);
@@ -103,6 +96,18 @@ SGOglMaterialNBPage::SGOglMaterialNBPage(SGFixedGLState* glState, QWidget* paren
 
     setLayout(new QVBoxLayout);
     layout()->addWidget(materialBox);
+
+    setup();
+}
+
+void SGOglMaterialNBPage::setup()
+{
+    const Material& mat = m_glState->GetMaterial();
+    shininessMaterial->setValue(mat.materialShininess);
+    ambientMaterial->setColor(mat.materialAmbientColorVector);
+    diffuseMaterial->setColor(mat.materialDiffuseColorVector);
+    specularMaterial->setColor(mat.materialSpecularColorVector);
+    emissionMaterial->setColor(mat.materialEmissionColorVector);
 }
 
 void SGOglMaterialNBPage::ambientChanged()

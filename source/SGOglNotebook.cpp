@@ -76,6 +76,15 @@ SGOglNotebook::~SGOglNotebook()
 {
 }
 
+void SGOglNotebook::setup()
+{
+    lightPage->setup();
+    materialPage->setup();
+    fogPage->setup();
+    textureCoordPage->setup();
+    textureEnvPage->setup();
+}
+
 void SGOglNotebook::OnValueChange()
 {
     emit valueChanged();

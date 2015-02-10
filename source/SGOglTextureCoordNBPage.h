@@ -54,6 +54,8 @@ class SGOglTextureCoordNBPage: public QWidget
     Q_OBJECT
 public:
     SGOglTextureCoordNBPage(SGFixedGLState* m_glState, QWidget* parent);
+
+    void setup();
 signals:
     void valueChanged();
 private slots:

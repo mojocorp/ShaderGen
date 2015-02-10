@@ -59,6 +59,8 @@ public:
     SGOglNotebook(SGFixedGLState* glState, SGFrame * parent = 0);
     ~SGOglNotebook();
     SGFrame* GetFrame() { return m_parent; }
+
+    void setup();
 signals:
     void valueChanged();
 private slots:

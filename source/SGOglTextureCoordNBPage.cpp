@@ -69,10 +69,10 @@ SGOglTextureCoordNBPage::SGOglTextureCoordNBPage(SGFixedGLState* glState, QWidge
     QLabel* eyePlaneCoeffLabelS = new QLabel(tr("GL_S"), this);
     QLabel* eyePlaneCoeffLabelT = new QLabel(tr("GL_T"), this);
     
-    eyePlaneCoeffTextS = new QVectorEdit(glState->GetTexture(0).eyePlaneCoeffS, this);
+    eyePlaneCoeffTextS = new QVectorEdit(QVector4D(), this);
     connect(eyePlaneCoeffTextS, SIGNAL(valueChanged()), SLOT(OnTextEnterEyeCoeffS()));
 
-    eyePlaneCoeffTextT = new QVectorEdit(glState->GetTexture(0).eyePlaneCoeffT, this);
+    eyePlaneCoeffTextT = new QVectorEdit(QVector4D(), this);
     connect(eyePlaneCoeffTextT, SIGNAL(valueChanged()), SLOT(OnTextEnterEyeCoeffT()));
 
     eyePlaneLabelSizer->addWidget(eyePlaneCoeffLabelS);
@@ -93,10 +93,10 @@ SGOglTextureCoordNBPage::SGOglTextureCoordNBPage(SGFixedGLState* glState, QWidge
     QLabel* objectPlaneCoeffLabelS = new QLabel(tr("GL_S"), this);
     QLabel* objectPlaneCoeffLabelT = new QLabel(tr("GL_T"), this);
 
-    objectPlaneCoeffTextS = new QVectorEdit(glState->GetTexture(0).objectPlaneCoeffS, this);
+    objectPlaneCoeffTextS = new QVectorEdit(QVector4D(), this);
     connect(objectPlaneCoeffTextS, SIGNAL(valueChanged()), SLOT(OnTextEnterObjCoeffS()));
 
-    objectPlaneCoeffTextT = new QVectorEdit(glState->GetTexture(0).objectPlaneCoeffT, this);
+    objectPlaneCoeffTextT = new QVectorEdit(QVector4D(), this);
     connect(objectPlaneCoeffTextT, SIGNAL(valueChanged()), SLOT(OnTextEnterObjCoeffT()));
 
     objectPlaneLabelSizer->addWidget(objectPlaneCoeffLabelS);
@@ -133,19 +133,10 @@ SGOglTextureCoordNBPage::SGOglTextureCoordNBPage(SGFixedGLState* glState, QWidge
     connect(texCoordUnitGroup, SIGNAL(buttonClicked(int)), SLOT(OnRadioTextureCoordUnit(int)));
 
     tex0TexGenEnableCheckBox = new QCheckBox(tr("T0"), this);
-    tex0TexGenEnableCheckBox->setChecked(glState->GetTexture(0).texGen);
-
     tex1TexGenEnableCheckBox = new QCheckBox(tr("T1"), this);
-    tex1TexGenEnableCheckBox->setChecked(glState->GetTexture(1).texGen);
-
     tex2TexGenEnableCheckBox = new QCheckBox(tr("T2"), this);
-    tex2TexGenEnableCheckBox->setChecked(glState->GetTexture(2).texGen);
-
     tex3TexGenEnableCheckBox = new QCheckBox(tr("T3"), this);
-    tex3TexGenEnableCheckBox->setChecked(glState->GetTexture(3).texGen);
-
     tex4TexGenEnableCheckBox = new QCheckBox(tr("T4"), this);
-    tex4TexGenEnableCheckBox->setChecked(glState->GetTexture(4).texGen);
 
     QGroupBox* texGenEnableDisableBox        = new QGroupBox(tr("glEnable/glDisable TexGen"), this);
     QHBoxLayout* texGenEnableDisableSizer    = new QHBoxLayout(texGenEnableDisableBox);
@@ -201,6 +192,22 @@ SGOglTextureCoordNBPage::SGOglTextureCoordNBPage(SGFixedGLState* glState, QWidge
 
     setLayout(new QVBoxLayout);
     layout()->addWidget(texBox);
+
+    setup();
+}
+
+void SGOglTextureCoordNBPage::setup()
+{
+    eyePlaneCoeffTextS->setValue(m_glState->GetTexture(0).eyePlaneCoeffS);
+    eyePlaneCoeffTextT->setValue(m_glState->GetTexture(0).eyePlaneCoeffT);
+    objectPlaneCoeffTextS->setValue(m_glState->GetTexture(0).objectPlaneCoeffS);
+    objectPlaneCoeffTextT->setValue(m_glState->GetTexture(0).objectPlaneCoeffT);
+
+    tex0TexGenEnableCheckBox->setChecked(m_glState->GetTexture(0).texGen);
+    tex1TexGenEnableCheckBox->setChecked(m_glState->GetTexture(1).texGen);
+    tex2TexGenEnableCheckBox->setChecked(m_glState->GetTexture(2).texGen);
+    tex3TexGenEnableCheckBox->setChecked(m_glState->GetTexture(3).texGen);
+    tex4TexGenEnableCheckBox->setChecked(m_glState->GetTexture(4).texGen);
 }
 
 void SGOglTextureCoordNBPage::OnRadioTextureCoordUnit(int)

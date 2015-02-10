@@ -54,8 +54,6 @@ SGOglFogNBPage::SGOglFogNBPage(SGFixedGLState* glState, QWidget* parent)
     :QWidget(parent),
       m_glState(glState)
 {
-    const Fog &fog = glState->GetFog();
-
     QGroupBox* fogBox            = new QGroupBox(tr("Fog Parameters"),  this);
     QGridLayout* fogSizer     = new QGridLayout(fogBox);
 
@@ -89,20 +87,18 @@ SGOglFogNBPage::SGOglFogNBPage(SGFixedGLState* glState, QWidget* parent)
 
     fogDensity = new QDoubleSpinBox(this);
     fogDensity->setRange(0, 100);
-    fogDensity->setValue(fog.fogDensity);
+
     fogStart   = new QDoubleSpinBox(this);
     fogStart->setRange(-1000, 1000);
-    fogStart->setValue(fog.fogStart);
+
     fogEnd     = new QDoubleSpinBox(this);
     fogEnd->setRange(-1000, 1000);
-    fogEnd->setValue(fog.fogEnd);
 
     connect(fogDensity, SIGNAL(valueChanged(double)), SLOT(fogDensityChanged(double)));
     connect(fogStart, SIGNAL(valueChanged(double)), SLOT(fogDensityChanged(double)));
     connect(fogEnd, SIGNAL(valueChanged(double)), SLOT(fogDensityChanged(double)));
 
-    fogColor   = new QColorButton  (this);
-    fogColor->setColor(fog.fogColorVector);
+    fogColor = new QColorButton  (this);
     connect(fogColor, SIGNAL(selected(QColor)), SLOT(fogColorChanged(QColor)));
 
     QLabel* fogDensityLbl      = new QLabel(tr("GL_FOG_DENSITY"), this);
@@ -134,6 +130,17 @@ SGOglFogNBPage::SGOglFogNBPage(SGFixedGLState* glState, QWidget* parent)
 
     setLayout(new QVBoxLayout);
     layout()->addWidget(fogBox);
+
+    setup();
+}
+
+void SGOglFogNBPage::setup()
+{
+    const Fog &fog = m_glState->GetFog();
+    fogDensity->setValue(fog.fogDensity);
+    fogStart->setValue(fog.fogStart);
+    fogEnd->setValue(fog.fogEnd);
+    fogColor->setColor(fog.fogColorVector);
 }
 
 void SGOglFogNBPage::fogColorChanged(const QColor & color)

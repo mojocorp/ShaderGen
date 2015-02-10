@@ -54,6 +54,8 @@ class SGOglTextureEnvNBPage: public QWidget
     Q_OBJECT
 public:
     SGOglTextureEnvNBPage(SGFixedGLState* m_glState, QWidget* parent);
+
+    void setup();
 signals:
     void valueChanged();
 private slots:
@@ -120,7 +122,6 @@ private:
 
     void DisableCombine();
     void EnableCombine();
-    void UpdateWidgets();
 
     SGFixedGLState* m_glState;
 
