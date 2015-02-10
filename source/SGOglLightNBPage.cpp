@@ -52,11 +52,10 @@ SGOglLightNBPage::SGOglLightNBPage(SGFixedGLState* glState, QWidget* parent)
     : QWidget(parent),
       m_glState(glState)
 {
-    QGroupBox* lightBox             = new QGroupBox(tr("Lighting Parameters"), this);
     QGroupBox* enableDisableBox     = new QGroupBox(tr("glEnable/glDisable"), this);
     QGroupBox* lightSelectionBox    = new QGroupBox(tr("Select Light"), this);
     QGroupBox* selectedLightBox     = new QGroupBox(tr("Selected Light Properties"), this);
-    QGridLayout* lightSizer     = new QGridLayout(lightBox);
+    QGridLayout* lightSizer     = new QGridLayout(this);
     QHBoxLayout* h1             = new QHBoxLayout(enableDisableBox);
     QHBoxLayout* h2             = new QHBoxLayout(lightSelectionBox);
     QGridLayout* h3             = new QGridLayout(selectedLightBox);
@@ -175,9 +174,6 @@ SGOglLightNBPage::SGOglLightNBPage(SGFixedGLState* glState, QWidget* parent)
     lightSizer->addWidget(selectedLightBox,  2, 0, 1, 3);
     lightSizer->setRowStretch(3, 2);
     lightSizer->setColumnStretch(4, 2);
-
-    setLayout(new QVBoxLayout);
-    layout()->addWidget(lightBox);
 
     setup();
 }

@@ -50,10 +50,9 @@ SGOglTextureCoordNBPage::SGOglTextureCoordNBPage(SGFixedGLState* glState, QWidge
     :QWidget(parent),
       m_glState(glState)
 {
-    QGroupBox* texBox            = new QGroupBox(tr("Textures"), this);
     QGroupBox* texPropertyBox    = new QGroupBox(tr("Selected Texture Properties"), this);
 
-    QGridLayout* textureSizer                 = new QGridLayout(texBox);
+    QGridLayout* textureSizer                 = new QGridLayout(this);
     QGridLayout* selectedTexPropertiesSizer   = new QGridLayout(texPropertyBox);
 
     QGroupBox* eyePlaneCoeffBox = new QGroupBox(tr("Eye Plane Coefficients"), this);
@@ -178,16 +177,13 @@ SGOglTextureCoordNBPage::SGOglTextureCoordNBPage(SGFixedGLState* glState, QWidge
 
     selectedTexPropertiesSizer->addWidget(coordGenBox,         0, 0, 2, 1);
     selectedTexPropertiesSizer->addWidget(eyePlaneCoeffBox,    0, 1);
-    selectedTexPropertiesSizer->addWidget(objectPlaneCoeffBox, 1, 1);
+    selectedTexPropertiesSizer->addWidget(objectPlaneCoeffBox, 0, 2);
 
     textureSizer->addWidget(texGenEnableDisableBox, 0, 0);
-    textureSizer->addWidget(texCoordUnitBox,        0, 1);
-    textureSizer->addWidget(texPropertyBox,         1, 0, 1, 2);
+    textureSizer->addWidget(texCoordUnitBox,        1, 0);
+    textureSizer->addWidget(texPropertyBox,         2, 0, 1, 2);
     textureSizer->setRowStretch(2, 2);
     textureSizer->setColumnStretch(2, 2);
-
-    setLayout(new QVBoxLayout);
-    layout()->addWidget(texBox);
 
     setup();
 }

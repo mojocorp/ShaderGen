@@ -48,8 +48,7 @@ SGOglMaterialNBPage::SGOglMaterialNBPage(SGFixedGLState* glState, QWidget* paren
     :QWidget(parent),
       m_glState(glState)
 {
-    QGroupBox* materialBox  = new QGroupBox(tr("Material Properties"), this);
-    QGridLayout* materialSizer = new QGridLayout(materialBox);
+    QGridLayout* materialSizer = new QGridLayout(this);
 
     shininessMaterial = new QDoubleSpinBox(this);
     shininessMaterial->setRange(0, 1000);
@@ -89,9 +88,6 @@ SGOglMaterialNBPage::SGOglMaterialNBPage(SGFixedGLState* glState, QWidget* paren
 
     materialSizer->setColumnStretch(4, 2);
     materialSizer->setRowStretch(3, 2);
-
-    setLayout(new QVBoxLayout);
-    layout()->addWidget(materialBox);
 
     setup();
 }

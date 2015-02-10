@@ -50,8 +50,7 @@ SGOglFogNBPage::SGOglFogNBPage(SGFixedGLState* glState, QWidget* parent)
     :QWidget(parent),
       m_glState(glState)
 {
-    QGroupBox* fogBox            = new QGroupBox(tr("Fog Parameters"),  this);
-    QGridLayout* fogSizer     = new QGridLayout(fogBox);
+    QGridLayout* fogSizer = new QGridLayout(this);
 
     QRadioButton *fogLinear = new QRadioButton(tr("GL_LINEAR"), this);
     QRadioButton *fogExp = new QRadioButton(tr("GL_EXP"), this);
@@ -123,9 +122,6 @@ SGOglFogNBPage::SGOglFogNBPage(SGFixedGLState* glState, QWidget* parent)
     fogSizer->addWidget(fogColor, 1, 4);
     fogSizer->setRowStretch(4, 2);
     fogSizer->setColumnStretch(5, 2);
-
-    setLayout(new QVBoxLayout);
-    layout()->addWidget(fogBox);
 
     setup();
 }
