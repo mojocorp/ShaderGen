@@ -55,7 +55,7 @@ public:
     SGCanvas::GLMode GetMode(){ return canvas->GetMode();}
     SGCanvas* GetCanvas() { return canvas; }
     void SwitchMode();
-    void SetMode(SGCanvas::GLMode a) { canvas->SetMode(a); }
+    void SetMode(SGCanvas::GLMode a);
 
 private slots:
     void OnRadio(int);

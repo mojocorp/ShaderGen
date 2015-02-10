@@ -82,17 +82,21 @@ void SGCanvasWrapper::OnRadio(int id)
 
 void SGCanvasWrapper::SwitchMode()
 {
-    if(canvas->GetMode() == SGCanvas::GLModeChoiceFixed)
-    {
-        glModeChoice->button(1)->setChecked(true);
+    if(canvas->GetMode() == SGCanvas::GLModeChoiceFixed) {
         canvas->SetMode(SGCanvas::GLModeChoiceShader);
-    }
-    else
-    {
-        glModeChoice->button(0)->setChecked(true);
+    } else {
         canvas->SetMode(SGCanvas::GLModeChoiceFixed);
     }
 }
 
+void SGCanvasWrapper::SetMode(SGCanvas::GLMode mode)
+{
+    canvas->SetMode(mode);
+    if(mode == SGCanvas::GLModeChoiceFixed) {
+        glModeChoice->button(0)->setChecked(true);
+    } else {
+        glModeChoice->button(1)->setChecked(true);
+    }
+}
 
 
