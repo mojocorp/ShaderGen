@@ -212,7 +212,6 @@ void SGOglTextureCoordNBPage::OnRadioTextureCoordUnit(int)
 {
     UpdateWidgets();
     m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
-    m_parent->GetFrame()->GetCanvas()->updateGL();
 }
 
 void SGOglTextureCoordNBPage::OnRadioTexCoordGen(int index)
@@ -239,7 +238,6 @@ void SGOglTextureCoordNBPage::OnRadioTexCoordGen(int index)
         break;
     }
     m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
-    m_parent->GetFrame()->GetCanvas()->updateGL();
 }
 
 void SGOglTextureCoordNBPage::OnCheckbox(int index)
@@ -262,7 +260,6 @@ void SGOglTextureCoordNBPage::OnCheckbox(int index)
         break;
     }
     m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
-    m_parent->GetFrame()->GetCanvas()->updateGL();
 }
 
 void SGOglTextureCoordNBPage::OnTextEnterEyeCoeffS()
@@ -272,7 +269,6 @@ void SGOglTextureCoordNBPage::OnTextEnterEyeCoeffS()
     m_glState->GetTexture(texCoordUnitGroup->checkedId()).eyePlaneCoeffS = eyePlaneSVec;
 
     m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
-    m_parent->GetFrame()->GetCanvas()->updateGL();
 }
 
 void SGOglTextureCoordNBPage::OnTextEnterEyeCoeffT()
@@ -282,7 +278,6 @@ void SGOglTextureCoordNBPage::OnTextEnterEyeCoeffT()
     m_glState->GetTexture(texCoordUnitGroup->checkedId()).eyePlaneCoeffT = eyePlaneTVec;
 
     m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
-    m_parent->GetFrame()->GetCanvas()->updateGL();
 }
 
 void SGOglTextureCoordNBPage::OnTextEnterObjCoeffS()
@@ -292,7 +287,6 @@ void SGOglTextureCoordNBPage::OnTextEnterObjCoeffS()
     m_glState->GetTexture(texCoordUnitGroup->checkedId()).objectPlaneCoeffS = objPlaneSVec;
 
     m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
-    m_parent->GetFrame()->GetCanvas()->updateGL();
 }
 
 void SGOglTextureCoordNBPage::OnTextEnterObjCoeffT()
@@ -302,7 +296,6 @@ void SGOglTextureCoordNBPage::OnTextEnterObjCoeffT()
     m_glState->GetTexture(texCoordUnitGroup->checkedId()).objectPlaneCoeffT = objPlaneTVec;
 
     m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
-    m_parent->GetFrame()->GetCanvas()->updateGL();
 }
 
 void SGOglTextureCoordNBPage::UpdateWidgets()
