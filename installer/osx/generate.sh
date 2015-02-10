@@ -8,7 +8,6 @@ make clean && make
 
 cd build
 
-#macdeployqt ShaderGen.app -dmg -no-plugins
 macdeployqt ShaderGen.app -dmg -no-plugins
 
-mv ShaderGen.dmg ShaderGen-3.1.1.dmg
+mv ShaderGen.dmg ShaderGen-3.3.0.dmg
