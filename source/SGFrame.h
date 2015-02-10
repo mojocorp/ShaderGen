@@ -87,6 +87,7 @@ private slots:
     void modelActionTriggered(QAction *action);
     void viewActionTriggered();
     void switchGLModeTriggered();
+    void setFixedGLMode();
     void help();
     void about();
 private:

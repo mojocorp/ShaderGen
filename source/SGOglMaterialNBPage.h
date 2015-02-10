@@ -45,15 +45,15 @@
 #include <QDoubleSpinBox>
 
 class SGFixedGLState;
-class SGOglNotebook;
 class QColorButton;
 
 class SGOglMaterialNBPage: public QWidget
 {
     Q_OBJECT
 public:
-    SGOglMaterialNBPage(SGFixedGLState* m_glState, SGOglNotebook*  parent);
-
+    SGOglMaterialNBPage(SGFixedGLState* m_glState, QWidget* parent);
+signals:
+    void valueChanged();
 private slots:
     void ambientChanged();
     void diffuseChanged();
@@ -63,7 +63,6 @@ private slots:
 
 private:
     SGFixedGLState* m_glState;
-    SGOglNotebook *m_parent;
 
     QDoubleSpinBox* shininessMaterial;
 

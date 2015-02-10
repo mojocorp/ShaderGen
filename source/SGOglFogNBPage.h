@@ -48,15 +48,15 @@
 #include <QDoubleSpinBox>
 
 class SGFixedGLState;
-class SGOglNotebook;
 class QColorButton;
 
 class SGOglFogNBPage : public QWidget
 {
     Q_OBJECT
 public:
-    SGOglFogNBPage(SGFixedGLState* m_glState, SGOglNotebook*  parent);
-
+    SGOglFogNBPage(SGFixedGLState* m_glState, QWidget* parent);
+signals:
+    void valueChanged();
 protected slots:
     void OnCheckbox();
     void fogColorChanged(const QColor & color);
@@ -67,7 +67,6 @@ protected slots:
 
 private:
     SGFixedGLState* m_glState;
-    SGOglNotebook *m_parent;
 
     QButtonGroup* fogModeChoice;
     QColorButton*   fogColor;

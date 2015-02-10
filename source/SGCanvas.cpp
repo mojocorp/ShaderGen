@@ -490,7 +490,7 @@ void SGCanvas::SetMode(GLMode m)
         return;
 
     mode = m;
-    if(mode == GLModeChoiceFixed) {
+    if(mode == GLModeChoiceShader) {
         SwitchToShaderMode();
     }
     updateGL();

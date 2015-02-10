@@ -47,17 +47,13 @@
 #include "QColorButton.h"
 
 #include "SGOglFogNBPage.h"
-#include "SGOglNotebook.h"
 #include "SGFixedGLState.h"
 #include "UtilityFunctions.h"
-#include "SGFrame.h"
-#include "SGCanvas.h"
 
-SGOglFogNBPage::SGOglFogNBPage(SGFixedGLState* glState, SGOglNotebook* parent)
+SGOglFogNBPage::SGOglFogNBPage(SGFixedGLState* glState, QWidget* parent)
     :QWidget(parent),
       m_glState(glState)
 {
-    m_parent = parent;
     const Fog &fog = glState->GetFog();
 
     QGroupBox* fogBox            = new QGroupBox(tr("Fog Parameters"),  this);
@@ -144,32 +140,31 @@ void SGOglFogNBPage::fogColorChanged(const QColor & color)
 {
     m_glState->GetFog().fogColorVector = color;
 
-    m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
+    emit valueChanged();
 }
 
 void SGOglFogNBPage::OnCheckbox()
 {
     m_glState->SetFogEnable(fogCheckBox->isChecked());
-
-    m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
+    emit valueChanged();
 }
 
 void SGOglFogNBPage::fogDensityChanged(double density)
 {
     m_glState->GetFog().fogDensity = density;
-    m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
+    emit valueChanged();
 }
 
 void SGOglFogNBPage::fogStartChanged(double start)
 {
     m_glState->GetFog().fogStart   = start;
-    m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
+    emit valueChanged();
 }
 
 void SGOglFogNBPage::fogEndChanged(double end)
 {
     m_glState->GetFog().fogEnd   = end;
-    m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
+    emit valueChanged();
 }
 
 void SGOglFogNBPage::OnRadio(int index)
@@ -187,5 +182,5 @@ void SGOglFogNBPage::OnRadio(int index)
     default:
         break;
     }
-    m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
+    emit valueChanged();
 }

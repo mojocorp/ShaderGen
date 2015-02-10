@@ -46,16 +46,12 @@
 
 #include "SGFixedGLState.h"
 #include "SGOglMaterialNBPage.h"
-#include "SGOglNotebook.h"
 #include "UtilityFunctions.h"
-#include "SGFrame.h"
-#include "SGCanvas.h"
 
-SGOglMaterialNBPage::SGOglMaterialNBPage(SGFixedGLState* glState, SGOglNotebook* parent)
+SGOglMaterialNBPage::SGOglMaterialNBPage(SGFixedGLState* glState, QWidget* parent)
     :QWidget(parent),
       m_glState(glState)
 {
-    m_parent = parent;
     const Material& mat = glState->GetMaterial();
 
     QGroupBox* materialBox  = new QGroupBox(tr("Material Properties"), this);
@@ -115,7 +111,7 @@ void SGOglMaterialNBPage::ambientChanged()
 
     mat.materialAmbientColorVector = ambientMaterial->color();
 
-    m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
+    emit valueChanged();
 }
 
 void SGOglMaterialNBPage::diffuseChanged()
@@ -124,7 +120,7 @@ void SGOglMaterialNBPage::diffuseChanged()
 
     mat.materialDiffuseColorVector = diffuseMaterial->color();
 
-    m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
+    emit valueChanged();
 }
 
 void SGOglMaterialNBPage::specularChanged()
@@ -133,7 +129,7 @@ void SGOglMaterialNBPage::specularChanged()
 
     mat.materialSpecularColorVector = specularMaterial->color();
 
-    m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
+    emit valueChanged();
 }
 
 void SGOglMaterialNBPage::emissionChanged()
@@ -142,13 +138,13 @@ void SGOglMaterialNBPage::emissionChanged()
 
     mat.materialEmissionColorVector = emissionMaterial->color();
 
-    m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
+    emit valueChanged();
 }
 
 void SGOglMaterialNBPage::shininessChanged()
 {
     m_glState->GetMaterial().materialShininess = shininessMaterial->value();
 
-    m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
+    emit valueChanged();
 }
 

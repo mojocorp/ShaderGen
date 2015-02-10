@@ -47,15 +47,15 @@
 #include <QComboBox>
 
 class SGFixedGLState;
-class SGOglNotebook;
 class QColorButton;
 
 class SGOglTextureEnvNBPage: public QWidget
 {
     Q_OBJECT
 public:
-    SGOglTextureEnvNBPage(SGFixedGLState* m_glState, SGOglNotebook*  parent);
-
+    SGOglTextureEnvNBPage(SGFixedGLState* m_glState, QWidget* parent);
+signals:
+    void valueChanged();
 private slots:
     void OnRadioTexApply();
     void OnRadioTextureNum();
@@ -123,7 +123,6 @@ private:
     void UpdateWidgets();
 
     SGFixedGLState* m_glState;
-    SGOglNotebook *m_parent;
 
     QButtonGroup *texApplyGroup, *textureGroup, *texCheckBoxGroup;
     

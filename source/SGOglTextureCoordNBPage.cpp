@@ -47,18 +47,13 @@
 #include "QVectorEdit.h"
 
 #include "SGOglTextureCoordNBPage.h"
-#include "SGOglNotebook.h"
 #include "SGFixedGLState.h"
 #include "UtilityFunctions.h"
-#include "SGFrame.h"
-#include "SGCanvas.h"
 
-SGOglTextureCoordNBPage::SGOglTextureCoordNBPage(SGFixedGLState* glState, SGOglNotebook* parent)
+SGOglTextureCoordNBPage::SGOglTextureCoordNBPage(SGFixedGLState* glState, QWidget* parent)
     :QWidget(parent),
       m_glState(glState)
 {
-    m_parent = parent;
-
     QGroupBox* texBox            = new QGroupBox(tr("Textures"), this);
     QGroupBox* texPropertyBox    = new QGroupBox(tr("Selected Texture Properties"), this);
 
@@ -211,7 +206,7 @@ SGOglTextureCoordNBPage::SGOglTextureCoordNBPage(SGFixedGLState* glState, SGOglN
 void SGOglTextureCoordNBPage::OnRadioTextureCoordUnit(int)
 {
     UpdateWidgets();
-    m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
+    emit valueChanged();
 }
 
 void SGOglTextureCoordNBPage::OnRadioTexCoordGen(int index)
@@ -237,7 +232,7 @@ void SGOglTextureCoordNBPage::OnRadioTexCoordGen(int index)
     default:
         break;
     }
-    m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
+    emit valueChanged();
 }
 
 void SGOglTextureCoordNBPage::OnCheckbox(int index)
@@ -259,7 +254,7 @@ void SGOglTextureCoordNBPage::OnCheckbox(int index)
         m_glState->GetTexture(4).texGen = tex4TexGenEnableCheckBox->isChecked();
         break;
     }
-    m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
+    emit valueChanged();
 }
 
 void SGOglTextureCoordNBPage::OnTextEnterEyeCoeffS()
@@ -268,7 +263,7 @@ void SGOglTextureCoordNBPage::OnTextEnterEyeCoeffS()
 
     m_glState->GetTexture(texCoordUnitGroup->checkedId()).eyePlaneCoeffS = eyePlaneSVec;
 
-    m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
+    emit valueChanged();
 }
 
 void SGOglTextureCoordNBPage::OnTextEnterEyeCoeffT()
@@ -277,7 +272,7 @@ void SGOglTextureCoordNBPage::OnTextEnterEyeCoeffT()
 
     m_glState->GetTexture(texCoordUnitGroup->checkedId()).eyePlaneCoeffT = eyePlaneTVec;
 
-    m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
+    emit valueChanged();
 }
 
 void SGOglTextureCoordNBPage::OnTextEnterObjCoeffS()
@@ -286,7 +281,7 @@ void SGOglTextureCoordNBPage::OnTextEnterObjCoeffS()
 
     m_glState->GetTexture(texCoordUnitGroup->checkedId()).objectPlaneCoeffS = objPlaneSVec;
 
-    m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
+    emit valueChanged();
 }
 
 void SGOglTextureCoordNBPage::OnTextEnterObjCoeffT()
@@ -295,7 +290,7 @@ void SGOglTextureCoordNBPage::OnTextEnterObjCoeffT()
 
     m_glState->GetTexture(texCoordUnitGroup->checkedId()).objectPlaneCoeffT = objPlaneTVec;
 
-    m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
+    emit valueChanged();
 }
 
 void SGOglTextureCoordNBPage::UpdateWidgets()

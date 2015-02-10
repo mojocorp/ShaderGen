@@ -53,19 +53,30 @@ SGOglNotebook::SGOglNotebook(SGFixedGLState* glState, SGFrame * parent)
     : QTabWidget(parent),
       m_parent(parent)
 {
-    lightPage        = new SGOglLightNBPage        (glState, this);
-    materialPage     = new SGOglMaterialNBPage     (glState, this);
-    fogPage          = new SGOglFogNBPage          (glState, this);
-    textureCoordPage = new SGOglTextureCoordNBPage (glState, this);
-    textureEnvPage   = new SGOglTextureEnvNBPage   (glState, this);
+    lightPage = new SGOglLightNBPage(glState, this);
+    materialPage = new SGOglMaterialNBPage(glState, this);
+    fogPage = new SGOglFogNBPage(glState, this);
+    textureCoordPage = new SGOglTextureCoordNBPage(glState, this);
+    textureEnvPage = new SGOglTextureEnvNBPage(glState, this);
 
-    addTab(lightPage   , tr("LIGHT"));
+    connect(lightPage, SIGNAL(valueChanged()), SLOT(OnValueChange()));
+    connect(materialPage, SIGNAL(valueChanged()), SLOT(OnValueChange()));
+    connect(fogPage, SIGNAL(valueChanged()), SLOT(OnValueChange()));
+    connect(textureCoordPage, SIGNAL(valueChanged()), SLOT(OnValueChange()));
+    connect(textureEnvPage, SIGNAL(valueChanged()), SLOT(OnValueChange()));
+
+    addTab(lightPage, tr("LIGHT"));
     addTab(materialPage, tr("MATERIAL"));
-    addTab(fogPage     , tr("FOG"));
+    addTab(fogPage, tr("FOG"));
     addTab(textureCoordPage, tr("TEXTURE COORDINATE SET"));
     addTab(textureEnvPage, tr("TEXTURE ENVIRONMENT SET"));
 }
 
 SGOglNotebook::~SGOglNotebook()
 {
+}
+
+void SGOglNotebook::OnValueChange()
+{
+    emit valueChanged();
 }

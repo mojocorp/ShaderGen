@@ -29,6 +29,8 @@ SGFrame::SGFrame(const QString& title)
 
     oglNotebook = new SGOglNotebook(glState, this);
     oglNotebook->resize(800, 300);
+    connect(oglNotebook, SIGNAL(valueChanged()), SLOT(setFixedGLMode()));
+
     canvas      = new SGCanvasWrapper(this);
     canvas->resize(400, 350);
     shaderText  = new SGShaderTextWindow(this);
@@ -229,6 +231,13 @@ void SGFrame::viewActionTriggered()
 void SGFrame::switchGLModeTriggered()
 {
     canvas->SwitchMode();
+    GetCanvas()->updateGL();
+}
+
+void SGFrame::setFixedGLMode()
+{
+    canvas->SetMode(SGCanvas::GLModeChoiceFixed);
+    GetCanvas()->updateGL();
 }
 
 void SGFrame::help()

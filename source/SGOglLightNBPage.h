@@ -48,7 +48,6 @@
 #include <QDoubleSpinBox>
 
 class SGFixedGLState;
-class SGOglNotebook;
 class QColorButton;
 class QVectorEdit;
 
@@ -56,8 +55,9 @@ class SGOglLightNBPage : public QWidget
 {
     Q_OBJECT
 public:
-    SGOglLightNBPage(SGFixedGLState* m_glState, SGOglNotebook*  parent);
-
+    SGOglLightNBPage(SGFixedGLState* m_glState, QWidget* parent);
+signals:
+    void valueChanged();
 private slots:
     void OnCheckbox(int index);
     void OnRadio(int index);
@@ -77,7 +77,6 @@ private slots:
 
 private:
     SGFixedGLState* m_glState;
-    SGOglNotebook *m_parent;
 
     QButtonGroup *lightSelectionGroup, *lightCheckGroup;
 

@@ -46,18 +46,13 @@
 #include "QColorButton.h"
 
 #include "SGOglTextureEnvNBPage.h"
-#include "SGOglNotebook.h"
 #include "SGFixedGLState.h"
 #include "UtilityFunctions.h"
-#include "SGFrame.h"
-#include "SGCanvas.h"
 
-SGOglTextureEnvNBPage::SGOglTextureEnvNBPage(SGFixedGLState* glState, SGOglNotebook* parent)
+SGOglTextureEnvNBPage::SGOglTextureEnvNBPage(SGFixedGLState* glState, QWidget* parent)
     :QWidget(parent),
       m_glState(glState)
 {
-    m_parent = parent;
-
     QGridLayout* texMainSizer    = new QGridLayout(this);
 
     QGroupBox* texBox            = new QGroupBox(tr("Textures"), this);
@@ -307,14 +302,14 @@ void SGOglTextureEnvNBPage::OnRadioTexApply()
         DisableCombine();
         break;
     }
-    m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
+    emit valueChanged();
 }
 
 void SGOglTextureEnvNBPage::OnRadioTextureNum()
 {
     UpdateWidgets();
 
-    m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
+    emit valueChanged();
 }
 
 void SGOglTextureEnvNBPage::OnCheckbox(int index)
@@ -339,14 +334,14 @@ void SGOglTextureEnvNBPage::OnCheckbox(int index)
     default:
         break;
     }
-    m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
+    emit valueChanged();
 }
 
 void SGOglTextureEnvNBPage::OnChoiceTextureChoose()
 {
     Texture& texture = m_glState->GetTexture(textureGroup->checkedId());
     texture.textureCurrentSelection = (SGTextures::TextureId)texChoose->currentIndex();
-    m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
+    emit valueChanged();
 }
 
 void SGOglTextureEnvNBPage::OnChoiceTextureCombineMode()
@@ -377,7 +372,7 @@ void SGOglTextureEnvNBPage::OnChoiceTextureCombineMode()
     default:
         break;
     }
-    m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
+    emit valueChanged();
 }
 
 void SGOglTextureEnvNBPage::OnChoiceTextureCombineOperandArg0()
@@ -393,7 +388,7 @@ void SGOglTextureEnvNBPage::OnChoiceTextureCombineOperandArg0()
     default:
         break;
     }
-    m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
+    emit valueChanged();
 }
 
 void SGOglTextureEnvNBPage::OnChoiceTextureCombineOperandArg1()
@@ -409,7 +404,7 @@ void SGOglTextureEnvNBPage::OnChoiceTextureCombineOperandArg1()
     default:
         break;
     }
-    m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
+    emit valueChanged();
 }
 
 void SGOglTextureEnvNBPage::OnChoiceTextureCombineOperandArg2()
@@ -425,14 +420,14 @@ void SGOglTextureEnvNBPage::OnChoiceTextureCombineOperandArg2()
     default:
         break;
     }
-    m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
+    emit valueChanged();
 }
 
 void SGOglTextureEnvNBPage::OnChoiceTextureCombineScale()
 {
     Texture& texture = m_glState->GetTexture(textureGroup->checkedId());
     texture.textureCombineScale = (float)(1 << texCombineScaleChoose->currentIndex());
-    m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
+    emit valueChanged();
 }
 
 void SGOglTextureEnvNBPage::OnChoiceTextureCombineSrc0RGB()
@@ -454,7 +449,7 @@ void SGOglTextureEnvNBPage::OnChoiceTextureCombineSrc0RGB()
     default:
         break;
     }
-    m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
+    emit valueChanged();
 }
 
 void SGOglTextureEnvNBPage::OnChoiceTextureCombineSrc1RGB()
@@ -476,7 +471,7 @@ void SGOglTextureEnvNBPage::OnChoiceTextureCombineSrc1RGB()
     default:
         break;
     }
-    m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
+    emit valueChanged();
 }
 
 void SGOglTextureEnvNBPage::OnChoiceTextureCombineSrc2RGB()
@@ -498,7 +493,7 @@ void SGOglTextureEnvNBPage::OnChoiceTextureCombineSrc2RGB()
     default:
         break;
     }
-    m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
+    emit valueChanged();
 }
 
 void SGOglTextureEnvNBPage::OnButton()
@@ -508,7 +503,7 @@ void SGOglTextureEnvNBPage::OnButton()
     QColor texEnvColor = texEnvColorButton->color();
     m_glState->GetTexture(textureSelected).texEnvColor = texEnvColor;
 
-    m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
+    emit valueChanged();
 }
 
 void SGOglTextureEnvNBPage::DisableCombine()
