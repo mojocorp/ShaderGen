@@ -53,11 +53,11 @@
 #include "SGFrame.h"
 #include "SGCanvas.h"
 
-SGOglTextureCoordNBPage::SGOglTextureCoordNBPage(SGOglNotebook* parent)
-    :QWidget(parent)
+SGOglTextureCoordNBPage::SGOglTextureCoordNBPage(SGFixedGLState* glState, SGOglNotebook* parent)
+    :QWidget(parent),
+      m_glState(glState)
 {
     m_parent = parent;
-    SGFixedGLState* glState = m_parent->GetGLState();
 
     QGroupBox* texBox            = new QGroupBox(tr("Textures"), this);
     QGroupBox* texPropertyBox    = new QGroupBox(tr("Selected Texture Properties"), this);
@@ -217,25 +217,23 @@ void SGOglTextureCoordNBPage::OnRadioTextureCoordUnit(int)
 
 void SGOglTextureCoordNBPage::OnRadioTexCoordGen(int index)
 {
-    SGFixedGLState* glState = m_parent->GetGLState();
-
     int workingTextureCoords = texCoordUnitGroup->checkedId();
 
     switch(index){
     case TEXTURE_COORDINATE_OBJECT_LINEAR:
-        glState->GetTexture(workingTextureCoords).textureCoordinateGeneration = GL_OBJECT_LINEAR;
+        m_glState->GetTexture(workingTextureCoords).textureCoordinateGeneration = GL_OBJECT_LINEAR;
         break;
     case TEXTURE_COORDINATE_EYE_LINEAR:
-        glState->GetTexture(workingTextureCoords).textureCoordinateGeneration = GL_EYE_LINEAR;
+        m_glState->GetTexture(workingTextureCoords).textureCoordinateGeneration = GL_EYE_LINEAR;
         break;
     case TEXTURE_COORDINATE_SPHERE_MAP:
-        glState->GetTexture(workingTextureCoords).textureCoordinateGeneration = GL_SPHERE_MAP;
+        m_glState->GetTexture(workingTextureCoords).textureCoordinateGeneration = GL_SPHERE_MAP;
         break;
     case TEXTURE_COORDINATE_REFLECTION_MAP:
-        glState->GetTexture(workingTextureCoords).textureCoordinateGeneration = GL_REFLECTION_MAP;
+        m_glState->GetTexture(workingTextureCoords).textureCoordinateGeneration = GL_REFLECTION_MAP;
         break;
     case TEXTURE_COORDINATE_NORMAL_MAP:
-        glState->GetTexture(workingTextureCoords).textureCoordinateGeneration = GL_NORMAL_MAP;
+        m_glState->GetTexture(workingTextureCoords).textureCoordinateGeneration = GL_NORMAL_MAP;
         break;
     default:
         break;
@@ -246,23 +244,21 @@ void SGOglTextureCoordNBPage::OnRadioTexCoordGen(int index)
 
 void SGOglTextureCoordNBPage::OnCheckbox(int index)
 {
-    SGFixedGLState *glState = m_parent->GetGLState();
-
     switch(index){
     case 0:
-        glState->GetTexture(0).texGen = tex0TexGenEnableCheckBox->isChecked();
+        m_glState->GetTexture(0).texGen = tex0TexGenEnableCheckBox->isChecked();
         break;
     case 1:
-        glState->GetTexture(1).texGen = tex1TexGenEnableCheckBox->isChecked();
+        m_glState->GetTexture(1).texGen = tex1TexGenEnableCheckBox->isChecked();
         break;
     case 2:
-        glState->GetTexture(2).texGen = tex2TexGenEnableCheckBox->isChecked();
+        m_glState->GetTexture(2).texGen = tex2TexGenEnableCheckBox->isChecked();
         break;
     case 3:
-        glState->GetTexture(3).texGen = tex3TexGenEnableCheckBox->isChecked();
+        m_glState->GetTexture(3).texGen = tex3TexGenEnableCheckBox->isChecked();
         break;
     case 4:
-        glState->GetTexture(4).texGen = tex4TexGenEnableCheckBox->isChecked();
+        m_glState->GetTexture(4).texGen = tex4TexGenEnableCheckBox->isChecked();
         break;
     }
     m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
@@ -271,11 +267,9 @@ void SGOglTextureCoordNBPage::OnCheckbox(int index)
 
 void SGOglTextureCoordNBPage::OnTextEnterEyeCoeffS()
 {
-    SGFixedGLState* glState = m_parent->GetGLState();
-
     QVector4D eyePlaneSVec = eyePlaneCoeffTextS->getValue();
 
-    glState->GetTexture(texCoordUnitGroup->checkedId()).eyePlaneCoeffS = eyePlaneSVec;
+    m_glState->GetTexture(texCoordUnitGroup->checkedId()).eyePlaneCoeffS = eyePlaneSVec;
 
     m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();
@@ -283,11 +277,9 @@ void SGOglTextureCoordNBPage::OnTextEnterEyeCoeffS()
 
 void SGOglTextureCoordNBPage::OnTextEnterEyeCoeffT()
 {
-    SGFixedGLState* glState = m_parent->GetGLState();
-
     QVector4D eyePlaneTVec = eyePlaneCoeffTextT->getValue();
 
-    glState->GetTexture(texCoordUnitGroup->checkedId()).eyePlaneCoeffT = eyePlaneTVec;
+    m_glState->GetTexture(texCoordUnitGroup->checkedId()).eyePlaneCoeffT = eyePlaneTVec;
 
     m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();
@@ -295,11 +287,9 @@ void SGOglTextureCoordNBPage::OnTextEnterEyeCoeffT()
 
 void SGOglTextureCoordNBPage::OnTextEnterObjCoeffS()
 {
-    SGFixedGLState* glState = m_parent->GetGLState();
-
     QVector4D objPlaneSVec = objectPlaneCoeffTextS->getValue();
 
-    glState->GetTexture(texCoordUnitGroup->checkedId()).objectPlaneCoeffS = objPlaneSVec;
+    m_glState->GetTexture(texCoordUnitGroup->checkedId()).objectPlaneCoeffS = objPlaneSVec;
 
     m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();
@@ -307,11 +297,9 @@ void SGOglTextureCoordNBPage::OnTextEnterObjCoeffS()
 
 void SGOglTextureCoordNBPage::OnTextEnterObjCoeffT()
 {
-    SGFixedGLState* glState = m_parent->GetGLState();
-
     QVector4D objPlaneTVec = objectPlaneCoeffTextT->getValue();
 
-    glState->GetTexture(texCoordUnitGroup->checkedId()).objectPlaneCoeffT = objPlaneTVec;
+    m_glState->GetTexture(texCoordUnitGroup->checkedId()).objectPlaneCoeffT = objPlaneTVec;
 
     m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();
@@ -319,8 +307,7 @@ void SGOglTextureCoordNBPage::OnTextEnterObjCoeffT()
 
 void SGOglTextureCoordNBPage::UpdateWidgets()
 {
-    SGFixedGLState* glState = m_parent->GetGLState();
-    const Texture& texture = glState->GetTexture(texCoordUnitGroup->checkedId());
+    const Texture& texture = m_glState->GetTexture(texCoordUnitGroup->checkedId());
 
     switch(texture.textureCoordinateGeneration){
     case GL_OBJECT_LINEAR:

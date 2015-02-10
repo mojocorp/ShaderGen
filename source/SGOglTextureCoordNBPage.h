@@ -46,6 +46,7 @@
 #include <QButtonGroup>
 #include <QLineEdit>
 
+class SGFixedGLState;
 class SGOglNotebook;
 class QVectorEdit;
 
@@ -53,7 +54,7 @@ class SGOglTextureCoordNBPage: public QWidget
 {
     Q_OBJECT
 public:
-    SGOglTextureCoordNBPage(SGOglNotebook*  parent);
+    SGOglTextureCoordNBPage(SGFixedGLState* m_glState, SGOglNotebook*  parent);
 
 private slots:
     void OnRadioTexCoordGen(int index);
@@ -74,6 +75,7 @@ private:
         TEXTURE_COORDINATE_NORMAL_MAP
     };
 
+    SGFixedGLState* m_glState;
     SGOglNotebook *m_parent;
 
     QCheckBox *tex0TexGenEnableCheckBox, *tex1TexGenEnableCheckBox, *tex2TexGenEnableCheckBox, *tex3TexGenEnableCheckBox, *tex4TexGenEnableCheckBox;

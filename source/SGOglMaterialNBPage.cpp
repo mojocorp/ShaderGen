@@ -44,17 +44,18 @@
 #include <QLabel>
 #include "QColorButton.h"
 
+#include "SGFixedGLState.h"
 #include "SGOglMaterialNBPage.h"
 #include "SGOglNotebook.h"
 #include "UtilityFunctions.h"
 #include "SGFrame.h"
 #include "SGCanvas.h"
 
-SGOglMaterialNBPage::SGOglMaterialNBPage(SGOglNotebook* parent)
-    :QWidget(parent)
+SGOglMaterialNBPage::SGOglMaterialNBPage(SGFixedGLState* glState, SGOglNotebook* parent)
+    :QWidget(parent),
+      m_glState(glState)
 {
     m_parent = parent;
-    SGFixedGLState* glState = m_parent->GetGLState();
     const Material& mat = glState->GetMaterial();
 
     QGroupBox* materialBox  = new QGroupBox(tr("Material Properties"), this);
@@ -110,8 +111,7 @@ SGOglMaterialNBPage::SGOglMaterialNBPage(SGOglNotebook* parent)
 
 void SGOglMaterialNBPage::ambientChanged()
 {
-    SGFixedGLState* glState = this->m_parent->GetGLState();
-    Material& mat = glState->GetMaterial();
+    Material& mat = m_glState->GetMaterial();
 
     mat.materialAmbientColorVector = ambientMaterial->color();
 
@@ -121,8 +121,7 @@ void SGOglMaterialNBPage::ambientChanged()
 
 void SGOglMaterialNBPage::diffuseChanged()
 {
-    SGFixedGLState* glState = this->m_parent->GetGLState();
-    Material& mat = glState->GetMaterial();
+    Material& mat = m_glState->GetMaterial();
 
     mat.materialDiffuseColorVector = diffuseMaterial->color();
 
@@ -132,8 +131,7 @@ void SGOglMaterialNBPage::diffuseChanged()
 
 void SGOglMaterialNBPage::specularChanged()
 {
-    SGFixedGLState* glState = this->m_parent->GetGLState();
-    Material& mat = glState->GetMaterial();
+    Material& mat = m_glState->GetMaterial();
 
     mat.materialSpecularColorVector = specularMaterial->color();
 
@@ -143,8 +141,7 @@ void SGOglMaterialNBPage::specularChanged()
 
 void SGOglMaterialNBPage::emissionChanged()
 {
-    SGFixedGLState* glState = this->m_parent->GetGLState();
-    Material& mat = glState->GetMaterial();
+    Material& mat = m_glState->GetMaterial();
 
     mat.materialEmissionColorVector = emissionMaterial->color();
 
@@ -154,8 +151,7 @@ void SGOglMaterialNBPage::emissionChanged()
 
 void SGOglMaterialNBPage::shininessChanged()
 {
-    SGFixedGLState* glState = m_parent->GetGLState();
-    glState->GetMaterial().materialShininess = shininessMaterial->value();
+    m_glState->GetMaterial().materialShininess = shininessMaterial->value();
 
     m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();

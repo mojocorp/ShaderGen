@@ -47,6 +47,7 @@
 #include <QCheckBox>
 #include <QDoubleSpinBox>
 
+class SGFixedGLState;
 class SGOglNotebook;
 class QColorButton;
 
@@ -54,7 +55,7 @@ class SGOglFogNBPage : public QWidget
 {
     Q_OBJECT
 public:
-    SGOglFogNBPage(SGOglNotebook*  parent);
+    SGOglFogNBPage(SGFixedGLState* m_glState, SGOglNotebook*  parent);
 
 protected slots:
     void OnCheckbox();
@@ -65,6 +66,7 @@ protected slots:
     void OnRadio(int index);
 
 private:
+    SGFixedGLState* m_glState;
     SGOglNotebook *m_parent;
 
     QButtonGroup* fogModeChoice;

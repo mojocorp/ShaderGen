@@ -47,6 +47,7 @@
 #include <QLineEdit>
 #include <QDoubleSpinBox>
 
+class SGFixedGLState;
 class SGOglNotebook;
 class QColorButton;
 class QVectorEdit;
@@ -55,7 +56,7 @@ class SGOglLightNBPage : public QWidget
 {
     Q_OBJECT
 public:
-    SGOglLightNBPage(SGOglNotebook*  parent);
+    SGOglLightNBPage(SGFixedGLState* m_glState, SGOglNotebook*  parent);
 
 private slots:
     void OnCheckbox(int index);
@@ -75,6 +76,7 @@ private slots:
     void diffuseLightChanged();
 
 private:
+    SGFixedGLState* m_glState;
     SGOglNotebook *m_parent;
 
     QButtonGroup *lightSelectionGroup, *lightCheckGroup;

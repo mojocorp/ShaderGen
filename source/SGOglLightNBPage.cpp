@@ -55,11 +55,11 @@
 #include "SGFrame.h"
 #include "SGCanvas.h"
 
-SGOglLightNBPage::SGOglLightNBPage(SGOglNotebook* parent)
-    : QWidget(parent)
+SGOglLightNBPage::SGOglLightNBPage(SGFixedGLState* glState, SGOglNotebook* parent)
+    : QWidget(parent),
+      m_glState(glState)
 {
     m_parent = parent;
-    SGFixedGLState* glState = m_parent->GetGLState();
 
     QGroupBox* lightBox             = new QGroupBox(tr("Lighting Parameters"), this);
     QGroupBox* enableDisableBox     = new QGroupBox(tr("glEnable/glDisable"), this);
@@ -205,24 +205,21 @@ SGOglLightNBPage::SGOglLightNBPage(SGOglNotebook* parent)
 
 void SGOglLightNBPage::lightingChanged()
 {
-    SGFixedGLState* glState = m_parent->GetGLState();
-    glState->SetLightingEnable(lightingCheckBox->isChecked());
+    m_glState->SetLightingEnable(lightingCheckBox->isChecked());
     m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();
 }
 
 void SGOglLightNBPage::normalizeChanged()
 {
-    SGFixedGLState* glState = m_parent->GetGLState();
-    glState->SetNormalizeEnable(normalizeCheckBox->isChecked());
+    m_glState->SetNormalizeEnable(normalizeCheckBox->isChecked());
     m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();
 }
 
 void SGOglLightNBPage::separateSpecularChanged()
 {
-    SGFixedGLState* glState = m_parent->GetGLState();
-    glState->SetSeparateSpecularColorEnable(separateSpecularColorCheckBox->isChecked());
+    m_glState->SetSeparateSpecularColorEnable(separateSpecularColorCheckBox->isChecked());
     m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();
 }
@@ -230,9 +227,8 @@ void SGOglLightNBPage::separateSpecularChanged()
 void lightPositionChanged();
 void SGOglLightNBPage::ambientLightChanged()
 {
-    SGFixedGLState* glState = m_parent->GetGLState();
     int lightSelected = lightSelectionGroup->checkedId();
-    glState->GetLight(lightSelected).lightAmbientColorVector = ambientLight->color();
+    m_glState->GetLight(lightSelected).lightAmbientColorVector = ambientLight->color();
 
     m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();
@@ -240,9 +236,8 @@ void SGOglLightNBPage::ambientLightChanged()
 
 void SGOglLightNBPage::specularLightChanged()
 {
-    SGFixedGLState* glState = m_parent->GetGLState();
     int lightSelected = lightSelectionGroup->checkedId();
-    glState->GetLight(lightSelected).lightSpecularColorVector = specularLight->color();
+    m_glState->GetLight(lightSelected).lightSpecularColorVector = specularLight->color();
 
     m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();
@@ -250,9 +245,8 @@ void SGOglLightNBPage::specularLightChanged()
 
 void SGOglLightNBPage::diffuseLightChanged()
 {
-    SGFixedGLState* glState = m_parent->GetGLState();
     int lightSelected = lightSelectionGroup->checkedId();
-    glState->GetLight(lightSelected).lightDiffuseColorVector = diffuseLight->color();
+    m_glState->GetLight(lightSelected).lightDiffuseColorVector = diffuseLight->color();
 
     m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();
@@ -260,9 +254,8 @@ void SGOglLightNBPage::diffuseLightChanged()
 
 void SGOglLightNBPage::OnCheckbox(int index)
 {
-    SGFixedGLState* glState = m_parent->GetGLState();
     const QAbstractButton* btn = lightCheckGroup->button(index);
-    glState->GetLight(index).lightEnabled = btn->isChecked();
+    m_glState->GetLight(index).lightEnabled = btn->isChecked();
 
     m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();
@@ -271,8 +264,7 @@ void SGOglLightNBPage::OnCheckbox(int index)
 void SGOglLightNBPage::spotExponentChanged()
 {
     int lightSelected = lightSelectionGroup->checkedId();
-    SGFixedGLState* glState = m_parent->GetGLState();
-    glState->GetLight(lightSelected).lightSpotExponent = spotExponent->value();
+    m_glState->GetLight(lightSelected).lightSpotExponent = spotExponent->value();
     m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();
 }
@@ -280,8 +272,7 @@ void SGOglLightNBPage::spotExponentChanged()
 void SGOglLightNBPage::spotCutoffChanged()
 {
     int lightSelected = lightSelectionGroup->checkedId();
-    SGFixedGLState* glState = m_parent->GetGLState();
-    glState->GetLight(lightSelected).lightSpotCutoff = spotCutoff->value();
+    m_glState->GetLight(lightSelected).lightSpotCutoff = spotCutoff->value();
     m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();
 }
@@ -289,8 +280,7 @@ void SGOglLightNBPage::spotCutoffChanged()
 void SGOglLightNBPage::constantAttenuationChanged()
 {
     int lightSelected = lightSelectionGroup->checkedId();
-    SGFixedGLState* glState = m_parent->GetGLState();
-    glState->GetLight(lightSelected).lightConstantAttenuation = constantAttenuation ->value();
+    m_glState->GetLight(lightSelected).lightConstantAttenuation = constantAttenuation ->value();
     m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();
 }
@@ -298,8 +288,7 @@ void SGOglLightNBPage::constantAttenuationChanged()
 void SGOglLightNBPage::quadraticAttenuationChanged()
 {
     int lightSelected = lightSelectionGroup->checkedId();
-    SGFixedGLState* glState = m_parent->GetGLState();
-    glState->GetLight(lightSelected).lightQuadraticAttenuation = quadraticAttenuation->value();
+    m_glState->GetLight(lightSelected).lightQuadraticAttenuation = quadraticAttenuation->value();
     m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();
 }
@@ -307,8 +296,7 @@ void SGOglLightNBPage::quadraticAttenuationChanged()
 void SGOglLightNBPage::linearAttenuationChanged()
 {
     int lightSelected = lightSelectionGroup->checkedId();
-    SGFixedGLState* glState = m_parent->GetGLState();
-    glState->GetLight(lightSelected).lightLinearAttenuation = linearAttenuation->value();
+    m_glState->GetLight(lightSelected).lightLinearAttenuation = linearAttenuation->value();
     m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();
 }
@@ -322,8 +310,7 @@ void SGOglLightNBPage::lightPositionChanged()
     }
 
     int lightSelected = lightSelectionGroup->checkedId();
-    SGFixedGLState* glState = m_parent->GetGLState();
-    glState->GetLight(lightSelected).lightPositionVector = tempLightPosVector;
+    m_glState->GetLight(lightSelected).lightPositionVector = tempLightPosVector;
     m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();
 }
@@ -332,18 +319,16 @@ void SGOglLightNBPage::spotDirectionChanged()
 {
     QVector4D tempLightSpotDirectionVector = spotDirection->getValue();
     int lightSelected = lightSelectionGroup->checkedId();
-    SGFixedGLState* glState = m_parent->GetGLState();
-    glState->GetLight(lightSelected).lightSpotDirectionVector = QVector3D(tempLightSpotDirectionVector.x(),
-                                                                           tempLightSpotDirectionVector.y(),
-                                                                           tempLightSpotDirectionVector.z());
+    m_glState->GetLight(lightSelected).lightSpotDirectionVector = QVector3D(tempLightSpotDirectionVector.x(),
+                                                                          tempLightSpotDirectionVector.y(),
+                                                                          tempLightSpotDirectionVector.z());
     m_parent->GetFrame()->SetCanvasMode(SGCanvas::GLModeChoiceFixed);
     m_parent->GetFrame()->GetCanvas()->updateGL();
 }
 
 void SGOglLightNBPage::OnRadio(int index)
 {
-    SGFixedGLState* glState = m_parent->GetGLState();
-    const Light& light = glState->GetLight(index);
+    const Light& light = m_glState->GetLight(index);
 
     ambientLight ->setColor(light.lightAmbientColorVector);
     diffuseLight ->setColor(light.lightDiffuseColorVector);

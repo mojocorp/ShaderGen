@@ -55,9 +55,8 @@ class   SGTextures;
 class SGOglNotebook: public QTabWidget
 {
 public:
-    SGOglNotebook(SGFrame * parent = 0);
+    SGOglNotebook(SGFixedGLState* glState, SGFrame * parent = 0);
     ~SGOglNotebook();
-    SGFixedGLState* GetGLState();
     SGFrame* GetFrame() { return m_parent; }
 private:
     SGFrame              *m_parent;

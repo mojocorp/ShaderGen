@@ -49,15 +49,15 @@
 #include "SGTextures.h"
 #include "SGFrame.h"
 
-SGOglNotebook::SGOglNotebook(SGFrame * parent)
+SGOglNotebook::SGOglNotebook(SGFixedGLState* glState, SGFrame * parent)
     : QTabWidget(parent),
       m_parent(parent)
 {
-    lightPage        = new SGOglLightNBPage        (this);
-    materialPage     = new SGOglMaterialNBPage     (this);
-    fogPage          = new SGOglFogNBPage          (this);
-    textureCoordPage = new SGOglTextureCoordNBPage (this);
-    textureEnvPage   = new SGOglTextureEnvNBPage   (this);
+    lightPage        = new SGOglLightNBPage        (glState, this);
+    materialPage     = new SGOglMaterialNBPage     (glState, this);
+    fogPage          = new SGOglFogNBPage          (glState, this);
+    textureCoordPage = new SGOglTextureCoordNBPage (glState, this);
+    textureEnvPage   = new SGOglTextureEnvNBPage   (glState, this);
 
     addTab(lightPage   , tr("LIGHT"));
     addTab(materialPage, tr("MATERIAL"));
@@ -68,9 +68,4 @@ SGOglNotebook::SGOglNotebook(SGFrame * parent)
 
 SGOglNotebook::~SGOglNotebook()
 {
-}
-
-SGFixedGLState* SGOglNotebook::GetGLState()
-{
-    return m_parent->GetGLState();
 }

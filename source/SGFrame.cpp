@@ -27,7 +27,7 @@ SGFrame::SGFrame(const QString& title)
     createMenus();
     createStatusBar();
 
-    oglNotebook = new SGOglNotebook(this);
+    oglNotebook = new SGOglNotebook(glState, this);
     oglNotebook->resize(800, 300);
     canvas      = new SGCanvasWrapper(this);
     canvas->resize(400, 350);
