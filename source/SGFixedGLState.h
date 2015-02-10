@@ -44,6 +44,7 @@
 #include <QColor>
 #include <QVector3D>
 #include <QVector4D>
+#include <QJsonObject>
 
 #include "globals.h"
 #include "SGTextures.h"
@@ -142,6 +143,8 @@ public:
 
     void SetTexGenEnable( bool en ) { m_texGenEnable= en;}
 
+    void read(const QJsonObject &json);
+    void write(QJsonObject &json) const;
 private:
     void InitLight(int num);
     void InitMaterial();

@@ -80,6 +80,9 @@ public:
     /// Returns 1 if an OpenGL error occurred, 0 otherwise.
     static int printOglError(const char *file, int line);
 
+    bool loadFile(const QString& filename);
+    bool saveFile(const QString& filename) const;
+
     void readSettings();
 protected:
     virtual void closeEvent(QCloseEvent * event);
@@ -90,6 +93,8 @@ private slots:
     void setFixedGLMode();
     void help();
     void about();
+    bool open();
+    bool saveAs();
 private:
     void createActions();
     void createMenus();
@@ -100,6 +105,8 @@ private:
     QMenu *modelMenu;
     QMenu *helpMenu;
 
+    QAction *openAct;
+    QAction *saveAsAct;
     QAction *exitAct;
     QAction *perspAct;
     QAction *switchGLModeAct;

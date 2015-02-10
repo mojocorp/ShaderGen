@@ -5,6 +5,8 @@
 #include <QActionGroup>
 #include <QBoxLayout>
 #include <QSettings>
+#include <QFileDialog>
+#include <QJsonDocument>
 
 #include "SGFrame.h"
 #include "SGFixedGLState.h"
@@ -61,6 +63,16 @@ SGFrame::~SGFrame()
 
 void SGFrame::createActions()
 {
+    openAct = new QAction(tr("&Open..."), this);
+    openAct->setShortcuts(QKeySequence::Open);
+    openAct->setStatusTip(tr("Open an existing file"));
+    connect(openAct, SIGNAL(triggered()), this, SLOT(open()));
+
+    saveAsAct = new QAction(tr("Save &As..."), this);
+    saveAsAct->setShortcuts(QKeySequence::SaveAs);
+    saveAsAct->setStatusTip(tr("Save the document under a new name"));
+    connect(saveAsAct, SIGNAL(triggered()), this, SLOT(saveAs()));
+
     exitAct = new QAction(tr("E&xit"), this);
     exitAct->setShortcuts(QKeySequence::Quit);
     exitAct->setStatusTip(tr("Exit the application"));
@@ -115,6 +127,9 @@ void SGFrame::createActions()
 void SGFrame::createMenus()
 {
     fileMenu = menuBar()->addMenu(tr("&File"));
+    fileMenu->addAction(openAct);
+    fileMenu->addAction(saveAsAct);
+    fileMenu->addSeparator();
     fileMenu->addAction(exitAct);
 
     menuBar()->addSeparator();
@@ -182,6 +197,40 @@ int SGFrame::printOglError(const char *file, int line)
         }
     }
     return retCode;
+}
+
+bool SGFrame::loadFile(const QString& filename)
+{
+    QFile loadFile(filename);
+
+    if (!loadFile.open(QIODevice::ReadOnly)) {
+        qWarning("Couldn't open save file.");
+        return false;
+    }
+
+    QByteArray saveData = loadFile.readAll();
+
+    QJsonDocument loadDoc(QJsonDocument::fromJson(saveData));
+    glState->read(loadDoc.object());
+    oglNotebook->setup();
+    GetCanvas()->updateGL();
+
+    return true;
+}
+
+bool SGFrame::saveFile(const QString& filename) const
+{
+    QFile saveFile(filename);
+    if (!saveFile.open(QIODevice::WriteOnly)) {
+        qWarning("Couldn't open save file.");
+        return false;
+    }
+    QJsonObject stateObject;
+    glState->write(stateObject);
+    QJsonDocument saveDoc(stateObject);
+    saveFile.write(saveDoc.toJson());
+
+    return true;
 }
 
 void SGFrame::readSettings()
@@ -291,4 +340,24 @@ void SGFrame::about()
                                                "<p><b>GLSL ShaderGen</b></p>"
                                                "<p>Version 3.2.0</p>"
                                                "</center>");
+}
+
+bool SGFrame::open()
+{
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open"), QDir::homePath(),
+                                                    tr("ShaderGen Files (*.json)"));
+    if (fileName.isEmpty())
+        return false;
+
+    return loadFile(fileName);
+}
+
+bool SGFrame::saveAs()
+{
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Save As"), QDir::homePath(),
+                                                    tr("ShaderGen Files (*.json)"));
+    if (fileName.isEmpty())
+        return false;
+
+    return saveFile(fileName);
 }
