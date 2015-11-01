@@ -470,8 +470,6 @@ void SGCanvas::setMode(GLMode m)
 
 void SGCanvas::printInfoLog(GLuint obj)
 {
-    QTextEdit *text = m_frame->getShaderTextWindow()->getInfoBox();
-
     GLint infologLength = 0;
     if(glIsProgram(obj))
     {
@@ -483,7 +481,7 @@ void SGCanvas::printInfoLog(GLuint obj)
     }
     else
     {
-        text->append(tr("ERROR: No Shader or Program available"));
+        m_frame->getShaderTextWindow()->log(tr("ERROR: No Shader or Program available"));
     }
 
     PrintOpenGLError();
@@ -503,12 +501,12 @@ void SGCanvas::printInfoLog(GLuint obj)
         }
         else
         {
-            text->append(tr("ERROR: No Shader or Program available"));
+            m_frame->getShaderTextWindow()->log(tr("ERROR: No Shader or Program available"));
         }
 
         QString errors = tr("InfoLog:") + infoLog.data();
 
-        text->append(errors);
+        m_frame->getShaderTextWindow()->log(errors);
     }
 }
 
@@ -528,8 +526,7 @@ int SGCanvas::switchToShaderMode()
 void SGCanvas::writeMessage(const QString str)
 {
     m_frame->setStatusText(str);
-    QTextEdit *text = m_frame->getShaderTextWindow()->getInfoBox();
-    text->append(str);
+    m_frame->getShaderTextWindow()->log(str);
 }
 
 GLint SGCanvas::getUniLoc(unsigned int program, const GLchar *name)
