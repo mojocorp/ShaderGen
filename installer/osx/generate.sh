@@ -1,6 +1,6 @@
 #!/bin/bash
 
-qmake -spec macx-g++ -r "CONFIG+=release"
+qmake ShaderGen.pro -r -spec macx-clang CONFIG+=x86_64
 
 make clean && make
 
