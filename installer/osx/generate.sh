@@ -1,13 +1,18 @@
 #!/bin/bash
 
-cd ../..
-
 qmake -spec macx-g++ -r "CONFIG+=release"
 
 make clean && make
 
-cd build
+(cd build && macdeployqt ShaderGen.app -no-plugins)
 
-macdeployqt ShaderGen.app -dmg -no-plugins
+mkdir dist
+cp -r build/ShaderGen.app dist
+ln -s /Applications dist/Applications
+cp License.txt dist 
 
-mv ShaderGen.dmg ShaderGen-3.3.0.dmg
+hdiutil create \
+        -volname "ShaderGen" \
+        -srcfolder ./dist \
+        -ov \
+        ShaderGen-3.3.0.dmg
