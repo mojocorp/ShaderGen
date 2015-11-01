@@ -181,17 +181,14 @@ int SGFrame::printOglError(const char *file, int line)
 
     int    retCode = 0;
 
-    QTextEdit *text = sgframe_instance->getShaderTextWindow()->getInfoBox();
-    text->textCursor().movePosition(QTextCursor::End);
-
     GLenum glErr = glGetError();
 
     if(DEBUG_ON)
     {
         while (glErr != GL_NO_ERROR)
         {
-            QString str = QString("\nglError in file %1 @ line %2: %3\n").arg(file).arg(line).arg( (const char*)gluErrorString(glErr));
-            text->append(str);
+            QString str = QString("glError in file %1:%2: %3").arg(file).arg(line).arg( (const char*)gluErrorString(glErr));
+            sgframe_instance->getShaderTextWindow()->log(str);
             retCode = 1;
             glErr = glGetError();
         }

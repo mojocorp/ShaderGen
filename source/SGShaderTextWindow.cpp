@@ -146,6 +146,12 @@ void SGShaderTextWindow::refresh()
     haveRefreshed = true;
 }
 
+void SGShaderTextWindow::log(const QString &text)
+{
+    textBoxInfo->textCursor().movePosition(QTextCursor::End);
+    textBoxInfo->append(text);
+}
+
 void SGShaderTextWindow::clearLog()
 {
     textBoxInfo->clear();

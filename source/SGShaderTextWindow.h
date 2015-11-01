@@ -50,13 +50,13 @@ public:
     SGShaderTextWindow(SGFrame *frame);
     QPlainTextEdit* getVertexShaderBox(){ return textBoxVert; }
     QPlainTextEdit* getFragmentShaderBox(){ return textBoxFrag ;}
-    QTextEdit* getInfoBox(){ return textBoxInfo ;}
     bool haveRefreshed, haveCompiled, haveLinked;
 public slots:
     void refresh();
     void compile();
     void link();
     void build();
+    void log(const QString &text);
     void clearLog();
 private:
     QPlainTextEdit *textBoxVert, *textBoxFrag;
