@@ -105,7 +105,6 @@ private:
     void setupFromFixedState();
     void writeMessage(const QString str);
     void unsupportedOpenGLVersion(void);
-    void getGlVersion(int *major, int *minor);
     void checkGlImplementation();
     void notEnoughTextureUnits(const int numTextures);
 };

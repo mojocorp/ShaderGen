@@ -545,9 +545,10 @@ GLint SGCanvas::getUniLoc(unsigned int program, const GLchar *name)
 }
 
 void SGCanvas::checkGlImplementation()
-{
-    int gl_major, gl_minor, gl_numTextures;
-    getGlVersion(&gl_major, &gl_minor);
+{  
+    const int gl_major = context()->format().majorVersion();
+
+    int  gl_numTextures;
     glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS_ARB, &gl_numTextures);
     if(gl_major < 2.0)
     {
@@ -556,16 +557,6 @@ void SGCanvas::checkGlImplementation()
     else if(gl_numTextures < 5)
     {
         notEnoughTextureUnits(gl_numTextures);
-    }
-}
-
-void SGCanvas::getGlVersion(int *major, int* minor)
-{
-    const char* verstr = (const char*)glGetString(GL_VERSION);
-    if( (verstr == NULL) || (sscanf(verstr, "%d.%d", major, minor) != 2))
-    {
-        *major = *minor = 0;
-        fprintf(stderr, "Invalid GL_VERSION format!!!\n");
     }
 }
 
