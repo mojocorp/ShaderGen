@@ -511,14 +511,14 @@ void SGCanvas::printInfoLog(GLuint obj)
 }
 
 int SGCanvas::switchToShaderMode()
-{   
-    if( !m_frame->getShaderTextWindow()->haveRefreshed)
-    {
-        m_frame->getShaderTextWindow()->refresh();
-    }
-    QString vert= m_frame->getShaderTextWindow()->getVertexShaderText();
-    QString frag= m_frame->getShaderTextWindow()->getFragmentShaderText();
-    linkShaders(vert,frag);
+{
+    const QString vert= m_frame->getVertexShader();
+    const QString frag= m_frame->getFragmentShader();
+
+    m_frame->getShaderTextWindow()->setFragmentShaderText(frag);
+    m_frame->getShaderTextWindow()->setVertexShaderText(vert);
+
+    linkShaders(vert, frag);
     updateGL();
     return 0;
 }
