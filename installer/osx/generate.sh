@@ -1,15 +1,16 @@
 #!/bin/bash
 
-qmake -spec macx-g++ -r "CONFIG+=release"
+qmake ShaderGen.pro -r -spec macx-clang CONFIG+=x86_64
 
 make clean && make
 
-(cd build && macdeployqt ShaderGen.app -no-plugins)
+(cd build && macdeployqt ShaderGen.app)
 
 mkdir dist
-cp -r build/ShaderGen.app dist
+cp -r build/ShaderGen.app License.txt dist
+rm -rf dist/ShaderGen.app/Contents/PlugIns/imageformats
+rm -rf dist/ShaderGen.app/Contents/PlugIns/printsupport
 ln -s /Applications dist/Applications
-cp License.txt dist 
 
 hdiutil create \
         -volname "ShaderGen" \
