@@ -13,6 +13,7 @@
 #include "SGCanvasWrapper.h"
 #include "SGCanvas.h"
 #include "SGShaderTextWindow.h"
+#include "SGOglNotebook.h"
 
 SGFrame *sgframe_instance = 0;
 

@@ -39,7 +39,6 @@
 
 #include <QMainWindow>
 
-#include "SGOglNotebook.h"
 #include "SGShaderGenerator.h"
 #include "SGCanvasWrapper.h"
 
@@ -47,7 +46,6 @@ class SGOglNotebook;
 class SGShaderTextWindow;
 class SGCanvas;
 class SGFixedGLState;
-class SGShaderGenerator;
 class SGTextures;
 class QSplitter;
 

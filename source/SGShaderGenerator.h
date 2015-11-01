@@ -41,7 +41,6 @@
 
 #include <QString>
 
-//#include "Compulsory.h"
 #include "globals.h"
 
 class SGShaderGenerator
