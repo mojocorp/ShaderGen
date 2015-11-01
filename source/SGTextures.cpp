@@ -152,13 +152,13 @@ void SGTextures::activate(TextureId id, GLint unit)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-    QImage image = QImage(":/textures/" + TextureNames[index]).mirrored();
+    QImage image = QImage(":/textures/" + TextureNames[index]);
     if (image.isNull())
     {
         QMessageBox::critical(m_frame, "GLSL ShaderGen", QString("Unable to load image %1").arg(TextureNames[index]));
         return;
     }
-    image = QGLWidget::convertToGLFormat(image.mirrored());
+    image = QGLWidget::convertToGLFormat(image);
     gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGBA, image.width(), image.height(),GL_RGBA, GL_UNSIGNED_BYTE, image.bits());
 }
 
