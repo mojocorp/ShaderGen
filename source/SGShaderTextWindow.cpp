@@ -101,7 +101,7 @@ void SGShaderTextWindow::compile()
 {
     if(haveRefreshed)
     {
-        haveCompiled = m_frame->getCanvas()->compileShaders(getVertexShaderBox()->toPlainText(),getFragmentShaderBox()->toPlainText());
+        haveCompiled = m_frame->getCanvas()->compileShaders(getVertexShaderText(), getFragmentShaderText());
     }
     notebook->setCurrentWidget(textBoxInfo);
 }
@@ -110,7 +110,7 @@ void SGShaderTextWindow::link()
 {
     if(haveCompiled)
     {
-        haveLinked = m_frame->getCanvas()->linkShaders(getVertexShaderBox()->toPlainText(),getFragmentShaderBox()->toPlainText());
+        haveLinked = m_frame->getCanvas()->linkShaders(getVertexShaderText(),getFragmentShaderText());
         notebook->setCurrentWidget(textBoxInfo);
         if(haveLinked)
         {
@@ -124,11 +124,11 @@ void SGShaderTextWindow::link()
 void SGShaderTextWindow::build()
 {
     refresh();
-    haveCompiled = m_frame->getCanvas()->compileShaders(getVertexShaderBox()->toPlainText(),getFragmentShaderBox()->toPlainText());
+    haveCompiled = m_frame->getCanvas()->compileShaders(getVertexShaderText(), getFragmentShaderText());
     notebook->setCurrentWidget(textBoxInfo);
     if(haveCompiled)
     {
-        haveLinked = m_frame->getCanvas()->linkShaders(getVertexShaderBox()->toPlainText(),getFragmentShaderBox()->toPlainText());
+        haveLinked = m_frame->getCanvas()->linkShaders(getVertexShaderText(), getFragmentShaderText());
         if(haveLinked)
         {
             m_frame->setCanvasMode(SGCanvas::GLModeChoiceShader);

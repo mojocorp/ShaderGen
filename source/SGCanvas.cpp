@@ -516,8 +516,8 @@ int SGCanvas::switchToShaderMode()
     {
         m_frame->getShaderTextWindow()->refresh();
     }
-    QString vert= m_frame->getShaderTextWindow()->getVertexShaderBox()->toPlainText();
-    QString frag= m_frame->getShaderTextWindow()->getFragmentShaderBox()->toPlainText();
+    QString vert= m_frame->getShaderTextWindow()->getVertexShaderText();
+    QString frag= m_frame->getShaderTextWindow()->getFragmentShaderText();
     linkShaders(vert,frag);
     updateGL();
     return 0;
