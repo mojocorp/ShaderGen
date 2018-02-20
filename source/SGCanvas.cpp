@@ -50,13 +50,13 @@
 SGCanvas::SGCanvas(SGFrame* frame, QWidget* parent)
   : QGLWidget(parent)
   , CameraZ(-5)
+  , mouse(this)
 {
     setFocusPolicy(Qt::StrongFocus);
     mode = GLModeChoiceFixed;
     m_frame = frame;
     models = new SGModels();
     m_zoom = 0.8f;
-    mouse.setCanvas(this);
     modelCurrent = SGModels::ModelTorus;
     glReady = glCompiled = glLinked = false;
     prog = vertS = fragS = 0;

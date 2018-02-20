@@ -46,21 +46,17 @@ class QMouseEvent;
 class SGCanvasMouseHandler
 {
   public:
-    SGCanvasMouseHandler();
     SGCanvasMouseHandler(SGCanvas* canvas);
     void onMousePress(QMouseEvent* event);
     void onMouseMove(QMouseEvent* event);
     void onMouseRelease(QMouseEvent* event);
     void loadMatrix() const;
-    void multMatrix() const;
-    void reset();
-    void setCanvas(SGCanvas* canvas1) { canvas = canvas1; }
-    void stop();
-    static const float StartZoom;
-    static const float InertiaThreshold;
-    static const int Delay;
 
   private:
+    void multMatrix() const;
+    void reset();
+    void stop();
+
     int frames;
     SGCanvas* canvas;
     bool validStart;

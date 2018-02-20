@@ -44,19 +44,11 @@
 #include "SGFrame.h"
 #include "UtilityFunctions.h"
 
-const float SGCanvasMouseHandler::StartZoom = 0.8f;
-const float SGCanvasMouseHandler::InertiaThreshold = 1.0f;
-const int SGCanvasMouseHandler::Delay = 10;
-
-SGCanvasMouseHandler::SGCanvasMouseHandler()
-{
-    canvas = 0;
-    reset();
-}
+static float StartZoom = 0.8f;
 
 SGCanvasMouseHandler::SGCanvasMouseHandler(SGCanvas* canvas1)
+  : canvas(canvas1)
 {
-    canvas = canvas1;
     reset();
 }
 

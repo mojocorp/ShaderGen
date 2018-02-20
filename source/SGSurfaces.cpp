@@ -237,8 +237,8 @@ void
 TSphere::eval(QVector2D& domain, QVector3D& range)
 {
     const float radius = 1;
-    float u = fabsf(domain.y() * M_PI);
-    float v = fabsf(domain.x() * TWO_PI);
+    float u = std::abs(domain.y() * M_PI);
+    float v = std::abs(domain.x() * TWO_PI);
 
     range.setX(radius * cosf(v) * sinf(u));
     range.setZ(radius * sinf(v) * sinf(u));
