@@ -10,6 +10,7 @@ DEFINES += GLEW_STATIC
 
 win32 {
 RC_FILE = info.rc
+LIBS += -lOpenGL32 -lglu32
 }
 
 macx {
