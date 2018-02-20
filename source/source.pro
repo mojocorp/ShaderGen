@@ -4,7 +4,7 @@ DESTDIR  = ../build
 
 QT += opengl
 DEPENDPATH += .
-INCLUDEPATH += . ../3rdparty/glew/include ../3rdparty/qjson-backport
+INCLUDEPATH += . ../3rdparty/glew/include
 
 DEFINES += GLEW_STATIC
 
@@ -66,6 +66,6 @@ SOURCES += App.cpp \
            QVectorEdit.cpp \
            QCodeEditor.cpp
 
-LIBS += -L../build -lGLEW -lqjson-backport
+LIBS += -L../build -lGLEW
 
 RESOURCES += textures.qrc
