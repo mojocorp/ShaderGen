@@ -37,12 +37,13 @@
 
 #include "SGSurfaces.h"
 #include "SGFrame.h"
-#define _USE_MATH_DEFINES
 #include "UtilityFunctions.h"
-#include <cmath>
 
-static const float pi = 3.14159265358979323846f;
-static const float twopi = 6.28318530717958647692f;
+#define _USE_MATH_DEFINES
+#include <cmath>
+#include <math.h>
+
+static const float TWO_PI = 6.28318530717958647692f;
 
 TParametricSurface::TParametricSurface()
   : slices(100)
@@ -133,17 +134,17 @@ TParametricSurface::vertex(QVector2D& domain, QVector3D& normal, QVector3D& p0, 
 void
 TKlein::eval(QVector2D& domain, QVector3D& range)
 {
-    float u = (1 - domain.x()) * twopi;
-    float v = domain.y() * twopi;
+    float u = (1 - domain.x()) * TWO_PI;
+    float v = domain.y() * TWO_PI;
 
     float x0 = 3 * cosf(u) * (1 + sinf(u)) + (2 * (1 - cosf(u) / 2)) * cosf(u) * cosf(v);
     float y0 = 8 * sinf(u) + (2 * (1 - cosf(u) / 2)) * sinf(u) * cosf(v);
 
-    float x1 = 3 * cosf(u) * (1 + sinf(u)) + (2 * (1 - cosf(u) / 2)) * cosf(v + pi);
+    float x1 = 3 * cosf(u) * (1 + sinf(u)) + (2 * (1 - cosf(u) / 2)) * cosf(v + M_PI);
     float y1 = 8 * sinf(u);
 
-    range.setX(u < pi ? x0 : x1);
-    range.setY(u < pi ? y0 : y1);
+    range.setX(u < M_PI ? x0 : x1);
+    range.setY(u < M_PI ? y0 : y1);
     range.setZ((2 * (1 - cosf(u) / 2)) * sinf(v));
     range = range / 10;
     range.setY(-range.y());
@@ -167,8 +168,8 @@ TTrefoil::eval(QVector2D& domain, QVector3D& range)
     const float b = 0.3f;
     const float c = 0.5f;
     const float d = 0.1f;
-    float u = (1 - domain.x()) * twopi * 2;
-    float v = domain.y() * twopi;
+    float u = (1 - domain.x()) * TWO_PI * 2;
+    float v = domain.y() * TWO_PI;
 
     float r = a + b * cosf(1.5f * u);
     float x = r * cosf(u);
@@ -203,12 +204,12 @@ TConic::eval(QVector2D& domain, QVector3D& range)
     const float c = 0.1f;
     const float n = 2;
 
-    float u = domain.x() * twopi;
-    float v = domain.y() * twopi;
+    float u = domain.x() * TWO_PI;
+    float v = domain.y() * TWO_PI;
 
-    range.setX(a * (1 - v / twopi) * cosf(n * v) * (1 + cosf(u)) + c * cosf(n * v));
-    range.setZ(a * (1 - v / twopi) * sinf(n * v) * (1 + cosf(u)) + c * sinf(n * v));
-    range.setY(b * v / twopi + a * (1 - v / twopi) * sinf(u) - 0.7f);
+    range.setX(a * (1 - v / TWO_PI) * cosf(n * v) * (1 + cosf(u)) + c * cosf(n * v));
+    range.setZ(a * (1 - v / TWO_PI) * sinf(n * v) * (1 + cosf(u)) + c * sinf(n * v));
+    range.setY(b * v / TWO_PI + a * (1 - v / TWO_PI) * sinf(u) - 0.7f);
     range *= 1.25;
     range.setY(range.y() + 0.125);
 
@@ -221,8 +222,8 @@ TTorus::eval(QVector2D& domain, QVector3D& range)
 {
     const float major = 0.8f;
     const float minor = 0.2f;
-    float u = domain.x() * twopi;
-    float v = domain.y() * twopi;
+    float u = domain.x() * TWO_PI;
+    float v = domain.y() * TWO_PI;
 
     range.setX((major + minor * cosf(v)) * cosf(u));
     range.setY((major + minor * cosf(v)) * sinf(u));
@@ -236,8 +237,8 @@ void
 TSphere::eval(QVector2D& domain, QVector3D& range)
 {
     const float radius = 1;
-    float u = fabsf(domain.y() * pi);
-    float v = fabsf(domain.x() * twopi);
+    float u = fabsf(domain.y() * M_PI);
+    float v = fabsf(domain.x() * TWO_PI);
 
     range.setX(radius * cosf(v) * sinf(u));
     range.setZ(radius * sinf(v) * sinf(u));
