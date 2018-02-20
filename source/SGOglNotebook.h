@@ -2,29 +2,30 @@
 
 #include <QTabWidget>
 
-class   SGOglLightNBPage;
-class   SGOglMaterialNBPage;
-class   SGOglFogNBPage;
-class   SGFixedGLState;
-class   SGOglTextureCoordNBPage;
-class   SGOglTextureEnvNBPage;
+class SGOglLightNBPage;
+class SGOglMaterialNBPage;
+class SGOglFogNBPage;
+class SGFixedGLState;
+class SGOglTextureCoordNBPage;
+class SGOglTextureEnvNBPage;
 
-class SGOglNotebook: public QTabWidget
+class SGOglNotebook : public QTabWidget
 {
     Q_OBJECT
-public:
+  public:
     SGOglNotebook(SGFixedGLState* glState, QWidget* parent = 0);
     ~SGOglNotebook();
 
     void setup();
-signals:
+  signals:
     void valueChanged();
-private slots:
+  private slots:
     void onValueChange();
-private:
-    SGOglLightNBPage     *lightPage;
-    SGOglMaterialNBPage  *materialPage;
-    SGOglFogNBPage       *fogPage;
-    SGOglTextureCoordNBPage *textureCoordPage;
-    SGOglTextureEnvNBPage *textureEnvPage;
+
+  private:
+    SGOglLightNBPage* lightPage;
+    SGOglMaterialNBPage* materialPage;
+    SGOglFogNBPage* fogPage;
+    SGOglTextureCoordNBPage* textureCoordPage;
+    SGOglTextureEnvNBPage* textureEnvPage;
 };

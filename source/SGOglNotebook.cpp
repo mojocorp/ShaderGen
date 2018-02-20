@@ -1,15 +1,15 @@
 #include "SGOglNotebook.h"
+#include "SGFixedGLState.h"
+#include "SGFrame.h"
+#include "SGOglFogNBPage.h"
 #include "SGOglLightNBPage.h"
 #include "SGOglMaterialNBPage.h"
-#include "SGOglFogNBPage.h"
 #include "SGOglTextureCoordNBPage.h"
 #include "SGOglTextureEnvNBPage.h"
-#include "SGFixedGLState.h"
 #include "SGTextures.h"
-#include "SGFrame.h"
 
 SGOglNotebook::SGOglNotebook(SGFixedGLState* glState, QWidget* parent)
-    : QTabWidget(parent)
+  : QTabWidget(parent)
 {
     lightPage = new SGOglLightNBPage(glState, this);
     materialPage = new SGOglMaterialNBPage(glState, this);
@@ -34,7 +34,8 @@ SGOglNotebook::~SGOglNotebook()
 {
 }
 
-void SGOglNotebook::setup()
+void
+SGOglNotebook::setup()
 {
     lightPage->setup();
     materialPage->setup();
@@ -43,7 +44,8 @@ void SGOglNotebook::setup()
     textureEnvPage->setup();
 }
 
-void SGOglNotebook::onValueChange()
+void
+SGOglNotebook::onValueChange()
 {
     emit valueChanged();
 }

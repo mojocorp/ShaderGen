@@ -37,28 +37,27 @@
 
 #pragma once
 
-#include <QWidget>
-#include <QCheckBox>
 #include <QButtonGroup>
+#include <QCheckBox>
 #include <QComboBox>
+#include <QWidget>
 
 class SGFixedGLState;
 class QColorButton;
 
-class SGOglTextureEnvNBPage: public QWidget
+class SGOglTextureEnvNBPage : public QWidget
 {
     Q_OBJECT
-public:
+  public:
     SGOglTextureEnvNBPage(SGFixedGLState* m_glState, QWidget* parent);
 
     void setup();
-signals:
+  signals:
     void valueChanged();
-private slots:
+  private slots:
     void onRadioTexApply();
     void onRadioTextureNum();
     void onCheckbox(int index);
-
 
     void onChoiceTextureChoose();
     void onChoiceTextureCombineMode();
@@ -72,9 +71,9 @@ private slots:
 
     void onButton();
 
-private:
-
-    enum TextureApplicationMethod {
+  private:
+    enum TextureApplicationMethod
+    {
         TEXTURE_APPLICATION_METHOD_REPLACE = 0,
         TEXTURE_APPLICATION_METHOD_MODULATE,
         TEXTURE_APPLICATION_METHOD_DECAL,
@@ -83,7 +82,8 @@ private:
         TEXTURE_APPLICATION_METHOD_COMBINE
     };
 
-    enum TextureCombineMode {
+    enum TextureCombineMode
+    {
         COMBINE_MODE_REPLACE = 0,
         COMBINE_MODE_MODULATE,
         COMBINE_MODE_ADD,
@@ -94,21 +94,24 @@ private:
         COMBINE_MODE_DOT3_RGBA
     };
 
-    enum TextureCombineSource {
+    enum TextureCombineSource
+    {
         COMBINE_SOURCE_TEXTURE = 0,
         COMBINE_SOURCE_CONSTANT,
         COMBINE_SOURCE_PRIMARY_COLOR,
         COMBINE_SOURCE_PREVIOUS
     };
 
-    enum TextureCombineOperand {
+    enum TextureCombineOperand
+    {
         COMBINE_OPERAND_SRC_COLOR = 0,
         COMBINE_OPERAND_ONE_MINUS_SRC_COLOR,
         COMBINE_OPERAND_SRC_ALPHA,
         COMBINE_OPERAND_ONE_MINUS_SRC_ALPHA
     };
 
-    enum TextureCombineScale {
+    enum TextureCombineScale
+    {
         COMBINE_SCALE_1_0 = 0,
         COMBINE_SCALE_2_0,
         COMBINE_SCALE_4_0
@@ -120,14 +123,12 @@ private:
     SGFixedGLState* m_glState;
 
     QButtonGroup *texApplyGroup, *textureGroup, *texCheckBoxGroup;
-    
-    QCheckBox *tex0CheckBox, *tex1CheckBox, *tex2CheckBox,
-    *tex3CheckBox, *tex4CheckBox;
-    
-    QComboBox  *texChoose, *texCombineModeChoose, *texCombineScaleChoose,
-    *texCombineSrc0RGBChoose, *texCombineSrc1RGBChoose,
-    *texCombineSrc2RGBChoose, *texCombineOperandArg0Choose,
-    *texCombineOperandArg1Choose, *texCombineOperandArg2Choose;
 
-    QColorButton *texEnvColorButton;
+    QCheckBox *tex0CheckBox, *tex1CheckBox, *tex2CheckBox, *tex3CheckBox, *tex4CheckBox;
+
+    QComboBox *texChoose, *texCombineModeChoose, *texCombineScaleChoose, *texCombineSrc0RGBChoose,
+      *texCombineSrc1RGBChoose, *texCombineSrc2RGBChoose, *texCombineOperandArg0Choose,
+      *texCombineOperandArg1Choose, *texCombineOperandArg2Choose;
+
+    QColorButton* texEnvColorButton;
 };

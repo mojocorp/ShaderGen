@@ -1,24 +1,24 @@
-#include <QMessageBox>
-#include <QMenuBar>
-#include <QStatusBar>
-#include <QSplitter>
 #include <QActionGroup>
 #include <QBoxLayout>
-#include <QSettings>
 #include <QFileDialog>
 #include <QJsonDocument>
+#include <QMenuBar>
+#include <QMessageBox>
+#include <QSettings>
+#include <QSplitter>
+#include <QStatusBar>
 
-#include "SGFrame.h"
-#include "SGFixedGLState.h"
-#include "SGCanvasWrapper.h"
 #include "SGCanvas.h"
-#include "SGShaderTextWindow.h"
+#include "SGCanvasWrapper.h"
+#include "SGFixedGLState.h"
+#include "SGFrame.h"
 #include "SGOglNotebook.h"
+#include "SGShaderTextWindow.h"
 
-SGFrame *sgframe_instance = 0;
+SGFrame* sgframe_instance = 0;
 
 SGFrame::SGFrame(const QString& title)
-    : QMainWindow()
+  : QMainWindow()
 {
     setWindowTitle(title);
 
@@ -34,9 +34,9 @@ SGFrame::SGFrame(const QString& title)
     oglNotebook->resize(800, 300);
     connect(oglNotebook, SIGNAL(valueChanged()), SLOT(setFixedGLMode()));
 
-    canvas      = new SGCanvasWrapper(this);
+    canvas = new SGCanvasWrapper(this);
     canvas->resize(400, 350);
-    shaderText  = new SGShaderTextWindow(this);
+    shaderText = new SGShaderTextWindow(this);
     shaderText->resize(450, 400);
 
     topSizer = new QSplitter(Qt::Vertical);
@@ -60,9 +60,10 @@ SGFrame::~SGFrame()
     delete shaderGen;
     delete textures;
     delete glState;
-} 
+}
 
-void SGFrame::createActions()
+void
+SGFrame::createActions()
 {
     openAct = new QAction(tr("&Open..."), this);
     openAct->setShortcuts(QKeySequence::Open);
@@ -107,7 +108,7 @@ void SGFrame::createActions()
     planeAct = new QAction(tr("Plane"), this);
     planeAct->setCheckable(true);
 
-    QActionGroup *modelGroup = new QActionGroup(this);
+    QActionGroup* modelGroup = new QActionGroup(this);
     modelGroup->addAction(torusAct);
     modelGroup->addAction(sphereAct);
     modelGroup->addAction(trefoilAct);
@@ -125,7 +126,8 @@ void SGFrame::createActions()
     connect(helpAct, SIGNAL(triggered()), this, SLOT(help()));
 }
 
-void SGFrame::createMenus()
+void
+SGFrame::createMenus()
 {
     fileMenu = menuBar()->addMenu(tr("&File"));
     fileMenu->addAction(openAct);
@@ -140,7 +142,6 @@ void SGFrame::createMenus()
     viewMenu->addSeparator();
     viewMenu->addAction(switchGLModeAct);
 
-
     modelMenu = menuBar()->addMenu(tr("&Model"));
     modelMenu->addAction(torusAct);
     modelMenu->addAction(sphereAct);
@@ -154,41 +155,47 @@ void SGFrame::createMenus()
     helpMenu->addAction(helpAct);
 }
 
-void SGFrame::createStatusBar()
+void
+SGFrame::createStatusBar()
 {
     statusBar()->showMessage(windowTitle());
 }
 
-void SGFrame::setCanvasMode(SGCanvas::GLMode a)
+void
+SGFrame::setCanvasMode(SGCanvas::GLMode a)
 {
     canvas->setMode(a);
     getCanvas()->updateGL();
 }
 
-void SGFrame::setStatusText(const QString &text)
+void
+SGFrame::setStatusText(const QString& text)
 {
     statusBar()->showMessage(text);
 }
 
-bool SGFrame::isPerspective() const
+bool
+SGFrame::isPerspective() const
 {
     return perspAct->isChecked();
 }
 
-int SGFrame::printOglError(const char *file, int line)
+int
+SGFrame::printOglError(const char* file, int line)
 {
     if (!sgframe_instance)
         return 0;
 
-    int    retCode = 0;
+    int retCode = 0;
 
     GLenum glErr = glGetError();
 
-    if(DEBUG_ON)
-    {
-        while (glErr != GL_NO_ERROR)
-        {
-            QString str = QString("glError in file %1:%2: %3").arg(file).arg(line).arg( (const char*)gluErrorString(glErr));
+    if (DEBUG_ON) {
+        while (glErr != GL_NO_ERROR) {
+            QString str = QString("glError in file %1:%2: %3")
+                            .arg(file)
+                            .arg(line)
+                            .arg((const char*)gluErrorString(glErr));
             sgframe_instance->getShaderTextWindow()->log(str);
             retCode = 1;
             glErr = glGetError();
@@ -197,7 +204,8 @@ int SGFrame::printOglError(const char *file, int line)
     return retCode;
 }
 
-bool SGFrame::loadFile(const QString& filename)
+bool
+SGFrame::loadFile(const QString& filename)
 {
     QFile loadFile(filename);
 
@@ -216,7 +224,8 @@ bool SGFrame::loadFile(const QString& filename)
     return true;
 }
 
-bool SGFrame::saveFile(const QString& filename) const
+bool
+SGFrame::saveFile(const QString& filename) const
 {
     QFile saveFile(filename);
     if (!saveFile.open(QIODevice::WriteOnly)) {
@@ -231,7 +240,8 @@ bool SGFrame::saveFile(const QString& filename) const
     return true;
 }
 
-void SGFrame::readSettings()
+void
+SGFrame::readSettings()
 {
     QSettings settings;
     restoreGeometry(settings.value("app/geometry").toByteArray());
@@ -240,7 +250,8 @@ void SGFrame::readSettings()
     horizSizer->restoreState(settings.value("app/horizSizer").toByteArray());
 }
 
-void SGFrame::closeEvent(QCloseEvent * event)
+void
+SGFrame::closeEvent(QCloseEvent* event)
 {
     QSettings settings;
     settings.setValue("app/geometry", saveGeometry());
@@ -251,7 +262,8 @@ void SGFrame::closeEvent(QCloseEvent * event)
     QMainWindow::closeEvent(event);
 }
 
-void SGFrame::modelActionTriggered(QAction *action)
+void
+SGFrame::modelActionTriggered(QAction* action)
 {
     if (action == torusAct) {
         getCanvas()->setModel(SGModels::ModelTorus);
@@ -270,36 +282,42 @@ void SGFrame::modelActionTriggered(QAction *action)
     getCanvas()->updateGL();
 }
 
-void SGFrame::viewActionTriggered()
+void
+SGFrame::viewActionTriggered()
 {
     getCanvas()->updateGL();
 }
 
-void SGFrame::switchGLModeTriggered()
+void
+SGFrame::switchGLModeTriggered()
 {
     canvas->switchMode();
     getCanvas()->updateGL();
 }
 
-void SGFrame::setFixedGLMode()
+void
+SGFrame::setFixedGLMode()
 {
     canvas->setMode(SGCanvas::GLModeChoiceFixed);
     getCanvas()->updateGL();
 }
 
-void SGFrame::help()
+void
+SGFrame::help()
 {
     QDialog help(this);
     help.setWindowTitle(tr("Help - ShaderGen"));
-    QVBoxLayout *layout = new QVBoxLayout(&help);
-    QTextEdit *txtEdit = new QTextEdit();
+    QVBoxLayout* layout = new QVBoxLayout(&help);
+    QTextEdit* txtEdit = new QTextEdit();
     txtEdit->setReadOnly(true);
     txtEdit->setPlainText(tr("\n"
                              "GLSL ShaderGen\n\n"
                              "INTENDED PURPOSE:\n\n"
-                             "The purpose of ShaderGen is to show the user how to emulate fixed functionality\n"
+                             "The purpose of ShaderGen is to show the user how to emulate fixed "
+                             "functionality\n"
                              "by using the OpenGL Shading Language.\n\n"
-                             "ShaderGen is intended to be educational, with the focus being on clarity of\n"
+                             "ShaderGen is intended to be educational, with the focus being on "
+                             "clarity of\n"
                              "generated code rather than efficiency.\n"
                              " \n"
                              " \n"
@@ -307,22 +325,32 @@ void SGFrame::help()
                              "The tool has three major parts:\n"
                              "* OpenGL Window : Displays rendered output.\n"
                              "* OpenGL State : Configure the OpenGL State using the tabs.\n"
-                             "* Shader Text Windows : Use the tabs to look through the generated shaders\n\n"
+                             "* Shader Text Windows : Use the tabs to look through the generated "
+                             "shaders\n\n"
                              "Operation:\n\n"
-                             "1. Using the tabs, setup the OpenGL state.  You will see your results updated"
-                             " in the OpenGL Window as you make state changes.  If you make a change requiring text"
+                             "1. Using the tabs, setup the OpenGL state.  You will see your "
+                             "results updated"
+                             " in the OpenGL Window as you make state changes.  If you make a "
+                             "change requiring text"
                              " entry, be sure to press the enter key to update the current state.\n"
-                             "2. Click the \"GENERATE SHADERS\" button on the Shader Windows panel to generate Vertex and Fragment Shaders\n"
-                             "3. Click \"COMPILE\" to compile the shaders, then check the \"Infolog\" text window for compilation results\n"
-                             "4. Click \"LINK\" to link the compilers, then see the \"Infolog\" window for results\n"
-                             "5. To switch the OpenGL Window to display the shaded model, click the \"Shader"
+                             "2. Click the \"GENERATE SHADERS\" button on the Shader Windows panel "
+                             "to generate Vertex and Fragment Shaders\n"
+                             "3. Click \"COMPILE\" to compile the shaders, then check the "
+                             "\"Infolog\" text window for compilation results\n"
+                             "4. Click \"LINK\" to link the compilers, then see the \"Infolog\" "
+                             "window for results\n"
+                             "5. To switch the OpenGL Window to display the shaded model, click "
+                             "the \"Shader"
                              " Equivalent\" mode radio button.\n"
                              "6. Click \"BUILD\" to do steps 2 through 5 together.\n\n\n"
                              "Note: The text boxes only accept values when enter key is pressed\n"
-                             "Note: You can edit the shaders in the text windows, and then press \"COMPILE\" and then \"LINK\" to"
+                             "Note: You can edit the shaders in the text windows, and then press "
+                             "\"COMPILE\" and then \"LINK\" to"
                              " to see the results of your edited shaders.\n"
-                             "Note: The eye coordinate distance between the model center and the viewpoint is 6.0.  The model is"
-                             " drawn with it's center at (0.0,0.0,6.0) in eye-coordinates and diagonals at (-1.0, -1.0, 5.0)"
+                             "Note: The eye coordinate distance between the model center and the "
+                             "viewpoint is 6.0.  The model is"
+                             " drawn with it's center at (0.0,0.0,6.0) in eye-coordinates and "
+                             "diagonals at (-1.0, -1.0, 5.0)"
                              " and (1.0, 1.0, 7.0).\n"
                              "                 "));
 
@@ -331,7 +359,8 @@ void SGFrame::help()
     help.exec();
 }
 
-void SGFrame::about()
+void
+SGFrame::about()
 {
     QMessageBox::about(this, "GLSL ShaderGen", "<center>"
                                                "<p><img src=\":textures/3Dlabs.png\"></p>"
@@ -340,7 +369,8 @@ void SGFrame::about()
                                                "</center>");
 }
 
-bool SGFrame::open()
+bool
+SGFrame::open()
 {
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open"), QDir::homePath(),
                                                     tr("ShaderGen Files (*.json)"));
@@ -350,7 +380,8 @@ bool SGFrame::open()
     return loadFile(fileName);
 }
 
-bool SGFrame::saveAs()
+bool
+SGFrame::saveAs()
 {
     QString fileName = QFileDialog::getSaveFileName(this, tr("Save As"), QDir::homePath(),
                                                     tr("ShaderGen Files (*.json)"));

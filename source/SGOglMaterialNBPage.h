@@ -37,29 +37,29 @@
 
 #pragma once
 
-#include <QWidget>
 #include <QDoubleSpinBox>
+#include <QWidget>
 
 class SGFixedGLState;
 class QColorButton;
 
-class SGOglMaterialNBPage: public QWidget
+class SGOglMaterialNBPage : public QWidget
 {
     Q_OBJECT
-public:
+  public:
     SGOglMaterialNBPage(SGFixedGLState* m_glState, QWidget* parent);
 
     void setup();
-signals:
+  signals:
     void valueChanged();
-private slots:
+  private slots:
     void ambientChanged();
     void diffuseChanged();
     void specularChanged();
     void emissionChanged();
     void shininessChanged();
 
-private:
+  private:
     SGFixedGLState* m_glState;
 
     QDoubleSpinBox* shininessMaterial;

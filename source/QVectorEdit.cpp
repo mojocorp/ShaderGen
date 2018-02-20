@@ -1,29 +1,31 @@
 #include "QVectorEdit.h"
-#include <QHBoxLayout>
 #include <QDoubleSpinBox>
+#include <QHBoxLayout>
 
 #include <limits>
 
-QVectorEdit::QVectorEdit(const QVector3D& vec, QWidget *parent) :
-    QWidget(parent)
+QVectorEdit::QVectorEdit(const QVector3D& vec, QWidget* parent)
+  : QWidget(parent)
 {
     init(QVector4D(vec, 0.0f));
 
     w->hide();
 }
 
-QVectorEdit::QVectorEdit(const QVector4D& vec, QWidget *parent) :
-    QWidget(parent)
+QVectorEdit::QVectorEdit(const QVector4D& vec, QWidget* parent)
+  : QWidget(parent)
 {
     init(vec);
 }
 
-void QVectorEdit::setValue(const QVector3D& vec)
+void
+QVectorEdit::setValue(const QVector3D& vec)
 {
     setValue(QVector4D(vec, 0.0f));
 }
 
-void QVectorEdit::setValue(const QVector4D& vec)
+void
+QVectorEdit::setValue(const QVector4D& vec)
 {
     blockSignals(true);
     x->setValue(vec.x());
@@ -33,26 +35,27 @@ void QVectorEdit::setValue(const QVector4D& vec)
     blockSignals(false);
 }
 
-QVector4D QVectorEdit::getValue() const
+QVector4D
+QVectorEdit::getValue() const
 {
-    return QVector4D(x->value(),
-                     y->value(),
-                     z->value(),
-                     w->value());
+    return QVector4D(x->value(), y->value(), z->value(), w->value());
 }
 
-QSize QVectorEdit::sizeHint() const
+QSize
+QVectorEdit::sizeHint() const
 {
     QSize s = x->sizeHint();
-    return QSize(4*40, s.height());
+    return QSize(4 * 40, s.height());
 }
 
-void QVectorEdit::onValueChange()
+void
+QVectorEdit::onValueChange()
 {
     emit valueChanged();
 }
 
-void QVectorEdit::init(const QVector4D& vec)
+void
+QVectorEdit::init(const QVector4D& vec)
 {
     QHBoxLayout* layout = new QHBoxLayout(this);
     layout->setSpacing(0);

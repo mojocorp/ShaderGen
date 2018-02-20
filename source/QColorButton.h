@@ -5,21 +5,23 @@
 class QColorButton : public QPushButton
 {
     Q_OBJECT
-public:
-    QColorButton(QWidget *parent = 0);
-    
+  public:
+    QColorButton(QWidget* parent = 0);
+
     //! Returns the currently selected color.
     QColor color() const;
 
-public slots:
+  public slots:
     //! Sets the currently selected color.
-    void setColor(const QColor & color);
+    void setColor(const QColor& color);
 
-signals:
-    void selected(const QColor & color);
-protected:
-    void paintEvent(QPaintEvent *);
+  signals:
+    void selected(const QColor& color);
+
+  protected:
+    void paintEvent(QPaintEvent*);
     void nextCheckState();
-private:
+
+  private:
     QColor col;
 };

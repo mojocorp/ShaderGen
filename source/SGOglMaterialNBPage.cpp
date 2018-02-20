@@ -34,19 +34,19 @@
 * POSSIBILITY OF SUCH DAMAGE.                                           *
 *                                                                       *
 ************************************************************************/
-#include <QGroupBox>
-#include <QGridLayout>
-#include <QVBoxLayout>
-#include <QLabel>
 #include "QColorButton.h"
+#include <QGridLayout>
+#include <QGroupBox>
+#include <QLabel>
+#include <QVBoxLayout>
 
 #include "SGFixedGLState.h"
 #include "SGOglMaterialNBPage.h"
 #include "UtilityFunctions.h"
 
 SGOglMaterialNBPage::SGOglMaterialNBPage(SGFixedGLState* glState, QWidget* parent)
-    :QWidget(parent),
-      m_glState(glState)
+  : QWidget(parent)
+  , m_glState(glState)
 {
     QGridLayout* materialSizer = new QGridLayout(this);
 
@@ -92,7 +92,8 @@ SGOglMaterialNBPage::SGOglMaterialNBPage(SGFixedGLState* glState, QWidget* paren
     setup();
 }
 
-void SGOglMaterialNBPage::setup()
+void
+SGOglMaterialNBPage::setup()
 {
     const Material& mat = m_glState->getMaterial();
     shininessMaterial->setValue(mat.materialShininess);
@@ -102,7 +103,8 @@ void SGOglMaterialNBPage::setup()
     emissionMaterial->setColor(mat.materialEmissionColorVector);
 }
 
-void SGOglMaterialNBPage::ambientChanged()
+void
+SGOglMaterialNBPage::ambientChanged()
 {
     Material& mat = m_glState->getMaterial();
 
@@ -111,7 +113,8 @@ void SGOglMaterialNBPage::ambientChanged()
     emit valueChanged();
 }
 
-void SGOglMaterialNBPage::diffuseChanged()
+void
+SGOglMaterialNBPage::diffuseChanged()
 {
     Material& mat = m_glState->getMaterial();
 
@@ -120,7 +123,8 @@ void SGOglMaterialNBPage::diffuseChanged()
     emit valueChanged();
 }
 
-void SGOglMaterialNBPage::specularChanged()
+void
+SGOglMaterialNBPage::specularChanged()
 {
     Material& mat = m_glState->getMaterial();
 
@@ -129,7 +133,8 @@ void SGOglMaterialNBPage::specularChanged()
     emit valueChanged();
 }
 
-void SGOglMaterialNBPage::emissionChanged()
+void
+SGOglMaterialNBPage::emissionChanged()
 {
     Material& mat = m_glState->getMaterial();
 
@@ -138,10 +143,10 @@ void SGOglMaterialNBPage::emissionChanged()
     emit valueChanged();
 }
 
-void SGOglMaterialNBPage::shininessChanged()
+void
+SGOglMaterialNBPage::shininessChanged()
 {
     m_glState->getMaterial().materialShininess = shininessMaterial->value();
 
     emit valueChanged();
 }
-

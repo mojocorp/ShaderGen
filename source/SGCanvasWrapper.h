@@ -37,26 +37,28 @@
 
 #pragma once
 
-#include <QFrame>
 #include <QButtonGroup>
+#include <QFrame>
 
 #include "SGCanvas.h"
 
 class SGFrame;
 
-class SGCanvasWrapper : public QFrame{
+class SGCanvasWrapper : public QFrame
+{
     Q_OBJECT
-public:
-    SGCanvasWrapper(SGFrame * parent);
-    SGCanvas::GLMode getMode(){ return canvas->getMode();}
+  public:
+    SGCanvasWrapper(SGFrame* parent);
+    SGCanvas::GLMode getMode() { return canvas->getMode(); }
     SGCanvas* getCanvas() { return canvas; }
     void switchMode();
     void setMode(SGCanvas::GLMode a);
 
-private slots:
+  private slots:
     void onRadio(int);
-private:
-    SGCanvas *canvas;
+
+  private:
+    SGCanvas* canvas;
     QButtonGroup* glModeChoice;
-    SGFrame *m_parent;
+    SGFrame* m_parent;
 };

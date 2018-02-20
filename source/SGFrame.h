@@ -39,8 +39,8 @@
 
 #include <QMainWindow>
 
-#include "SGShaderGenerator.h"
 #include "SGCanvasWrapper.h"
+#include "SGShaderGenerator.h"
 
 class SGOglNotebook;
 class SGShaderTextWindow;
@@ -54,34 +54,35 @@ class QSplitter;
 class SGFrame : public QMainWindow
 {
     Q_OBJECT
-public:
+  public:
     SGFrame(const QString& title);
     ~SGFrame();
 
-    SGFixedGLState* getGLState(){ return glState; }
+    SGFixedGLState* getGLState() { return glState; }
     SGTextures* getTextures() { return textures; }
 
-    SGShaderTextWindow* getShaderTextWindow(){ return shaderText; }
+    SGShaderTextWindow* getShaderTextWindow() { return shaderText; }
     SGCanvas* getCanvas() { return canvas->getCanvas(); }
 
     void setCanvasMode(SGCanvas::GLMode a);
-    void setStatusText(const QString &text);
+    void setStatusText(const QString& text);
     bool isPerspective() const;
 
-    const QString & getVertexShader() { return shaderGen->buildVertexShader(); }
-    const QString & getFragmentShader() { return shaderGen->buildFragmentShader(); }
+    const QString& getVertexShader() { return shaderGen->buildVertexShader(); }
+    const QString& getFragmentShader() { return shaderGen->buildFragmentShader(); }
 
     /// Returns 1 if an OpenGL error occurred, 0 otherwise.
-    static int printOglError(const char *file, int line);
+    static int printOglError(const char* file, int line);
 
     bool loadFile(const QString& filename);
     bool saveFile(const QString& filename) const;
 
     void readSettings();
-protected:
-    virtual void closeEvent(QCloseEvent * event);
-private slots:
-    void modelActionTriggered(QAction *action);
+
+  protected:
+    virtual void closeEvent(QCloseEvent* event);
+  private slots:
+    void modelActionTriggered(QAction* action);
     void viewActionTriggered();
     void switchGLModeTriggered();
     void setFixedGLMode();
@@ -89,36 +90,37 @@ private slots:
     void about();
     bool open();
     bool saveAs();
-private:
+
+  private:
     void createActions();
     void createMenus();
     void createStatusBar();
 
-    QMenu *fileMenu;
-    QMenu *viewMenu;
-    QMenu *modelMenu;
-    QMenu *helpMenu;
+    QMenu* fileMenu;
+    QMenu* viewMenu;
+    QMenu* modelMenu;
+    QMenu* helpMenu;
 
-    QAction *openAct;
-    QAction *saveAsAct;
-    QAction *exitAct;
-    QAction *perspAct;
-    QAction *switchGLModeAct;
-    QAction *torusAct;
-    QAction *sphereAct;
-    QAction *trefoilAct;
-    QAction *kleinAct;
-    QAction *conicAct;
-    QAction *planeAct;
-    QAction *aboutAct;
-    QAction *helpAct;
+    QAction* openAct;
+    QAction* saveAsAct;
+    QAction* exitAct;
+    QAction* perspAct;
+    QAction* switchGLModeAct;
+    QAction* torusAct;
+    QAction* sphereAct;
+    QAction* trefoilAct;
+    QAction* kleinAct;
+    QAction* conicAct;
+    QAction* planeAct;
+    QAction* aboutAct;
+    QAction* helpAct;
 
-    SGFixedGLState *glState;
-    SGTextures *textures;
-    SGOglNotebook *oglNotebook;
-    SGCanvasWrapper *canvas;
+    SGFixedGLState* glState;
+    SGTextures* textures;
+    SGOglNotebook* oglNotebook;
+    SGCanvasWrapper* canvas;
     SGShaderTextWindow* shaderText;
-    SGShaderGenerator *shaderGen;
-    QSplitter *topSizer;
-    QSplitter *horizSizer;
+    SGShaderGenerator* shaderGen;
+    QSplitter* topSizer;
+    QSplitter* horizSizer;
 };

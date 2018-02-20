@@ -37,11 +37,11 @@
 
 #pragma once
 
-#include <QWidget>
 #include <QButtonGroup>
-#include <QPushButton>
 #include <QCheckBox>
 #include <QDoubleSpinBox>
+#include <QPushButton>
+#include <QWidget>
 
 class SGFixedGLState;
 class QColorButton;
@@ -49,25 +49,25 @@ class QColorButton;
 class SGOglFogNBPage : public QWidget
 {
     Q_OBJECT
-public:
+  public:
     SGOglFogNBPage(SGFixedGLState* m_glState, QWidget* parent);
 
     void setup();
-signals:
+  signals:
     void valueChanged();
-protected slots:
+  protected slots:
     void onCheckbox();
-    void fogColorChanged(const QColor & color);
+    void fogColorChanged(const QColor& color);
     void fogDensityChanged(double);
     void fogStartChanged(double);
     void fogEndChanged(double);
     void onRadio(int index);
 
-private:
+  private:
     SGFixedGLState* m_glState;
 
     QButtonGroup* fogModeChoice;
-    QColorButton*   fogColor;
+    QColorButton* fogColor;
     QDoubleSpinBox* fogDensity;
     QDoubleSpinBox* fogStart;
     QDoubleSpinBox* fogEnd;

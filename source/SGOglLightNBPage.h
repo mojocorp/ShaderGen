@@ -37,11 +37,11 @@
 
 #pragma once
 
-#include <QWidget>
 #include <QButtonGroup>
 #include <QCheckBox>
-#include <QLineEdit>
 #include <QDoubleSpinBox>
+#include <QLineEdit>
+#include <QWidget>
 
 class SGFixedGLState;
 class QColorButton;
@@ -50,13 +50,13 @@ class QVectorEdit;
 class SGOglLightNBPage : public QWidget
 {
     Q_OBJECT
-public:
+  public:
     SGOglLightNBPage(SGFixedGLState* m_glState, QWidget* parent);
 
-     void setup();
-signals:
+    void setup();
+  signals:
     void valueChanged();
-private slots:
+  private slots:
     void onCheckbox(int index);
     void onRadio(int index);
     void lightingChanged();
@@ -73,7 +73,7 @@ private slots:
     void specularLightChanged();
     void diffuseLightChanged();
 
-private:
+  private:
     SGFixedGLState* m_glState;
 
     QButtonGroup *lightSelectionGroup, *lightCheckGroup;

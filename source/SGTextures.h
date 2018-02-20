@@ -53,8 +53,9 @@ struct ITexture
 
 class SGTextures
 {
-public:
-    enum TextureId {
+  public:
+    enum TextureId
+    {
         TextureLogo = 0,
         TextureLogoNormal,
         TextureRust,
@@ -70,16 +71,16 @@ public:
         TextureMetalSheetNormal
     };
 
-    SGTextures(SGFrame *frame, SGFixedGLState *state);
+    SGTextures(SGFrame* frame, SGFixedGLState* state);
     ~SGTextures();
     void load(const char* filename);
     void activate(TextureId id, GLint unit);
     void deactivate(GLint unit);
 
-private:
+  private:
     SGFrame* m_frame;
-    SGFixedGLState *glState;
-    ITexture textures[13] ;
+    SGFixedGLState* glState;
+    ITexture textures[13];
     QString TextureNames[13];
     QImage image1;
 };

@@ -38,18 +38,18 @@
 #include <QApplication>
 #include <QMessageBox>
 
+#include "SGFixedGLState.h"
 #include "SGFrame.h"
 #include "SGTextures.h"
-#include "SGFixedGLState.h"
 
 #include <QGLWidget>
 
 #include "UtilityFunctions.h"
 #include <stdio.h>
 
-SGTextures::SGTextures(SGFrame *frame, SGFixedGLState *state)
-    : m_frame(frame),
-      glState(state)
+SGTextures::SGTextures(SGFrame* frame, SGFixedGLState* state)
+  : m_frame(frame)
+  , glState(state)
 {
     TextureNames[0] = "3Dlabs.png";
     TextureNames[1] = "3DlabsNormal.png";
@@ -65,14 +65,15 @@ SGTextures::SGTextures(SGFrame *frame, SGFixedGLState *state)
     TextureNames[11] = "metalSheetDiffuse.png";
     TextureNames[12] = "metalSheetNormal.png";
 
-    memset( textures, 0, sizeof(textures) );
+    memset(textures, 0, sizeof(textures));
 }
 
 SGTextures::~SGTextures()
 {
 }
 
-void SGTextures::activate(TextureId id, GLint unit)
+void
+SGTextures::activate(TextureId id, GLint unit)
 {
     PrintOpenGLError();
 
@@ -87,19 +88,16 @@ void SGTextures::activate(TextureId id, GLint unit)
     int tempInteger;
     glGetIntegerv(GL_MAX_TEXTURE_UNITS_ARB, &tempInteger);
 
-    if(glState->getTexture(unit).texGen)
-    {
+    if (glState->getTexture(unit).texGen) {
         glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, glState->getTexture(unit).textureCoordinateGeneration);
         glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, glState->getTexture(unit).textureCoordinateGeneration);
         PrintOpenGLError();
-        if(glState->getTexture(unit).textureCoordinateGeneration == GL_OBJECT_LINEAR)
-        {
+        if (glState->getTexture(unit).textureCoordinateGeneration == GL_OBJECT_LINEAR) {
             glTexGenf(GL_S, GL_OBJECT_PLANE, glState->getTexture(unit).objectPlaneCoeffS);
             glTexGenf(GL_T, GL_OBJECT_PLANE, glState->getTexture(unit).objectPlaneCoeffT);
         }
         PrintOpenGLError();
-        if(glState->getTexture(unit).textureCoordinateGeneration == GL_EYE_LINEAR)
-        {
+        if (glState->getTexture(unit).textureCoordinateGeneration == GL_EYE_LINEAR) {
             PrintOpenGLError();
             glTexGenf(GL_S, GL_EYE_PLANE, glState->getTexture(unit).eyePlaneCoeffS);
             PrintOpenGLError();
@@ -112,21 +110,24 @@ void SGTextures::activate(TextureId id, GLint unit)
 
     PrintOpenGLError();
 
-    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, glState->getTexture(unit).textureApplicationMethod);
+    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE,
+              glState->getTexture(unit).textureApplicationMethod);
 
     glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, glState->getTexture(unit).texEnvColor);
 
     PrintOpenGLError();
 
-    if(glState->getTexture(unit).textureApplicationMethod == GL_COMBINE)
-    {
+    if (glState->getTexture(unit).textureApplicationMethod == GL_COMBINE) {
         glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, glState->getTexture(unit).textureCombineMode);
         glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_RGB, glState->getTexture(unit).textureCombineSource0);
         glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_RGB, glState->getTexture(unit).textureCombineSource1);
         glTexEnvi(GL_TEXTURE_ENV, GL_SRC2_RGB, glState->getTexture(unit).textureCombineSource2);
-        glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_RGB, glState->getTexture(unit).textureCombineOperand0);
-        glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_RGB, glState->getTexture(unit).textureCombineOperand1);
-        glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND2_RGB, glState->getTexture(unit).textureCombineOperand2);
+        glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_RGB,
+                  glState->getTexture(unit).textureCombineOperand0);
+        glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_RGB,
+                  glState->getTexture(unit).textureCombineOperand1);
+        glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND2_RGB,
+                  glState->getTexture(unit).textureCombineOperand2);
         glTexEnvf(GL_TEXTURE_ENV, GL_RGB_SCALE, glState->getTexture(unit).textureCombineScale);
     }
 
@@ -134,13 +135,10 @@ void SGTextures::activate(TextureId id, GLint unit)
 
     int index = id;
 
-    if( textures[index].glid )
-    {
-        glBindTexture( GL_TEXTURE_2D, textures[index].glid);
+    if (textures[index].glid) {
+        glBindTexture(GL_TEXTURE_2D, textures[index].glid);
         return;
-    }
-    else
-    {
+    } else {
         glGenTextures(1, &textures[index].glid);
         glBindTexture(GL_TEXTURE_2D, textures[index].glid);
     }
@@ -153,16 +151,18 @@ void SGTextures::activate(TextureId id, GLint unit)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
     QImage image = QImage(":/textures/" + TextureNames[index]);
-    if (image.isNull())
-    {
-        QMessageBox::critical(m_frame, "GLSL ShaderGen", QString("Unable to load image %1").arg(TextureNames[index]));
+    if (image.isNull()) {
+        QMessageBox::critical(m_frame, "GLSL ShaderGen",
+                              QString("Unable to load image %1").arg(TextureNames[index]));
         return;
     }
     image = QGLWidget::convertToGLFormat(image);
-    gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGBA, image.width(), image.height(),GL_RGBA, GL_UNSIGNED_BYTE, image.bits());
+    gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGBA, image.width(), image.height(), GL_RGBA,
+                      GL_UNSIGNED_BYTE, image.bits());
 }
 
-void SGTextures::deactivate(GLint unit)
+void
+SGTextures::deactivate(GLint unit)
 {
     glActiveTexture(GL_TEXTURE0 + unit);
     glDisable(GL_TEXTURE_2D);

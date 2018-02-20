@@ -35,61 +35,57 @@
 *                                                                       *
 ************************************************************************/
 
-#include "SGFrame.h"
 #include "SGSurfaces.h"
+#include "SGFrame.h"
 #define _USE_MATH_DEFINES
-#include <cmath>
 #include "UtilityFunctions.h"
+#include <cmath>
 
 static const float pi = 3.14159265358979323846f;
 static const float twopi = 6.28318530717958647692f;
 
 TParametricSurface::TParametricSurface()
-    : slices(100)
+  : slices(100)
 {
-
 }
 
 TParametricSurface::~TParametricSurface()
 {
-
 }
 
-// Draw a parametric surface.  'slices' is the tesselation factor.  Returns the number of vertices.
-int TParametricSurface::Draw()
+// Draw a parametric surface.  'slices' is the tesselation factor.  Returns the
+// number of vertices.
+int
+TParametricSurface::Draw()
 {
     int totalVerts = 0;
     int stacks = slices / 2;
-    du = 1.0f / (float) (slices-1);
-    dv = 1.0f / (float) (stacks-1);
+    du = 1.0f / (float)(slices - 1);
+    dv = 1.0f / (float)(stacks - 1);
 
     bool isNormalize = glIsEnabled(GL_NORMALIZE);
 
-    for (int i=0; i<slices; i++)
-    {
+    for (int i = 0; i < slices; i++) {
         float u = i * du;
         glBegin(GL_QUAD_STRIP);
-        flipped = flip(QVector2D(u,0));
+        flipped = flip(QVector2D(u, 0));
 
-        for (int j=0; j<stacks; j++)
-        {
+        for (int j = 0; j < stacks; j++) {
             float v = j * dv;
             QVector3D normal, p0;
             QVector2D domain = flipped ? QVector2D(u + du, v) : QVector2D(u, v);
             vertex(domain, normal, p0, isNormalize);
             if (isNormalize)
                 glNormal(normal);
-            for(int i=0; i<5; i++)
-            {
+            for (int i = 0; i < 5; i++) {
                 glMultiTexCoord(domain, GL_TEXTURE0 + i);
             }
             glVertex(p0);
-            domain =  flipped ? QVector2D(u, v) : QVector2D(u + du, v);
+            domain = flipped ? QVector2D(u, v) : QVector2D(u + du, v);
             vertex(domain, normal, p0, isNormalize);
             if (isNormalize)
                 glNormal(normal);
-            for(int i=0; i<5; i++)
-            {
+            for (int i = 0; i < 5; i++) {
                 glMultiTexCoord(domain, GL_TEXTURE0 + i);
             }
 
@@ -103,47 +99,45 @@ int TParametricSurface::Draw()
     return totalVerts;
 }
 
-// Send out a normal, texture coordinate, vertex coordinate, and an optional custom attribute.
-void TParametricSurface::vertex(QVector2D& domain, QVector3D& normal, QVector3D& p0, bool isNormalize)
+// Send out a normal, texture coordinate, vertex coordinate, and an optional
+// custom attribute.
+void
+TParametricSurface::vertex(QVector2D& domain, QVector3D& normal, QVector3D& p0, bool isNormalize)
 {
     QVector3D p1, p2, p3;
     float u = domain.x();
     float v = domain.y();
 
     eval(domain, p0);
-    QVector2D z1(u + du/2, v);
+    QVector2D z1(u + du / 2, v);
     eval(z1, p1);
-    QVector2D z2(u + du/2 + du, v);
+    QVector2D z2(u + du / 2 + du, v);
     eval(z2, p3);
 
-    if (flipped)
-    {
-        QVector2D z3(u + du/2, v - dv);
+    if (flipped) {
+        QVector2D z3(u + du / 2, v - dv);
         eval(z3, p2);
-    }
-    else
-    {
-        QVector2D z4(u + du/2, v + dv);
+    } else {
+        QVector2D z4(u + du / 2, v + dv);
         eval(z4, p2);
     }
-    if(isNormalize)
-    {
+    if (isNormalize) {
         normal = QVector3D::crossProduct(p3 - p1, p2 - p1);
-        if (normal.length() < 0.00001f)
-        {
+        if (normal.length() < 0.00001f) {
             normal = p0;
         }
         normal.normalize();
     }
 }
 
-void TKlein::eval(QVector2D& domain, QVector3D& range)
+void
+TKlein::eval(QVector2D& domain, QVector3D& range)
 {
     float u = (1 - domain.x()) * twopi;
     float v = domain.y() * twopi;
 
     float x0 = 3 * cosf(u) * (1 + sinf(u)) + (2 * (1 - cosf(u) / 2)) * cosf(u) * cosf(v);
-    float y0  = 8 * sinf(u) + (2 * (1 - cosf(u) / 2)) * sinf(u) * cosf(v);
+    float y0 = 8 * sinf(u) + (2 * (1 - cosf(u) / 2)) * sinf(u) * cosf(v);
 
     float x1 = 3 * cosf(u) * (1 + sinf(u)) + (2 * (1 - cosf(u) / 2)) * cosf(v + pi);
     float y1 = 8 * sinf(u);
@@ -158,13 +152,16 @@ void TKlein::eval(QVector2D& domain, QVector3D& range)
     domain.setX(domain.x() * 4);
 }
 
-// Flip the normals along a segment of the Klein bottle so that we don't need two-sided lighting.
-bool TKlein::flip(const QVector2D& domain)
+// Flip the normals along a segment of the Klein bottle so that we don't need
+// two-sided lighting.
+bool
+TKlein::flip(const QVector2D& domain)
 {
     return (domain.x() < .125);
 }
 
-void TTrefoil::eval(QVector2D& domain, QVector3D& range)
+void
+TTrefoil::eval(QVector2D& domain, QVector3D& range)
 {
     const float a = 0.5f;
     const float b = 0.3f;
@@ -183,10 +180,11 @@ void TTrefoil::eval(QVector2D& domain, QVector3D& range)
     dv.setY(-1.5f * b * sinf(1.5f * u) * sinf(u) + (a + b * cosf(1.5f * u)) * cosf(u));
     dv.setZ(1.5f * c * cosf(1.5f * u));
 
-    QVector3D q = dv; q.normalize();
+    QVector3D q = dv;
+    q.normalize();
     QVector3D qvn(q.y(), -q.x(), 0);
     qvn.normalize();
-    QVector3D ww = QVector3D::crossProduct(q,qvn);
+    QVector3D ww = QVector3D::crossProduct(q, qvn);
 
     range.setX(x + d * (qvn.x() * cosf(v) + ww.x() * sinf(v)));
     range.setY(y + d * (qvn.y() * cosf(v) + ww.y() * sinf(v)));
@@ -197,7 +195,8 @@ void TTrefoil::eval(QVector2D& domain, QVector3D& range)
     domain /= 3;
 }
 
-void TConic::eval(QVector2D& domain, QVector3D& range)
+void
+TConic::eval(QVector2D& domain, QVector3D& range)
 {
     const float a = 0.2f;
     const float b = 1.5f;
@@ -217,7 +216,8 @@ void TConic::eval(QVector2D& domain, QVector3D& range)
     domain.setY(domain.y() * 4);
 }
 
-void TTorus::eval(QVector2D& domain, QVector3D& range)
+void
+TTorus::eval(QVector2D& domain, QVector3D& range)
 {
     const float major = 0.8f;
     const float minor = 0.2f;
@@ -232,7 +232,8 @@ void TTorus::eval(QVector2D& domain, QVector3D& range)
     domain.setX(domain.x() * 4);
 }
 
-void TSphere::eval(QVector2D& domain, QVector3D& range)
+void
+TSphere::eval(QVector2D& domain, QVector3D& range)
 {
     const float radius = 1;
     float u = fabsf(domain.y() * pi);
@@ -246,15 +247,13 @@ void TSphere::eval(QVector2D& domain, QVector3D& range)
     domain.setX(1 - domain.x());
 }
 
-void TPlane::eval(QVector2D& domain, QVector3D& range)
+void
+TPlane::eval(QVector2D& domain, QVector3D& range)
 {
-    if (z < 0)
-    {
+    if (z < 0) {
         range.setX(-width * (domain.x() - 0.5f));
-        range.setY( width * (domain.y() - 0.5f));
-    }
-    else
-    {
+        range.setY(width * (domain.y() - 0.5f));
+    } else {
         range.setX(width * (domain.x() - 0.5f));
         range.setY(width * (domain.y() - 0.5f));
     }

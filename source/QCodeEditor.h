@@ -38,39 +38,34 @@
  **
  ****************************************************************************/
 
-#ifndef QCodeEditor_H
-#define QCodeEditor_H
+#pragma once
 
-#include <QPlainTextEdit>
 #include <QObject>
+#include <QPlainTextEdit>
 
 class QPaintEvent;
 class QResizeEvent;
 class QSize;
 class QWidget;
 
-
 class QCodeEditor : public QPlainTextEdit
 {
     Q_OBJECT
 
-public:
-    QCodeEditor(QWidget *parent = 0);
+  public:
+    QCodeEditor(QWidget* parent = 0);
 
-    void lineNumberAreaPaintEvent(QPaintEvent *event);
+    void lineNumberAreaPaintEvent(QPaintEvent* event);
     int lineNumberAreaWidth();
 
-protected:
-    void resizeEvent(QResizeEvent *event);
+  protected:
+    void resizeEvent(QResizeEvent* event);
 
-private slots:
+  private slots:
     void updateLineNumberAreaWidth(int newBlockCount);
     void highlightCurrentLine();
-    void updateLineNumberArea(const QRect &, int);
+    void updateLineNumberArea(const QRect&, int);
 
-private:
-    QWidget *lineNumberArea;
+  private:
+    QWidget* lineNumberArea;
 };
-
-
-#endif

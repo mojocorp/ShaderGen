@@ -43,12 +43,13 @@
 // Abstract base class representing a parametric surface.
 class TParametricSurface
 {
-public:
+  public:
     TParametricSurface();
     virtual ~TParametricSurface();
 
     int Draw();
-protected:
+
+  protected:
     virtual void eval(QVector2D& domain, QVector3D& range) = 0;
     virtual void vertex(QVector2D& domain, QVector3D& normal, QVector3D& p0, bool isNormalize);
     virtual bool flip(const QVector2D& /*domain*/) { return false; }
@@ -60,40 +61,45 @@ protected:
 
 class TSphere : public TParametricSurface
 {
-public:
+  public:
     void eval(QVector2D& domain, QVector3D& range);
 };
 
 class TTorus : public TParametricSurface
 {
-public:
+  public:
     void eval(QVector2D& domain, QVector3D& range);
 };
 
 class TConic : public TParametricSurface
 {
-public:
+  public:
     void eval(QVector2D& domain, QVector3D& range);
 };
 
 class TTrefoil : public TParametricSurface
 {
-public:
+  public:
     void eval(QVector2D& domain, QVector3D& range);
 };
 
 class TKlein : public TParametricSurface
 {
-public:
+  public:
     void eval(QVector2D& domain, QVector3D& range);
     bool flip(const QVector2D& domain);
 };
 
 class TPlane : public TParametricSurface
 {
-public:
-    TPlane(float z = 0, float width = 2) : z(z), width(width) {}
+  public:
+    TPlane(float z = 0, float width = 2)
+      : z(z)
+      , width(width)
+    {
+    }
     void eval(QVector2D& domain, QVector3D& range);
-protected:
+
+  protected:
     float z, width;
 };

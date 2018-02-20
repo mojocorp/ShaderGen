@@ -38,15 +38,16 @@
 #pragma once
 
 #include <QColor>
+#include <QJsonObject>
 #include <QVector3D>
 #include <QVector4D>
-#include <QJsonObject>
 
-#include "globals.h"
 #include "SGTextures.h"
+#include "globals.h"
 
-struct Light{
-    bool  lightEnabled;
+struct Light
+{
+    bool lightEnabled;
 
     float lightSpotExponent;
     float lightSpotCutoff;
@@ -61,7 +62,8 @@ struct Light{
     QColor lightSpecularColorVector;
 };
 
-struct Material{
+struct Material
+{
     QColor materialDiffuseColorVector;
     QColor materialAmbientColorVector;
     QColor materialSpecularColorVector;
@@ -70,15 +72,17 @@ struct Material{
     GLenum faceSelection;
 };
 
-struct Fog{
+struct Fog
+{
     float fogStart, fogEnd, fogDensity;
     QColor fogColorVector;
     GLenum fogMode;
 };
 
-struct Texture{
+struct Texture
+{
     bool textureEnabled;
-    
+
     bool texGen;
 
     QVector4D eyePlaneCoeffS;
@@ -91,7 +95,7 @@ struct Texture{
 
     GLenum textureApplicationMethod;
     GLenum textureCoordinateGeneration;
-    
+
     SGTextures::TextureId textureCurrentSelection;
 
     GLfloat textureCombineScale;
@@ -106,52 +110,53 @@ struct Texture{
     GLenum textureCombineOperand2;
 };
 
-//Wrapper
-class SGFixedGLState{
+// Wrapper
+class SGFixedGLState
+{
 
-public:
-    SGFixedGLState() { Init() ;}
+  public:
+    SGFixedGLState() { Init(); }
     ~SGFixedGLState();
     void Init();
 
-    Light&    getLight(int num){ return m_light[num] ;}
-    Material& getMaterial()    { return m_material   ;}
-    Fog&      getFog()         { return m_fog        ;}
-    Texture&  getTexture(int num) {return m_texture[num] ;}
+    Light& getLight(int num) { return m_light[num]; }
+    Material& getMaterial() { return m_material; }
+    Fog& getFog() { return m_fog; }
+    Texture& getTexture(int num) { return m_texture[num]; }
 
-    bool getLightingEnable()    const { return m_lightingEnable  ;}
-    bool getFogEnable()         const { return m_fogEnable       ;}
-    bool getNormalizeEnable()   const { return m_normalizeEnable ;}
-    bool getSeparateSpecularColorEnable() const { return m_separateSpecularColorEnable ;}
-    bool get2SidedLightingEnable() const { return m_2sidedLightingEnable;}
-    bool getTextureEnable()     const { return m_textureEnable;}
+    bool getLightingEnable() const { return m_lightingEnable; }
+    bool getFogEnable() const { return m_fogEnable; }
+    bool getNormalizeEnable() const { return m_normalizeEnable; }
+    bool getSeparateSpecularColorEnable() const { return m_separateSpecularColorEnable; }
+    bool get2SidedLightingEnable() const { return m_2sidedLightingEnable; }
+    bool getTextureEnable() const { return m_textureEnable; }
 
-    void setLightingEnable ( bool en ) { m_lightingEnable  = en   ;}
-    void setFogEnable      ( bool en ) { m_fogEnable       = en   ;}
-    void setNormalizeEnable( bool en ) { m_normalizeEnable = en   ;}
-    void setSeparateSpecularColorEnable ( bool en ) { m_separateSpecularColorEnable = en;}
-    void set2SidedLightingEnable( bool en ) { m_2sidedLightingEnable = en ;}
-    void setTextureEnable  ( bool en ) { m_textureEnable   = en   ;}
+    void setLightingEnable(bool en) { m_lightingEnable = en; }
+    void setFogEnable(bool en) { m_fogEnable = en; }
+    void setNormalizeEnable(bool en) { m_normalizeEnable = en; }
+    void setSeparateSpecularColorEnable(bool en) { m_separateSpecularColorEnable = en; }
+    void set2SidedLightingEnable(bool en) { m_2sidedLightingEnable = en; }
+    void setTextureEnable(bool en) { m_textureEnable = en; }
     GLenum getLightEnum(int a) const { return GL_LIGHT0 + a; }
     GLenum getTexEnum(int a) const { return GL_TEXTURE0 + a; }
 
-    bool getTexGenEnable()    { return m_texGenEnable;}
+    bool getTexGenEnable() { return m_texGenEnable; }
 
-    void setTexGenEnable( bool en ) { m_texGenEnable= en;}
+    void setTexGenEnable(bool en) { m_texGenEnable = en; }
 
-    void read(const QJsonObject &json);
-    void write(QJsonObject &json) const;
-private:
+    void read(const QJsonObject& json);
+    void write(QJsonObject& json) const;
+
+  private:
     void initLight(int num);
     void initMaterial();
     void initFog();
     void initTexture(int num);
 
-    bool m_fogEnable, m_lightingEnable, m_normalizeEnable, m_2sidedLightingEnable,
-    m_textureEnable, m_texGenEnable, m_separateSpecularColorEnable;
-    Light    m_light[NUM_LIGHTS];
-    Texture  m_texture[NUM_TEXTURES];
+    bool m_fogEnable, m_lightingEnable, m_normalizeEnable, m_2sidedLightingEnable, m_textureEnable,
+      m_texGenEnable, m_separateSpecularColorEnable;
+    Light m_light[NUM_LIGHTS];
+    Texture m_texture[NUM_TEXTURES];
     Material m_material;
-    Fog      m_fog;
-
+    Fog m_fog;
 };

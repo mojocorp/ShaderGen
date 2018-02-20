@@ -37,30 +37,30 @@
 
 #pragma once
 
-#include <QVector3D>
 #include <QMatrix4x4>
+#include <QVector3D>
 
 class SGCanvas;
 class QMouseEvent;
 
 class SGCanvasMouseHandler
 {
-public :
+  public:
     SGCanvasMouseHandler();
-    SGCanvasMouseHandler(SGCanvas * canvas);
-    void onMousePress(QMouseEvent *event);
-    void onMouseMove(QMouseEvent *event);
-    void onMouseRelease(QMouseEvent *event);
+    SGCanvasMouseHandler(SGCanvas* canvas);
+    void onMousePress(QMouseEvent* event);
+    void onMouseMove(QMouseEvent* event);
+    void onMouseRelease(QMouseEvent* event);
     void loadMatrix() const;
     void multMatrix() const;
     void reset();
-    void setCanvas(SGCanvas *canvas1) { canvas = canvas1; }
+    void setCanvas(SGCanvas* canvas1) { canvas = canvas1; }
     void stop();
     static const float StartZoom;
     static const float InertiaThreshold;
     static const int Delay;
 
-private:
+  private:
     int frames;
     SGCanvas* canvas;
     bool validStart;

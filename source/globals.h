@@ -45,7 +45,7 @@ const bool DEBUG_ON = true;
 
 const int NUM_TEXTURES = 5;
 
-//default values for lights
+// default values for lights
 const int NUM_LIGHTS_ENABLED_AT_START = 3;
 const int NUM_LIGHTS = 8;
 
@@ -77,7 +77,7 @@ const QColor DEFAULT_LIGHT_AMBIENT_COLOR_OTHER = QColor::fromRgbF(0.0f, 0.0f, 0.
 const QColor DEFAULT_LIGHT_DIFFUSE_COLOR_OTHER = QColor::fromRgbF(1.0f, 1.0f, 0.0f, 1.0f);
 const QColor DEFAULT_LIGHT_SPECULAR_COLOR_OTHER = QColor::fromRgbF(0.5f, 0.5f, 0.5f, 1.0f);
 
-//default values for materials
+// default values for materials
 const float DEFAULT_MATERIAL_SHININESS = 30.0f;
 
 const QColor DEFAULT_MATERIAL_AMBIENT_COLOR = QColor::fromRgbF(0.0f, 0.0f, 0.0f, 1.0f);
@@ -85,17 +85,17 @@ const QColor DEFAULT_MATERIAL_DIFFUSE_COLOR = QColor::fromRgbF(1.0f, 1.0f, 1.0f,
 const QColor DEFAULT_MATERIAL_SPECULAR_COLOR = QColor::fromRgbF(0.3f, 0.3f, 0.3f, 1.0f);
 const QColor DEFAULT_MATERIAL_EMISSION_COLOR = QColor::fromRgbF(0.3f, 0.3f, 0.3f, 1.0f);
 
-//default values for fog
+// default values for fog
 const float DEFAULT_FOG_DENSITY = 0.0f;
 const float DEFAULT_FOG_START = 5.0f;
 const float DEFAULT_FOG_END = 7.0f;
 
 const QColor DEFAULT_FOG_COLOR = QColor::fromRgbF(0.0f, 0.0f, 0.0f, 1.0f);
 
-//default values for textures
+// default values for textures
 const float DEFAULT_COMBINE_RGB_SCALE = 1.0f;
 
-const int NUM_TEXTURE_COORDS = 4; //s,t,r(p),q
+const int NUM_TEXTURE_COORDS = 4; // s,t,r(p),q
 
 const QColor DEFAULT_TEX_ENV_COLOR = QColor::fromRgbF(1.0f, 1.0f, 1.0f, 1.0f);
 const QVector4D DEFAULT_EYE_PLANE_COEFF_S = QVector4D(1.0f, 0.0f, 0.0f, 0.0f);

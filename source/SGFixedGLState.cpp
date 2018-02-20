@@ -35,25 +35,23 @@
 *                                                                       *
 ************************************************************************/
 
-#include <QJsonObject>
-#include <QJsonArray>
-#include "globals.h"
 #include "SGFixedGLState.h"
+#include "globals.h"
+#include <QJsonArray>
+#include <QJsonObject>
 
-void SGFixedGLState::Init()
+void
+SGFixedGLState::Init()
 {
-    for(int i=0; i< NUM_LIGHTS; i++)
-    {
+    for (int i = 0; i < NUM_LIGHTS; i++) {
         initLight(i);
     }
 
-    for(int i=0; i<NUM_LIGHTS_ENABLED_AT_START; i++)
-    {
+    for (int i = 0; i < NUM_LIGHTS_ENABLED_AT_START; i++) {
         m_light[i].lightEnabled = true;
     }
 
-    for(int i=0; i<NUM_TEXTURES; i++)
-    {
+    for (int i = 0; i < NUM_TEXTURES; i++) {
         initTexture(i);
     }
 
@@ -64,7 +62,7 @@ void SGFixedGLState::Init()
     setFogEnable(false);
     setSeparateSpecularColorEnable(false);
     set2SidedLightingEnable(false);
-    
+
     setTextureEnable(false);
     setTexGenEnable(false);
     setNormalizeEnable(true);
@@ -72,41 +70,41 @@ void SGFixedGLState::Init()
 
 SGFixedGLState::~SGFixedGLState()
 {
-
 }
 
-void SGFixedGLState::initLight(int num)
+void
+SGFixedGLState::initLight(int num)
 {
     m_light[num].lightEnabled = false;
 
-    switch(num){
-    case 1:
-        m_light[num].lightPositionVector = DEFAULT_LIGHT_POSITION_ONE;
-        m_light[num].lightAmbientColorVector = DEFAULT_LIGHT_AMBIENT_COLOR_ONE;
-        m_light[num].lightDiffuseColorVector = DEFAULT_LIGHT_DIFFUSE_COLOR_ONE;
-        m_light[num].lightSpecularColorVector = DEFAULT_LIGHT_SPECULAR_COLOR_ONE;
-        break;
-    case 2:
-        m_light[num].lightPositionVector = DEFAULT_LIGHT_POSITION_TWO;
-        m_light[num].lightAmbientColorVector  = DEFAULT_LIGHT_AMBIENT_COLOR_TWO;
-        m_light[num].lightDiffuseColorVector  = DEFAULT_LIGHT_DIFFUSE_COLOR_TWO;
-        m_light[num].lightSpecularColorVector = DEFAULT_LIGHT_SPECULAR_COLOR_TWO;
-        break;
-    case 3:
-        m_light[num].lightPositionVector = DEFAULT_LIGHT_POSITION_THREE;
-        m_light[num].lightAmbientColorVector  = DEFAULT_LIGHT_AMBIENT_COLOR_THREE;
-        m_light[num].lightDiffuseColorVector  = DEFAULT_LIGHT_DIFFUSE_COLOR_THREE;
-        m_light[num].lightSpecularColorVector = DEFAULT_LIGHT_SPECULAR_COLOR_THREE;
-        break;
-    default:
-        m_light[num].lightPositionVector = DEFAULT_LIGHT_POSITION_OTHER;
-        m_light[num].lightAmbientColorVector  = DEFAULT_LIGHT_AMBIENT_COLOR_OTHER;
-        m_light[num].lightDiffuseColorVector  = DEFAULT_LIGHT_DIFFUSE_COLOR_OTHER;
-        m_light[num].lightSpecularColorVector = DEFAULT_LIGHT_SPECULAR_COLOR_OTHER;
-        break;
+    switch (num) {
+        case 1:
+            m_light[num].lightPositionVector = DEFAULT_LIGHT_POSITION_ONE;
+            m_light[num].lightAmbientColorVector = DEFAULT_LIGHT_AMBIENT_COLOR_ONE;
+            m_light[num].lightDiffuseColorVector = DEFAULT_LIGHT_DIFFUSE_COLOR_ONE;
+            m_light[num].lightSpecularColorVector = DEFAULT_LIGHT_SPECULAR_COLOR_ONE;
+            break;
+        case 2:
+            m_light[num].lightPositionVector = DEFAULT_LIGHT_POSITION_TWO;
+            m_light[num].lightAmbientColorVector = DEFAULT_LIGHT_AMBIENT_COLOR_TWO;
+            m_light[num].lightDiffuseColorVector = DEFAULT_LIGHT_DIFFUSE_COLOR_TWO;
+            m_light[num].lightSpecularColorVector = DEFAULT_LIGHT_SPECULAR_COLOR_TWO;
+            break;
+        case 3:
+            m_light[num].lightPositionVector = DEFAULT_LIGHT_POSITION_THREE;
+            m_light[num].lightAmbientColorVector = DEFAULT_LIGHT_AMBIENT_COLOR_THREE;
+            m_light[num].lightDiffuseColorVector = DEFAULT_LIGHT_DIFFUSE_COLOR_THREE;
+            m_light[num].lightSpecularColorVector = DEFAULT_LIGHT_SPECULAR_COLOR_THREE;
+            break;
+        default:
+            m_light[num].lightPositionVector = DEFAULT_LIGHT_POSITION_OTHER;
+            m_light[num].lightAmbientColorVector = DEFAULT_LIGHT_AMBIENT_COLOR_OTHER;
+            m_light[num].lightDiffuseColorVector = DEFAULT_LIGHT_DIFFUSE_COLOR_OTHER;
+            m_light[num].lightSpecularColorVector = DEFAULT_LIGHT_SPECULAR_COLOR_OTHER;
+            break;
     }
     m_light[num].lightSpotDirectionVector = DEFAULT_LIGHT_SPOT_DIRECTION;
-    
+
     m_light[num].lightSpotCutoff = DEFAULT_SPOT_CUT;
     m_light[num].lightSpotExponent = DEFAULT_SPOT_EXP;
     m_light[num].lightConstantAttenuation = DEFAULT_LIGHT_CONST_ATTEN;
@@ -114,7 +112,8 @@ void SGFixedGLState::initLight(int num)
     m_light[num].lightQuadraticAttenuation = DEFAULT_LIGHT_QUAD_ATTEN;
 }
 
-void SGFixedGLState::initMaterial()
+void
+SGFixedGLState::initMaterial()
 {
     m_material.materialAmbientColorVector = DEFAULT_MATERIAL_AMBIENT_COLOR;
     m_material.materialDiffuseColorVector = DEFAULT_MATERIAL_DIFFUSE_COLOR;
@@ -125,18 +124,20 @@ void SGFixedGLState::initMaterial()
     m_material.materialEmissionColorVector = DEFAULT_MATERIAL_EMISSION_COLOR;
 }
 
-void SGFixedGLState::initFog()
+void
+SGFixedGLState::initFog()
 {
-    m_fog.fogMode    = GL_LINEAR;
+    m_fog.fogMode = GL_LINEAR;
 
     m_fog.fogDensity = DEFAULT_FOG_DENSITY;
-    m_fog.fogStart   = DEFAULT_FOG_START;
-    m_fog.fogEnd     = DEFAULT_FOG_END;
+    m_fog.fogStart = DEFAULT_FOG_START;
+    m_fog.fogEnd = DEFAULT_FOG_END;
 
     m_fog.fogColorVector = DEFAULT_FOG_COLOR;
 }
 
-void SGFixedGLState::initTexture(int num)
+void
+SGFixedGLState::initTexture(int num)
 {
     m_texture[num].textureEnabled = false;
 
@@ -159,7 +160,9 @@ void SGFixedGLState::initTexture(int num)
     m_texture[num].objectPlaneCoeffT = DEFAULT_OBJ_PLANE_COEFF_T;
 }
 
-static QJsonArray fromVector3D(const QVector3D &vec) {
+static QJsonArray
+fromVector3D(const QVector3D& vec)
+{
     QJsonArray array;
     array.append(vec.x());
     array.append(vec.y());
@@ -167,7 +170,9 @@ static QJsonArray fromVector3D(const QVector3D &vec) {
     return array;
 }
 
-static QJsonArray fromVector4D(const QVector4D &vec) {
+static QJsonArray
+fromVector4D(const QVector4D& vec)
+{
     QJsonArray array;
     array.append(vec.x());
     array.append(vec.y());
@@ -176,22 +181,23 @@ static QJsonArray fromVector4D(const QVector4D &vec) {
     return array;
 }
 
-static QVector3D toVector3D(const QJsonValueRef &value) {
+static QVector3D
+toVector3D(const QJsonValueRef& value)
+{
     QJsonArray array = value.toArray();
-    return QVector3D(array[0].toDouble(),
-                     array[1].toDouble(),
-                     array[2].toDouble());
+    return QVector3D(array[0].toDouble(), array[1].toDouble(), array[2].toDouble());
 }
 
-static QVector4D toVector4D(const QJsonValueRef &value) {
+static QVector4D
+toVector4D(const QJsonValueRef& value)
+{
     QJsonArray array = value.toArray();
-    return QVector4D(array[0].toDouble(),
-                     array[1].toDouble(),
-                     array[2].toDouble(),
+    return QVector4D(array[0].toDouble(), array[1].toDouble(), array[2].toDouble(),
                      array[3].toDouble());
 }
 
-void SGFixedGLState::read(const QJsonObject &json)
+void
+SGFixedGLState::read(const QJsonObject& json)
 {
     m_fogEnable = json["fogEnable"].toBool();
     m_lightingEnable = json["lightingEnable"].toBool();
@@ -202,7 +208,7 @@ void SGFixedGLState::read(const QJsonObject &json)
     m_separateSpecularColorEnable = json["separateSpecularColorEnable"].toBool();
 
     QJsonArray lightArray = json["lights"].toArray();
-    for (int i=0; i<lightArray.size(); ++i) {
+    for (int i = 0; i < lightArray.size(); ++i) {
         QJsonObject lightObject = lightArray[i].toObject();
 
         m_light[i].lightEnabled = lightObject["enabled"].toBool();
@@ -215,13 +221,16 @@ void SGFixedGLState::read(const QJsonObject &json)
 
         m_light[i].lightSpotDirectionVector = toVector3D(lightObject["spotDirectionVector"]);
         m_light[i].lightPositionVector = toVector4D(lightObject["positionVector"]);
-        m_light[i].lightAmbientColorVector.setNamedColor(lightObject["ambientColorVector"].toString());
-        m_light[i].lightDiffuseColorVector.setNamedColor(lightObject["diffuseColorVector"].toString());
-        m_light[i].lightSpecularColorVector.setNamedColor(lightObject["specularColorVector"].toString());
+        m_light[i].lightAmbientColorVector.setNamedColor(
+          lightObject["ambientColorVector"].toString());
+        m_light[i].lightDiffuseColorVector.setNamedColor(
+          lightObject["diffuseColorVector"].toString());
+        m_light[i].lightSpecularColorVector.setNamedColor(
+          lightObject["specularColorVector"].toString());
     }
 
     QJsonArray textureArray = json["textures"].toArray();
-    for (int i=0; i<textureArray.size(); ++i) {
+    for (int i = 0; i < textureArray.size(); ++i) {
         QJsonObject textureObject = textureArray[i].toObject();
         m_texture[i].textureEnabled = textureObject["textureEnabled"].toBool();
         m_texture[i].texGen = textureObject["texGen"].toBool();
@@ -232,7 +241,8 @@ void SGFixedGLState::read(const QJsonObject &json)
         m_texture[i].texEnvColor.setNamedColor(textureObject["texEnvColor"].toString());
         m_texture[i].textureApplicationMethod = textureObject["applicationMethod"].toInt();
         m_texture[i].textureCoordinateGeneration = textureObject["coordinateGeneration"].toInt();
-        m_texture[i].textureCurrentSelection = (SGTextures::TextureId)textureObject["currentSelection"].toInt();
+        m_texture[i].textureCurrentSelection =
+          (SGTextures::TextureId)textureObject["currentSelection"].toInt();
         m_texture[i].textureCombineScale = textureObject["combineScale"].toDouble();
         m_texture[i].textureCombineMode = textureObject["combineMode"].toInt();
         m_texture[i].textureCombineSource0 = textureObject["combineSource0"].toInt();
@@ -246,8 +256,10 @@ void SGFixedGLState::read(const QJsonObject &json)
     QJsonObject materialObject = json["material"].toObject();
     m_material.materialDiffuseColorVector.setNamedColor(materialObject["diffuseColor"].toString());
     m_material.materialAmbientColorVector.setNamedColor(materialObject["ambientColor"].toString());
-    m_material.materialSpecularColorVector.setNamedColor(materialObject["specularColor"].toString());
-    m_material.materialEmissionColorVector.setNamedColor(materialObject["emissionColor"].toString());
+    m_material.materialSpecularColorVector.setNamedColor(
+      materialObject["specularColor"].toString());
+    m_material.materialEmissionColorVector.setNamedColor(
+      materialObject["emissionColor"].toString());
     m_material.materialShininess = materialObject["shininess"].toDouble();
     m_material.faceSelection = materialObject["faceSelection"].toInt();
 
@@ -259,18 +271,18 @@ void SGFixedGLState::read(const QJsonObject &json)
     m_fog.fogMode = fogObject["mode"].toInt();
 }
 
-void SGFixedGLState::write(QJsonObject &json) const
+void
+SGFixedGLState::write(QJsonObject& json) const
 {
     json["fogEnable"] = m_fogEnable;
     json["lightingEnable"] = m_lightingEnable;
     json["normalizeEnable"] = m_normalizeEnable;
-    json["2sidedLightingEnable"] = m_2sidedLightingEnable,
-    json["textureEnable"] = m_textureEnable;
+    json["2sidedLightingEnable"] = m_2sidedLightingEnable, json["textureEnable"] = m_textureEnable;
     json["texGenEnable"] = m_texGenEnable;
     json["separateSpecularColorEnable"] = m_separateSpecularColorEnable;
 
     QJsonArray lightArray;
-    for (int i=0; i<NUM_LIGHTS; i++) {
+    for (int i = 0; i < NUM_LIGHTS; i++) {
         QJsonObject lightObject;
         lightObject["enabled"] = m_light[i].lightEnabled;
 
@@ -290,7 +302,7 @@ void SGFixedGLState::write(QJsonObject &json) const
     json["lights"] = lightArray;
 
     QJsonArray textureArray;
-    for (int i=0; i<NUM_TEXTURES; i++) {
+    for (int i = 0; i < NUM_TEXTURES; i++) {
         QJsonObject textureObject;
         textureObject["textureEnabled"] = m_texture[i].textureEnabled;
         textureObject["texGen"] = m_texture[i].texGen;

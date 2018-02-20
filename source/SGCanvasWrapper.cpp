@@ -35,29 +35,29 @@
 *                                                                       *
 ************************************************************************/
 
-#include <QVBoxLayout>
 #include <QGroupBox>
 #include <QRadioButton>
+#include <QVBoxLayout>
 
-#include "SGCanvasWrapper.h"
 #include "SGCanvas.h"
+#include "SGCanvasWrapper.h"
 #include "SGFrame.h"
 
-SGCanvasWrapper::SGCanvasWrapper(SGFrame *parent)
-    :QFrame(parent)
+SGCanvasWrapper::SGCanvasWrapper(SGFrame* parent)
+  : QFrame(parent)
 {
     m_parent = parent;
 
-    QVBoxLayout *topSizer = new QVBoxLayout();
+    QVBoxLayout* topSizer = new QVBoxLayout();
 
-    canvas      = new SGCanvas(parent, this);
+    canvas = new SGCanvas(parent, this);
     canvas->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
-    QGroupBox *gb = new QGroupBox(tr("Select GL Mode"), this);
+    QGroupBox* gb = new QGroupBox(tr("Select GL Mode"), this);
     gb->setLayout(new QHBoxLayout);
-    QRadioButton *fixed = new QRadioButton(tr("FIXED FUNCTIONALITY MODE"), gb);
+    QRadioButton* fixed = new QRadioButton(tr("FIXED FUNCTIONALITY MODE"), gb);
     fixed->setChecked(true);
-    QRadioButton *shader = new QRadioButton(tr("EQUIVALENT SHADER MODE "), gb);
+    QRadioButton* shader = new QRadioButton(tr("EQUIVALENT SHADER MODE "), gb);
     gb->layout()->addWidget(fixed);
     gb->layout()->addWidget(shader);
 
@@ -71,28 +71,29 @@ SGCanvasWrapper::SGCanvasWrapper(SGFrame *parent)
     setLayout(topSizer);
 }
 
-void SGCanvasWrapper::onRadio(int id)
+void
+SGCanvasWrapper::onRadio(int id)
 {
     canvas->setMode((SGCanvas::GLMode)id);
 }
 
-void SGCanvasWrapper::switchMode()
+void
+SGCanvasWrapper::switchMode()
 {
-    if(canvas->getMode() == SGCanvas::GLModeChoiceFixed) {
+    if (canvas->getMode() == SGCanvas::GLModeChoiceFixed) {
         canvas->setMode(SGCanvas::GLModeChoiceShader);
     } else {
         canvas->setMode(SGCanvas::GLModeChoiceFixed);
     }
 }
 
-void SGCanvasWrapper::setMode(SGCanvas::GLMode mode)
+void
+SGCanvasWrapper::setMode(SGCanvas::GLMode mode)
 {
     canvas->setMode(mode);
-    if(mode == SGCanvas::GLModeChoiceFixed) {
+    if (mode == SGCanvas::GLModeChoiceFixed) {
         glModeChoice->button(0)->setChecked(true);
     } else {
         glModeChoice->button(1)->setChecked(true);
     }
 }
-
-

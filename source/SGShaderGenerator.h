@@ -45,14 +45,15 @@
 
 class SGShaderGenerator
 {
-public:
+  public:
     SGShaderGenerator();
     ~SGShaderGenerator();
-    const QString & buildVertexShader();
-    const QString & buildFragmentShader();
+    const QString& buildVertexShader();
+    const QString& buildFragmentShader();
 
-private:
-    typedef struct _currentTextureState{
+  private:
+    typedef struct _currentTextureState
+    {
         GLboolean textureCoordinateGenerationReflection;
         GLboolean textureCoordinateGenerationSphereMap;
         GLboolean textureCoordinateGenerationEye;
@@ -69,26 +70,26 @@ private:
     bool fMapSphere, fMapReflection, vTexGenEnable;
 
     GLboolean texturesEnabled;
-    
+
     CurrentTextureState currentTexture[NUM_TEXTURES];
 
     void initTextures();
-    void buildFragFog(QString &str);
-    void buildFragTex(QString &str);
+    void buildFragFog(QString& str);
+    void buildFragTex(QString& str);
 
-    void buildFragSeparateSpecularColor(QString &str);
+    void buildFragSeparateSpecularColor(QString& str);
 
-    void buildLightCode  ( QString &str );
-    void buildVertMain   ( QString &str );
-    void buildFuncFnormal( QString &str );
-    void buildFuncFog    ( QString &str );
-    void buildFuncPoint  ( QString &str );
-    void buildTexCoord   ( QString &str );
+    void buildLightCode(QString& str);
+    void buildVertMain(QString& str);
+    void buildFuncFnormal(QString& str);
+    void buildFuncFog(QString& str);
+    void buildFuncPoint(QString& str);
+    void buildTexCoord(QString& str);
 
-    void addFuncLightDirectional   (QString &str) const;
-    void addFuncLightPoint         (QString &str) const;
-    void addFuncLightSpot          (QString &str) const;
-    void addFuncSphereMap          (QString &str) const;
-    void addFuncReflectionMap      (QString &str) const;
-    void addFuncLightSpotDirection (QString &str) const;
+    void addFuncLightDirectional(QString& str) const;
+    void addFuncLightPoint(QString& str) const;
+    void addFuncLightSpot(QString& str) const;
+    void addFuncSphereMap(QString& str) const;
+    void addFuncReflectionMap(QString& str) const;
+    void addFuncLightSpotDirection(QString& str) const;
 };

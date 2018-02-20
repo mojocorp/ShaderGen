@@ -49,22 +49,23 @@ class SGFixedGLState;
 
 class SGCanvas : public QGLWidget
 {
-public:
-    SGCanvas(SGFrame* frame, QWidget* parent=0);
+  public:
+    SGCanvas(SGFrame* frame, QWidget* parent = 0);
     ~SGCanvas();
 
-    SGFrame* getFrame(){ return m_frame;}
+    SGFrame* getFrame() { return m_frame; }
 
-    bool linkShaders(const QString & vertexShader, const QString & fragmentShader);
-    bool compileShaders(const QString & vertexShader, const QString & fragmentShader);
+    bool linkShaders(const QString& vertexShader, const QString& fragmentShader);
+    bool compileShaders(const QString& vertexShader, const QString& fragmentShader);
 
-    //Mode for GL, Fixed or Shader
-    enum GLMode {
+    // Mode for GL, Fixed or Shader
+    enum GLMode
+    {
         GLModeChoiceFixed,
         GLModeChoiceShader
     };
     void setMode(GLMode a);
-    GLMode getMode() { return mode;}
+    GLMode getMode() { return mode; }
 
     int switchToShaderMode();
 
@@ -75,29 +76,31 @@ public:
 
     void initializeGL();
     void paintGL();
-    void SetZoom(float zoom) { m_zoom = zoom;}
+    void SetZoom(float zoom) { m_zoom = zoom; }
     void GLSetup();
-    void setModel(SGModels::ModelId id) { modelCurrent = id;}
+    void setModel(SGModels::ModelId id) { modelCurrent = id; }
     void printInfoLog(GLuint obj);
 
     GLuint logo;
-protected:
-    virtual void keyPressEvent(QKeyEvent * event);
-    virtual void mousePressEvent(QMouseEvent * event);
-    virtual void mouseMoveEvent(QMouseEvent * event);
-    virtual void mouseReleaseEvent(QMouseEvent * event);
-private:
+
+  protected:
+    virtual void keyPressEvent(QKeyEvent* event);
+    virtual void mousePressEvent(QMouseEvent* event);
+    virtual void mouseMoveEvent(QMouseEvent* event);
+    virtual void mouseReleaseEvent(QMouseEvent* event);
+
+  private:
     SGFixedGLState* getGLState();
 
     GLMode mode;
-    SGModels *models;
+    SGModels* models;
     SGCanvasMouseHandler mouse;
     SGModels::ModelId modelCurrent;
     SGFrame* m_frame;
     int m_width, m_height;
     float m_left, m_right, m_bottom, m_top, m_znear, m_zfar, m_zoom;
 
-    GLint getUniLoc(unsigned int program, const GLchar *name);
+    GLint getUniLoc(unsigned int program, const GLchar* name);
 
     bool glReady, glCompiled, glLinked;
     unsigned int vertS, fragS, prog;

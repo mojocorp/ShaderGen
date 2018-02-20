@@ -50,13 +50,13 @@ SGModels::SGModels()
 
 SGModels::~SGModels()
 {
-    for (int i=0; i<6; i++)
-    {
+    for (int i = 0; i < 6; i++) {
         delete surface[i];
     }
 }
 
-void SGModels::drawModel(ModelId id)
+void
+SGModels::drawModel(ModelId id)
 {
     surface[id]->Draw();
 }

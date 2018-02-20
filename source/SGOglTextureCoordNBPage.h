@@ -35,26 +35,26 @@
 *                                                                       *
 ************************************************************************/
 
-# pragma once
+#pragma once
 
-#include <QWidget>
-#include <QCheckBox>
 #include <QButtonGroup>
+#include <QCheckBox>
 #include <QLineEdit>
+#include <QWidget>
 
 class SGFixedGLState;
 class QVectorEdit;
 
-class SGOglTextureCoordNBPage: public QWidget
+class SGOglTextureCoordNBPage : public QWidget
 {
     Q_OBJECT
-public:
+  public:
     SGOglTextureCoordNBPage(SGFixedGLState* m_glState, QWidget* parent);
 
     void setup();
-signals:
+  signals:
     void valueChanged();
-private slots:
+  private slots:
     void onRadioTexCoordGen(int index);
     void onRadioTextureCoordUnit(int index);
     void onCheckbox(int index);
@@ -63,9 +63,9 @@ private slots:
     void onTextEnterObjCoeffS();
     void onTextEnterObjCoeffT();
 
-private:
-
-    enum TextureCoordinateGenerationMethod {
+  private:
+    enum TextureCoordinateGenerationMethod
+    {
         TEXTURE_COORDINATE_OBJECT_LINEAR = 0,
         TEXTURE_COORDINATE_EYE_LINEAR,
         TEXTURE_COORDINATE_SPHERE_MAP,
@@ -75,11 +75,13 @@ private:
 
     SGFixedGLState* m_glState;
 
-    QCheckBox *tex0TexGenEnableCheckBox, *tex1TexGenEnableCheckBox, *tex2TexGenEnableCheckBox, *tex3TexGenEnableCheckBox, *tex4TexGenEnableCheckBox;
-    
+    QCheckBox *tex0TexGenEnableCheckBox, *tex1TexGenEnableCheckBox, *tex2TexGenEnableCheckBox,
+      *tex3TexGenEnableCheckBox, *tex4TexGenEnableCheckBox;
+
     QButtonGroup *coordGenGroup, *texCoordSelGroup, *texCoordUnitGroup;
-    
-    QVectorEdit *eyePlaneCoeffTextS, *eyePlaneCoeffTextT, *objectPlaneCoeffTextS, *objectPlaneCoeffTextT;
+
+    QVectorEdit *eyePlaneCoeffTextS, *eyePlaneCoeffTextT, *objectPlaneCoeffTextS,
+      *objectPlaneCoeffTextT;
 
     void updateWidgets();
 };

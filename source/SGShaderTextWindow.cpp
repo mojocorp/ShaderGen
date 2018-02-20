@@ -1,17 +1,17 @@
-#include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QPushButton>
+#include <QVBoxLayout>
 
-#include "SGShaderTextWindow.h"
-#include "SGFrame.h"
-#include "SGCanvas.h"
 #include "QCodeEditor.h"
+#include "SGCanvas.h"
+#include "SGFrame.h"
+#include "SGShaderTextWindow.h"
 
-SGShaderTextWindow::SGShaderTextWindow(SGFrame *frame)
-    : QFrame(frame),
-      m_frame(frame),
-      m_haveCompiled(false),
-      m_haveLinked(false)
+SGShaderTextWindow::SGShaderTextWindow(SGFrame* frame)
+  : QFrame(frame)
+  , m_frame(frame)
+  , m_haveCompiled(false)
+  , m_haveLinked(false)
 {
     notebook = new QTabWidget(this);
 
@@ -26,14 +26,14 @@ SGShaderTextWindow::SGShaderTextWindow(SGFrame *frame)
     textBoxFrag->setFont(fixedFont);
     textBoxInfo->setFont(fixedFont);
 
-    notebook->addTab( textBoxVert, "Vertex Shader");
-    notebook->addTab( textBoxFrag, "Fragment Shader");
-    notebook->addTab( textBoxInfo, "InfoLog");
+    notebook->addTab(textBoxVert, "Vertex Shader");
+    notebook->addTab(textBoxFrag, "Fragment Shader");
+    notebook->addTab(textBoxInfo, "InfoLog");
 
-    QVBoxLayout *topSizer = new QVBoxLayout();
-    QHBoxLayout *button_sizer = new QHBoxLayout();
+    QVBoxLayout* topSizer = new QVBoxLayout();
+    QHBoxLayout* button_sizer = new QHBoxLayout();
 
-    QPushButton *pb;
+    QPushButton* pb;
     pb = new QPushButton("1. GENERATE SHADERS", this);
     connect(pb, SIGNAL(clicked()), SLOT(generateClicked()));
     button_sizer->addWidget(pb);
@@ -60,30 +60,32 @@ SGShaderTextWindow::SGShaderTextWindow(SGFrame *frame)
     setLayout(topSizer);
 }
 
-void SGShaderTextWindow::generateClicked()
+void
+SGShaderTextWindow::generateClicked()
 {
     textBoxFrag->setPlainText(m_frame->getFragmentShader());
     textBoxVert->setPlainText(m_frame->getVertexShader());
 }
 
-void SGShaderTextWindow::compileClicked()
+void
+SGShaderTextWindow::compileClicked()
 {
-    const QString vert= m_frame->getVertexShader();
-    const QString frag= m_frame->getFragmentShader();
+    const QString vert = m_frame->getVertexShader();
+    const QString frag = m_frame->getFragmentShader();
 
     m_haveCompiled = m_frame->getCanvas()->compileShaders(vert, frag);
 
     notebook->setCurrentWidget(textBoxInfo);
 }
 
-void SGShaderTextWindow::linkClicked()
+void
+SGShaderTextWindow::linkClicked()
 {
-    if(m_haveCompiled)
-    {
-        m_haveLinked = m_frame->getCanvas()->linkShaders(getVertexShaderText(),getFragmentShaderText());
+    if (m_haveCompiled) {
+        m_haveLinked =
+          m_frame->getCanvas()->linkShaders(getVertexShaderText(), getFragmentShaderText());
         notebook->setCurrentWidget(textBoxInfo);
-        if(m_haveLinked)
-        {
+        if (m_haveLinked) {
             m_frame->setCanvasMode(SGCanvas::GLModeChoiceShader);
         }
 
@@ -91,18 +93,17 @@ void SGShaderTextWindow::linkClicked()
     }
 }
 
-void SGShaderTextWindow::buildClicked()
+void
+SGShaderTextWindow::buildClicked()
 {
-    const QString vert= m_frame->getVertexShader();
-    const QString frag= m_frame->getFragmentShader();
+    const QString vert = m_frame->getVertexShader();
+    const QString frag = m_frame->getFragmentShader();
 
     m_haveCompiled = m_frame->getCanvas()->compileShaders(vert, frag);
     notebook->setCurrentWidget(textBoxInfo);
-    if(m_haveCompiled)
-    {
+    if (m_haveCompiled) {
         m_haveLinked = m_frame->getCanvas()->linkShaders(vert, frag);
-        if(m_haveLinked)
-        {
+        if (m_haveLinked) {
             m_frame->setCanvasMode(SGCanvas::GLModeChoiceShader);
         }
 
@@ -110,14 +111,15 @@ void SGShaderTextWindow::buildClicked()
     }
 }
 
-void SGShaderTextWindow::log(const QString &text)
+void
+SGShaderTextWindow::log(const QString& text)
 {
     textBoxInfo->textCursor().movePosition(QTextCursor::End);
     textBoxInfo->append(text);
 }
 
-void SGShaderTextWindow::clearLog()
+void
+SGShaderTextWindow::clearLog()
 {
     textBoxInfo->clear();
 }
-

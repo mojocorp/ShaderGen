@@ -41,8 +41,9 @@ class TParametricSurface;
 
 class SGModels
 {
-public:
-    enum ModelId {
+  public:
+    enum ModelId
+    {
         ModelTorus = 0,
         ModelPlane,
         ModelSphere,
@@ -54,6 +55,7 @@ public:
     SGModels();
     ~SGModels();
     void drawModel(ModelId id);
-private:
+
+  private:
     TParametricSurface* surface[6];
 };
