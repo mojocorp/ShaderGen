@@ -69,7 +69,7 @@ class SGCanvas : public QGLWidget
 
     int switchToShaderMode();
 
-    static const float CameraZ;
+    const float CameraZ;
     float getZoom() { return m_zoom; }
 
     QVector3D getWorldSpace(int x, int y);

@@ -159,9 +159,9 @@ SGCanvasMouseHandler::loadMatrix() const
     glLoadIdentity();
 
     if (canvas->getFrame()->isPerspective()) {
-        glTranslatef(0.0f, 0.0f, SGCanvas::CameraZ - 1.0f);
+        glTranslatef(0.0f, 0.0f, canvas->CameraZ - 1.0f);
     } else {
-        glTranslatef(0.0f, 0.0f, SGCanvas::CameraZ);
+        glTranslatef(0.0f, 0.0f, canvas->CameraZ);
     }
 
     glRotatef(20.0f, 1.0f, 0.0f, 0.0f);

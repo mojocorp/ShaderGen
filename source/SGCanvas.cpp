@@ -47,10 +47,9 @@
 #include "UtilityFunctions.h"
 #include <stdio.h>
 
-const float SGCanvas::CameraZ = -5;
-
 SGCanvas::SGCanvas(SGFrame* frame, QWidget* parent)
   : QGLWidget(parent)
+  , CameraZ(-5)
 {
     setFocusPolicy(Qt::StrongFocus);
     mode = GLModeChoiceFixed;
