@@ -50,21 +50,21 @@ SGOglMaterialNBPage::SGOglMaterialNBPage(SGFixedGLState* glState, QWidget* paren
 {
     QGridLayout* materialSizer = new QGridLayout(this);
 
-    shininessMaterial = new QDoubleSpinBox(this);
-    shininessMaterial->setRange(0, 1000);
-    connect(shininessMaterial, SIGNAL(valueChanged(double)), SLOT(shininessChanged()));
+    m_shininessMaterial = new QDoubleSpinBox(this);
+    m_shininessMaterial->setRange(0, 1000);
+    connect(m_shininessMaterial, SIGNAL(valueChanged(double)), SLOT(shininessChanged()));
 
-    ambientMaterial = new QColorButton(this);
-    connect(ambientMaterial, SIGNAL(selected(QColor)), SLOT(ambientChanged()));
+    m_ambientMaterial = new QColorButton(this);
+    connect(m_ambientMaterial, SIGNAL(selected(QColor)), SLOT(ambientChanged()));
 
-    diffuseMaterial = new QColorButton(this);
-    connect(diffuseMaterial, SIGNAL(selected(QColor)), SLOT(diffuseChanged()));
+    m_diffuseMaterial = new QColorButton(this);
+    connect(m_diffuseMaterial, SIGNAL(selected(QColor)), SLOT(diffuseChanged()));
 
-    specularMaterial = new QColorButton(this);
-    connect(specularMaterial, SIGNAL(selected(QColor)), SLOT(specularChanged()));
+    m_specularMaterial = new QColorButton(this);
+    connect(m_specularMaterial, SIGNAL(selected(QColor)), SLOT(specularChanged()));
 
-    emissionMaterial = new QColorButton(this);
-    connect(emissionMaterial, SIGNAL(selected(QColor)), SLOT(emissionChanged()));
+    m_emissionMaterial = new QColorButton(this);
+    connect(m_emissionMaterial, SIGNAL(selected(QColor)), SLOT(emissionChanged()));
 
     QLabel* ambientMatLbl = new QLabel(tr("GL_AMBIENT"), this);
     QLabel* specularMatLbl = new QLabel(tr("GL_SPECULAR"), this);
@@ -76,15 +76,15 @@ SGOglMaterialNBPage::SGOglMaterialNBPage(SGFixedGLState* glState, QWidget* paren
     materialSizer->addWidget(diffuseMatLbl, 1, 0);
     materialSizer->addWidget(specularMatLbl, 2, 0);
 
-    materialSizer->addWidget(ambientMaterial, 0, 1);
-    materialSizer->addWidget(diffuseMaterial, 1, 1);
-    materialSizer->addWidget(specularMaterial, 2, 1);
+    materialSizer->addWidget(m_ambientMaterial, 0, 1);
+    materialSizer->addWidget(m_diffuseMaterial, 1, 1);
+    materialSizer->addWidget(m_specularMaterial, 2, 1);
 
     materialSizer->addWidget(shininessLbl, 0, 2);
     materialSizer->addWidget(emissionLbl, 1, 2);
 
-    materialSizer->addWidget(shininessMaterial, 0, 3);
-    materialSizer->addWidget(emissionMaterial, 1, 3);
+    materialSizer->addWidget(m_shininessMaterial, 0, 3);
+    materialSizer->addWidget(m_emissionMaterial, 1, 3);
 
     materialSizer->setColumnStretch(4, 2);
     materialSizer->setRowStretch(3, 2);
@@ -96,11 +96,11 @@ void
 SGOglMaterialNBPage::setup()
 {
     const Material& mat = m_glState->getMaterial();
-    shininessMaterial->setValue(mat.materialShininess);
-    ambientMaterial->setColor(mat.materialAmbientColorVector);
-    diffuseMaterial->setColor(mat.materialDiffuseColorVector);
-    specularMaterial->setColor(mat.materialSpecularColorVector);
-    emissionMaterial->setColor(mat.materialEmissionColorVector);
+    m_shininessMaterial->setValue(mat.materialShininess);
+    m_ambientMaterial->setColor(mat.materialAmbientColorVector);
+    m_diffuseMaterial->setColor(mat.materialDiffuseColorVector);
+    m_specularMaterial->setColor(mat.materialSpecularColorVector);
+    m_emissionMaterial->setColor(mat.materialEmissionColorVector);
 }
 
 void
@@ -108,7 +108,7 @@ SGOglMaterialNBPage::ambientChanged()
 {
     Material& mat = m_glState->getMaterial();
 
-    mat.materialAmbientColorVector = ambientMaterial->color();
+    mat.materialAmbientColorVector = m_ambientMaterial->color();
 
     emit valueChanged();
 }
@@ -118,7 +118,7 @@ SGOglMaterialNBPage::diffuseChanged()
 {
     Material& mat = m_glState->getMaterial();
 
-    mat.materialDiffuseColorVector = diffuseMaterial->color();
+    mat.materialDiffuseColorVector = m_diffuseMaterial->color();
 
     emit valueChanged();
 }
@@ -128,7 +128,7 @@ SGOglMaterialNBPage::specularChanged()
 {
     Material& mat = m_glState->getMaterial();
 
-    mat.materialSpecularColorVector = specularMaterial->color();
+    mat.materialSpecularColorVector = m_specularMaterial->color();
 
     emit valueChanged();
 }
@@ -138,7 +138,7 @@ SGOglMaterialNBPage::emissionChanged()
 {
     Material& mat = m_glState->getMaterial();
 
-    mat.materialEmissionColorVector = emissionMaterial->color();
+    mat.materialEmissionColorVector = m_emissionMaterial->color();
 
     emit valueChanged();
 }
@@ -146,7 +146,7 @@ SGOglMaterialNBPage::emissionChanged()
 void
 SGOglMaterialNBPage::shininessChanged()
 {
-    m_glState->getMaterial().materialShininess = shininessMaterial->value();
+    m_glState->getMaterial().materialShininess = m_shininessMaterial->value();
 
     emit valueChanged();
 }

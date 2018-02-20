@@ -50,8 +50,8 @@ SGCanvasWrapper::SGCanvasWrapper(SGFrame* parent)
 
     QVBoxLayout* topSizer = new QVBoxLayout();
 
-    canvas = new SGCanvas(parent, this);
-    canvas->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    m_canvas = new SGCanvas(parent, this);
+    m_canvas->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
     QGroupBox* gb = new QGroupBox(tr("Select GL Mode"), this);
     gb->setLayout(new QHBoxLayout);
@@ -61,39 +61,39 @@ SGCanvasWrapper::SGCanvasWrapper(SGFrame* parent)
     gb->layout()->addWidget(fixed);
     gb->layout()->addWidget(shader);
 
-    glModeChoice = new QButtonGroup(this);
-    glModeChoice->addButton(fixed, 0);
-    glModeChoice->addButton(shader, 1);
-    connect(glModeChoice, SIGNAL(buttonClicked(int)), SLOT(onRadio(int)));
+    m_glModeChoice = new QButtonGroup(this);
+    m_glModeChoice->addButton(fixed, 0);
+    m_glModeChoice->addButton(shader, 1);
+    connect(m_glModeChoice, SIGNAL(buttonClicked(int)), SLOT(onRadio(int)));
 
     topSizer->addWidget(gb);
-    topSizer->addWidget(canvas);
+    topSizer->addWidget(m_canvas);
     setLayout(topSizer);
 }
 
 void
 SGCanvasWrapper::onRadio(int id)
 {
-    canvas->setMode((SGCanvas::GLMode)id);
+    m_canvas->setMode((SGCanvas::GLMode)id);
 }
 
 void
 SGCanvasWrapper::switchMode()
 {
-    if (canvas->getMode() == SGCanvas::GLModeChoiceFixed) {
-        canvas->setMode(SGCanvas::GLModeChoiceShader);
+    if (m_canvas->getMode() == SGCanvas::GLModeChoiceFixed) {
+        m_canvas->setMode(SGCanvas::GLModeChoiceShader);
     } else {
-        canvas->setMode(SGCanvas::GLModeChoiceFixed);
+        m_canvas->setMode(SGCanvas::GLModeChoiceFixed);
     }
 }
 
 void
 SGCanvasWrapper::setMode(SGCanvas::GLMode mode)
 {
-    canvas->setMode(mode);
+    m_canvas->setMode(mode);
     if (mode == SGCanvas::GLModeChoiceFixed) {
-        glModeChoice->button(0)->setChecked(true);
+        m_glModeChoice->button(0)->setChecked(true);
     } else {
-        glModeChoice->button(1)->setChecked(true);
+        m_glModeChoice->button(1)->setChecked(true);
     }
 }

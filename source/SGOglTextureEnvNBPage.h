@@ -122,13 +122,14 @@ class SGOglTextureEnvNBPage : public QWidget
 
     SGFixedGLState* m_glState;
 
-    QButtonGroup *texApplyGroup, *textureGroup, *texCheckBoxGroup;
+    QButtonGroup *m_texApplyGroup, *m_textureGroup, *m_texCheckBoxGroup;
 
-    QCheckBox *tex0CheckBox, *tex1CheckBox, *tex2CheckBox, *tex3CheckBox, *tex4CheckBox;
+    QCheckBox *m_tex0CheckBox, *m_tex1CheckBox, *m_tex2CheckBox, *m_tex3CheckBox, *m_tex4CheckBox;
 
-    QComboBox *texChoose, *texCombineModeChoose, *texCombineScaleChoose, *texCombineSrc0RGBChoose,
-      *texCombineSrc1RGBChoose, *texCombineSrc2RGBChoose, *texCombineOperandArg0Choose,
-      *texCombineOperandArg1Choose, *texCombineOperandArg2Choose;
+    QComboBox *m_texChoose, *m_texCombineModeChoose, *m_texCombineScaleChoose,
+      *m_texCombineSrc0RGBChoose, *m_texCombineSrc1RGBChoose, *m_texCombineSrc2RGBChoose,
+      *m_texCombineOperandArg0Choose, *m_texCombineOperandArg1Choose,
+      *m_texCombineOperandArg2Choose;
 
-    QColorButton* texEnvColorButton;
+    QColorButton* m_texEnvColorButton;
 };

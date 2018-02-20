@@ -46,7 +46,7 @@
 static const float TWO_PI = 6.28318530717958647692f;
 
 TParametricSurface::TParametricSurface()
-  : slices(100)
+  : m_slices(100)
 {
 }
 
@@ -60,21 +60,21 @@ int
 TParametricSurface::Draw()
 {
     int totalVerts = 0;
-    int stacks = slices / 2;
-    du = 1.0f / (float)(slices - 1);
-    dv = 1.0f / (float)(stacks - 1);
+    int stacks = m_slices / 2;
+    m_du = 1.0f / (float)(m_slices - 1);
+    m_dv = 1.0f / (float)(stacks - 1);
 
     bool isNormalize = glIsEnabled(GL_NORMALIZE);
 
-    for (int i = 0; i < slices; i++) {
-        float u = i * du;
+    for (int i = 0; i < m_slices; i++) {
+        float u = i * m_du;
         glBegin(GL_QUAD_STRIP);
-        flipped = flip(QVector2D(u, 0));
+        m_flipped = flip(QVector2D(u, 0));
 
         for (int j = 0; j < stacks; j++) {
-            float v = j * dv;
+            float v = j * m_dv;
             QVector3D normal, p0;
-            QVector2D domain = flipped ? QVector2D(u + du, v) : QVector2D(u, v);
+            QVector2D domain = m_flipped ? QVector2D(u + m_du, v) : QVector2D(u, v);
             vertex(domain, normal, p0, isNormalize);
             if (isNormalize)
                 glNormal(normal);
@@ -82,7 +82,7 @@ TParametricSurface::Draw()
                 glMultiTexCoord(domain, GL_TEXTURE0 + i);
             }
             glVertex(p0);
-            domain = flipped ? QVector2D(u, v) : QVector2D(u + du, v);
+            domain = m_flipped ? QVector2D(u, v) : QVector2D(u + m_du, v);
             vertex(domain, normal, p0, isNormalize);
             if (isNormalize)
                 glNormal(normal);
@@ -110,16 +110,16 @@ TParametricSurface::vertex(QVector2D& domain, QVector3D& normal, QVector3D& p0, 
     float v = domain.y();
 
     eval(domain, p0);
-    QVector2D z1(u + du / 2, v);
+    QVector2D z1(u + m_du / 2, v);
     eval(z1, p1);
-    QVector2D z2(u + du / 2 + du, v);
+    QVector2D z2(u + m_du / 2 + m_du, v);
     eval(z2, p3);
 
-    if (flipped) {
-        QVector2D z3(u + du / 2, v - dv);
+    if (m_flipped) {
+        QVector2D z3(u + m_du / 2, v - m_dv);
         eval(z3, p2);
     } else {
-        QVector2D z4(u + du / 2, v + dv);
+        QVector2D z4(u + m_du / 2, v + m_dv);
         eval(z4, p2);
     }
     if (isNormalize) {
@@ -251,12 +251,12 @@ TSphere::eval(QVector2D& domain, QVector3D& range)
 void
 TPlane::eval(QVector2D& domain, QVector3D& range)
 {
-    if (z < 0) {
-        range.setX(-width * (domain.x() - 0.5f));
-        range.setY(width * (domain.y() - 0.5f));
+    if (m_z < 0) {
+        range.setX(-m_width * (domain.x() - 0.5f));
+        range.setY(m_width * (domain.y() - 0.5f));
     } else {
-        range.setX(width * (domain.x() - 0.5f));
-        range.setY(width * (domain.y() - 0.5f));
+        range.setX(m_width * (domain.x() - 0.5f));
+        range.setY(m_width * (domain.y() - 0.5f));
     }
-    range.setZ(z);
+    range.setZ(m_z);
 }

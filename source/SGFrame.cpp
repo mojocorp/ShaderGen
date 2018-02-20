@@ -22,33 +22,33 @@ SGFrame::SGFrame(const QString& title)
 {
     setWindowTitle(title);
 
-    glState = new SGFixedGLState();
-    textures = new SGTextures(this, glState);
-    shaderGen = new SGShaderGenerator();
+    m_glState = new SGFixedGLState();
+    m_textures = new SGTextures(this, m_glState);
+    m_shaderGen = new SGShaderGenerator();
 
     createActions();
     createMenus();
     createStatusBar();
 
-    oglNotebook = new SGOglNotebook(glState, this);
-    oglNotebook->resize(800, 300);
-    connect(oglNotebook, SIGNAL(valueChanged()), SLOT(setFixedGLMode()));
+    m_oglNotebook = new SGOglNotebook(m_glState, this);
+    m_oglNotebook->resize(800, 300);
+    connect(m_oglNotebook, SIGNAL(valueChanged()), SLOT(setFixedGLMode()));
 
-    canvas = new SGCanvasWrapper(this);
-    canvas->resize(400, 350);
-    shaderText = new SGShaderTextWindow(this);
-    shaderText->resize(450, 400);
+    m_canvas = new SGCanvasWrapper(this);
+    m_canvas->resize(400, 350);
+    m_shaderText = new SGShaderTextWindow(this);
+    m_shaderText->resize(450, 400);
 
-    topSizer = new QSplitter(Qt::Vertical);
-    horizSizer = new QSplitter(Qt::Horizontal);
+    m_topSizer = new QSplitter(Qt::Vertical);
+    m_horizSizer = new QSplitter(Qt::Horizontal);
 
-    horizSizer->addWidget(canvas);
-    horizSizer->addWidget(shaderText);
+    m_horizSizer->addWidget(m_canvas);
+    m_horizSizer->addWidget(m_shaderText);
 
-    topSizer->addWidget(horizSizer);
-    topSizer->addWidget(oglNotebook);
+    m_topSizer->addWidget(m_horizSizer);
+    m_topSizer->addWidget(m_oglNotebook);
 
-    setCentralWidget(topSizer);
+    setCentralWidget(m_topSizer);
 
     sgframe_instance = this;
 }
@@ -57,102 +57,102 @@ SGFrame::~SGFrame()
 {
     sgframe_instance = 0;
 
-    delete shaderGen;
-    delete textures;
-    delete glState;
+    delete m_shaderGen;
+    delete m_textures;
+    delete m_glState;
 }
 
 void
 SGFrame::createActions()
 {
-    openAct = new QAction(tr("&Open..."), this);
-    openAct->setShortcuts(QKeySequence::Open);
-    openAct->setStatusTip(tr("Open an existing file"));
-    connect(openAct, SIGNAL(triggered()), this, SLOT(open()));
+    m_openAct = new QAction(tr("&Open..."), this);
+    m_openAct->setShortcuts(QKeySequence::Open);
+    m_openAct->setStatusTip(tr("Open an existing file"));
+    connect(m_openAct, SIGNAL(triggered()), this, SLOT(open()));
 
-    saveAsAct = new QAction(tr("Save &As..."), this);
-    saveAsAct->setShortcuts(QKeySequence::SaveAs);
-    saveAsAct->setStatusTip(tr("Save the document under a new name"));
-    connect(saveAsAct, SIGNAL(triggered()), this, SLOT(saveAs()));
+    m_saveAsAct = new QAction(tr("Save &As..."), this);
+    m_saveAsAct->setShortcuts(QKeySequence::SaveAs);
+    m_saveAsAct->setStatusTip(tr("Save the document under a new name"));
+    connect(m_saveAsAct, SIGNAL(triggered()), this, SLOT(saveAs()));
 
-    exitAct = new QAction(tr("E&xit"), this);
-    exitAct->setShortcuts(QKeySequence::Quit);
-    exitAct->setStatusTip(tr("Exit the application"));
-    connect(exitAct, SIGNAL(triggered()), this, SLOT(close()));
+    m_exitAct = new QAction(tr("E&xit"), this);
+    m_exitAct->setShortcuts(QKeySequence::Quit);
+    m_exitAct->setStatusTip(tr("Exit the application"));
+    connect(m_exitAct, SIGNAL(triggered()), this, SLOT(close()));
 
-    perspAct = new QAction(tr("Perspective"), this);
-    perspAct->setCheckable(true);
-    perspAct->setChecked(true);
-    connect(perspAct, SIGNAL(triggered()), SLOT(viewActionTriggered()));
+    m_perspAct = new QAction(tr("Perspective"), this);
+    m_perspAct->setCheckable(true);
+    m_perspAct->setChecked(true);
+    connect(m_perspAct, SIGNAL(triggered()), SLOT(viewActionTriggered()));
 
-    switchGLModeAct = new QAction(tr("Switch GL mode"), this);
-    switchGLModeAct->setShortcut(Qt::Key_F7);
-    connect(switchGLModeAct, SIGNAL(triggered()), SLOT(switchGLModeTriggered()));
+    m_switchGLModeAct = new QAction(tr("Switch GL mode"), this);
+    m_switchGLModeAct->setShortcut(Qt::Key_F7);
+    connect(m_switchGLModeAct, SIGNAL(triggered()), SLOT(switchGLModeTriggered()));
 
-    torusAct = new QAction(tr("Torus"), this);
-    torusAct->setCheckable(true);
-    torusAct->setChecked(true);
+    m_torusAct = new QAction(tr("Torus"), this);
+    m_torusAct->setCheckable(true);
+    m_torusAct->setChecked(true);
 
-    sphereAct = new QAction(tr("Sphere"), this);
-    sphereAct->setCheckable(true);
+    m_sphereAct = new QAction(tr("Sphere"), this);
+    m_sphereAct->setCheckable(true);
 
-    trefoilAct = new QAction(tr("Trefoil"), this);
-    trefoilAct->setCheckable(true);
+    m_trefoilAct = new QAction(tr("Trefoil"), this);
+    m_trefoilAct->setCheckable(true);
 
-    kleinAct = new QAction(tr("Klein"), this);
-    kleinAct->setCheckable(true);
+    m_kleinAct = new QAction(tr("Klein"), this);
+    m_kleinAct->setCheckable(true);
 
-    conicAct = new QAction(tr("Conic"), this);
-    conicAct->setCheckable(true);
+    m_conicAct = new QAction(tr("Conic"), this);
+    m_conicAct->setCheckable(true);
 
-    planeAct = new QAction(tr("Plane"), this);
-    planeAct->setCheckable(true);
+    m_planeAct = new QAction(tr("Plane"), this);
+    m_planeAct->setCheckable(true);
 
     QActionGroup* modelGroup = new QActionGroup(this);
-    modelGroup->addAction(torusAct);
-    modelGroup->addAction(sphereAct);
-    modelGroup->addAction(trefoilAct);
-    modelGroup->addAction(kleinAct);
-    modelGroup->addAction(conicAct);
-    modelGroup->addAction(planeAct);
+    modelGroup->addAction(m_torusAct);
+    modelGroup->addAction(m_sphereAct);
+    modelGroup->addAction(m_trefoilAct);
+    modelGroup->addAction(m_kleinAct);
+    modelGroup->addAction(m_conicAct);
+    modelGroup->addAction(m_planeAct);
     connect(modelGroup, SIGNAL(triggered(QAction*)), SLOT(modelActionTriggered(QAction*)));
 
-    aboutAct = new QAction(tr("&About"), this);
-    aboutAct->setStatusTip(tr("Show the application's About box"));
-    connect(aboutAct, SIGNAL(triggered()), this, SLOT(about()));
+    m_aboutAct = new QAction(tr("&About"), this);
+    m_aboutAct->setStatusTip(tr("Show the application's About box"));
+    connect(m_aboutAct, SIGNAL(triggered()), this, SLOT(about()));
 
-    helpAct = new QAction(tr("Help"), this);
-    helpAct->setStatusTip(tr("Show the help"));
-    connect(helpAct, SIGNAL(triggered()), this, SLOT(help()));
+    m_helpAct = new QAction(tr("Help"), this);
+    m_helpAct->setStatusTip(tr("Show the help"));
+    connect(m_helpAct, SIGNAL(triggered()), this, SLOT(help()));
 }
 
 void
 SGFrame::createMenus()
 {
-    fileMenu = menuBar()->addMenu(tr("&File"));
-    fileMenu->addAction(openAct);
-    fileMenu->addAction(saveAsAct);
-    fileMenu->addSeparator();
-    fileMenu->addAction(exitAct);
+    m_fileMenu = menuBar()->addMenu(tr("&File"));
+    m_fileMenu->addAction(m_openAct);
+    m_fileMenu->addAction(m_saveAsAct);
+    m_fileMenu->addSeparator();
+    m_fileMenu->addAction(m_exitAct);
 
     menuBar()->addSeparator();
 
-    viewMenu = menuBar()->addMenu(tr("&View"));
-    viewMenu->addAction(perspAct);
-    viewMenu->addSeparator();
-    viewMenu->addAction(switchGLModeAct);
+    m_viewMenu = menuBar()->addMenu(tr("&View"));
+    m_viewMenu->addAction(m_perspAct);
+    m_viewMenu->addSeparator();
+    m_viewMenu->addAction(m_switchGLModeAct);
 
-    modelMenu = menuBar()->addMenu(tr("&Model"));
-    modelMenu->addAction(torusAct);
-    modelMenu->addAction(sphereAct);
-    modelMenu->addAction(trefoilAct);
-    modelMenu->addAction(kleinAct);
-    modelMenu->addAction(conicAct);
-    modelMenu->addAction(planeAct);
+    m_modelMenu = menuBar()->addMenu(tr("&Model"));
+    m_modelMenu->addAction(m_torusAct);
+    m_modelMenu->addAction(m_sphereAct);
+    m_modelMenu->addAction(m_trefoilAct);
+    m_modelMenu->addAction(m_kleinAct);
+    m_modelMenu->addAction(m_conicAct);
+    m_modelMenu->addAction(m_planeAct);
 
-    helpMenu = menuBar()->addMenu(tr("&Help"));
-    helpMenu->addAction(aboutAct);
-    helpMenu->addAction(helpAct);
+    m_helpMenu = menuBar()->addMenu(tr("&Help"));
+    m_helpMenu->addAction(m_aboutAct);
+    m_helpMenu->addAction(m_helpAct);
 }
 
 void
@@ -164,7 +164,7 @@ SGFrame::createStatusBar()
 void
 SGFrame::setCanvasMode(SGCanvas::GLMode a)
 {
-    canvas->setMode(a);
+    m_canvas->setMode(a);
     getCanvas()->updateGL();
 }
 
@@ -177,7 +177,7 @@ SGFrame::setStatusText(const QString& text)
 bool
 SGFrame::isPerspective() const
 {
-    return perspAct->isChecked();
+    return m_perspAct->isChecked();
 }
 
 int
@@ -217,8 +217,8 @@ SGFrame::loadFile(const QString& filename)
     QByteArray saveData = loadFile.readAll();
 
     QJsonDocument loadDoc(QJsonDocument::fromJson(saveData));
-    glState->read(loadDoc.object());
-    oglNotebook->setup();
+    m_glState->read(loadDoc.object());
+    m_oglNotebook->setup();
     getCanvas()->updateGL();
 
     return true;
@@ -233,7 +233,7 @@ SGFrame::saveFile(const QString& filename) const
         return false;
     }
     QJsonObject stateObject;
-    glState->write(stateObject);
+    m_glState->write(stateObject);
     QJsonDocument saveDoc(stateObject);
     saveFile.write(saveDoc.toJson());
 
@@ -246,8 +246,8 @@ SGFrame::readSettings()
     QSettings settings;
     restoreGeometry(settings.value("app/geometry").toByteArray());
     restoreState(settings.value("app/windowState").toByteArray());
-    topSizer->restoreState(settings.value("app/topSizer").toByteArray());
-    horizSizer->restoreState(settings.value("app/horizSizer").toByteArray());
+    m_topSizer->restoreState(settings.value("app/topSizer").toByteArray());
+    m_horizSizer->restoreState(settings.value("app/horizSizer").toByteArray());
 }
 
 void
@@ -256,8 +256,8 @@ SGFrame::closeEvent(QCloseEvent* event)
     QSettings settings;
     settings.setValue("app/geometry", saveGeometry());
     settings.setValue("app/windowState", saveState());
-    settings.setValue("app/topSizer", topSizer->saveState());
-    settings.setValue("app/horizSizer", horizSizer->saveState());
+    settings.setValue("app/topSizer", m_topSizer->saveState());
+    settings.setValue("app/horizSizer", m_horizSizer->saveState());
 
     QMainWindow::closeEvent(event);
 }
@@ -265,17 +265,17 @@ SGFrame::closeEvent(QCloseEvent* event)
 void
 SGFrame::modelActionTriggered(QAction* action)
 {
-    if (action == torusAct) {
+    if (action == m_torusAct) {
         getCanvas()->setModel(SGModels::ModelTorus);
-    } else if (action == sphereAct) {
+    } else if (action == m_sphereAct) {
         getCanvas()->setModel(SGModels::ModelSphere);
-    } else if (action == trefoilAct) {
+    } else if (action == m_trefoilAct) {
         getCanvas()->setModel(SGModels::ModelTrefoil);
-    } else if (action == kleinAct) {
+    } else if (action == m_kleinAct) {
         getCanvas()->setModel(SGModels::ModelKlein);
-    } else if (action == conicAct) {
+    } else if (action == m_conicAct) {
         getCanvas()->setModel(SGModels::ModelConic);
-    } else if (action == planeAct) {
+    } else if (action == m_planeAct) {
         getCanvas()->setModel(SGModels::ModelPlane);
     }
 
@@ -291,14 +291,14 @@ SGFrame::viewActionTriggered()
 void
 SGFrame::switchGLModeTriggered()
 {
-    canvas->switchMode();
+    m_canvas->switchMode();
     getCanvas()->updateGL();
 }
 
 void
 SGFrame::setFixedGLMode()
 {
-    canvas->setMode(SGCanvas::GLModeChoiceFixed);
+    m_canvas->setMode(SGCanvas::GLModeChoiceFixed);
     getCanvas()->updateGL();
 }
 

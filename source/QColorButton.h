@@ -23,5 +23,5 @@ class QColorButton : public QPushButton
     void nextCheckState();
 
   private:
-    QColor col;
+    QColor m_color;
 };

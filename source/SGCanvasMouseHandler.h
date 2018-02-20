@@ -57,13 +57,13 @@ class SGCanvasMouseHandler
     void reset();
     void stop();
 
-    int frames;
-    SGCanvas* canvas;
-    bool validStart;
-    QVector3D vStart;
-    QVector3D vPrev;
-    QVector3D vInc;
-    float startZoom;
-    QMatrix4x4 mStart;
-    QMatrix4x4 xform;
+    int m_frames;
+    SGCanvas* m_canvas;
+    bool m_validStart;
+    QVector3D m_vStart;
+    QVector3D m_vPrev;
+    QVector3D m_vInc;
+    float m_startZoom;
+    QMatrix4x4 m_mStart;
+    QMatrix4x4 m_xform;
 };

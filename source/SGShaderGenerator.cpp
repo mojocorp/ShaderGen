@@ -50,70 +50,70 @@
 const float LOG2E = 1.442695f;
 
 SGShaderGenerator::SGShaderGenerator()
-  : fragShader(" ")
-  , vertShader(" ")
-  , fLightPoint(false)
-  , fLightSpot(false)
-  , fLightDir(false)
-  , fLightDirSpot(false)
-  , fMapSphere(false)
-  , fMapReflection(false)
-  , vTexGenEnable(false)
-  , texturesEnabled(GL_FALSE)
+  : m_fragShader(" ")
+  , m_vertShader(" ")
+  , m_fLightPoint(false)
+  , m_fLightSpot(false)
+  , m_fLightDir(false)
+  , m_fLightDirSpot(false)
+  , m_fMapSphere(false)
+  , m_fMapReflection(false)
+  , m_vTexGenEnable(false)
+  , m_texturesEnabled(GL_FALSE)
 {
     for (int i = 0; i < NUM_TEXTURES; i++) {
-        currentTexture[i].textureCoordinateGenerationEye = GL_FALSE;
-        currentTexture[i].textureCoordinateGenerationNormal = GL_FALSE;
-        currentTexture[i].textureCoordinateGenerationObject = GL_FALSE;
-        currentTexture[i].textureCoordinateGenerationReflection = GL_FALSE;
-        currentTexture[i].textureCoordinateGenerationSphereMap = GL_FALSE;
-        currentTexture[i].textureEnabled = GL_FALSE;
+        m_currentTexture[i].textureCoordinateGenerationEye = GL_FALSE;
+        m_currentTexture[i].textureCoordinateGenerationNormal = GL_FALSE;
+        m_currentTexture[i].textureCoordinateGenerationObject = GL_FALSE;
+        m_currentTexture[i].textureCoordinateGenerationReflection = GL_FALSE;
+        m_currentTexture[i].textureCoordinateGenerationSphereMap = GL_FALSE;
+        m_currentTexture[i].textureEnabled = GL_FALSE;
         for (int k = 0; k < NUM_TEXTURE_COORDS; k++) {
-            currentTexture[i].textureGenerationEnableArray[k] = GL_FALSE;
+            m_currentTexture[i].textureGenerationEnableArray[k] = GL_FALSE;
         }
     }
 }
 
 SGShaderGenerator::~SGShaderGenerator()
 {
-    fragShader.clear();
-    vertShader.clear();
+    m_fragShader.clear();
+    m_vertShader.clear();
 }
 
 void
 SGShaderGenerator::initTextures()
 {
-    vTexGenEnable = false;
-    texturesEnabled = false;
+    m_vTexGenEnable = false;
+    m_texturesEnabled = false;
 
     for (int i = 0; i < NUM_TEXTURES; i++) {
-        currentTexture[i].textureCoordinateGenerationReflection = false;
-        currentTexture[i].textureCoordinateGenerationSphereMap = false;
-        currentTexture[i].textureCoordinateGenerationEye = false;
-        currentTexture[i].textureCoordinateGenerationObject = false;
-        currentTexture[i].textureCoordinateGenerationNormal = false;
-        currentTexture[i].textureEnabled = false;
+        m_currentTexture[i].textureCoordinateGenerationReflection = false;
+        m_currentTexture[i].textureCoordinateGenerationSphereMap = false;
+        m_currentTexture[i].textureCoordinateGenerationEye = false;
+        m_currentTexture[i].textureCoordinateGenerationObject = false;
+        m_currentTexture[i].textureCoordinateGenerationNormal = false;
+        m_currentTexture[i].textureEnabled = false;
 
         glActiveTexture(GL_TEXTURE0 + i);
 
-        currentTexture[i].textureEnabled = glIsEnabled(GL_TEXTURE_2D);
+        m_currentTexture[i].textureEnabled = glIsEnabled(GL_TEXTURE_2D);
 
-        if (currentTexture[i].textureEnabled == GL_TRUE) {
+        if (m_currentTexture[i].textureEnabled == GL_TRUE) {
 
             int tempIntS, tempIntT, tempIntR, tempIntQ;
 
-            vTexGenEnable = true;
-            texturesEnabled = true;
+            m_vTexGenEnable = true;
+            m_texturesEnabled = true;
 
             glGetTexGeniv(GL_S, GL_TEXTURE_GEN_MODE, &tempIntS);
             glGetTexGeniv(GL_T, GL_TEXTURE_GEN_MODE, &tempIntT);
             glGetTexGeniv(GL_R, GL_TEXTURE_GEN_MODE, &tempIntR);
             glGetTexGeniv(GL_Q, GL_TEXTURE_GEN_MODE, &tempIntQ);
 
-            currentTexture[i].textureGenerationEnableArray[0] = glIsEnabled(GL_TEXTURE_GEN_S);
-            currentTexture[i].textureGenerationEnableArray[1] = glIsEnabled(GL_TEXTURE_GEN_T);
-            currentTexture[i].textureGenerationEnableArray[2] = glIsEnabled(GL_TEXTURE_GEN_R);
-            currentTexture[i].textureGenerationEnableArray[3] = glIsEnabled(GL_TEXTURE_GEN_Q);
+            m_currentTexture[i].textureGenerationEnableArray[0] = glIsEnabled(GL_TEXTURE_GEN_S);
+            m_currentTexture[i].textureGenerationEnableArray[1] = glIsEnabled(GL_TEXTURE_GEN_T);
+            m_currentTexture[i].textureGenerationEnableArray[2] = glIsEnabled(GL_TEXTURE_GEN_R);
+            m_currentTexture[i].textureGenerationEnableArray[3] = glIsEnabled(GL_TEXTURE_GEN_Q);
 
             // The following block queries the GL State to see if there are any
             // texture coordinates
@@ -123,22 +123,22 @@ SGShaderGenerator::initTextures()
             //  creation of the
             //  vertex shader user defined functions that reproduce the
             //  coordinate generation.
-            if (currentTexture[i].textureGenerationEnableArray[0] ||
-                currentTexture[i].textureGenerationEnableArray[1] ||
-                currentTexture[i].textureGenerationEnableArray[2] ||
-                currentTexture[i].textureGenerationEnableArray[3]) {
-                currentTexture[i].textureCoordinateGenerationReflection =
+            if (m_currentTexture[i].textureGenerationEnableArray[0] ||
+                m_currentTexture[i].textureGenerationEnableArray[1] ||
+                m_currentTexture[i].textureGenerationEnableArray[2] ||
+                m_currentTexture[i].textureGenerationEnableArray[3]) {
+                m_currentTexture[i].textureCoordinateGenerationReflection =
                   (tempIntS == GL_REFLECTION_MAP || tempIntT == GL_REFLECTION_MAP ||
                    tempIntR == GL_REFLECTION_MAP);
-                currentTexture[i].textureCoordinateGenerationSphereMap =
+                m_currentTexture[i].textureCoordinateGenerationSphereMap =
                   (tempIntS == GL_SPHERE_MAP || tempIntT == GL_SPHERE_MAP);
-                currentTexture[i].textureCoordinateGenerationEye =
+                m_currentTexture[i].textureCoordinateGenerationEye =
                   (tempIntS == GL_EYE_LINEAR && tempIntT == GL_EYE_LINEAR &&
                    tempIntQ == GL_EYE_LINEAR && tempIntR == GL_EYE_LINEAR);
-                currentTexture[i].textureCoordinateGenerationObject =
+                m_currentTexture[i].textureCoordinateGenerationObject =
                   (tempIntS == GL_OBJECT_LINEAR || tempIntT == GL_OBJECT_LINEAR ||
                    tempIntQ == GL_OBJECT_LINEAR || tempIntR == GL_OBJECT_LINEAR);
-                currentTexture[i].textureCoordinateGenerationNormal =
+                m_currentTexture[i].textureCoordinateGenerationNormal =
                   (tempIntS == GL_NORMAL_MAP || tempIntT == GL_NORMAL_MAP ||
                    tempIntQ == GL_NORMAL_MAP || tempIntR == GL_NORMAL_MAP);
             }
@@ -153,40 +153,40 @@ SGShaderGenerator::initTextures()
 const QString&
 SGShaderGenerator::buildFragmentShader()
 {
-    fragShader = ""
-                 "/*******************************************************\n"
-                 "* Fixed.frag Fixed Function Equivalent Fragment Shader *\n"
-                 "*   Automatically Generated by 3Dlabs GLSL ShaderGen   *\n"
-                 "*             http://developer.3dlabs.com              *\n"
-                 "*******************************************************/\n";
+    m_fragShader = ""
+                   "/*******************************************************\n"
+                   "* Fixed.frag Fixed Function Equivalent Fragment Shader *\n"
+                   "*   Automatically Generated by 3Dlabs GLSL ShaderGen   *\n"
+                   "*             http://developer.3dlabs.com              *\n"
+                   "*******************************************************/\n";
 
     initTextures();
 
     for (int i = 0; i < NUM_TEXTURES; i++) {
-        if (currentTexture[i].textureEnabled) {
-            fragShader += QString("uniform sampler2D texUnit%1;\n").arg(i);
-            texturesEnabled = true;
+        if (m_currentTexture[i].textureEnabled) {
+            m_fragShader += QString("uniform sampler2D texUnit%1;\n").arg(i);
+            m_texturesEnabled = true;
         }
     }
 
-    fragShader += "\n"
-                  "void main (void) \n"
-                  "{\n"
-                  "    vec4 color;\n"
-                  "\n"
-                  "    color = gl_Color;\n\n";
+    m_fragShader += "\n"
+                    "void main (void) \n"
+                    "{\n"
+                    "    vec4 color;\n"
+                    "\n"
+                    "    color = gl_Color;\n\n";
 
-    buildFragTex(fragShader);
+    buildFragTex(m_fragShader);
 
     // No GUI Support in ShaderGen 1.0/2.0/3.0
-    buildFragSeparateSpecularColor(fragShader);
+    buildFragSeparateSpecularColor(m_fragShader);
 
-    buildFragFog(fragShader);
+    buildFragFog(m_fragShader);
 
-    fragShader += "    gl_FragColor = color;\n"
-                  "}\n";
+    m_fragShader += "    gl_FragColor = color;\n"
+                    "}\n";
 
-    return fragShader;
+    return m_fragShader;
 }
 
 void
@@ -641,7 +641,8 @@ SGShaderGenerator::buildVertexShader()
 
     bottomVertShader = "";
 
-    fLightPoint = fLightSpot = fLightDir = fMapSphere = fMapReflection = fLightDirSpot = false;
+    m_fLightPoint = m_fLightSpot = m_fLightDir = m_fMapSphere = m_fMapReflection = m_fLightDirSpot =
+      false;
 
     buildFuncFnormal(bottomVertShader);
 
@@ -649,9 +650,9 @@ SGShaderGenerator::buildVertexShader()
     // This is necessary for the BuildTexCoord function to handle
     //  multiple texture coordinates correctly.
     for (int i = NUM_TEXTURES - 1; i >= 0; i--) {
-        if (currentTexture[i].textureEnabled) {
+        if (m_currentTexture[i].textureEnabled) {
             buildTexCoord(bottomVertShader);
-            texturesEnabled = true;
+            m_texturesEnabled = true;
             break;
         }
     }
@@ -660,29 +661,29 @@ SGShaderGenerator::buildVertexShader()
 
     buildVertMain(bottomVertShader);
 
-    if (fLightPoint) {
+    if (m_fLightPoint) {
         addFuncLightPoint(topVertShader);
     }
-    if (fLightSpot) {
+    if (m_fLightSpot) {
         addFuncLightSpot(topVertShader);
     }
-    if (fLightDir) {
+    if (m_fLightDir) {
         addFuncLightDirectional(topVertShader);
     }
-    if (fLightDirSpot) {
+    if (m_fLightDirSpot) {
         addFuncLightSpotDirection(topVertShader);
     }
-    if (fMapSphere) {
+    if (m_fMapSphere) {
         addFuncSphereMap(topVertShader);
     }
-    if (fMapReflection) {
+    if (m_fMapReflection) {
         addFuncReflectionMap(topVertShader);
     }
     if (glIsEnabled(GL_FOG)) {
         buildFuncFog(topVertShader);
     }
-    vertShader = topVertShader + bottomVertShader;
-    return vertShader;
+    m_vertShader = topVertShader + bottomVertShader;
+    return m_vertShader;
 }
 
 void
@@ -724,20 +725,20 @@ SGShaderGenerator::buildLightCode(QString& str)
                 if (v[3] == 0.0) {
                     if (spotCut != DEFAULT_SPOT_CUT) {
                         str += QString().sprintf("    infiniteSpotLight(%d, normal);\n\n", i);
-                        fLightDirSpot = true;
+                        m_fLightDirSpot = true;
                     } else {
                         str += QString().sprintf("    directionalLight(%d, normal);\n\n", i);
-                        fLightDir = true;
+                        m_fLightDir = true;
                     }
                 } else {
                     if (spotCut == DEFAULT_SPOT_CUT) {
                         str +=
                           QString().sprintf("    pointLight(%d, normal, eye, ecPosition3);\n\n", i);
-                        fLightPoint = true;
+                        m_fLightPoint = true;
                     } else {
                         str +=
                           QString().sprintf("    spotLight(%d, normal, eye, ecPosition3);\n\n", i);
-                        fLightSpot = true;
+                        m_fLightSpot = true;
                     }
                 }
             }
@@ -772,19 +773,19 @@ SGShaderGenerator::buildLightCode(QString& str)
 
                     if (v[3] == 0.0) {
                         str += QString().sprintf("    directionalLight(%d, normal);\n\n", i);
-                        fLightDir = true;
+                        m_fLightDir = true;
                     } else {
                         glGetLightfv(GL_LIGHT0 + i, GL_SPOT_CUTOFF, &spotCut);
                         if (spotCut == 180.0) {
                             str += QString().sprintf("    pointLight(%d, normal, "
                                                      "eye, ecPosition3);\n\n",
                                                      i);
-                            fLightPoint = true;
+                            m_fLightPoint = true;
                         } else {
                             str += QString().sprintf("    spotLight(%d, normal, "
                                                      "eye, ecPosition3);\n\n",
                                                      i);
-                            fLightSpot = true;
+                            m_fLightSpot = true;
                         }
                     }
                 }
@@ -819,7 +820,7 @@ SGShaderGenerator::buildLightCode(QString& str)
 void
 SGShaderGenerator::buildFuncFnormal(QString& str)
 {
-    if (glIsEnabled(GL_LIGHTING) || texturesEnabled) {
+    if (glIsEnabled(GL_LIGHTING) || m_texturesEnabled) {
         str += "\n"
                "vec3 fnormal(void)\n"
                "{\n"
@@ -868,16 +869,16 @@ SGShaderGenerator::buildTexCoord(QString& str)
     QString texCoordString, tempStringA, tempStringB;
 
     for (int i = 0; i < NUM_TEXTURES; i++) {
-        if (currentTexture[i].textureEnabled == GL_TRUE) {
-            if (currentTexture[i].textureCoordinateGenerationReflection) {
-                if (!fMapReflection && !fMapSphere) {
+        if (m_currentTexture[i].textureEnabled == GL_TRUE) {
+            if (m_currentTexture[i].textureCoordinateGenerationReflection) {
+                if (!m_fMapReflection && !m_fMapSphere) {
                     tempStringA = "    vec3 ecPosition3;"
                                   "    ecPosition3 = (vec3(ecPosition))/ecPosition.w;\n";
                 }
-                if (!fMapReflection) {
+                if (!m_fMapReflection) {
                     tempStringB = "    vec3 reflection = reflectionMap( "
                                   "normal, ecPosition3 );\n";
-                    if (!fMapSphere) {
+                    if (!m_fMapSphere) {
                         texCoordString =
                           tempStringA + tempStringB +
                           QString().sprintf("    gl_TexCoord[%i] = vec4( reflection, 1.0); \n", i);
@@ -886,19 +887,19 @@ SGShaderGenerator::buildTexCoord(QString& str)
                           tempStringB +
                           QString().sprintf("    gl_TexCoord[%i] = vec4( reflection, 1.0); \n", i);
                     }
-                    fMapReflection = true;
+                    m_fMapReflection = true;
                 } else {
                     texCoordString.sprintf("    gl_TexCoord[%i] = vec4( reflection, 1.0); \n", i);
                 }
-            } else if (currentTexture[i].textureCoordinateGenerationSphereMap) {
-                if (!fMapSphere && !fMapReflection) {
+            } else if (m_currentTexture[i].textureCoordinateGenerationSphereMap) {
+                if (!m_fMapSphere && !m_fMapReflection) {
                     tempStringA = "    vec3 ecPosition3;\n"
                                   "    ecPosition3 = (vec3(ecPosition))/ecPosition.w;\n";
                 }
-                if (!fMapSphere) {
+                if (!m_fMapSphere) {
                     tempStringB = "    vec2 sMap = sphereMap( normal, ecPosition3 );\n";
 
-                    if (!fMapReflection) {
+                    if (!m_fMapReflection) {
                         texCoordString =
                           tempStringA + tempStringB +
                           QString().sprintf("    gl_TexCoord[%i] = vec4(sMap, 0.0, 1.0 );\n", i);
@@ -907,11 +908,11 @@ SGShaderGenerator::buildTexCoord(QString& str)
                           tempStringB +
                           QString().sprintf("    gl_TexCoord[%i] = vec4(sMap, 0.0, 1.0 );\n", i);
                     }
-                    fMapSphere = true;
+                    m_fMapSphere = true;
                 } else {
                     texCoordString.sprintf("    gl_TexCoord[%i] = vec4( sMap, 0.0, 1.0 );\n", i);
                 }
-            } else if (currentTexture[i].textureCoordinateGenerationEye) {
+            } else if (m_currentTexture[i].textureCoordinateGenerationEye) {
                 texCoordString.sprintf("\n    gl_TexCoord[%i].s = dot( "
                                        "ecPosition, gl_EyePlaneS[%i] );\n"
                                        "    gl_TexCoord[%i].t = dot( "
@@ -921,7 +922,7 @@ SGShaderGenerator::buildTexCoord(QString& str)
                                        "    gl_TexCoord[%i].q = dot( "
                                        "ecPosition, gl_EyePlaneQ[%i] );\n",
                                        i, i, i, i, i, i, i, i);
-            } else if (currentTexture[i].textureCoordinateGenerationObject) {
+            } else if (m_currentTexture[i].textureCoordinateGenerationObject) {
                 texCoordString.sprintf("\n    gl_TexCoord[%i].s = dot( "
                                        "gl_Vertex, gl_ObjectPlaneS[%i] );\n"
                                        "    gl_TexCoord[%i].t = dot( "
@@ -931,7 +932,7 @@ SGShaderGenerator::buildTexCoord(QString& str)
                                        "    gl_TexCoord[%i].q = dot( "
                                        "gl_Vertex, gl_ObjectPlaneQ[%i] );\n",
                                        i, i, i, i, i, i, i, i);
-            } else if (currentTexture[i].textureCoordinateGenerationNormal) {
+            } else if (m_currentTexture[i].textureCoordinateGenerationNormal) {
                 texCoordString.sprintf("\n    gl_TexCoord[%i] = vec4( normal, 1.0 );\n", i);
 
             } else {
@@ -992,7 +993,7 @@ SGShaderGenerator::buildVertMain(QString& str)
            "{\n";
 
     for (int i = 0; i < NUM_TEXTURES; i++) {
-        if (currentTexture[i].textureEnabled || lighting) {
+        if (m_currentTexture[i].textureEnabled || lighting) {
             str += "    vec3  transformedNormal;\n"
                    "    float alphaFade = 1.0;\n\n";
             break;
@@ -1006,7 +1007,7 @@ SGShaderGenerator::buildVertMain(QString& str)
            "gl_Vertex;\n";
 
     for (int i = 0; i < 5; i++) {
-        if (currentTexture[i].textureEnabled || lighting) {
+        if (m_currentTexture[i].textureEnabled || lighting) {
             str += "    transformedNormal = fnormal();\n";
             break;
         }
@@ -1028,7 +1029,7 @@ SGShaderGenerator::buildVertMain(QString& str)
         str += "    gl_FogFragCoord = ffog(ecPosition.z);\n";
     }
 
-    if (vTexGenEnable) {
+    if (m_vTexGenEnable) {
         str += "    ftexgen(transformedNormal, ecPosition);\n";
     }
 

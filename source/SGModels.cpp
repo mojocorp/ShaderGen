@@ -40,23 +40,23 @@
 
 SGModels::SGModels()
 {
-    surface[ModelTorus] = new TTorus();
-    surface[ModelPlane] = new TPlane();
-    surface[ModelSphere] = new TSphere();
-    surface[ModelConic] = new TConic();
-    surface[ModelTrefoil] = new TTrefoil();
-    surface[ModelKlein] = new TKlein();
+    m_surface[ModelTorus] = new TTorus();
+    m_surface[ModelPlane] = new TPlane();
+    m_surface[ModelSphere] = new TSphere();
+    m_surface[ModelConic] = new TConic();
+    m_surface[ModelTrefoil] = new TTrefoil();
+    m_surface[ModelKlein] = new TKlein();
 }
 
 SGModels::~SGModels()
 {
     for (int i = 0; i < 6; i++) {
-        delete surface[i];
+        delete m_surface[i];
     }
 }
 
 void
 SGModels::drawModel(ModelId id)
 {
-    surface[id]->Draw();
+    m_surface[id]->Draw();
 }

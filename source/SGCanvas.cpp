@@ -50,21 +50,21 @@
 SGCanvas::SGCanvas(SGFrame* frame, QWidget* parent)
   : QGLWidget(parent)
   , CameraZ(-5)
-  , mouse(this)
+  , m_mouse(this)
 {
     setFocusPolicy(Qt::StrongFocus);
-    mode = GLModeChoiceFixed;
+    m_mode = GLModeChoiceFixed;
     m_frame = frame;
-    models = new SGModels();
+    m_models = new SGModels();
     m_zoom = 0.8f;
-    modelCurrent = SGModels::ModelTorus;
-    glReady = glCompiled = glLinked = false;
-    prog = vertS = fragS = 0;
+    m_modelCurrent = SGModels::ModelTorus;
+    m_glReady = m_glCompiled = m_glLinked = false;
+    m_prog = m_vertS = m_fragS = 0;
 }
 
 SGCanvas::~SGCanvas()
 {
-    delete models;
+    delete m_models;
 }
 
 SGFixedGLState*
@@ -99,8 +99,8 @@ SGCanvas::paintGL()
     GLSetup();
     PrintOpenGLError();
     glPushMatrix();
-    mouse.loadMatrix();
-    models->drawModel(modelCurrent);
+    m_mouse.loadMatrix();
+    m_models->drawModel(m_modelCurrent);
     PrintOpenGLError();
     glPopMatrix();
 
@@ -166,17 +166,17 @@ SGCanvas::GLSetup()
 
     PrintOpenGLError();
 
-    if (mode == SGCanvas::GLModeChoiceFixed) {
+    if (m_mode == SGCanvas::GLModeChoiceFixed) {
         glUseProgram(0);
         setupFromFixedState();
     } else {
-        if (glLinked) {
-            glUseProgram(prog);
+        if (m_glLinked) {
+            glUseProgram(m_prog);
         } else {
             glUseProgram(0);
         }
     }
-    glReady = true;
+    m_glReady = true;
 }
 
 void
@@ -279,21 +279,21 @@ SGCanvas::keyPressEvent(QKeyEvent* event)
 void
 SGCanvas::mousePressEvent(QMouseEvent* event)
 {
-    mouse.onMousePress(event);
+    m_mouse.onMousePress(event);
     updateGL();
 }
 
 void
 SGCanvas::mouseMoveEvent(QMouseEvent* event)
 {
-    mouse.onMouseMove(event);
+    m_mouse.onMouseMove(event);
     updateGL();
 }
 
 void
 SGCanvas::mouseReleaseEvent(QMouseEvent* event)
 {
-    mouse.onMouseRelease(event);
+    m_mouse.onMouseRelease(event);
     updateGL();
 }
 
@@ -302,53 +302,53 @@ SGCanvas::linkShaders(const QString& vertexShader, const QString& fragmentShader
 {
     GLint linked;
 
-    if (glLinked) {
+    if (m_glLinked) {
         return true;
     }
 
-    if (!glCompiled) {
+    if (!m_glCompiled) {
         compileShaders(vertexShader, fragmentShader);
     }
 
-    if (glCompiled) {
+    if (m_glCompiled) {
         writeMessage(tr("Attempting to link programs...."));
-        if (glIsProgram(prog)) {
-            glDeleteProgram(prog);
+        if (glIsProgram(m_prog)) {
+            glDeleteProgram(m_prog);
         }
-        prog = glCreateProgram();
-        glAttachShader(prog, vertS);
-        glAttachShader(prog, fragS);
-        glLinkProgram(prog);
-        glGetProgramiv(prog, GL_LINK_STATUS, &linked);
-        printInfoLog(prog);
+        m_prog = glCreateProgram();
+        glAttachShader(m_prog, m_vertS);
+        glAttachShader(m_prog, m_fragS);
+        glLinkProgram(m_prog);
+        glGetProgramiv(m_prog, GL_LINK_STATUS, &linked);
+        printInfoLog(m_prog);
         if (!linked) {
             writeMessage(tr("Error in linking programs!!"));
-            glLinked = false;
+            m_glLinked = false;
             return false;
         } else {
-            glUseProgram(prog);
+            glUseProgram(m_prog);
             for (int i = 0; i < 5; i++) {
                 GLint uniformLocation;
 
                 switch (i) {
                     case 0:
-                        uniformLocation = glGetUniformLocation(prog, "texUnit0");
+                        uniformLocation = glGetUniformLocation(m_prog, "texUnit0");
                         glUniform1i(uniformLocation, 0);
                         break;
                     case 1:
-                        uniformLocation = glGetUniformLocation(prog, "texUnit1");
+                        uniformLocation = glGetUniformLocation(m_prog, "texUnit1");
                         glUniform1i(uniformLocation, 1);
                         break;
                     case 2:
-                        uniformLocation = glGetUniformLocation(prog, "texUnit2");
+                        uniformLocation = glGetUniformLocation(m_prog, "texUnit2");
                         glUniform1i(uniformLocation, 2);
                         break;
                     case 3:
-                        uniformLocation = glGetUniformLocation(prog, "texUnit3");
+                        uniformLocation = glGetUniformLocation(m_prog, "texUnit3");
                         glUniform1i(uniformLocation, 3);
                         break;
                     case 4:
-                        uniformLocation = glGetUniformLocation(prog, "texUnit4");
+                        uniformLocation = glGetUniformLocation(m_prog, "texUnit4");
                         glUniform1i(uniformLocation, 4);
                         break;
                     default:
@@ -359,13 +359,13 @@ SGCanvas::linkShaders(const QString& vertexShader, const QString& fragmentShader
 
         writeMessage(tr("Linked programs successfully"));
 
-        glLinked = true;
+        m_glLinked = true;
         return true;
     } else {
         writeMessage(tr("Compilation failed, not attempting link, check shader code"));
-        glLinked = false;
+        m_glLinked = false;
 
-        glDeleteProgram(prog);
+        glDeleteProgram(m_prog);
         return false;
     }
 }
@@ -375,46 +375,46 @@ SGCanvas::compileShaders(const QString& vertexShader, const QString& fragmentSha
 {
 
     GLint vertCompiled, fragCompiled;
-    glLinked = false;
-    if (vertS || fragS) {
-        if (glIsProgram(prog)) {
-            glDeleteProgram(prog);
+    m_glLinked = false;
+    if (m_vertS || m_fragS) {
+        if (glIsProgram(m_prog)) {
+            glDeleteProgram(m_prog);
         }
     }
-    vertS = glCreateShader(GL_VERTEX_SHADER);
-    fragS = glCreateShader(GL_FRAGMENT_SHADER);
+    m_vertS = glCreateShader(GL_VERTEX_SHADER);
+    m_fragS = glCreateShader(GL_FRAGMENT_SHADER);
     std::string vs = qPrintable(vertexShader);
     std::string fs = qPrintable(fragmentShader);
     const char* vertdata = vs.c_str();
     const char* fragdata = fs.c_str();
-    glShaderSource(vertS, 1, (const GLchar**)&vertdata, NULL);
-    glShaderSource(fragS, 1, (const GLchar**)&fragdata, NULL);
-    glCompileShader(vertS);
-    glGetShaderiv(vertS, GL_COMPILE_STATUS, &vertCompiled);
+    glShaderSource(m_vertS, 1, (const GLchar**)&vertdata, NULL);
+    glShaderSource(m_fragS, 1, (const GLchar**)&fragdata, NULL);
+    glCompileShader(m_vertS);
+    glGetShaderiv(m_vertS, GL_COMPILE_STATUS, &vertCompiled);
     if (!vertCompiled) {
         writeMessage(tr("Vertex shader failed to compile"));
-        printInfoLog(vertS);
-        glDeleteShader(vertS);
+        printInfoLog(m_vertS);
+        glDeleteShader(m_vertS);
     } else {
         writeMessage(tr("Vertex shader compiled successfully"));
     }
-    printInfoLog(vertS);
-    glCompileShader(fragS);
-    glGetShaderiv(fragS, GL_COMPILE_STATUS, &fragCompiled);
+    printInfoLog(m_vertS);
+    glCompileShader(m_fragS);
+    glGetShaderiv(m_fragS, GL_COMPILE_STATUS, &fragCompiled);
     if (!fragCompiled) {
         writeMessage(tr("Fragment shader failed to compile"));
-        printInfoLog(fragS);
-        glDeleteShader(fragS);
+        printInfoLog(m_fragS);
+        glDeleteShader(m_fragS);
     } else {
         writeMessage(tr("Fragment shader compiled successfully"));
     }
-    printInfoLog(fragS);
+    printInfoLog(m_fragS);
 
     if (!vertCompiled || !fragCompiled) {
-        glCompiled = false;
+        m_glCompiled = false;
         return false;
     }
-    glCompiled = true;
+    m_glCompiled = true;
 
     return true;
 }
@@ -422,11 +422,11 @@ SGCanvas::compileShaders(const QString& vertexShader, const QString& fragmentSha
 void
 SGCanvas::setMode(GLMode m)
 {
-    if (mode == m)
+    if (m_mode == m)
         return;
 
-    mode = m;
-    if (mode == GLModeChoiceShader) {
+    m_mode = m;
+    if (m_mode == GLModeChoiceShader) {
         switchToShaderMode();
     }
     updateGL();

@@ -62,10 +62,10 @@ class SGOglMaterialNBPage : public QWidget
   private:
     SGFixedGLState* m_glState;
 
-    QDoubleSpinBox* shininessMaterial;
+    QDoubleSpinBox* m_shininessMaterial;
 
-    QColorButton* ambientMaterial;
-    QColorButton* diffuseMaterial;
-    QColorButton* specularMaterial;
-    QColorButton* emissionMaterial;
+    QColorButton* m_ambientMaterial;
+    QColorButton* m_diffuseMaterial;
+    QColorButton* m_specularMaterial;
+    QColorButton* m_emissionMaterial;
 };

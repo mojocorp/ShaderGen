@@ -79,8 +79,8 @@ class SGTextures
 
   private:
     SGFrame* m_frame;
-    SGFixedGLState* glState;
-    ITexture textures[13];
-    QString TextureNames[13];
-    QImage image1;
+    SGFixedGLState* m_glState;
+    ITexture m_textures[13];
+    QString m_textureNames[13];
+    QImage m_image1;
 };

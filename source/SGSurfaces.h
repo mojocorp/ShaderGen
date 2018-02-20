@@ -54,9 +54,9 @@ class TParametricSurface
     virtual void vertex(QVector2D& domain, QVector3D& normal, QVector3D& p0, bool isNormalize);
     virtual bool flip(const QVector2D& /*domain*/) { return false; }
 
-    int slices;
-    bool flipped;
-    float du, dv;
+    int m_slices;
+    bool m_flipped;
+    float m_du, m_dv;
 };
 
 class TSphere : public TParametricSurface
@@ -94,12 +94,12 @@ class TPlane : public TParametricSurface
 {
   public:
     TPlane(float z = 0, float width = 2)
-      : z(z)
-      , width(width)
+      : m_z(z)
+      , m_width(width)
     {
     }
     void eval(QVector2D& domain, QVector3D& range);
 
   protected:
-    float z, width;
+    float m_z, m_width;
 };

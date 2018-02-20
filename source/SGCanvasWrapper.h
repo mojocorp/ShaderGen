@@ -49,8 +49,8 @@ class SGCanvasWrapper : public QFrame
     Q_OBJECT
   public:
     SGCanvasWrapper(SGFrame* parent);
-    SGCanvas::GLMode getMode() { return canvas->getMode(); }
-    SGCanvas* getCanvas() { return canvas; }
+    SGCanvas::GLMode getMode() { return m_canvas->getMode(); }
+    SGCanvas* getCanvas() { return m_canvas; }
     void switchMode();
     void setMode(SGCanvas::GLMode a);
 
@@ -58,7 +58,7 @@ class SGCanvasWrapper : public QFrame
     void onRadio(int);
 
   private:
-    SGCanvas* canvas;
-    QButtonGroup* glModeChoice;
+    SGCanvas* m_canvas;
+    QButtonGroup* m_glModeChoice;
     SGFrame* m_parent;
 };

@@ -58,18 +58,18 @@ class SGFrame : public QMainWindow
     SGFrame(const QString& title);
     ~SGFrame();
 
-    SGFixedGLState* getGLState() { return glState; }
-    SGTextures* getTextures() { return textures; }
+    SGFixedGLState* getGLState() { return m_glState; }
+    SGTextures* getTextures() { return m_textures; }
 
-    SGShaderTextWindow* getShaderTextWindow() { return shaderText; }
-    SGCanvas* getCanvas() { return canvas->getCanvas(); }
+    SGShaderTextWindow* getShaderTextWindow() { return m_shaderText; }
+    SGCanvas* getCanvas() { return m_canvas->getCanvas(); }
 
     void setCanvasMode(SGCanvas::GLMode a);
     void setStatusText(const QString& text);
     bool isPerspective() const;
 
-    const QString& getVertexShader() { return shaderGen->buildVertexShader(); }
-    const QString& getFragmentShader() { return shaderGen->buildFragmentShader(); }
+    const QString& getVertexShader() { return m_shaderGen->buildVertexShader(); }
+    const QString& getFragmentShader() { return m_shaderGen->buildFragmentShader(); }
 
     /// Returns 1 if an OpenGL error occurred, 0 otherwise.
     static int printOglError(const char* file, int line);
@@ -96,31 +96,31 @@ class SGFrame : public QMainWindow
     void createMenus();
     void createStatusBar();
 
-    QMenu* fileMenu;
-    QMenu* viewMenu;
-    QMenu* modelMenu;
-    QMenu* helpMenu;
+    QMenu* m_fileMenu;
+    QMenu* m_viewMenu;
+    QMenu* m_modelMenu;
+    QMenu* m_helpMenu;
 
-    QAction* openAct;
-    QAction* saveAsAct;
-    QAction* exitAct;
-    QAction* perspAct;
-    QAction* switchGLModeAct;
-    QAction* torusAct;
-    QAction* sphereAct;
-    QAction* trefoilAct;
-    QAction* kleinAct;
-    QAction* conicAct;
-    QAction* planeAct;
-    QAction* aboutAct;
-    QAction* helpAct;
+    QAction* m_openAct;
+    QAction* m_saveAsAct;
+    QAction* m_exitAct;
+    QAction* m_perspAct;
+    QAction* m_switchGLModeAct;
+    QAction* m_torusAct;
+    QAction* m_sphereAct;
+    QAction* m_trefoilAct;
+    QAction* m_kleinAct;
+    QAction* m_conicAct;
+    QAction* m_planeAct;
+    QAction* m_aboutAct;
+    QAction* m_helpAct;
 
-    SGFixedGLState* glState;
-    SGTextures* textures;
-    SGOglNotebook* oglNotebook;
-    SGCanvasWrapper* canvas;
-    SGShaderTextWindow* shaderText;
-    SGShaderGenerator* shaderGen;
-    QSplitter* topSizer;
-    QSplitter* horizSizer;
+    SGFixedGLState* m_glState;
+    SGTextures* m_textures;
+    SGOglNotebook* m_oglNotebook;
+    SGCanvasWrapper* m_canvas;
+    SGShaderTextWindow* m_shaderText;
+    SGShaderGenerator* m_shaderGen;
+    QSplitter* m_topSizer;
+    QSplitter* m_horizSizer;
 };

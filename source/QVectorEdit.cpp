@@ -9,7 +9,7 @@ QVectorEdit::QVectorEdit(const QVector3D& vec, QWidget* parent)
 {
     init(QVector4D(vec, 0.0f));
 
-    w->hide();
+    m_w->hide();
 }
 
 QVectorEdit::QVectorEdit(const QVector4D& vec, QWidget* parent)
@@ -28,23 +28,23 @@ void
 QVectorEdit::setValue(const QVector4D& vec)
 {
     blockSignals(true);
-    x->setValue(vec.x());
-    y->setValue(vec.y());
-    z->setValue(vec.z());
-    w->setValue(vec.w());
+    m_x->setValue(vec.x());
+    m_y->setValue(vec.y());
+    m_z->setValue(vec.z());
+    m_w->setValue(vec.w());
     blockSignals(false);
 }
 
 QVector4D
 QVectorEdit::getValue() const
 {
-    return QVector4D(x->value(), y->value(), z->value(), w->value());
+    return QVector4D(m_x->value(), m_y->value(), m_z->value(), m_w->value());
 }
 
 QSize
 QVectorEdit::sizeHint() const
 {
-    QSize s = x->sizeHint();
+    QSize s = m_x->sizeHint();
     return QSize(4 * 40, s.height());
 }
 
@@ -61,39 +61,39 @@ QVectorEdit::init(const QVector4D& vec)
     layout->setSpacing(0);
     layout->setMargin(0);
 
-    x = new QDoubleSpinBox(this);
-    x->setToolTip("X");
-    x->setMinimumWidth(40);
-    x->setRange(-std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
-    x->setButtonSymbols(QAbstractSpinBox::NoButtons);
+    m_x = new QDoubleSpinBox(this);
+    m_x->setToolTip("X");
+    m_x->setMinimumWidth(40);
+    m_x->setRange(-std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
+    m_x->setButtonSymbols(QAbstractSpinBox::NoButtons);
 
-    y = new QDoubleSpinBox(this);
-    y->setToolTip("Y");
-    y->setMinimumWidth(40);
-    y->setRange(-std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
-    y->setButtonSymbols(QAbstractSpinBox::NoButtons);
+    m_y = new QDoubleSpinBox(this);
+    m_y->setToolTip("Y");
+    m_y->setMinimumWidth(40);
+    m_y->setRange(-std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
+    m_y->setButtonSymbols(QAbstractSpinBox::NoButtons);
 
-    z = new QDoubleSpinBox(this);
-    z->setToolTip("Z");
-    z->setMinimumWidth(40);
-    z->setRange(-std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
-    z->setButtonSymbols(QAbstractSpinBox::NoButtons);
+    m_z = new QDoubleSpinBox(this);
+    m_z->setToolTip("Z");
+    m_z->setMinimumWidth(40);
+    m_z->setRange(-std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
+    m_z->setButtonSymbols(QAbstractSpinBox::NoButtons);
 
-    w = new QDoubleSpinBox(this);
-    w->setToolTip("W");
-    w->setMinimumWidth(40);
-    w->setRange(-std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
-    w->setButtonSymbols(QAbstractSpinBox::NoButtons);
+    m_w = new QDoubleSpinBox(this);
+    m_w->setToolTip("W");
+    m_w->setMinimumWidth(40);
+    m_w->setRange(-std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
+    m_w->setButtonSymbols(QAbstractSpinBox::NoButtons);
 
-    layout->addWidget(x);
-    layout->addWidget(y);
-    layout->addWidget(z);
-    layout->addWidget(w);
+    layout->addWidget(m_x);
+    layout->addWidget(m_y);
+    layout->addWidget(m_z);
+    layout->addWidget(m_w);
 
     setValue(vec);
 
-    connect(x, SIGNAL(valueChanged(double)), SLOT(onValueChange()));
-    connect(y, SIGNAL(valueChanged(double)), SLOT(onValueChange()));
-    connect(z, SIGNAL(valueChanged(double)), SLOT(onValueChange()));
-    connect(w, SIGNAL(valueChanged(double)), SLOT(onValueChange()));
+    connect(m_x, SIGNAL(valueChanged(double)), SLOT(onValueChange()));
+    connect(m_y, SIGNAL(valueChanged(double)), SLOT(onValueChange()));
+    connect(m_z, SIGNAL(valueChanged(double)), SLOT(onValueChange()));
+    connect(m_w, SIGNAL(valueChanged(double)), SLOT(onValueChange()));
 }

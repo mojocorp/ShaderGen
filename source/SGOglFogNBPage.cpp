@@ -63,11 +63,11 @@ SGOglFogNBPage::SGOglFogNBPage(SGFixedGLState* glState, QWidget* parent)
     fogModeChoiceSizer->addWidget(fogExp);
     fogModeChoiceSizer->addWidget(fogExp2);
 
-    fogModeChoice = new QButtonGroup(this);
-    fogModeChoice->addButton(fogLinear, 0);
-    fogModeChoice->addButton(fogExp, 1);
-    fogModeChoice->addButton(fogExp2, 2);
-    connect(fogModeChoice, SIGNAL(buttonClicked(int)), SLOT(onRadio(int)));
+    m_fogModeChoice = new QButtonGroup(this);
+    m_fogModeChoice->addButton(fogLinear, 0);
+    m_fogModeChoice->addButton(fogExp, 1);
+    m_fogModeChoice->addButton(fogExp2, 2);
+    connect(m_fogModeChoice, SIGNAL(buttonClicked(int)), SLOT(onRadio(int)));
 
     GLenum aa = glState->getFog().fogMode;
     switch (aa) {
@@ -85,34 +85,34 @@ SGOglFogNBPage::SGOglFogNBPage(SGFixedGLState* glState, QWidget* parent)
             break;
     }
 
-    fogModeChoice->button(aa)->setChecked(true);
+    m_fogModeChoice->button(aa)->setChecked(true);
 
-    fogDensity = new QDoubleSpinBox(this);
-    fogDensity->setRange(0, 100);
+    m_fogDensity = new QDoubleSpinBox(this);
+    m_fogDensity->setRange(0, 100);
 
-    fogStart = new QDoubleSpinBox(this);
-    fogStart->setRange(-1000, 1000);
+    m_fogStart = new QDoubleSpinBox(this);
+    m_fogStart->setRange(-1000, 1000);
 
-    fogEnd = new QDoubleSpinBox(this);
-    fogEnd->setRange(-1000, 1000);
+    m_fogEnd = new QDoubleSpinBox(this);
+    m_fogEnd->setRange(-1000, 1000);
 
-    connect(fogDensity, SIGNAL(valueChanged(double)), SLOT(fogDensityChanged(double)));
-    connect(fogStart, SIGNAL(valueChanged(double)), SLOT(fogDensityChanged(double)));
-    connect(fogEnd, SIGNAL(valueChanged(double)), SLOT(fogDensityChanged(double)));
+    connect(m_fogDensity, SIGNAL(valueChanged(double)), SLOT(fogDensityChanged(double)));
+    connect(m_fogStart, SIGNAL(valueChanged(double)), SLOT(fogDensityChanged(double)));
+    connect(m_fogEnd, SIGNAL(valueChanged(double)), SLOT(fogDensityChanged(double)));
 
-    fogColor = new QColorButton(this);
-    connect(fogColor, SIGNAL(selected(QColor)), SLOT(fogColorChanged(QColor)));
+    m_fogColor = new QColorButton(this);
+    connect(m_fogColor, SIGNAL(selected(QColor)), SLOT(fogColorChanged(QColor)));
 
     QLabel* fogDensityLbl = new QLabel(tr("GL_FOG_DENSITY"), this);
     QLabel* fogStartLbl = new QLabel(tr("GL_FOG_START"), this);
     QLabel* fogEndLbl = new QLabel(tr("GL_FOG_END"), this);
     QLabel* fogColorLbl = new QLabel(tr("GL_FOG_COLOR"), this);
 
-    fogCheckBox = new QCheckBox(tr("GL_FOG_ENABLE"), this);
-    fogCheckBox->setChecked(glState->getFogEnable());
-    connect(fogCheckBox, SIGNAL(clicked(bool)), SLOT(onCheckbox()));
+    m_fogCheckBox = new QCheckBox(tr("GL_FOG_ENABLE"), this);
+    m_fogCheckBox->setChecked(glState->getFogEnable());
+    connect(m_fogCheckBox, SIGNAL(clicked(bool)), SLOT(onCheckbox()));
 
-    fogSizer->addWidget(fogCheckBox, 0, 0);
+    fogSizer->addWidget(m_fogCheckBox, 0, 0);
 
     fogSizer->addWidget(fogModeChoiceBox, 1, 0, 3, 1);
 
@@ -120,13 +120,13 @@ SGOglFogNBPage::SGOglFogNBPage(SGFixedGLState* glState, QWidget* parent)
     fogSizer->addWidget(fogStartLbl, 2, 1);
     fogSizer->addWidget(fogEndLbl, 3, 1);
 
-    fogSizer->addWidget(fogDensity, 1, 2);
-    fogSizer->addWidget(fogStart, 2, 2);
-    fogSizer->addWidget(fogEnd, 3, 2);
+    fogSizer->addWidget(m_fogDensity, 1, 2);
+    fogSizer->addWidget(m_fogStart, 2, 2);
+    fogSizer->addWidget(m_fogEnd, 3, 2);
 
     fogSizer->addWidget(fogColorLbl, 1, 3);
 
-    fogSizer->addWidget(fogColor, 1, 4);
+    fogSizer->addWidget(m_fogColor, 1, 4);
     fogSizer->setRowStretch(4, 2);
     fogSizer->setColumnStretch(5, 2);
 
@@ -137,10 +137,10 @@ void
 SGOglFogNBPage::setup()
 {
     const Fog& fog = m_glState->getFog();
-    fogDensity->setValue(fog.fogDensity);
-    fogStart->setValue(fog.fogStart);
-    fogEnd->setValue(fog.fogEnd);
-    fogColor->setColor(fog.fogColorVector);
+    m_fogDensity->setValue(fog.fogDensity);
+    m_fogStart->setValue(fog.fogStart);
+    m_fogEnd->setValue(fog.fogEnd);
+    m_fogColor->setColor(fog.fogColorVector);
 }
 
 void
@@ -154,7 +154,7 @@ SGOglFogNBPage::fogColorChanged(const QColor& color)
 void
 SGOglFogNBPage::onCheckbox()
 {
-    m_glState->setFogEnable(fogCheckBox->isChecked());
+    m_glState->setFogEnable(m_fogCheckBox->isChecked());
     emit valueChanged();
 }
 

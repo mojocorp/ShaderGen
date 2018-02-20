@@ -63,15 +63,15 @@ class SGShaderGenerator
         GLboolean textureGenerationEnableArray[NUM_TEXTURE_COORDS];
     } CurrentTextureState;
 
-    QString fragShader;
-    QString vertShader;
+    QString m_fragShader;
+    QString m_vertShader;
 
-    bool fLightPoint, fLightSpot, fLightDir, fLightDirSpot;
-    bool fMapSphere, fMapReflection, vTexGenEnable;
+    bool m_fLightPoint, m_fLightSpot, m_fLightDir, m_fLightDirSpot;
+    bool m_fMapSphere, m_fMapReflection, m_vTexGenEnable;
 
-    GLboolean texturesEnabled;
+    GLboolean m_texturesEnabled;
 
-    CurrentTextureState currentTexture[NUM_TEXTURES];
+    CurrentTextureState m_currentTexture[NUM_TEXTURES];
 
     void initTextures();
     void buildFragFog(QString& str);

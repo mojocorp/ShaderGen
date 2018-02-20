@@ -67,5 +67,5 @@ class QCodeEditor : public QPlainTextEdit
     void updateLineNumberArea(const QRect&, int);
 
   private:
-    QWidget* lineNumberArea;
+    QWidget* m_lineNumberArea;
 };

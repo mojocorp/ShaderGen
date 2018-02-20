@@ -65,7 +65,7 @@ class SGCanvas : public QGLWidget
         GLModeChoiceShader
     };
     void setMode(GLMode a);
-    GLMode getMode() { return mode; }
+    GLMode getMode() { return m_mode; }
 
     int switchToShaderMode();
 
@@ -78,7 +78,7 @@ class SGCanvas : public QGLWidget
     void paintGL();
     void SetZoom(float zoom) { m_zoom = zoom; }
     void GLSetup();
-    void setModel(SGModels::ModelId id) { modelCurrent = id; }
+    void setModel(SGModels::ModelId id) { m_modelCurrent = id; }
     void printInfoLog(GLuint obj);
 
     GLuint logo;
@@ -92,18 +92,18 @@ class SGCanvas : public QGLWidget
   private:
     SGFixedGLState* getGLState();
 
-    GLMode mode;
-    SGModels* models;
-    SGCanvasMouseHandler mouse;
-    SGModels::ModelId modelCurrent;
+    GLMode m_mode;
+    SGModels* m_models;
+    SGCanvasMouseHandler m_mouse;
+    SGModels::ModelId m_modelCurrent;
     SGFrame* m_frame;
     int m_width, m_height;
     float m_left, m_right, m_bottom, m_top, m_znear, m_zfar, m_zoom;
 
     GLint getUniLoc(unsigned int program, const GLchar* name);
 
-    bool glReady, glCompiled, glLinked;
-    unsigned int vertS, fragS, prog;
+    bool m_glReady, m_glCompiled, m_glLinked;
+    unsigned int m_vertS, m_fragS, m_prog;
 
     void setupFromFixedState();
     void writeMessage(const QString str);

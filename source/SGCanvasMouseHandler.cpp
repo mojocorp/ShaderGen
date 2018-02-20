@@ -47,7 +47,7 @@
 static float StartZoom = 0.8f;
 
 SGCanvasMouseHandler::SGCanvasMouseHandler(SGCanvas* canvas1)
-  : canvas(canvas1)
+  : m_canvas(canvas1)
 {
     reset();
 }
@@ -55,85 +55,85 @@ SGCanvasMouseHandler::SGCanvasMouseHandler(SGCanvas* canvas1)
 void
 SGCanvasMouseHandler::reset()
 {
-    frames = 0.0f;
+    m_frames = 0.0f;
 
-    startZoom = StartZoom;
-    if (canvas) {
-        canvas->SetZoom(startZoom);
+    m_startZoom = StartZoom;
+    if (m_canvas) {
+        m_canvas->SetZoom(m_startZoom);
     }
     stop();
-    vPrev = QVector3D(0.0f, 0.0f, 0.0f);
-    vInc = QVector3D(0.0f, 0.0f, 0.0f);
-    validStart = false;
-    xform.setToIdentity();
+    m_vPrev = QVector3D(0.0f, 0.0f, 0.0f);
+    m_vInc = QVector3D(0.0f, 0.0f, 0.0f);
+    m_validStart = false;
+    m_xform.setToIdentity();
 }
 
 void
 SGCanvasMouseHandler::stop()
 {
-    vInc = QVector3D(0.0f, 0.0f, 0.0f);
+    m_vInc = QVector3D(0.0f, 0.0f, 0.0f);
 }
 
 void
 SGCanvasMouseHandler::onMousePress(QMouseEvent* event)
 {
-    QVector3D cursor = canvas->getWorldSpace(event->x(), event->y());
+    QVector3D cursor = m_canvas->getWorldSpace(event->x(), event->y());
 
     if (event->buttons() & Qt::LeftButton) {
         if (!(event->modifiers() & Qt::ControlModifier)) {
             stop();
         }
-        vStart = cursor;
-        mStart = xform;
-        startZoom = canvas->getZoom();
-        vPrev = cursor;
-        validStart = true;
+        m_vStart = cursor;
+        m_mStart = m_xform;
+        m_startZoom = m_canvas->getZoom();
+        m_vPrev = cursor;
+        m_validStart = true;
     }
     // Right mouse button zooms.
     else if (event->buttons() & Qt::RightButton) {
-        vStart = cursor;
-        startZoom = canvas->getZoom();
-        validStart = true;
+        m_vStart = cursor;
+        m_startZoom = m_canvas->getZoom();
+        m_validStart = true;
     }
 }
 
 void
 SGCanvasMouseHandler::onMouseMove(QMouseEvent* event)
 {
-    QVector3D cursor = canvas->getWorldSpace(event->x(), event->y());
+    QVector3D cursor = m_canvas->getWorldSpace(event->x(), event->y());
 
     if (event->buttons() & Qt::LeftButton) {
-        if (!validStart) {
-            vInc = QVector3D(0.0f, 0.0f, 0.0f);
+        if (!m_validStart) {
+            m_vInc = QVector3D(0.0f, 0.0f, 0.0f);
         } else {
             if (event->modifiers() & Qt::ControlModifier) {
-                float delta = cursor.y() - vStart.y();
+                float delta = cursor.y() - m_vStart.y();
                 if (delta) {
-                    canvas->SetZoom(startZoom + delta);
-                    canvas->updateGL();
+                    m_canvas->SetZoom(m_startZoom + delta);
+                    m_canvas->updateGL();
                 }
             } else {
-                float theta = 180 * (cursor - vStart).length();
+                float theta = 180 * (cursor - m_vStart).length();
                 if (theta) {
-                    QVector3D axis = QVector3D::crossProduct(vStart, cursor);
+                    QVector3D axis = QVector3D::crossProduct(m_vStart, cursor);
                     axis.normalize();
 
                     glLoadIdentity();
                     glRotatef(-theta, axis.x(), axis.y(), axis.z());
-                    glMultMatrix(mStart);
-                    glGet(GL_MODELVIEW_MATRIX, xform);
-                    canvas->updateGL();
+                    glMultMatrix(m_mStart);
+                    glGet(GL_MODELVIEW_MATRIX, m_xform);
+                    m_canvas->updateGL();
                 }
             }
-            vInc = cursor - vPrev;
+            m_vInc = cursor - m_vPrev;
         }
-        vPrev = cursor;
+        m_vPrev = cursor;
     } else if (event->buttons() & Qt::RightButton) {
-        if (validStart) {
-            float delta = cursor.y() - vStart.y();
+        if (m_validStart) {
+            float delta = cursor.y() - m_vStart.y();
             if (delta) {
-                canvas->SetZoom(startZoom + delta);
-                canvas->updateGL();
+                m_canvas->SetZoom(m_startZoom + delta);
+                m_canvas->updateGL();
             }
         }
     }
@@ -142,7 +142,7 @@ SGCanvasMouseHandler::onMouseMove(QMouseEvent* event)
 void
 SGCanvasMouseHandler::onMouseRelease(QMouseEvent*)
 {
-    validStart = false;
+    m_validStart = false;
 }
 
 void
@@ -150,10 +150,10 @@ SGCanvasMouseHandler::loadMatrix() const
 {
     glLoadIdentity();
 
-    if (canvas->getFrame()->isPerspective()) {
-        glTranslatef(0.0f, 0.0f, canvas->CameraZ - 1.0f);
+    if (m_canvas->getFrame()->isPerspective()) {
+        glTranslatef(0.0f, 0.0f, m_canvas->CameraZ - 1.0f);
     } else {
-        glTranslatef(0.0f, 0.0f, canvas->CameraZ);
+        glTranslatef(0.0f, 0.0f, m_canvas->CameraZ);
     }
 
     glRotatef(20.0f, 1.0f, 0.0f, 0.0f);
@@ -163,5 +163,5 @@ SGCanvasMouseHandler::loadMatrix() const
 void
 SGCanvasMouseHandler::multMatrix() const
 {
-    glMultMatrix(xform);
+    glMultMatrix(m_xform);
 }

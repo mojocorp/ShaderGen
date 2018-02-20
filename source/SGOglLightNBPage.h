@@ -76,21 +76,21 @@ class SGOglLightNBPage : public QWidget
   private:
     SGFixedGLState* m_glState;
 
-    QButtonGroup *lightSelectionGroup, *lightCheckGroup;
+    QButtonGroup *m_lightSelectionGroup, *m_lightCheckGroup;
 
-    QCheckBox *lightingCheckBox, *normalizeCheckBox, *separateSpecularColorCheckBox;
+    QCheckBox *m_lightingCheckBox, *m_normalizeCheckBox, *m_separateSpecularColorCheckBox;
 
-    QVectorEdit* lightPosition;
+    QVectorEdit* m_lightPosition;
 
-    QVectorEdit* spotDirection;
-    QDoubleSpinBox* spotExponent;
-    QDoubleSpinBox* spotCutoff;
+    QVectorEdit* m_spotDirection;
+    QDoubleSpinBox* m_spotExponent;
+    QDoubleSpinBox* m_spotCutoff;
 
-    QDoubleSpinBox* constantAttenuation;
-    QDoubleSpinBox* quadraticAttenuation;
-    QDoubleSpinBox* linearAttenuation;
+    QDoubleSpinBox* m_constantAttenuation;
+    QDoubleSpinBox* m_quadraticAttenuation;
+    QDoubleSpinBox* m_linearAttenuation;
 
-    QColorButton* ambientLight;
-    QColorButton* specularLight;
-    QColorButton* diffuseLight;
+    QColorButton* m_ambientLight;
+    QColorButton* m_specularLight;
+    QColorButton* m_diffuseLight;
 };

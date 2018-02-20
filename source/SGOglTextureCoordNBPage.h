@@ -75,13 +75,13 @@ class SGOglTextureCoordNBPage : public QWidget
 
     SGFixedGLState* m_glState;
 
-    QCheckBox *tex0TexGenEnableCheckBox, *tex1TexGenEnableCheckBox, *tex2TexGenEnableCheckBox,
-      *tex3TexGenEnableCheckBox, *tex4TexGenEnableCheckBox;
+    QCheckBox *m_tex0TexGenEnableCheckBox, *m_tex1TexGenEnableCheckBox, *m_tex2TexGenEnableCheckBox,
+      *m_tex3TexGenEnableCheckBox, *m_tex4TexGenEnableCheckBox;
 
-    QButtonGroup *coordGenGroup, *texCoordSelGroup, *texCoordUnitGroup;
+    QButtonGroup *m_coordGenGroup, *m_texCoordSelGroup, *m_texCoordUnitGroup;
 
-    QVectorEdit *eyePlaneCoeffTextS, *eyePlaneCoeffTextT, *objectPlaneCoeffTextS,
-      *objectPlaneCoeffTextT;
+    QVectorEdit *m_eyePlaneCoeffTextS, *m_eyePlaneCoeffTextT, *m_objectPlaneCoeffTextS,
+      *m_objectPlaneCoeffTextT;
 
     void updateWidgets();
 };

@@ -27,8 +27,8 @@ class QVectorEdit : public QWidget
   private:
     void init(const QVector4D& vec);
 
-    QDoubleSpinBox* x;
-    QDoubleSpinBox* y;
-    QDoubleSpinBox* z;
-    QDoubleSpinBox* w;
+    QDoubleSpinBox* m_x;
+    QDoubleSpinBox* m_y;
+    QDoubleSpinBox* m_z;
+    QDoubleSpinBox* m_w;
 };

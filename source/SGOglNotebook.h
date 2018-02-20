@@ -23,9 +23,9 @@ class SGOglNotebook : public QTabWidget
     void onValueChange();
 
   private:
-    SGOglLightNBPage* lightPage;
-    SGOglMaterialNBPage* materialPage;
-    SGOglFogNBPage* fogPage;
-    SGOglTextureCoordNBPage* textureCoordPage;
-    SGOglTextureEnvNBPage* textureEnvPage;
+    SGOglLightNBPage* m_lightPage;
+    SGOglMaterialNBPage* m_materialPage;
+    SGOglFogNBPage* m_fogPage;
+    SGOglTextureCoordNBPage* m_textureCoordPage;
+    SGOglTextureEnvNBPage* m_textureEnvPage;
 };

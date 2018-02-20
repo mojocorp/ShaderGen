@@ -66,10 +66,10 @@ class SGOglFogNBPage : public QWidget
   private:
     SGFixedGLState* m_glState;
 
-    QButtonGroup* fogModeChoice;
-    QColorButton* fogColor;
-    QDoubleSpinBox* fogDensity;
-    QDoubleSpinBox* fogStart;
-    QDoubleSpinBox* fogEnd;
-    QCheckBox* fogCheckBox;
+    QButtonGroup* m_fogModeChoice;
+    QColorButton* m_fogColor;
+    QDoubleSpinBox* m_fogDensity;
+    QDoubleSpinBox* m_fogStart;
+    QDoubleSpinBox* m_fogEnd;
+    QCheckBox* m_fogCheckBox;
 };

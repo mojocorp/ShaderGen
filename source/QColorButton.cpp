@@ -11,13 +11,13 @@ QColorButton::QColorButton(QWidget* parent)
 QColor
 QColorButton::color() const
 {
-    return col;
+    return m_color;
 }
 
 void
 QColorButton::setColor(const QColor& color)
 {
-    col = color;
+    m_color = color;
 
     update();
 }
@@ -29,7 +29,7 @@ QColorButton::paintEvent(QPaintEvent* event)
 
     QPainter p(this);
     p.setPen(Qt::black);
-    p.setBrush(col);
+    p.setBrush(m_color);
     p.drawRect(5, 5, 34, 12);
 }
 
@@ -38,14 +38,14 @@ QColorButton::nextCheckState()
 {
     QPushButton::nextCheckState();
 
-    QColor savedColor = col;
+    QColor savedColor = m_color;
 
     QColorDialog* dialog = new QColorDialog(this);
-    dialog->setCurrentColor(col);
+    dialog->setCurrentColor(m_color);
     connect(dialog, SIGNAL(currentColorChanged(QColor)), SLOT(setColor(const QColor&)));
 
     if (dialog->exec() == QDialog::Accepted) {
-        emit selected(col);
+        emit selected(m_color);
     } else {
         setColor(savedColor);
     }
