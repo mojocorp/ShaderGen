@@ -39,7 +39,7 @@
 
 #include <QMainWindow>
 
-#include "SGCanvasWrapper.h"
+#include "SGCanvas.h"
 #include "SGShaderGenerator.h"
 
 class SGOglNotebook;
@@ -48,6 +48,7 @@ class SGCanvas;
 class SGFixedGLState;
 class SGTextures;
 class QSplitter;
+class QButtonGroup;
 
 #define PrintOpenGLError() SGFrame::printOglError(__FILE__, __LINE__)
 
@@ -62,7 +63,7 @@ class SGFrame : public QMainWindow
     SGTextures* getTextures() { return m_textures; }
 
     SGShaderTextWindow* getShaderTextWindow() { return m_shaderText; }
-    SGCanvas* getCanvas() { return m_canvas->getCanvas(); }
+    SGCanvas* getCanvas() { return m_canvas; }
 
     void setCanvasMode(SGCanvas::GLMode a);
     void setStatusText(const QString& text);
@@ -82,6 +83,7 @@ class SGFrame : public QMainWindow
   protected:
     virtual void closeEvent(QCloseEvent* event);
   private slots:
+    void onGLModeChanged(int);
     void modelActionTriggered(QAction* action);
     void viewActionTriggered();
     void switchGLModeTriggered();
@@ -118,7 +120,8 @@ class SGFrame : public QMainWindow
     SGFixedGLState* m_glState;
     SGTextures* m_textures;
     SGOglNotebook* m_oglNotebook;
-    SGCanvasWrapper* m_canvas;
+    SGCanvas* m_canvas;
+    QButtonGroup* m_glModeChoice;
     SGShaderTextWindow* m_shaderText;
     SGShaderGenerator* m_shaderGen;
     QSplitter* m_topSizer;

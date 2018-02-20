@@ -50,7 +50,7 @@ class SGFixedGLState;
 class SGCanvas : public QGLWidget
 {
   public:
-    SGCanvas(SGFrame* frame, QWidget* parent = 0);
+    SGCanvas(SGFrame* frame);
     ~SGCanvas();
 
     SGFrame* getFrame() { return m_frame; }

@@ -24,7 +24,6 @@ LIBS += -lGLU
 
 # Input
 HEADERS += globals.h\
-           SGCanvasWrapper.h \
            SGFrame.h \
            SGFixedGLState.h \
            SGModels.h \
@@ -46,7 +45,6 @@ HEADERS += globals.h\
            QCodeEditor.h
 
 SOURCES += App.cpp \
-           SGCanvasWrapper.cpp \
            SGFrame.cpp \
            SGFixedGLState.cpp \
            SGModels.cpp \

@@ -1,21 +1,24 @@
 #include <QActionGroup>
 #include <QBoxLayout>
+#include <QButtonGroup>
 #include <QFileDialog>
+#include <QGroupBox>
 #include <QJsonDocument>
 #include <QMenuBar>
 #include <QMessageBox>
+#include <QRadioButton>
 #include <QSettings>
 #include <QSplitter>
 #include <QStatusBar>
+#include <QVBoxLayout>
 
 #include "SGCanvas.h"
-#include "SGCanvasWrapper.h"
 #include "SGFixedGLState.h"
 #include "SGFrame.h"
 #include "SGOglNotebook.h"
 #include "SGShaderTextWindow.h"
 
-SGFrame* sgframe_instance = 0;
+static SGFrame* sgframe_instance = 0;
 
 SGFrame::SGFrame(const QString& title)
   : QMainWindow()
@@ -34,15 +37,36 @@ SGFrame::SGFrame(const QString& title)
     m_oglNotebook->resize(800, 300);
     connect(m_oglNotebook, SIGNAL(valueChanged()), SLOT(setFixedGLMode()));
 
-    m_canvas = new SGCanvasWrapper(this);
-    m_canvas->resize(400, 350);
+    QFrame* canvasWrapper = new QFrame(this);
+    QVBoxLayout* canvasWrapperLayout = new QVBoxLayout(canvasWrapper);
+
+    m_canvas = new SGCanvas(this);
+    m_canvas->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+
+    QGroupBox* gb = new QGroupBox(tr("Select GL Mode"), this);
+    gb->setLayout(new QHBoxLayout);
+    QRadioButton* fixed = new QRadioButton(tr("FIXED FUNCTIONALITY MODE"), gb);
+    fixed->setChecked(true);
+    QRadioButton* shader = new QRadioButton(tr("EQUIVALENT SHADER MODE "), gb);
+    gb->layout()->addWidget(fixed);
+    gb->layout()->addWidget(shader);
+
+    m_glModeChoice = new QButtonGroup(this);
+    m_glModeChoice->addButton(fixed, 0);
+    m_glModeChoice->addButton(shader, 1);
+    connect(m_glModeChoice, SIGNAL(buttonClicked(int)), SLOT(onGLModeChanged(int)));
+
+    canvasWrapperLayout->addWidget(gb);
+    canvasWrapperLayout->addWidget(m_canvas);
+    canvasWrapper->resize(400, 350);
+
     m_shaderText = new SGShaderTextWindow(this);
     m_shaderText->resize(450, 400);
 
     m_topSizer = new QSplitter(Qt::Vertical);
     m_horizSizer = new QSplitter(Qt::Horizontal);
 
-    m_horizSizer->addWidget(m_canvas);
+    m_horizSizer->addWidget(canvasWrapper);
     m_horizSizer->addWidget(m_shaderText);
 
     m_topSizer->addWidget(m_horizSizer);
@@ -165,7 +189,7 @@ void
 SGFrame::setCanvasMode(SGCanvas::GLMode a)
 {
     m_canvas->setMode(a);
-    getCanvas()->updateGL();
+    m_canvas->updateGL();
 }
 
 void
@@ -219,7 +243,7 @@ SGFrame::loadFile(const QString& filename)
     QJsonDocument loadDoc(QJsonDocument::fromJson(saveData));
     m_glState->read(loadDoc.object());
     m_oglNotebook->setup();
-    getCanvas()->updateGL();
+    m_canvas->updateGL();
 
     return true;
 }
@@ -263,43 +287,53 @@ SGFrame::closeEvent(QCloseEvent* event)
 }
 
 void
+SGFrame::onGLModeChanged(int id)
+{
+    m_canvas->setMode((SGCanvas::GLMode)id);
+}
+
+void
 SGFrame::modelActionTriggered(QAction* action)
 {
     if (action == m_torusAct) {
-        getCanvas()->setModel(SGModels::ModelTorus);
+        m_canvas->setModel(SGModels::ModelTorus);
     } else if (action == m_sphereAct) {
-        getCanvas()->setModel(SGModels::ModelSphere);
+        m_canvas->setModel(SGModels::ModelSphere);
     } else if (action == m_trefoilAct) {
-        getCanvas()->setModel(SGModels::ModelTrefoil);
+        m_canvas->setModel(SGModels::ModelTrefoil);
     } else if (action == m_kleinAct) {
-        getCanvas()->setModel(SGModels::ModelKlein);
+        m_canvas->setModel(SGModels::ModelKlein);
     } else if (action == m_conicAct) {
-        getCanvas()->setModel(SGModels::ModelConic);
+        m_canvas->setModel(SGModels::ModelConic);
     } else if (action == m_planeAct) {
-        getCanvas()->setModel(SGModels::ModelPlane);
+        m_canvas->setModel(SGModels::ModelPlane);
     }
 
-    getCanvas()->updateGL();
+    m_canvas->updateGL();
 }
 
 void
 SGFrame::viewActionTriggered()
 {
-    getCanvas()->updateGL();
+    m_canvas->updateGL();
 }
 
 void
 SGFrame::switchGLModeTriggered()
 {
-    m_canvas->switchMode();
-    getCanvas()->updateGL();
+    if (m_canvas->getMode() == SGCanvas::GLModeChoiceFixed) {
+        m_glModeChoice->button(1)->setChecked(true);
+    } else {
+        m_glModeChoice->button(0)->setChecked(true);
+    }
+    m_canvas->updateGL();
 }
 
 void
 SGFrame::setFixedGLMode()
 {
-    m_canvas->setMode(SGCanvas::GLModeChoiceFixed);
-    getCanvas()->updateGL();
+    m_glModeChoice->button(0)->setChecked(true);
+    m_canvas->updateGL();
 }
 
 void

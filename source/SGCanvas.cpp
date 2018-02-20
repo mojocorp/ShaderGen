@@ -47,8 +47,8 @@
 #include "UtilityFunctions.h"
 #include <stdio.h>
 
-SGCanvas::SGCanvas(SGFrame* frame, QWidget* parent)
-  : QGLWidget(parent)
+SGCanvas::SGCanvas(SGFrame* frame)
+  : QGLWidget(frame)
   , CameraZ(-5)
   , m_mouse(this)
 {
