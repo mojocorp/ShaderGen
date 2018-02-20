@@ -115,9 +115,9 @@ class SGFixedGLState
 {
 
   public:
-    SGFixedGLState() { Init(); }
+    SGFixedGLState() { init(); }
     ~SGFixedGLState();
-    void Init();
+    void init();
 
     Light& getLight(int num) { return m_light[num]; }
     Material& getMaterial() { return m_material; }

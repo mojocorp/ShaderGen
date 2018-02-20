@@ -44,7 +44,7 @@ HEADERS += globals.h\
            QVectorEdit.h \
            QCodeEditor.h
 
-SOURCES += App.cpp \
+SOURCES += \
            SGFrame.cpp \
            SGFixedGLState.cpp \
            SGModels.cpp \
@@ -62,7 +62,8 @@ SOURCES += App.cpp \
            SGOglTextureEnvNBPage.cpp \
            QColorButton.cpp \
            QVectorEdit.cpp \
-           QCodeEditor.cpp
+           QCodeEditor.cpp \
+    main.cpp
 
 LIBS += -L../build -lGLEW
 

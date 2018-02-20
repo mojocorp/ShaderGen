@@ -57,7 +57,7 @@ TParametricSurface::~TParametricSurface()
 // Draw a parametric surface.  'slices' is the tesselation factor.  Returns the
 // number of vertices.
 int
-TParametricSurface::Draw()
+TParametricSurface::draw()
 {
     int totalVerts = 0;
     int stacks = m_slices / 2;

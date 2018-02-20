@@ -58,5 +58,5 @@ SGModels::~SGModels()
 void
 SGModels::drawModel(ModelId id)
 {
-    m_surface[id]->Draw();
+    m_surface[id]->draw();
 }

@@ -41,7 +41,7 @@
 #include <QJsonObject>
 
 void
-SGFixedGLState::Init()
+SGFixedGLState::init()
 {
     for (int i = 0; i < NUM_LIGHTS; i++) {
         initLight(i);

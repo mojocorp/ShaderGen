@@ -47,7 +47,7 @@ class TParametricSurface
     TParametricSurface();
     virtual ~TParametricSurface();
 
-    int Draw();
+    int draw();
 
   protected:
     virtual void eval(QVector2D& domain, QVector3D& range) = 0;
