@@ -74,7 +74,7 @@ QCodeEditor::QCodeEditor(QWidget* parent)
 }
 
 int
-QCodeEditor::lineNumberAreaWidth()
+QCodeEditor::lineNumberAreaWidth() const
 {
     int digits = 1;
     int max = qMax(1, blockCount());
@@ -83,9 +83,7 @@ QCodeEditor::lineNumberAreaWidth()
         ++digits;
     }
 
-    int space = 3 + fontMetrics().width(QLatin1Char('9')) * digits;
-
-    return space;
+    return 3 + fontMetrics().width(QLatin1Char('9')) * digits;
 }
 
 void
@@ -111,7 +109,7 @@ QCodeEditor::resizeEvent(QResizeEvent* e)
 {
     QPlainTextEdit::resizeEvent(e);
 
-    QRect cr = contentsRect();
+    const QRect cr = contentsRect();
     m_lineNumberArea->setGeometry(QRect(cr.left(), cr.top(), lineNumberAreaWidth(), cr.height()));
 }
 

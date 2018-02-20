@@ -65,12 +65,12 @@ class SGCanvas : public QGLWidget
         GLModeChoiceShader
     };
     void setMode(GLMode a);
-    GLMode getMode() { return m_mode; }
+    GLMode getMode() const { return m_mode; }
 
     int switchToShaderMode();
 
     const float CameraZ;
-    float getZoom() { return m_zoom; }
+    float getZoom() const { return m_zoom; }
 
     QVector3D getWorldSpace(int x, int y);
 

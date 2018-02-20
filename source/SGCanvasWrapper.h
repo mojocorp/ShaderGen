@@ -49,8 +49,8 @@ class SGCanvasWrapper : public QFrame
     Q_OBJECT
   public:
     SGCanvasWrapper(SGFrame* parent);
-    SGCanvas::GLMode getMode() { return m_canvas->getMode(); }
-    SGCanvas* getCanvas() { return m_canvas; }
+    SGCanvas::GLMode getMode() const { return m_canvas->getMode(); }
+    SGCanvas* getCanvas() const { return m_canvas; }
     void switchMode();
     void setMode(SGCanvas::GLMode a);
 

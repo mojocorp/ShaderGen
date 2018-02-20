@@ -140,7 +140,7 @@ class SGFixedGLState
     GLenum getLightEnum(int a) const { return GL_LIGHT0 + a; }
     GLenum getTexEnum(int a) const { return GL_TEXTURE0 + a; }
 
-    bool getTexGenEnable() { return m_texGenEnable; }
+    bool getTexGenEnable() const { return m_texGenEnable; }
 
     void setTexGenEnable(bool en) { m_texGenEnable = en; }
 

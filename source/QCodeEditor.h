@@ -56,7 +56,7 @@ class QCodeEditor : public QPlainTextEdit
     QCodeEditor(QWidget* parent = 0);
 
     void lineNumberAreaPaintEvent(QPaintEvent* event);
-    int lineNumberAreaWidth();
+    int lineNumberAreaWidth() const;
 
   protected:
     void resizeEvent(QResizeEvent* event);
