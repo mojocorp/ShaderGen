@@ -91,10 +91,11 @@ SGOglLightNBPage::SGOglLightNBPage(SGFixedGLState* glState, QWidget* parent)
     h1->addWidget(m_normalizeCheckBox);
     h1->addWidget(m_separateSpecularColorCheckBox);
 
-    m_lightPosition = new QVectorEdit(QVector4D(), this);
+    m_lightPosition = new QVectorEdit(this);
     connect(m_lightPosition, SIGNAL(valueChanged()), SLOT(lightPositionChanged()));
 
-    m_spotDirection = new QVectorEdit(QVector3D(), this);
+    m_spotDirection = new QVectorEdit(this);
+    m_spotDirection->setNumFields(3);
     connect(m_spotDirection, SIGNAL(valueChanged()), SLOT(spotDirectionChanged()));
 
     m_spotExponent = new QDoubleSpinBox(this);

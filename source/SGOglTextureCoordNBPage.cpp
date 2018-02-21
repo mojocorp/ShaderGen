@@ -64,10 +64,10 @@ SGOglTextureCoordNBPage::SGOglTextureCoordNBPage(SGFixedGLState* glState, QWidge
     QLabel* eyePlaneCoeffLabelS = new QLabel(tr("GL_S"), this);
     QLabel* eyePlaneCoeffLabelT = new QLabel(tr("GL_T"), this);
 
-    m_eyePlaneCoeffTextS = new QVectorEdit(QVector4D(), this);
+    m_eyePlaneCoeffTextS = new QVectorEdit(this);
     connect(m_eyePlaneCoeffTextS, SIGNAL(valueChanged()), SLOT(onTextEnterEyeCoeffS()));
 
-    m_eyePlaneCoeffTextT = new QVectorEdit(QVector4D(), this);
+    m_eyePlaneCoeffTextT = new QVectorEdit(this);
     connect(m_eyePlaneCoeffTextT, SIGNAL(valueChanged()), SLOT(onTextEnterEyeCoeffT()));
 
     eyePlaneLabelSizer->addWidget(eyePlaneCoeffLabelS);
@@ -88,10 +88,10 @@ SGOglTextureCoordNBPage::SGOglTextureCoordNBPage(SGFixedGLState* glState, QWidge
     QLabel* objectPlaneCoeffLabelS = new QLabel(tr("GL_S"), this);
     QLabel* objectPlaneCoeffLabelT = new QLabel(tr("GL_T"), this);
 
-    m_objectPlaneCoeffTextS = new QVectorEdit(QVector4D(), this);
+    m_objectPlaneCoeffTextS = new QVectorEdit(this);
     connect(m_objectPlaneCoeffTextS, SIGNAL(valueChanged()), SLOT(onTextEnterObjCoeffS()));
 
-    m_objectPlaneCoeffTextT = new QVectorEdit(QVector4D(), this);
+    m_objectPlaneCoeffTextT = new QVectorEdit(this);
     connect(m_objectPlaneCoeffTextT, SIGNAL(valueChanged()), SLOT(onTextEnterObjCoeffT()));
 
     objectPlaneLabelSizer->addWidget(objectPlaneCoeffLabelS);

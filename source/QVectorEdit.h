@@ -10,23 +10,20 @@ class QVectorEdit : public QWidget
 {
     Q_OBJECT
   public:
-    QVectorEdit(const QVector3D& vec, QWidget* parent = 0);
-    QVectorEdit(const QVector4D& vec, QWidget* parent = 0);
-
-    void setValue(const QVector3D& vec);
-    void setValue(const QVector4D& vec);
+    QVectorEdit(QWidget* parent = 0);
 
     QVector4D getValue() const;
 
     QSize sizeHint() const;
+  public slots:
+    void setNumFields(int n);
+    void setValue(const QVector4D& vec);
   signals:
     void valueChanged();
   private slots:
     void onValueChange();
 
   private:
-    void init(const QVector4D& vec);
-
     QDoubleSpinBox* m_x;
     QDoubleSpinBox* m_y;
     QDoubleSpinBox* m_z;

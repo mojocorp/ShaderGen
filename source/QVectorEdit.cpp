@@ -4,58 +4,8 @@
 
 #include <limits>
 
-QVectorEdit::QVectorEdit(const QVector3D& vec, QWidget* parent)
+QVectorEdit::QVectorEdit(QWidget* parent)
   : QWidget(parent)
-{
-    init(QVector4D(vec, 0.0f));
-
-    m_w->hide();
-}
-
-QVectorEdit::QVectorEdit(const QVector4D& vec, QWidget* parent)
-  : QWidget(parent)
-{
-    init(vec);
-}
-
-void
-QVectorEdit::setValue(const QVector3D& vec)
-{
-    setValue(QVector4D(vec, 0.0f));
-}
-
-void
-QVectorEdit::setValue(const QVector4D& vec)
-{
-    blockSignals(true);
-    m_x->setValue(vec.x());
-    m_y->setValue(vec.y());
-    m_z->setValue(vec.z());
-    m_w->setValue(vec.w());
-    blockSignals(false);
-}
-
-QVector4D
-QVectorEdit::getValue() const
-{
-    return QVector4D(m_x->value(), m_y->value(), m_z->value(), m_w->value());
-}
-
-QSize
-QVectorEdit::sizeHint() const
-{
-    QSize s = m_x->sizeHint();
-    return QSize(4 * 40, s.height());
-}
-
-void
-QVectorEdit::onValueChange()
-{
-    emit valueChanged();
-}
-
-void
-QVectorEdit::init(const QVector4D& vec)
 {
     QHBoxLayout* layout = new QHBoxLayout(this);
     layout->setSpacing(0);
@@ -90,10 +40,49 @@ QVectorEdit::init(const QVector4D& vec)
     layout->addWidget(m_z);
     layout->addWidget(m_w);
 
-    setValue(vec);
+    setValue(QVector4D(0.f, 0.f, 0.f, 0.f));
 
     connect(m_x, SIGNAL(valueChanged(double)), SLOT(onValueChange()));
     connect(m_y, SIGNAL(valueChanged(double)), SLOT(onValueChange()));
     connect(m_z, SIGNAL(valueChanged(double)), SLOT(onValueChange()));
     connect(m_w, SIGNAL(valueChanged(double)), SLOT(onValueChange()));
+}
+
+void
+QVectorEdit::setNumFields(int n)
+{
+    m_x->setVisible(n > 0);
+    m_y->setVisible(n > 1);
+    m_z->setVisible(n > 2);
+    m_w->setVisible(n > 3);
+}
+
+void
+QVectorEdit::setValue(const QVector4D& vec)
+{
+    blockSignals(true);
+    m_x->setValue(vec.x());
+    m_y->setValue(vec.y());
+    m_z->setValue(vec.z());
+    m_w->setValue(vec.w());
+    blockSignals(false);
+}
+
+QVector4D
+QVectorEdit::getValue() const
+{
+    return QVector4D(m_x->value(), m_y->value(), m_z->value(), m_w->value());
+}
+
+QSize
+QVectorEdit::sizeHint() const
+{
+    QSize s = m_x->sizeHint();
+    return QSize(4 * 40, s.height());
+}
+
+void
+QVectorEdit::onValueChange()
+{
+    emit valueChanged();
 }
