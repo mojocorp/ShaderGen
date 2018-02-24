@@ -140,9 +140,9 @@ SGCanvas::GLSetup()
 
     for (GLint i = 0; i < 5; i++) {
         if (glState->getTexture(i).textureEnabled) {
-            m_frame->getTextures()->activate(glState->getTexture(i).textureCurrentSelection, i);
+            m_frame->getTextures()->bind(glState->getTexture(i).textureCurrentSelection, i);
         } else {
-            m_frame->getTextures()->deactivate(i);
+            m_frame->getTextures()->release(i);
         }
     }
 

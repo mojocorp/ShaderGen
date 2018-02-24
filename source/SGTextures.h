@@ -39,17 +39,10 @@
 
 #include <GL/glew.h>
 
-#include <QImage>
+class QOpenGLTexture;
 
 class SGFixedGLState;
 class SGFrame;
-
-struct ITexture
-{
-    unsigned glid;
-    unsigned width;
-    unsigned height;
-};
 
 class SGTextures
 {
@@ -74,13 +67,12 @@ class SGTextures
     SGTextures(SGFrame* frame, SGFixedGLState* state);
     ~SGTextures();
     void load(const char* filename);
-    void activate(TextureId id, GLint unit);
-    void deactivate(GLint unit);
+    void bind(TextureId id, GLint unit);
+    void release(GLint unit);
 
   private:
     SGFrame* m_frame;
     SGFixedGLState* m_glState;
-    ITexture m_textures[13];
+    QOpenGLTexture* m_textures[13];
     QString m_textureNames[13];
-    QImage m_image1;
 };

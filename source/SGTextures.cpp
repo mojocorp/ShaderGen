@@ -42,7 +42,7 @@
 #include "SGFrame.h"
 #include "SGTextures.h"
 
-#include <QGLWidget>
+#include <QOpenGLTexture>
 
 #include "UtilityFunctions.h"
 #include <stdio.h>
@@ -65,7 +65,9 @@ SGTextures::SGTextures(SGFrame* frame, SGFixedGLState* state)
     m_textureNames[11] = "metalSheetDiffuse.png";
     m_textureNames[12] = "metalSheetNormal.png";
 
-    memset(m_textures, 0, sizeof(m_textures));
+    for (int i = 0; i < 13; i++) {
+        m_textures[i] = NULL;
+    }
 }
 
 SGTextures::~SGTextures()
@@ -73,8 +75,23 @@ SGTextures::~SGTextures()
 }
 
 void
-SGTextures::activate(TextureId id, GLint unit)
+SGTextures::bind(TextureId id, GLint unit)
 {
+    for (int i = 0; i < 13; i++) {
+        if (!m_textures[i]) {
+            const QImage image = QImage(":/textures/" + m_textureNames[i]).mirrored();
+            if (image.isNull()) {
+                QMessageBox::critical(
+                  m_frame, "GLSL ShaderGen",
+                  QString("Unable to load image %1").arg(m_textureNames[i]));
+                continue;
+            }
+            m_textures[i] = new QOpenGLTexture(image, QOpenGLTexture::GenerateMipMaps);
+            m_textures[i]->setMinificationFilter(QOpenGLTexture::LinearMipMapLinear);
+            m_textures[i]->setMagnificationFilter(QOpenGLTexture::Linear);
+            m_textures[i]->setWrapMode(QOpenGLTexture::Repeat);
+        }
+    }
     PrintOpenGLError();
 
     glActiveTexture(GL_TEXTURE0 + unit);
@@ -135,36 +152,11 @@ SGTextures::activate(TextureId id, GLint unit)
 
     glEnable(GL_TEXTURE_2D);
 
-    int index = id;
-
-    if (m_textures[index].glid) {
-        glBindTexture(GL_TEXTURE_2D, m_textures[index].glid);
-        return;
-    } else {
-        glGenTextures(1, &m_textures[index].glid);
-        glBindTexture(GL_TEXTURE_2D, m_textures[index].glid);
-    }
-
-    PrintOpenGLError();
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-    QImage image = QImage(":/textures/" + m_textureNames[index]);
-    if (image.isNull()) {
-        QMessageBox::critical(m_frame, "GLSL ShaderGen",
-                              QString("Unable to load image %1").arg(m_textureNames[index]));
-        return;
-    }
-    image = QGLWidget::convertToGLFormat(image);
-    gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGBA, image.width(), image.height(), GL_RGBA,
-                      GL_UNSIGNED_BYTE, image.bits());
+    m_textures[id]->bind(unit);
 }
 
 void
-SGTextures::deactivate(GLint unit)
+SGTextures::release(GLint unit)
 {
     glActiveTexture(GL_TEXTURE0 + unit);
     glDisable(GL_TEXTURE_2D);
