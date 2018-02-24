@@ -46,6 +46,10 @@ SGModels::SGModels()
     m_surface[ModelConic] = new TConic();
     m_surface[ModelTrefoil] = new TTrefoil();
     m_surface[ModelKlein] = new TKlein();
+
+    for (int i = 0; i < 6; i++) {
+        m_surface[i]->generate();
+    }
 }
 
 SGModels::~SGModels()
@@ -56,7 +60,7 @@ SGModels::~SGModels()
 }
 
 void
-SGModels::drawModel(ModelId id)
+SGModels::drawModel(ModelId id, bool normalize)
 {
-    m_surface[id]->draw();
+    m_surface[id]->draw(normalize);
 }

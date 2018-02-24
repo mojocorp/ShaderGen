@@ -100,7 +100,7 @@ SGCanvas::paintGL()
     PrintOpenGLError();
     glPushMatrix();
     m_mouse.loadMatrix();
-    m_models->drawModel(m_modelCurrent);
+    m_models->drawModel(m_modelCurrent, getGLState()->getNormalizeEnable());
     PrintOpenGLError();
     glPopMatrix();
 

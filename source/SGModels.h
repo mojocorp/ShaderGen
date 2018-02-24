@@ -54,7 +54,7 @@ class SGModels
 
     SGModels();
     ~SGModels();
-    void drawModel(ModelId id);
+    void drawModel(ModelId id, bool normalize);
 
   private:
     TParametricSurface* m_surface[6];

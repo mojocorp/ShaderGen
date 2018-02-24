@@ -37,6 +37,7 @@
 
 #pragma once
 
+#include <QVector>
 #include <QVector2D>
 #include <QVector3D>
 
@@ -47,16 +48,20 @@ class TParametricSurface
     TParametricSurface();
     virtual ~TParametricSurface();
 
-    int draw();
+    void generate();
+    void draw(bool normalize);
 
   protected:
     virtual void eval(QVector2D& domain, QVector3D& range) = 0;
-    virtual void vertex(QVector2D& domain, QVector3D& normal, QVector3D& p0, bool isNormalize);
+    virtual void vertex(QVector2D& domain, QVector3D& normal, QVector3D& p0);
     virtual bool flip(const QVector2D& /*domain*/) { return false; }
 
     int m_slices;
     bool m_flipped;
     float m_du, m_dv;
+    QVector<QVector3D> m_vertices;
+    QVector<QVector3D> m_normals;
+    QVector<QVector2D> m_texCoords;
 };
 
 class TSphere : public TParametricSurface

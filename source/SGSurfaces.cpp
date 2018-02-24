@@ -36,8 +36,8 @@
 ************************************************************************/
 
 #include "SGSurfaces.h"
-#include "SGFrame.h"
-#include "UtilityFunctions.h"
+
+#include <GL/glew.h>
 
 #define _USE_MATH_DEFINES
 #include <cmath>
@@ -54,56 +54,73 @@ TParametricSurface::~TParametricSurface()
 {
 }
 
-// Draw a parametric surface.  'slices' is the tesselation factor.  Returns the
-// number of vertices.
-int
-TParametricSurface::draw()
+void
+TParametricSurface::generate()
 {
-    int totalVerts = 0;
-    int stacks = m_slices / 2;
+    const int stacks = m_slices / 2;
     m_du = 1.0f / (float)(m_slices - 1);
     m_dv = 1.0f / (float)(stacks - 1);
 
-    bool isNormalize = glIsEnabled(GL_NORMALIZE);
+    m_normals.reserve(2 * m_slices * stacks);
+    m_texCoords.reserve(2 * m_slices * stacks);
+    m_vertices.reserve(2 * m_slices * stacks);
 
     for (int i = 0; i < m_slices; i++) {
-        float u = i * m_du;
-        glBegin(GL_QUAD_STRIP);
+        const float u = i * m_du;
         m_flipped = flip(QVector2D(u, 0));
 
         for (int j = 0; j < stacks; j++) {
             float v = j * m_dv;
             QVector3D normal, p0;
-            QVector2D domain = m_flipped ? QVector2D(u + m_du, v) : QVector2D(u, v);
-            vertex(domain, normal, p0, isNormalize);
-            if (isNormalize)
-                glNormal(normal);
-            for (int i = 0; i < 5; i++) {
-                glMultiTexCoord(domain, GL_TEXTURE0 + i);
-            }
-            glVertex(p0);
-            domain = m_flipped ? QVector2D(u, v) : QVector2D(u + m_du, v);
-            vertex(domain, normal, p0, isNormalize);
-            if (isNormalize)
-                glNormal(normal);
-            for (int i = 0; i < 5; i++) {
-                glMultiTexCoord(domain, GL_TEXTURE0 + i);
-            }
 
-            glVertex(p0);
-            totalVerts += 2;
+            QVector2D domain = m_flipped ? QVector2D(u + m_du, v) : QVector2D(u, v);
+            vertex(domain, normal, p0);
+            m_normals.push_back(normal);
+            m_texCoords.push_back(domain);
+            m_vertices.push_back(p0);
+
+            domain = m_flipped ? QVector2D(u, v) : QVector2D(u + m_du, v);
+            vertex(domain, normal, p0);
+            m_normals.push_back(normal);
+            m_texCoords.push_back(domain);
+            m_vertices.push_back(p0);
         }
-        glEnd();
+    }
+}
+
+// Draw a parametric surface.  'slices' is the tesselation factor.  Returns the
+// number of vertices.
+void
+TParametricSurface::draw(bool isNormalize)
+{
+    if (isNormalize) {
+        glEnableClientState(GL_NORMAL_ARRAY);
+        glNormalPointer(GL_FLOAT, sizeof(QVector3D), m_normals.data());
     }
 
-    PrintOpenGLError();
-    return totalVerts;
+    for (int i = 0; i < 5; i++) {
+        glClientActiveTexture(GL_TEXTURE0 + i);
+        glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+        glTexCoordPointer(2, GL_FLOAT, sizeof(QVector2D), m_texCoords.data());
+    }
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glVertexPointer(3, GL_FLOAT, sizeof(QVector3D), m_vertices.data());
+
+    for (int i = 0; i < m_slices; i++) {
+        glDrawArrays(GL_QUAD_STRIP, i * m_slices, m_slices);
+    }
+    glDisableClientState(GL_VERTEX_ARRAY);
+    glDisableClientState(GL_NORMAL_ARRAY);
+    for (int i = 0; i < 5; i++) {
+        glClientActiveTexture(GL_TEXTURE0 + i);
+        glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+    }
 }
 
 // Send out a normal, texture coordinate, vertex coordinate, and an optional
 // custom attribute.
 void
-TParametricSurface::vertex(QVector2D& domain, QVector3D& normal, QVector3D& p0, bool isNormalize)
+TParametricSurface::vertex(QVector2D& domain, QVector3D& normal, QVector3D& p0)
 {
     QVector3D p1, p2, p3;
     float u = domain.x();
@@ -122,13 +139,12 @@ TParametricSurface::vertex(QVector2D& domain, QVector3D& normal, QVector3D& p0, 
         QVector2D z4(u + m_du / 2, v + m_dv);
         eval(z4, p2);
     }
-    if (isNormalize) {
-        normal = QVector3D::crossProduct(p3 - p1, p2 - p1);
-        if (normal.length() < 0.00001f) {
-            normal = p0;
-        }
-        normal.normalize();
+
+    normal = QVector3D::crossProduct(p3 - p1, p2 - p1);
+    if (normal.length() < 0.00001f) {
+        normal = p0;
     }
+    normal.normalize();
 }
 
 void
