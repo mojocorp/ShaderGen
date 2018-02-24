@@ -81,8 +81,6 @@ class SGCanvas : public QGLWidget
     void setModel(SGModels::ModelId id) { m_modelCurrent = id; }
     void printInfoLog(GLuint obj);
 
-    GLuint logo;
-
   protected:
     virtual void keyPressEvent(QKeyEvent* event);
     virtual void mousePressEvent(QMouseEvent* event);

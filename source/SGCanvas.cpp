@@ -104,24 +104,6 @@ SGCanvas::paintGL()
     PrintOpenGLError();
     glPopMatrix();
 
-    PrintOpenGLError();
-    glUseProgram(0);
-    PrintOpenGLError();
-    glPushAttrib(GL_ENABLE_BIT | GL_LIGHTING_BIT | GL_TEXTURE_BIT | GL_FOG_BIT);
-
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    glDisable(GL_DEPTH_TEST);
-
-    if (glIsEnabled(GL_FOG)) {
-        glDisable(GL_FOG);
-    }
-
-    PrintOpenGLError();
-
-    glPopAttrib();
-
     glFinish();
     PrintOpenGLError();
 }
