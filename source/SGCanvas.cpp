@@ -58,7 +58,7 @@ SGCanvas::SGCanvas(SGFrame* frame)
     m_models = new SGModels();
     m_zoom = 0.8f;
     m_modelCurrent = SGModels::ModelTorus;
-    m_glReady = m_glCompiled = m_glLinked = false;
+    m_glCompiled = m_glLinked = false;
     m_prog = m_vertS = m_fragS = 0;
 }
 
@@ -96,46 +96,10 @@ SGCanvas::paintGL()
     glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
     PrintOpenGLError();
 
-    GLSetup();
-    PrintOpenGLError();
-    glPushMatrix();
-    m_mouse.loadMatrix();
-    m_models->drawModel(m_modelCurrent, getGLState()->getNormalizeEnable());
-    PrintOpenGLError();
-    glPopMatrix();
-
-    glFinish();
-    PrintOpenGLError();
-}
-
-void
-SGCanvas::GLSetup()
-{
-    float aspect = (float)width() / (float)height();
-    float vp = 0.8f;
-    m_left = -vp;
-    m_right = vp;
-    m_bottom = -vp / aspect;
-    m_top = vp / aspect;
-    m_znear = 2;
-    m_zfar = 10;
-
-    SGFixedGLState* glState = getGLState();
-    glViewport(0, 0, width(), height());
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    PrintOpenGLError();
-    if (m_frame->isPerspective()) {
-        glFrustum(m_left * m_zoom, m_right * m_zoom, m_bottom * m_zoom, m_top * m_zoom, m_znear,
-                  m_zfar);
-    } else {
-        glOrtho(3 * m_left * m_zoom, 3 * m_right * m_zoom, 3 * m_bottom * m_zoom,
-                3 * m_top * m_zoom, m_znear, m_zfar);
-    }
-
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
+    SGFixedGLState* glState = getGLState();
     for (GLint i = 0; i < 5; i++) {
         if (glState->getTexture(i).textureEnabled) {
             m_frame->getTextures()->bind(glState->getTexture(i).textureCurrentSelection, i);
@@ -156,7 +120,41 @@ SGCanvas::GLSetup()
             glUseProgram(0);
         }
     }
-    m_glReady = true;
+
+    PrintOpenGLError();
+    glPushMatrix();
+    m_mouse.loadMatrix();
+    m_models->drawModel(m_modelCurrent, getGLState()->getNormalizeEnable());
+    PrintOpenGLError();
+    glPopMatrix();
+
+    glFinish();
+    PrintOpenGLError();
+}
+
+void
+SGCanvas::resizeGL(int width, int height)
+{
+    const float aspect = (float)width / (float)height;
+    const float vp = 0.8f;
+    m_left = -vp;
+    m_right = vp;
+    m_bottom = -vp / aspect;
+    m_top = vp / aspect;
+    m_znear = 2;
+    m_zfar = 10;
+
+    glViewport(0, 0, width, height);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    PrintOpenGLError();
+    if (m_frame->isPerspective()) {
+        glFrustum(m_left * m_zoom, m_right * m_zoom, m_bottom * m_zoom, m_top * m_zoom, m_znear,
+                  m_zfar);
+    } else {
+        glOrtho(3 * m_left * m_zoom, 3 * m_right * m_zoom, 3 * m_bottom * m_zoom,
+                3 * m_top * m_zoom, m_znear, m_zfar);
+    }
 }
 
 void

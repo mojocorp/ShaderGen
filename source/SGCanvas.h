@@ -76,8 +76,8 @@ class SGCanvas : public QGLWidget
 
     void initializeGL();
     void paintGL();
+    void resizeGL(int width, int height);
     void SetZoom(float zoom) { m_zoom = zoom; }
-    void GLSetup();
     void setModel(SGModels::ModelId id) { m_modelCurrent = id; }
     void printInfoLog(GLuint obj);
 
@@ -99,7 +99,7 @@ class SGCanvas : public QGLWidget
 
     GLint getUniLoc(unsigned int program, const GLchar* name);
 
-    bool m_glReady, m_glCompiled, m_glLinked;
+    bool m_glCompiled, m_glLinked;
     unsigned int m_vertS, m_fragS, m_prog;
 
     void setupFromFixedState();
