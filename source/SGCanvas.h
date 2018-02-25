@@ -95,7 +95,6 @@ class SGCanvas : public QGLWidget
     SGCanvasMouseHandler m_mouse;
     SGModels::ModelId m_modelCurrent;
     SGFrame* m_frame;
-    int m_width, m_height;
     float m_left, m_right, m_bottom, m_top, m_znear, m_zfar, m_zoom;
 
     GLint getUniLoc(unsigned int program, const GLchar* name);

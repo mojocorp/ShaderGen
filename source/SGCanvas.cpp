@@ -111,9 +111,7 @@ SGCanvas::paintGL()
 void
 SGCanvas::GLSetup()
 {
-    m_width = width();
-    m_height = height();
-    float aspect = (float)m_width / (float)m_height;
+    float aspect = (float)width() / (float)height();
     float vp = 0.8f;
     m_left = -vp;
     m_right = vp;
@@ -123,7 +121,7 @@ SGCanvas::GLSetup()
     m_zfar = 10;
 
     SGFixedGLState* glState = getGLState();
-    glViewport(0, 0, m_width, m_height);
+    glViewport(0, 0, width(), height());
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     PrintOpenGLError();
@@ -230,8 +228,8 @@ QVector3D
 SGCanvas::getWorldSpace(int x, int y)
 {
     QVector3D v;
-    v.setX((float)x / (float)m_width);
-    v.setY(1 - (float)y / (float)m_height);
+    v.setX((float)x / (float)width());
+    v.setY(1 - (float)y / (float)height());
     v.setZ(CameraZ);
     v.setX(v.x() * (m_right - m_left));
     v.setY(v.y() * (m_top - m_bottom));
