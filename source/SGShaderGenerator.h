@@ -37,8 +37,6 @@
 
 #pragma once
 
-#include <GL/glew.h>
-
 #include <QString>
 
 #include "globals.h"
@@ -54,13 +52,13 @@ class SGShaderGenerator
   private:
     typedef struct _currentTextureState
     {
-        GLboolean textureCoordinateGenerationReflection;
-        GLboolean textureCoordinateGenerationSphereMap;
-        GLboolean textureCoordinateGenerationEye;
-        GLboolean textureCoordinateGenerationObject;
-        GLboolean textureCoordinateGenerationNormal;
-        GLboolean textureEnabled;
-        GLboolean textureGenerationEnableArray[NUM_TEXTURE_COORDS];
+        bool textureCoordinateGenerationReflection;
+        bool textureCoordinateGenerationSphereMap;
+        bool textureCoordinateGenerationEye;
+        bool textureCoordinateGenerationObject;
+        bool textureCoordinateGenerationNormal;
+        bool textureEnabled;
+        bool textureGenerationEnableArray[NUM_TEXTURE_COORDS];
     } CurrentTextureState;
 
     QString m_fragShader;
@@ -69,7 +67,7 @@ class SGShaderGenerator
     bool m_fLightPoint, m_fLightSpot, m_fLightDir, m_fLightDirSpot;
     bool m_fMapSphere, m_fMapReflection, m_vTexGenEnable;
 
-    GLboolean m_texturesEnabled;
+    bool m_texturesEnabled;
 
     CurrentTextureState m_currentTexture[NUM_TEXTURES];
 

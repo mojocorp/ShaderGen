@@ -40,10 +40,10 @@
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QRadioButton>
+#include <QOpenGLFunctions>
 
 #include "SGFixedGLState.h"
 #include "SGOglTextureEnvNBPage.h"
-#include "UtilityFunctions.h"
 
 SGOglTextureEnvNBPage::SGOglTextureEnvNBPage(SGFixedGLState* glState, QWidget* parent)
   : QWidget(parent)

@@ -69,14 +69,14 @@ struct Material
     QColor materialSpecularColorVector;
     QColor materialEmissionColorVector;
     float materialShininess;
-    GLenum faceSelection;
+    int faceSelection;
 };
 
 struct Fog
 {
     float fogStart, fogEnd, fogDensity;
     QColor fogColorVector;
-    GLenum fogMode;
+    int fogMode;
 };
 
 struct Texture
@@ -93,21 +93,21 @@ struct Texture
 
     QColor texEnvColor;
 
-    GLenum textureApplicationMethod;
-    GLenum textureCoordinateGeneration;
+    int textureApplicationMethod;
+    int textureCoordinateGeneration;
 
     SGTextures::TextureId textureCurrentSelection;
 
-    GLfloat textureCombineScale;
+    float textureCombineScale;
 
-    GLenum textureCombineMode;
+    int textureCombineMode;
 
-    GLenum textureCombineSource0;
-    GLenum textureCombineSource1;
-    GLenum textureCombineSource2;
-    GLenum textureCombineOperand0;
-    GLenum textureCombineOperand1;
-    GLenum textureCombineOperand2;
+    int textureCombineSource0;
+    int textureCombineSource1;
+    int textureCombineSource2;
+    int textureCombineOperand0;
+    int textureCombineOperand1;
+    int textureCombineOperand2;
 };
 
 // Wrapper
@@ -137,8 +137,8 @@ class SGFixedGLState
     void setSeparateSpecularColorEnable(bool en) { m_separateSpecularColorEnable = en; }
     void set2SidedLightingEnable(bool en) { m_2sidedLightingEnable = en; }
     void setTextureEnable(bool en) { m_textureEnable = en; }
-    GLenum getLightEnum(int a) const { return GL_LIGHT0 + a; }
-    GLenum getTexEnum(int a) const { return GL_TEXTURE0 + a; }
+    int getLightEnum(int a) const;
+    int getTexEnum(int a) const;
 
     bool getTexGenEnable() const { return m_texGenEnable; }
 

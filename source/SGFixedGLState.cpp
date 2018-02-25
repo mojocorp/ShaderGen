@@ -39,6 +39,7 @@
 #include "globals.h"
 #include <QJsonArray>
 #include <QJsonObject>
+#include <QOpenGLFunctions>
 
 void
 SGFixedGLState::init()
@@ -70,6 +71,17 @@ SGFixedGLState::init()
 
 SGFixedGLState::~SGFixedGLState()
 {
+}
+
+int
+SGFixedGLState::getLightEnum(int a) const
+{
+    return GL_LIGHT0 + a;
+}
+int
+SGFixedGLState::getTexEnum(int a) const
+{
+    return GL_TEXTURE0 + a;
 }
 
 void

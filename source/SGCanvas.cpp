@@ -77,15 +77,7 @@ SGCanvas::initializeGL()
 {
     checkGlImplementation();
 
-    int initSuccess = glewInit();
-
-    if (initSuccess != GLEW_OK) {
-        QMessageBox::critical(
-          this, "GLSL ShaderGen",
-          QString("Unable to initialize GLEW.\n %1").arg((char*)glewGetErrorString(initSuccess)));
-    } else {
-        glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-    }
+    glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 }
 
 void

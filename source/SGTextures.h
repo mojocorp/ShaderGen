@@ -37,8 +37,6 @@
 
 #pragma once
 
-#include <GL/glew.h>
-
 class QOpenGLTexture;
 
 class SGFixedGLState;
@@ -67,8 +65,8 @@ class SGTextures
     SGTextures(SGFrame* frame, SGFixedGLState* state);
     ~SGTextures();
     void load(const char* filename);
-    void bind(TextureId id, GLint unit);
-    void release(GLint unit);
+    void bind(TextureId id, int unit);
+    void release(int unit);
 
   private:
     SGFrame* m_frame;

@@ -44,8 +44,23 @@
 
 #include <QOpenGLTexture>
 
-#include "UtilityFunctions.h"
 #include <stdio.h>
+
+namespace {
+inline void
+glTexEnvf(GLenum target, GLenum pname, const QColor& c)
+{
+    const GLfloat color[] = { (GLfloat)c.redF(), (GLfloat)c.greenF(), (GLfloat)c.blueF() };
+    glTexEnvfv(target, pname, color);
+}
+
+inline void
+glTexGenf(GLenum coord, GLenum pname, const QVector4D& v)
+{
+    const GLfloat vector[] = { v.x(), v.y(), v.z(), v.w() };
+    glTexGenfv(coord, pname, vector);
+}
+}
 
 SGTextures::SGTextures(SGFrame* frame, SGFixedGLState* state)
   : m_frame(frame)
@@ -75,7 +90,7 @@ SGTextures::~SGTextures()
 }
 
 void
-SGTextures::bind(TextureId id, GLint unit)
+SGTextures::bind(TextureId id, int unit)
 {
     for (int i = 0; i < 13; i++) {
         if (!m_textures[i]) {
@@ -156,7 +171,7 @@ SGTextures::bind(TextureId id, GLint unit)
 }
 
 void
-SGTextures::release(GLint unit)
+SGTextures::release(int unit)
 {
     glActiveTexture(GL_TEXTURE0 + unit);
     glDisable(GL_TEXTURE_2D);

@@ -37,7 +37,7 @@
 
 #include "SGSurfaces.h"
 
-#include <GL/glew.h>
+#include <QOpenGLFunctions>
 
 #define _USE_MATH_DEFINES
 #include <cmath>

@@ -42,7 +42,6 @@
 
 #include "SGFixedGLState.h"
 #include "SGOglMaterialNBPage.h"
-#include "UtilityFunctions.h"
 
 SGOglMaterialNBPage::SGOglMaterialNBPage(SGFixedGLState* glState, QWidget* parent)
   : QWidget(parent)

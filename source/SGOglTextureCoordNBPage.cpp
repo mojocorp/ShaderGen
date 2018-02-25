@@ -41,10 +41,10 @@
 #include <QLabel>
 #include <QRadioButton>
 #include <QVBoxLayout>
+#include <QOpenGLFunctions>
 
 #include "SGFixedGLState.h"
 #include "SGOglTextureCoordNBPage.h"
-#include "UtilityFunctions.h"
 
 SGOglTextureCoordNBPage::SGOglTextureCoordNBPage(SGFixedGLState* glState, QWidget* parent)
   : QWidget(parent)

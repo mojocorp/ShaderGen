@@ -41,10 +41,10 @@
 #include <QGroupBox>
 #include <QLabel>
 #include <QRadioButton>
+#include <QOpenGLFunctions>
 
 #include "SGFixedGLState.h"
 #include "SGOglFogNBPage.h"
-#include "UtilityFunctions.h"
 
 SGOglFogNBPage::SGOglFogNBPage(SGFixedGLState* glState, QWidget* parent)
   : QWidget(parent)

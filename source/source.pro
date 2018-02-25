@@ -4,9 +4,7 @@ DESTDIR  = ../build
 
 QT += opengl
 DEPENDPATH += .
-INCLUDEPATH += . ../3rdparty/glew/include
-
-DEFINES += GLEW_STATIC
+INCLUDEPATH += .
 
 win32 {
 RC_FILE = info.rc
@@ -65,6 +63,6 @@ SOURCES += \
            QCodeEditor.cpp \
     main.cpp
 
-LIBS += -L../build -lGLEW
+LIBS += -L../build
 
 RESOURCES += textures.qrc

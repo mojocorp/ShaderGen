@@ -35,14 +35,13 @@
 *                                                                       *
 ************************************************************************/
 
-#include <GL/glew.h>
 #include <QMouseEvent>
+#include <QOpenGLFunctions>
 #include <QTime>
 
 #include "SGCanvas.h"
 #include "SGCanvasMouseHandler.h"
 #include "SGFrame.h"
-#include "UtilityFunctions.h"
 
 static float StartZoom = 0.8f;
 
@@ -120,8 +119,8 @@ SGCanvasMouseHandler::onMouseMove(QMouseEvent* event)
 
                     glLoadIdentity();
                     glRotatef(-theta, axis.x(), axis.y(), axis.z());
-                    glMultMatrix(m_mStart);
-                    glGet(GL_MODELVIEW_MATRIX, m_xform);
+                    glMultMatrixf(m_mStart.constData());
+                    glGetFloatv(GL_MODELVIEW_MATRIX, m_xform.data());
                     m_canvas->updateGL();
                 }
             }
@@ -163,5 +162,5 @@ SGCanvasMouseHandler::loadMatrix() const
 void
 SGCanvasMouseHandler::multMatrix() const
 {
-    glMultMatrix(m_xform);
+    glMultMatrixf(m_xform.constData());
 }

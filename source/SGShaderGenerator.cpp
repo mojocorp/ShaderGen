@@ -44,8 +44,9 @@
 * shader.                                                               *
 ************************************************************************/
 
+#include <QOpenGLFunctions>
+
 #include "SGShaderGenerator.h"
-#include "UtilityFunctions.h"
 
 const float LOG2E = 1.442695f;
 

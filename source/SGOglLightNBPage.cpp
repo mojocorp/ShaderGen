@@ -46,7 +46,6 @@
 
 #include "SGFixedGLState.h"
 #include "SGOglLightNBPage.h"
-#include "UtilityFunctions.h"
 
 SGOglLightNBPage::SGOglLightNBPage(SGFixedGLState* glState, QWidget* parent)
   : QWidget(parent)

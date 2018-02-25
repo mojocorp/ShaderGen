@@ -6,5 +6,5 @@
 TEMPLATE  = subdirs
 CONFIG   += ordered
 
-SUBDIRS += 3rdparty source
+SUBDIRS += source
 
