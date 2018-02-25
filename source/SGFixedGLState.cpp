@@ -164,7 +164,7 @@ SGFixedGLState::initTexture(int num)
     m_texture[num].textureCombineOperand0 = GL_SRC_COLOR;
     m_texture[num].textureCombineOperand1 = GL_SRC_COLOR;
     m_texture[num].textureCombineOperand2 = GL_SRC_COLOR;
-    m_texture[num].textureCurrentSelection = (SGTextures::TextureId)num;
+    m_texture[num].textureCurrentSelection = num;
     m_texture[num].texEnvColor = DEFAULT_TEX_ENV_COLOR;
     m_texture[num].eyePlaneCoeffS = DEFAULT_EYE_PLANE_COEFF_S;
     m_texture[num].eyePlaneCoeffT = DEFAULT_EYE_PLANE_COEFF_T;
@@ -253,8 +253,7 @@ SGFixedGLState::read(const QJsonObject& json)
         m_texture[i].texEnvColor.setNamedColor(textureObject["texEnvColor"].toString());
         m_texture[i].textureApplicationMethod = textureObject["applicationMethod"].toInt();
         m_texture[i].textureCoordinateGeneration = textureObject["coordinateGeneration"].toInt();
-        m_texture[i].textureCurrentSelection =
-          (SGTextures::TextureId)textureObject["currentSelection"].toInt();
+        m_texture[i].textureCurrentSelection = textureObject["currentSelection"].toInt();
         m_texture[i].textureCombineScale = textureObject["combineScale"].toDouble();
         m_texture[i].textureCombineMode = textureObject["combineMode"].toInt();
         m_texture[i].textureCombineSource0 = textureObject["combineSource0"].toInt();

@@ -42,7 +42,6 @@
 #include <QVector3D>
 #include <QVector4D>
 
-#include "SGTextures.h"
 #include "globals.h"
 
 struct Light
@@ -96,7 +95,7 @@ struct Texture
     int textureApplicationMethod;
     int textureCoordinateGeneration;
 
-    SGTextures::TextureId textureCurrentSelection;
+    int textureCurrentSelection;
 
     float textureCombineScale;
 

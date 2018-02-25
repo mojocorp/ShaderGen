@@ -53,7 +53,6 @@ class SGCanvasMouseHandler
     void loadMatrix() const;
 
   private:
-    void multMatrix() const;
     void reset();
     void stop();
 

@@ -17,6 +17,7 @@
 #include "SGFrame.h"
 #include "SGOglNotebook.h"
 #include "SGShaderTextWindow.h"
+#include "SGTextures.h"
 
 static SGFrame* sgframe_instance = 0;
 

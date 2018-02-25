@@ -156,11 +156,6 @@ SGCanvasMouseHandler::loadMatrix() const
     }
 
     glRotatef(20.0f, 1.0f, 0.0f, 0.0f);
-    multMatrix();
-}
-
-void
-SGCanvasMouseHandler::multMatrix() const
-{
     glMultMatrixf(m_xform.constData());
 }
+

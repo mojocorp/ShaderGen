@@ -37,6 +37,9 @@
 
 #pragma once
 
+#include <QStringList>
+#include <QVector>
+
 class QOpenGLTexture;
 
 class SGFixedGLState;
@@ -45,32 +48,17 @@ class SGFrame;
 class SGTextures
 {
   public:
-    enum TextureId
-    {
-        TextureLogo = 0,
-        TextureLogoNormal,
-        TextureRust,
-        TextureLeopard,
-        TextureEyeball,
-        TextureCobblestone,
-        TextureCobblestoneNormal,
-        TextureBricks,
-        TextureBricksNormal,
-        TextureStonewall,
-        TextureStonewallNormal,
-        TextureMetalSheet,
-        TextureMetalSheetNormal
-    };
-
     SGTextures(SGFrame* frame, SGFixedGLState* state);
     ~SGTextures();
-    void load(const char* filename);
-    void bind(TextureId id, int unit);
+
+    const QStringList& getTextureNames() const { return m_textureNames; }
+
+    void bind(int id, int unit);
     void release(int unit);
 
   private:
     SGFrame* m_frame;
     SGFixedGLState* m_glState;
-    QOpenGLTexture* m_textures[13];
-    QString m_textureNames[13];
+    QVector<QOpenGLTexture*> m_textures;
+    QStringList m_textureNames;
 };

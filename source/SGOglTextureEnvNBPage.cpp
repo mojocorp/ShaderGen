@@ -496,7 +496,7 @@ void
 SGOglTextureEnvNBPage::onChoiceTextureChoose()
 {
     Texture& texture = m_glState->getTexture(m_textureGroup->checkedId());
-    texture.textureCurrentSelection = (SGTextures::TextureId)m_texChoose->currentIndex();
+    texture.textureCurrentSelection = m_texChoose->currentIndex();
     emit valueChanged();
 }
 

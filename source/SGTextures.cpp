@@ -66,21 +66,22 @@ SGTextures::SGTextures(SGFrame* frame, SGFixedGLState* state)
   : m_frame(frame)
   , m_glState(state)
 {
-    m_textureNames[0] = "3Dlabs.png";
-    m_textureNames[1] = "3DlabsNormal.png";
-    m_textureNames[2] = "rust.png";
-    m_textureNames[3] = "Leopard.png";
-    m_textureNames[4] = "eyeball.png";
-    m_textureNames[5] = "cobblestonesDiffuse.png";
-    m_textureNames[6] = "cobblestonesNormal.png";
-    m_textureNames[7] = "bricksDiffuse.png";
-    m_textureNames[8] = "bricksNormal.png";
-    m_textureNames[9] = "stonewallDiffuse.png";
-    m_textureNames[10] = "stonewallNormal.png";
-    m_textureNames[11] = "metalSheetDiffuse.png";
-    m_textureNames[12] = "metalSheetNormal.png";
+    m_textureNames << "3Dlabs";
+    m_textureNames << "3DlabsNormal";
+    m_textureNames << "rust";
+    m_textureNames << "Leopard";
+    m_textureNames << "eyeball";
+    m_textureNames << "cobblestonesDiffuse";
+    m_textureNames << "cobblestonesNormal";
+    m_textureNames << "bricksDiffuse";
+    m_textureNames << "bricksNormal";
+    m_textureNames << "stonewallDiffuse";
+    m_textureNames << "stonewallNormal";
+    m_textureNames << "metalSheetDiffuse";
+    m_textureNames << "metalSheetNormal";
 
-    for (int i = 0; i < 13; i++) {
+    m_textures.resize(m_textureNames.size());
+    for (int i = 0; i < m_textures.size(); i++) {
         m_textures[i] = NULL;
     }
 }
@@ -90,11 +91,11 @@ SGTextures::~SGTextures()
 }
 
 void
-SGTextures::bind(TextureId id, int unit)
+SGTextures::bind(int id, int unit)
 {
-    for (int i = 0; i < 13; i++) {
+    for (int i = 0; i < m_textures.size(); i++) {
         if (!m_textures[i]) {
-            const QImage image = QImage(":/textures/" + m_textureNames[i]).mirrored();
+            const QImage image = QImage(":/textures/" + m_textureNames[i] + ".png").mirrored();
             if (image.isNull()) {
                 QMessageBox::critical(
                   m_frame, "GLSL ShaderGen",
@@ -116,9 +117,6 @@ SGTextures::bind(TextureId id, int unit)
     glDisable(GL_TEXTURE_GEN_S);
     glDisable(GL_TEXTURE_GEN_T);
     PrintOpenGLError();
-
-    int tempInteger;
-    glGetIntegerv(GL_MAX_TEXTURE_UNITS_ARB, &tempInteger);
 
     if (m_glState->getTexture(unit).texGen) {
         glTexGeni(GL_S, GL_TEXTURE_GEN_MODE,
