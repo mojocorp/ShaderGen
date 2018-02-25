@@ -44,8 +44,48 @@
 #include "SGFrame.h"
 #include "SGShaderTextWindow.h"
 #include "SGTextures.h"
-#include "UtilityFunctions.h"
 #include <stdio.h>
+
+namespace {
+/******************************************************
+The following functions are used to convert
+    data back and forth between OpenGL and Qt.
+******************************************************/
+inline void
+glFogf(GLenum pname, const QColor& c)
+{
+    const GLfloat color[] = { (GLfloat)c.redF(), (GLfloat)c.greenF(), (GLfloat)c.blueF() };
+    glFogfv(pname, color);
+}
+
+inline void
+glLightf(GLenum light, GLenum pname, const QColor& c)
+{
+    const GLfloat color[] = { (GLfloat)c.redF(), (GLfloat)c.greenF(), (GLfloat)c.blueF() };
+    glLightfv(light, pname, color);
+}
+
+inline void
+glMaterialf(GLenum face, GLenum pname, const QColor& c)
+{
+    const GLfloat color[] = { (GLfloat)c.redF(), (GLfloat)c.greenF(), (GLfloat)c.blueF() };
+    glMaterialfv(face, pname, color);
+}
+
+inline void
+glLightf(GLenum light, GLenum pname, const QVector3D& v)
+{
+    const GLfloat vector[] = { v.x(), v.y(), v.z() };
+    glLightfv(light, pname, vector);
+}
+
+inline void
+glLightf(GLenum light, GLenum pname, const QVector4D& v)
+{
+    const GLfloat vector[] = { v.x(), v.y(), v.z(), v.w() };
+    glLightfv(light, pname, vector);
+}
+}
 
 SGCanvas::SGCanvas(SGFrame* frame)
   : QGLWidget(frame)

@@ -34,7 +34,6 @@ HEADERS += globals.h\
            SGTextures.h \
            SGOglFogNBPage.h \
            SGOglMaterialNBPage.h \
-           UtilityFunctions.h \
            SGOglLightNBPage.h \
            SGOglTextureCoordNBPage.h \
            SGOglTextureEnvNBPage.h \
