@@ -214,16 +214,14 @@ SGFrame::printOglError(const char* file, int line)
 
     GLenum glErr = glGetError();
 
-    if (DEBUG_ON) {
-        while (glErr != GL_NO_ERROR) {
-            QString str = QString("glError in file %1:%2: %3")
-                            .arg(file)
-                            .arg(line)
-                            .arg((const char*)gluErrorString(glErr));
-            sgframe_instance->getShaderTextWindow()->log(str);
-            retCode = 1;
-            glErr = glGetError();
-        }
+    while (glErr != GL_NO_ERROR) {
+        const QString str = QString("glError in file %1:%2: %3")
+                              .arg(file)
+                              .arg(line)
+                              .arg((const char*)gluErrorString(glErr));
+        sgframe_instance->getShaderTextWindow()->log(str);
+        retCode = 1;
+        glErr = glGetError();
     }
     return retCode;
 }

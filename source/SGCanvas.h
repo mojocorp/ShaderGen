@@ -40,6 +40,7 @@
 #include <GL/glew.h>
 
 #include <QGLWidget>
+#include <QOpenGLShaderProgram>
 
 #include "SGCanvasMouseHandler.h"
 #include "SGModels.h"
@@ -79,7 +80,6 @@ class SGCanvas : public QGLWidget
     void resizeGL(int width, int height);
     void SetZoom(float zoom) { m_zoom = zoom; }
     void setModel(SGModels::ModelId id) { m_modelCurrent = id; }
-    void printInfoLog(GLuint obj);
 
   protected:
     virtual void keyPressEvent(QKeyEvent* event);
@@ -97,10 +97,8 @@ class SGCanvas : public QGLWidget
     SGFrame* m_frame;
     float m_left, m_right, m_bottom, m_top, m_znear, m_zfar, m_zoom;
 
-    GLint getUniLoc(unsigned int program, const GLchar* name);
-
-    bool m_glCompiled, m_glLinked;
-    unsigned int m_vertS, m_fragS, m_prog;
+    bool m_glCompiled;
+    QOpenGLShaderProgram m_prog;
 
     void setupFromFixedState();
     void writeMessage(const QString str);

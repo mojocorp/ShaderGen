@@ -51,6 +51,7 @@ SGCanvas::SGCanvas(SGFrame* frame)
   : QGLWidget(frame)
   , CameraZ(-5)
   , m_mouse(this)
+  , m_glCompiled(false)
 {
     setFocusPolicy(Qt::StrongFocus);
     m_mode = GLModeChoiceFixed;
@@ -58,8 +59,6 @@ SGCanvas::SGCanvas(SGFrame* frame)
     m_models = new SGModels();
     m_zoom = 0.8f;
     m_modelCurrent = SGModels::ModelTorus;
-    m_glCompiled = m_glLinked = false;
-    m_prog = m_vertS = m_fragS = 0;
 }
 
 SGCanvas::~SGCanvas()
@@ -111,13 +110,12 @@ SGCanvas::paintGL()
     PrintOpenGLError();
 
     if (m_mode == SGCanvas::GLModeChoiceFixed) {
-        glUseProgram(0);
         setupFromFixedState();
     } else {
-        if (m_glLinked) {
-            glUseProgram(m_prog);
+        if (m_prog.isLinked()) {
+            m_prog.bind();
         } else {
-            glUseProgram(0);
+            m_prog.release();
         }
     }
 
@@ -278,123 +276,81 @@ SGCanvas::mouseReleaseEvent(QMouseEvent* event)
 bool
 SGCanvas::linkShaders(const QString& vertexShader, const QString& fragmentShader)
 {
-    GLint linked;
-
-    if (m_glLinked) {
-        return true;
-    }
-
-    if (!m_glCompiled) {
-        compileShaders(vertexShader, fragmentShader);
-    }
-
-    if (m_glCompiled) {
-        writeMessage(tr("Attempting to link programs...."));
-        if (glIsProgram(m_prog)) {
-            glDeleteProgram(m_prog);
-        }
-        m_prog = glCreateProgram();
-        glAttachShader(m_prog, m_vertS);
-        glAttachShader(m_prog, m_fragS);
-        glLinkProgram(m_prog);
-        glGetProgramiv(m_prog, GL_LINK_STATUS, &linked);
-        printInfoLog(m_prog);
-        if (!linked) {
-            writeMessage(tr("Error in linking programs!!"));
-            m_glLinked = false;
-            return false;
-        } else {
-            glUseProgram(m_prog);
-            for (int i = 0; i < 5; i++) {
-                GLint uniformLocation;
-
-                switch (i) {
-                    case 0:
-                        uniformLocation = glGetUniformLocation(m_prog, "texUnit0");
-                        glUniform1i(uniformLocation, 0);
-                        break;
-                    case 1:
-                        uniformLocation = glGetUniformLocation(m_prog, "texUnit1");
-                        glUniform1i(uniformLocation, 1);
-                        break;
-                    case 2:
-                        uniformLocation = glGetUniformLocation(m_prog, "texUnit2");
-                        glUniform1i(uniformLocation, 2);
-                        break;
-                    case 3:
-                        uniformLocation = glGetUniformLocation(m_prog, "texUnit3");
-                        glUniform1i(uniformLocation, 3);
-                        break;
-                    case 4:
-                        uniformLocation = glGetUniformLocation(m_prog, "texUnit4");
-                        glUniform1i(uniformLocation, 4);
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
-
-        writeMessage(tr("Linked programs successfully"));
-
-        m_glLinked = true;
-        return true;
-    } else {
+    if (!m_glCompiled && !compileShaders(vertexShader, fragmentShader)) {
         writeMessage(tr("Compilation failed, not attempting link, check shader code"));
-        m_glLinked = false;
-
-        glDeleteProgram(m_prog);
         return false;
     }
+
+    writeMessage(tr("Attempting to link programs...."));
+    m_prog.link();
+
+    if (m_prog.log().length() > 0) {
+        m_frame->getShaderTextWindow()->log(tr("InfoLog:") + m_prog.log());
+    }
+
+    if (!m_prog.isLinked()) {
+        writeMessage(tr("Error in linking programs!!"));
+        return false;
+    } else {
+        m_prog.bind();
+        for (int i = 0; i < 5; i++) {
+            switch (i) {
+                case 0:
+                    m_prog.setUniformValue("texUnit0", 0);
+                    break;
+                case 1:
+                    m_prog.setUniformValue("texUnit1", 1);
+                    break;
+                case 2:
+                    m_prog.setUniformValue("texUnit2", 2);
+                    break;
+                case 3:
+                    m_prog.setUniformValue("texUnit3", 3);
+                    break;
+                case 4:
+                    m_prog.setUniformValue("texUnit4", 4);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    writeMessage(tr("Linked programs successfully"));
+
+    return true;
 }
 
 bool
 SGCanvas::compileShaders(const QString& vertexShader, const QString& fragmentShader)
 {
+    m_glCompiled = false;
 
-    GLint vertCompiled, fragCompiled;
-    m_glLinked = false;
-    if (m_vertS || m_fragS) {
-        if (glIsProgram(m_prog)) {
-            glDeleteProgram(m_prog);
-        }
-    }
-    m_vertS = glCreateShader(GL_VERTEX_SHADER);
-    m_fragS = glCreateShader(GL_FRAGMENT_SHADER);
-    std::string vs = qPrintable(vertexShader);
-    std::string fs = qPrintable(fragmentShader);
-    const char* vertdata = vs.c_str();
-    const char* fragdata = fs.c_str();
-    glShaderSource(m_vertS, 1, (const GLchar**)&vertdata, NULL);
-    glShaderSource(m_fragS, 1, (const GLchar**)&fragdata, NULL);
-    glCompileShader(m_vertS);
-    glGetShaderiv(m_vertS, GL_COMPILE_STATUS, &vertCompiled);
-    if (!vertCompiled) {
+    m_prog.removeAllShaders();
+
+    if (!m_prog.addShaderFromSourceCode(QOpenGLShader::Vertex, vertexShader)) {
         writeMessage(tr("Vertex shader failed to compile"));
-        printInfoLog(m_vertS);
-        glDeleteShader(m_vertS);
+        return false;
     } else {
         writeMessage(tr("Vertex shader compiled successfully"));
     }
-    printInfoLog(m_vertS);
-    glCompileShader(m_fragS);
-    glGetShaderiv(m_fragS, GL_COMPILE_STATUS, &fragCompiled);
-    if (!fragCompiled) {
+    if (m_prog.log().length() > 0) {
+        m_frame->getShaderTextWindow()->log(tr("InfoLog:") + m_prog.log());
+    }
+
+    if (!m_prog.addShaderFromSourceCode(QOpenGLShader::Fragment, fragmentShader)) {
         writeMessage(tr("Fragment shader failed to compile"));
-        printInfoLog(m_fragS);
-        glDeleteShader(m_fragS);
+        return false;
     } else {
         writeMessage(tr("Fragment shader compiled successfully"));
     }
-    printInfoLog(m_fragS);
-
-    if (!vertCompiled || !fragCompiled) {
-        m_glCompiled = false;
-        return false;
+    if (m_prog.log().length() > 0) {
+        m_frame->getShaderTextWindow()->log(tr("InfoLog:") + m_prog.log());
     }
+
     m_glCompiled = true;
 
-    return true;
+    return m_glCompiled;
 }
 
 void
@@ -408,38 +364,6 @@ SGCanvas::setMode(GLMode m)
         switchToShaderMode();
     }
     updateGL();
-}
-
-void
-SGCanvas::printInfoLog(GLuint obj)
-{
-    GLint infologLength = 0;
-    if (glIsProgram(obj)) {
-        glGetProgramiv(obj, GL_INFO_LOG_LENGTH, &infologLength);
-    } else if (glIsShader(obj)) {
-        glGetShaderiv(obj, GL_INFO_LOG_LENGTH, &infologLength);
-    } else {
-        m_frame->getShaderTextWindow()->log(tr("ERROR: No Shader or Program available"));
-    }
-
-    PrintOpenGLError();
-
-    if (infologLength > 0) {
-        int charsWritten = 0;
-        QVector<GLchar> infoLog(infologLength);
-
-        if (glIsProgram(obj)) {
-            glGetProgramInfoLog(obj, infologLength, &charsWritten, infoLog.data());
-        } else if (glIsShader(obj)) {
-            glGetShaderInfoLog(obj, infologLength, &charsWritten, infoLog.data());
-        } else {
-            m_frame->getShaderTextWindow()->log(tr("ERROR: No Shader or Program available"));
-        }
-
-        QString errors = tr("InfoLog:") + infoLog.data();
-
-        m_frame->getShaderTextWindow()->log(errors);
-    }
 }
 
 int
@@ -461,18 +385,6 @@ SGCanvas::writeMessage(const QString str)
 {
     m_frame->setStatusText(str);
     m_frame->getShaderTextWindow()->log(str);
-}
-
-GLint
-SGCanvas::getUniLoc(unsigned int program, const GLchar* name)
-{
-    GLint loc;
-    loc = glGetUniformLocation(program, name);
-    if (loc == -1) {
-        writeMessage(tr("No such uniform named \"") + name + "\"");
-    }
-    PrintOpenGLError();
-    return loc;
 }
 
 void

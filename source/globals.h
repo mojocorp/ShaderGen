@@ -41,8 +41,6 @@
 #include <QVector3D>
 #include <QVector4D>
 
-const bool DEBUG_ON = true;
-
 const int NUM_TEXTURES = 5;
 
 // default values for lights
