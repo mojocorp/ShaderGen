@@ -46,12 +46,14 @@
 
 #include <QOpenGLFunctions>
 
+#include "SGFixedGLState.h"
 #include "SGShaderGenerator.h"
 
 const float LOG2E = 1.442695f;
 
-SGShaderGenerator::SGShaderGenerator()
-  : m_fragShader(" ")
+SGShaderGenerator::SGShaderGenerator(const SGFixedGLState* state)
+  : m_glState((SGFixedGLState*)state)
+  , m_fragShader(" ")
   , m_vertShader(" ")
   , m_fLightPoint(false)
   , m_fLightSpot(false)
@@ -59,92 +61,13 @@ SGShaderGenerator::SGShaderGenerator()
   , m_fLightDirSpot(false)
   , m_fMapSphere(false)
   , m_fMapReflection(false)
-  , m_vTexGenEnable(false)
-  , m_texturesEnabled(GL_FALSE)
 {
-    for (int i = 0; i < NUM_TEXTURES; i++) {
-        m_currentTexture[i].textureCoordinateGenerationEye = GL_FALSE;
-        m_currentTexture[i].textureCoordinateGenerationNormal = GL_FALSE;
-        m_currentTexture[i].textureCoordinateGenerationObject = GL_FALSE;
-        m_currentTexture[i].textureCoordinateGenerationReflection = GL_FALSE;
-        m_currentTexture[i].textureCoordinateGenerationSphereMap = GL_FALSE;
-        m_currentTexture[i].textureEnabled = GL_FALSE;
-        for (int k = 0; k < NUM_TEXTURE_COORDS; k++) {
-            m_currentTexture[i].textureGenerationEnableArray[k] = GL_FALSE;
-        }
-    }
 }
 
 SGShaderGenerator::~SGShaderGenerator()
 {
     m_fragShader.clear();
     m_vertShader.clear();
-}
-
-void
-SGShaderGenerator::initTextures()
-{
-    m_vTexGenEnable = false;
-    m_texturesEnabled = false;
-
-    for (int i = 0; i < NUM_TEXTURES; i++) {
-        m_currentTexture[i].textureCoordinateGenerationReflection = false;
-        m_currentTexture[i].textureCoordinateGenerationSphereMap = false;
-        m_currentTexture[i].textureCoordinateGenerationEye = false;
-        m_currentTexture[i].textureCoordinateGenerationObject = false;
-        m_currentTexture[i].textureCoordinateGenerationNormal = false;
-        m_currentTexture[i].textureEnabled = false;
-
-        glActiveTexture(GL_TEXTURE0 + i);
-
-        m_currentTexture[i].textureEnabled = glIsEnabled(GL_TEXTURE_2D);
-
-        if (m_currentTexture[i].textureEnabled == GL_TRUE) {
-
-            int tempIntS, tempIntT, tempIntR, tempIntQ;
-
-            m_vTexGenEnable = true;
-            m_texturesEnabled = true;
-
-            glGetTexGeniv(GL_S, GL_TEXTURE_GEN_MODE, &tempIntS);
-            glGetTexGeniv(GL_T, GL_TEXTURE_GEN_MODE, &tempIntT);
-            glGetTexGeniv(GL_R, GL_TEXTURE_GEN_MODE, &tempIntR);
-            glGetTexGeniv(GL_Q, GL_TEXTURE_GEN_MODE, &tempIntQ);
-
-            m_currentTexture[i].textureGenerationEnableArray[0] = glIsEnabled(GL_TEXTURE_GEN_S);
-            m_currentTexture[i].textureGenerationEnableArray[1] = glIsEnabled(GL_TEXTURE_GEN_T);
-            m_currentTexture[i].textureGenerationEnableArray[2] = glIsEnabled(GL_TEXTURE_GEN_R);
-            m_currentTexture[i].textureGenerationEnableArray[3] = glIsEnabled(GL_TEXTURE_GEN_Q);
-
-            // The following block queries the GL State to see if there are any
-            // texture coordinates
-            //  being generated automatically.  If automatic texture
-            //  coordination is being used,
-            //  it marks the appropriate boolean to true, thus enabling the
-            //  creation of the
-            //  vertex shader user defined functions that reproduce the
-            //  coordinate generation.
-            if (m_currentTexture[i].textureGenerationEnableArray[0] ||
-                m_currentTexture[i].textureGenerationEnableArray[1] ||
-                m_currentTexture[i].textureGenerationEnableArray[2] ||
-                m_currentTexture[i].textureGenerationEnableArray[3]) {
-                m_currentTexture[i].textureCoordinateGenerationReflection =
-                  (tempIntS == GL_REFLECTION_MAP || tempIntT == GL_REFLECTION_MAP ||
-                   tempIntR == GL_REFLECTION_MAP);
-                m_currentTexture[i].textureCoordinateGenerationSphereMap =
-                  (tempIntS == GL_SPHERE_MAP || tempIntT == GL_SPHERE_MAP);
-                m_currentTexture[i].textureCoordinateGenerationEye =
-                  (tempIntS == GL_EYE_LINEAR && tempIntT == GL_EYE_LINEAR &&
-                   tempIntQ == GL_EYE_LINEAR && tempIntR == GL_EYE_LINEAR);
-                m_currentTexture[i].textureCoordinateGenerationObject =
-                  (tempIntS == GL_OBJECT_LINEAR || tempIntT == GL_OBJECT_LINEAR ||
-                   tempIntQ == GL_OBJECT_LINEAR || tempIntR == GL_OBJECT_LINEAR);
-                m_currentTexture[i].textureCoordinateGenerationNormal =
-                  (tempIntS == GL_NORMAL_MAP || tempIntT == GL_NORMAL_MAP ||
-                   tempIntQ == GL_NORMAL_MAP || tempIntR == GL_NORMAL_MAP);
-            }
-        }
-    }
 }
 
 /**********************************************
@@ -161,12 +84,10 @@ SGShaderGenerator::buildFragmentShader()
                    "*          https://github.com/mojocorp/ShaderGen       *\n"
                    "*******************************************************/\n";
 
-    initTextures();
-
     for (int i = 0; i < NUM_TEXTURES; i++) {
-        if (m_currentTexture[i].textureEnabled) {
+        const Texture& texture = m_glState->getTexture(i);
+        if (texture.textureEnabled) {
             m_fragShader += QString("uniform sampler2D texUnit%1;\n").arg(i);
-            m_texturesEnabled = true;
         }
     }
 
@@ -193,15 +114,9 @@ SGShaderGenerator::buildFragmentShader()
 void
 SGShaderGenerator::buildFragFog(QString& str)
 {
-    double fogDensity;
-    double preComputedValue;
-    int fogMode;
     QString stringTemp;
 
-    glGetIntegerv(GL_FOG_MODE, &fogMode);
-    glGetDoublev(GL_FOG_DENSITY, &fogDensity);
-
-    if (glIsEnabled(GL_FOG)) {
+    if (m_glState->getFogEnable()) {
         str += "\n    float fog;\n\n";
 
         // In previous releases of GLSL ShaderGen, the fog calculation was
@@ -213,11 +128,12 @@ SGShaderGenerator::buildFragFog(QString& str)
 
         // if(fogMode == GL_EXP || fogMode == GL_EXP2)
         //    str += "        const float LOG2E = 1.442695;
-
+        const int fogMode = m_glState->getFog().fogMode;
+        const double fogDensity = m_glState->getFog().fogDensity;
         if (fogMode == GL_LINEAR) {
             str += "    fog = (gl_Fog.end - gl_FogFragCoord) * gl_Fog.scale;\n\n";
         } else if (fogMode == GL_EXP) {
-            preComputedValue = -fogDensity * LOG2E;
+            const double preComputedValue = -fogDensity * LOG2E;
 
             stringTemp = QString::number(preComputedValue);
 
@@ -243,7 +159,7 @@ SGShaderGenerator::buildFragFog(QString& str)
             // str += wxT("        fog = exp2(-gl_Fog.density * gl_FogFragCoord
             // * LOG2E);\n\n");
         } else if (fogMode == GL_EXP2) {
-            preComputedValue = -fogDensity * fogDensity * LOG2E;
+            const double preComputedValue = -fogDensity * fogDensity * LOG2E;
 
             stringTemp = QString::number(preComputedValue);
 
@@ -269,11 +185,7 @@ SGShaderGenerator::buildFragFog(QString& str)
 void
 SGShaderGenerator::buildFragSeparateSpecularColor(QString& str)
 {
-    int sepSpecInt;
-
-    glGetIntegerv(GL_LIGHT_MODEL_COLOR_CONTROL, &sepSpecInt);
-
-    if (sepSpecInt == GL_SEPARATE_SPECULAR_COLOR) {
+    if (m_glState->getSeparateSpecularColorEnable()) {
         str += "    color += gl_SecondaryColor;\n"
                "    color = clamp(color, 0.0, 1.0);\n\n";
     }
@@ -285,14 +197,10 @@ SGShaderGenerator::buildFragTex(QString& str)
     QString fragmentTextureString;
 
     for (int i = 0; i < NUM_TEXTURES; i++) {
-        glActiveTexture(GL_TEXTURE0 + i);
+        const Texture& texture = m_glState->getTexture(i);
 
-        int texEnv;
-
-        glGetTexEnviv(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, &texEnv);
-
-        if (glIsEnabled(GL_TEXTURE_2D)) {
-            switch (texEnv) {
+        if (texture.textureEnabled) {
+            switch (texture.textureApplicationMethod) {
                 case GL_MODULATE:
                     fragmentTextureString.sprintf("    color *= "
                                                   "texture2D(texUnit%i, "
@@ -332,21 +240,18 @@ SGShaderGenerator::buildFragTex(QString& str)
                                                   i, i, i, i, i);
                     break;
                 case GL_COMBINE:
-                    int combineMode, combineSrc0, combineSrc1, combineSrc2;
-                    int combineOperand0, combineOperand1, combineOperand2;
+                    const int combineMode = texture.textureCombineMode;
+                    const int combineSrc0 = texture.textureCombineSource0;
+                    const int combineSrc1 = texture.textureCombineSource1;
+                    const int combineSrc2 = texture.textureCombineSource2;
 
-                    int combineRGBScale;
+                    const int combineOperand0 = texture.textureCombineOperand0;
+                    const int combineOperand1 = texture.textureCombineOperand1;
+                    const int combineOperand2 = texture.textureCombineOperand2;
+
+                    const int combineRGBScale = texture.textureCombineScale;
 
                     QString Arg0, Arg1, Arg2, Operand0, Operand1, Operand2;
-
-                    glGetTexEnviv(GL_TEXTURE_ENV, GL_COMBINE_RGB, &combineMode);
-                    glGetTexEnviv(GL_TEXTURE_ENV, GL_SRC0_RGB, &combineSrc0);
-                    glGetTexEnviv(GL_TEXTURE_ENV, GL_SRC1_RGB, &combineSrc1);
-                    glGetTexEnviv(GL_TEXTURE_ENV, GL_SRC2_RGB, &combineSrc2);
-                    glGetTexEnviv(GL_TEXTURE_ENV, GL_OPERAND0_RGB, &combineOperand0);
-                    glGetTexEnviv(GL_TEXTURE_ENV, GL_OPERAND1_RGB, &combineOperand1);
-                    glGetTexEnviv(GL_TEXTURE_ENV, GL_OPERAND2_RGB, &combineOperand2);
-                    glGetTexEnviv(GL_TEXTURE_ENV, GL_RGB_SCALE, &combineRGBScale);
 
                     if (combineSrc0 == GL_TEXTURE) {
                         if (combineOperand0 == GL_SRC_COLOR) {
@@ -628,19 +533,16 @@ SGShaderGenerator::buildFragTex(QString& str)
 const QString&
 SGShaderGenerator::buildVertexShader()
 {
-    QString topVertShader, bottomVertShader;
-    initTextures();
-
-    topVertShader = ""
-                    "/*******************************************************\n"
-                    "*  Fixed.vert Fixed Function Equivalent Vertex Shader  *\n"
-                    "*        Automatically Generated by GLSL ShaderGen     *\n"
-                    "*          https://github.com/mojocorp/ShaderGen       *\n"
-                    "*******************************************************/\n";
+    QString topVertShader = ""
+                            "/*******************************************************\n"
+                            "*  Fixed.vert Fixed Function Equivalent Vertex Shader  *\n"
+                            "*        Automatically Generated by GLSL ShaderGen     *\n"
+                            "*          https://github.com/mojocorp/ShaderGen       *\n"
+                            "*******************************************************/\n";
 
     topVertShader += "vec4 Ambient;\nvec4 Diffuse;\nvec4 Specular;\n\n";
 
-    bottomVertShader = "";
+    QString bottomVertShader = "";
 
     m_fLightPoint = m_fLightSpot = m_fLightDir = m_fMapSphere = m_fMapReflection = m_fLightDirSpot =
       false;
@@ -651,13 +553,13 @@ SGShaderGenerator::buildVertexShader()
     // This is necessary for the BuildTexCoord function to handle
     //  multiple texture coordinates correctly.
     for (int i = NUM_TEXTURES - 1; i >= 0; i--) {
-        if (m_currentTexture[i].textureEnabled) {
+        const Texture& texture = m_glState->getTexture(i);
+        if (texture.textureEnabled) {
             buildTexCoord(bottomVertShader);
-            m_texturesEnabled = true;
             break;
         }
     }
-    if (glIsEnabled(GL_LIGHTING))
+    if (m_glState->getLightingEnable())
         buildLightCode(bottomVertShader);
 
     buildVertMain(bottomVertShader);
@@ -680,7 +582,7 @@ SGShaderGenerator::buildVertexShader()
     if (m_fMapReflection) {
         addFuncReflectionMap(topVertShader);
     }
-    if (glIsEnabled(GL_FOG)) {
+    if (m_glState->getFogEnable()) {
         buildFuncFog(topVertShader);
     }
     m_vertShader = topVertShader + bottomVertShader;
@@ -690,13 +592,11 @@ SGShaderGenerator::buildVertexShader()
 void
 SGShaderGenerator::buildLightCode(QString& str)
 {
-    int separateSpecInt, lightModelTwoSidedInt, localViewInt;
+    const bool lightModelTwoSided = m_glState->getTwoSidedLightingEnable();
 
-    glGetIntegerv(GL_LIGHT_MODEL_COLOR_CONTROL, &separateSpecInt);
-    glGetIntegerv(GL_LIGHT_MODEL_TWO_SIDE, &lightModelTwoSidedInt);
-    glGetIntegerv(GL_LIGHT_MODEL_LOCAL_VIEWER, &localViewInt);
+    const bool localView = m_glState->getLocalViewerLightingEnable();
 
-    if (glIsEnabled(GL_LIGHTING)) {
+    if (m_glState->getLightingEnable()) {
 
         str += "\nvoid flight(in vec3 normal, in vec4 ecPosition, float alphaFade)\n"
                "{\n"
@@ -705,7 +605,7 @@ SGShaderGenerator::buildLightCode(QString& str)
                "    vec3 eye;\n\n"
                "    ecPosition3 = (vec3 (ecPosition)) / ecPosition.w;\n";
 
-        if (localViewInt) {
+        if (localView) {
             str += "    eye = -normalize(ecPosition3);\n\n";
         } else {
             str += "    eye = vec3 (0.0, 0.0, 1.0);\n\n";
@@ -716,13 +616,12 @@ SGShaderGenerator::buildLightCode(QString& str)
                "    Diffuse  = vec4 (0.0);\n"
                "    Specular = vec4 (0.0);\n\n";
 
-        GLfloat v[4];
-        GLfloat spotCut;
-
         for (int i = 0; i < NUM_LIGHTS; i++) {
-            if (glIsEnabled(GL_LIGHT0 + i)) {
-                glGetLightfv(GL_LIGHT0 + i, GL_POSITION, v);
-                glGetLightfv(GL_LIGHT0 + i, GL_SPOT_CUTOFF, &spotCut);
+            const Light& light = m_glState->getLight(i);
+            if (light.lightEnabled) {
+                const QVector4D& v = light.lightPositionVector;
+                const float spotCut = light.lightSpotCutoff;
+
                 if (v[3] == 0.0) {
                     if (spotCut != DEFAULT_SPOT_CUT) {
                         str += QString().sprintf("    infiniteSpotLight(%d, normal);\n\n", i);
@@ -749,7 +648,7 @@ SGShaderGenerator::buildLightCode(QString& str)
                "            Ambient  * gl_FrontMaterial.ambient +\n"
                "            Diffuse  * gl_FrontMaterial.diffuse;\n";
 
-        if (separateSpecInt == GL_SEPARATE_SPECULAR_COLOR) {
+        if (m_glState->getSeparateSpecularColorEnable()) {
             str += "    gl_FrontSecondaryColor = Specular * "
                    "gl_FrontMaterial.specular;\n";
         } else {
@@ -760,7 +659,7 @@ SGShaderGenerator::buildLightCode(QString& str)
 
         str += "    gl_FrontColor = color;\n";
 
-        if (lightModelTwoSidedInt) {
+        if (lightModelTwoSided) {
             str += "    // Invert the normal for these lighting calculations\n"
                    "    normal = -normal;\n"
                    "    //Clear the light intensity accumulators\n"
@@ -768,15 +667,16 @@ SGShaderGenerator::buildLightCode(QString& str)
                    "    Diffuse  = vec4 (0.0);\n"
                    "    Specular = vec4 (0.0);\n\n";
 
-            for (int i = 0; i < 8; i++) {
-                if (glIsEnabled(GL_LIGHT0 + i)) {
-                    glGetLightfv(GL_LIGHT0 + i, GL_POSITION, v);
+            for (int i = 0; i < NUM_LIGHTS; i++) {
+                const Light& light = m_glState->getLight(i);
+                if (light.lightEnabled) {
+                    const QVector4D& v = light.lightPositionVector;
 
                     if (v[3] == 0.0) {
                         str += QString().sprintf("    directionalLight(%d, normal);\n\n", i);
                         m_fLightDir = true;
                     } else {
-                        glGetLightfv(GL_LIGHT0 + i, GL_SPOT_CUTOFF, &spotCut);
+                        const float spotCut = light.lightSpotCutoff;
                         if (spotCut == 180.0) {
                             str += QString().sprintf("    pointLight(%d, normal, "
                                                      "eye, ecPosition3);\n\n",
@@ -797,7 +697,7 @@ SGShaderGenerator::buildLightCode(QString& str)
                    "        Ambient * gl_BackMaterial.ambient +\n"
                    "        Diffuse * gl_BackMaterial.diffuse;\n";
 
-            if (separateSpecInt == GL_SEPARATE_SPECULAR_COLOR)
+            if (m_glState->getSeparateSpecularColorEnable())
                 str += "    gl_BackSecondaryColor = Specular * "
                        "gl_BackMaterial.specular;\n";
             else
@@ -809,7 +709,7 @@ SGShaderGenerator::buildLightCode(QString& str)
         str += "\n"
                "    gl_FrontColor.a *= alphaFade;\n";
 
-        if (lightModelTwoSidedInt) {
+        if (lightModelTwoSided) {
             str += "    gl_FrontSecondaryColor.a *= alphaFade;\n"
                    "    gl_BackColor.a *= alphaFade;\n"
                    "    gl_BackSecondaryColor.a *= alphaFade;\n";
@@ -821,17 +721,17 @@ SGShaderGenerator::buildLightCode(QString& str)
 void
 SGShaderGenerator::buildFuncFnormal(QString& str)
 {
-    if (glIsEnabled(GL_LIGHTING) || m_texturesEnabled) {
+    if (m_glState->getLightingEnable() || m_glState->getTextureEnable()) {
         str += "\n"
                "vec3 fnormal(void)\n"
                "{\n"
                "    //Compute the normal \n"
                "    vec3 normal = gl_NormalMatrix * gl_Normal;\n";
 
-        if (glIsEnabled(GL_NORMALIZE)) {
+        if (m_glState->getNormalizeEnable()) {
             str += "    normal = normalize(normal);\n";
         }
-        if (glIsEnabled(GL_RESCALE_NORMAL)) {
+        if (m_glState->getRescaleNormalEnable()) {
             str += "    normal = normal * gl_NormalScale;\n";
             str += "    return normal;\n"
                    "}\n";
@@ -845,15 +745,11 @@ SGShaderGenerator::buildFuncFnormal(QString& str)
 void
 SGShaderGenerator::buildFuncFog(QString& str)
 {
-    int fogCoordSource;
-
-    glGetIntegerv(GL_FOG_COORDINATE_SOURCE, &fogCoordSource);
-
     str += "\n"
            "float ffog(in float ecDistance)\n"
            "{\n";
 
-    if (fogCoordSource == GL_FOG_COORDINATE) {
+    if (m_glState->getFog().fogSource == GL_FOG_COORD) {
         str += "    return gl_FogCoord;\n";
     } else {
         str += "    return(abs(ecDistance));\n";
@@ -870,8 +766,9 @@ SGShaderGenerator::buildTexCoord(QString& str)
     QString texCoordString, tempStringA, tempStringB;
 
     for (int i = 0; i < NUM_TEXTURES; i++) {
-        if (m_currentTexture[i].textureEnabled == GL_TRUE) {
-            if (m_currentTexture[i].textureCoordinateGenerationReflection) {
+        const Texture& texture = m_glState->getTexture(i);
+        if (texture.textureEnabled) {
+            if (texture.textureCoordinateGeneration == GL_REFLECTION_MAP) {
                 if (!m_fMapReflection && !m_fMapSphere) {
                     tempStringA = "    vec3 ecPosition3;"
                                   "    ecPosition3 = (vec3(ecPosition))/ecPosition.w;\n";
@@ -882,38 +779,38 @@ SGShaderGenerator::buildTexCoord(QString& str)
                     if (!m_fMapSphere) {
                         texCoordString =
                           tempStringA + tempStringB +
-                          QString().sprintf("    gl_TexCoord[%i] = vec4( reflection, 1.0); \n", i);
+                          QString().sprintf("    gl_TexCoord[%i] = vec4(reflection, 1.0); \n", i);
                     } else {
                         texCoordString =
                           tempStringB +
-                          QString().sprintf("    gl_TexCoord[%i] = vec4( reflection, 1.0); \n", i);
+                          QString().sprintf("    gl_TexCoord[%i] = vec4(reflection, 1.0); \n", i);
                     }
                     m_fMapReflection = true;
                 } else {
-                    texCoordString.sprintf("    gl_TexCoord[%i] = vec4( reflection, 1.0); \n", i);
+                    texCoordString.sprintf("    gl_TexCoord[%i] = vec4(reflection, 1.0); \n", i);
                 }
-            } else if (m_currentTexture[i].textureCoordinateGenerationSphereMap) {
+            } else if (texture.textureCoordinateGeneration == GL_SPHERE_MAP) {
                 if (!m_fMapSphere && !m_fMapReflection) {
                     tempStringA = "    vec3 ecPosition3;\n"
                                   "    ecPosition3 = (vec3(ecPosition))/ecPosition.w;\n";
                 }
                 if (!m_fMapSphere) {
-                    tempStringB = "    vec2 sMap = sphereMap( normal, ecPosition3 );\n";
+                    tempStringB = "    vec2 sMap = sphereMap(normal, ecPosition3);\n";
 
                     if (!m_fMapReflection) {
                         texCoordString =
                           tempStringA + tempStringB +
-                          QString().sprintf("    gl_TexCoord[%i] = vec4(sMap, 0.0, 1.0 );\n", i);
+                          QString().sprintf("    gl_TexCoord[%i] = vec4(sMap, 0.0, 1.0);\n", i);
                     } else {
                         texCoordString =
                           tempStringB +
-                          QString().sprintf("    gl_TexCoord[%i] = vec4(sMap, 0.0, 1.0 );\n", i);
+                          QString().sprintf("    gl_TexCoord[%i] = vec4(sMap, 0.0, 1.0);\n", i);
                     }
                     m_fMapSphere = true;
                 } else {
-                    texCoordString.sprintf("    gl_TexCoord[%i] = vec4( sMap, 0.0, 1.0 );\n", i);
+                    texCoordString.sprintf("    gl_TexCoord[%i] = vec4(sMap, 0.0, 1.0);\n", i);
                 }
-            } else if (m_currentTexture[i].textureCoordinateGenerationEye) {
+            } else if (texture.textureCoordinateGeneration == GL_EYE_LINEAR) {
                 texCoordString.sprintf("\n    gl_TexCoord[%i].s = dot( "
                                        "ecPosition, gl_EyePlaneS[%i] );\n"
                                        "    gl_TexCoord[%i].t = dot( "
@@ -923,7 +820,7 @@ SGShaderGenerator::buildTexCoord(QString& str)
                                        "    gl_TexCoord[%i].q = dot( "
                                        "ecPosition, gl_EyePlaneQ[%i] );\n",
                                        i, i, i, i, i, i, i, i);
-            } else if (m_currentTexture[i].textureCoordinateGenerationObject) {
+            } else if (texture.textureCoordinateGeneration == GL_OBJECT_LINEAR) {
                 texCoordString.sprintf("\n    gl_TexCoord[%i].s = dot( "
                                        "gl_Vertex, gl_ObjectPlaneS[%i] );\n"
                                        "    gl_TexCoord[%i].t = dot( "
@@ -933,7 +830,7 @@ SGShaderGenerator::buildTexCoord(QString& str)
                                        "    gl_TexCoord[%i].q = dot( "
                                        "gl_Vertex, gl_ObjectPlaneQ[%i] );\n",
                                        i, i, i, i, i, i, i, i);
-            } else if (m_currentTexture[i].textureCoordinateGenerationNormal) {
+            } else if (texture.textureCoordinateGeneration == GL_NORMAL_MAP) {
                 texCoordString.sprintf("\n    gl_TexCoord[%i] = vec4( normal, 1.0 );\n", i);
 
             } else {
@@ -987,14 +884,15 @@ SGShaderGenerator::buildFuncPoint(QString& str)
 void
 SGShaderGenerator::buildVertMain(QString& str)
 {
-    GLboolean lighting = glIsEnabled(GL_LIGHTING);
+    const bool lighting = m_glState->getLightingEnable();
 
     str += "\n\n"
            "void main (void)\n"
            "{\n";
 
     for (int i = 0; i < NUM_TEXTURES; i++) {
-        if (m_currentTexture[i].textureEnabled || lighting) {
+        const Texture& texture = m_glState->getTexture(i);
+        if (texture.textureEnabled || lighting) {
             str += "    vec3  transformedNormal;\n"
                    "    float alphaFade = 1.0;\n\n";
             break;
@@ -1007,8 +905,9 @@ SGShaderGenerator::buildVertMain(QString& str)
            "    gl_Position = gl_ProjectionMatrix * gl_ModelViewMatrix * "
            "gl_Vertex;\n";
 
-    for (int i = 0; i < 5; i++) {
-        if (m_currentTexture[i].textureEnabled || lighting) {
+    for (int i = 0; i < NUM_TEXTURES; i++) {
+        const Texture& texture = m_glState->getTexture(i);
+        if (texture.textureEnabled || lighting) {
             str += "    transformedNormal = fnormal();\n";
             break;
         }
@@ -1018,7 +917,7 @@ SGShaderGenerator::buildVertMain(QString& str)
     // Query and support point parameters here.
     //
 
-    if (glIsEnabled(GL_LIGHTING)) {
+    if (m_glState->getLightingEnable()) {
         str += "    flight(transformedNormal, ecPosition, alphaFade);\n";
     }
     /*else
@@ -1026,11 +925,11 @@ SGShaderGenerator::buildVertMain(QString& str)
         //str += wxT("    gl_FrontColor = gl_Color;\n");
     }*/
 
-    if (glIsEnabled(GL_FOG)) {
+    if (m_glState->getFogEnable()) {
         str += "    gl_FogFragCoord = ffog(ecPosition.z);\n";
     }
 
-    if (m_vTexGenEnable) {
+    if (m_glState->getTexGenEnable()) {
         str += "    ftexgen(transformedNormal, ecPosition);\n";
     }
 

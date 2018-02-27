@@ -60,13 +60,15 @@ SGFixedGLState::init()
     initFog();
 
     setLightingEnable(true);
+    setTwoSidedLightingEnable(false);
     setFogEnable(false);
     setSeparateSpecularColorEnable(false);
-    set2SidedLightingEnable(false);
+    setLocalViewerLightingEnable(false);
 
     setTextureEnable(false);
     setTexGenEnable(false);
     setNormalizeEnable(true);
+    setRescaleNormalEnable(false);
 }
 
 SGFixedGLState::~SGFixedGLState()
@@ -140,6 +142,7 @@ void
 SGFixedGLState::initFog()
 {
     m_fog.fogMode = GL_LINEAR;
+    m_fog.fogSource = GL_FRAGMENT_DEPTH;
 
     m_fog.fogDensity = DEFAULT_FOG_DENSITY;
     m_fog.fogStart = DEFAULT_FOG_START;
@@ -213,8 +216,11 @@ SGFixedGLState::read(const QJsonObject& json)
 {
     m_fogEnable = json["fogEnable"].toBool();
     m_lightingEnable = json["lightingEnable"].toBool();
+    m_twoSidedLightingEnable = json["twoSidedLightingEnable"].toBool();
+    m_localViewerLightingEnable = json["localViewerLightingEnable"].toBool();
     m_normalizeEnable = json["normalizeEnable"].toBool();
-    m_2sidedLightingEnable = json["2sidedLightingEnable"].toBool();
+    m_rescaleNormalEnable = json["rescaleNormal"].toBool();
+    m_twoSidedLightingEnable = json["twoSidedLightingEnable"].toBool();
     m_textureEnable = json["textureEnable"].toBool();
     m_texGenEnable = json["texGenEnable"].toBool();
     m_separateSpecularColorEnable = json["separateSpecularColorEnable"].toBool();
@@ -280,6 +286,7 @@ SGFixedGLState::read(const QJsonObject& json)
     m_fog.fogDensity = fogObject["density"].toDouble();
     m_fog.fogColorVector.setNamedColor(fogObject["colorVector"].toString());
     m_fog.fogMode = fogObject["mode"].toInt();
+    m_fog.fogSource = fogObject["source"].toInt();
 }
 
 void
@@ -287,8 +294,12 @@ SGFixedGLState::write(QJsonObject& json) const
 {
     json["fogEnable"] = m_fogEnable;
     json["lightingEnable"] = m_lightingEnable;
+    json["twoSidedLightingEnable"] = m_twoSidedLightingEnable;
+    json["localViewerLightingEnable"] = m_localViewerLightingEnable;
     json["normalizeEnable"] = m_normalizeEnable;
-    json["2sidedLightingEnable"] = m_2sidedLightingEnable, json["textureEnable"] = m_textureEnable;
+    json["rescaleNormalEnable"] = m_rescaleNormalEnable;
+    json["twoSidedLightingEnable"] = m_twoSidedLightingEnable,
+    json["textureEnable"] = m_textureEnable;
     json["texGenEnable"] = m_texGenEnable;
     json["separateSpecularColorEnable"] = m_separateSpecularColorEnable;
 
@@ -352,5 +363,6 @@ SGFixedGLState::write(QJsonObject& json) const
     fogObject["density"] = m_fog.fogDensity;
     fogObject["colorVector"] = m_fog.fogColorVector.name();
     fogObject["mode"] = (int)m_fog.fogMode;
+    fogObject["source"] = (int)m_fog.fogSource;
     json["fog"] = fogObject;
 }

@@ -60,7 +60,10 @@ class SGOglLightNBPage : public QWidget
     void onCheckbox(int index);
     void onRadio(int index);
     void lightingChanged();
+    void twoSidedLightingChanged();
+    void localViewerLightingChanged();
     void normalizeChanged();
+    void rescaleNormalChanged();
     void separateSpecularChanged();
     void lightPositionChanged();
     void spotDirectionChanged();
@@ -78,7 +81,8 @@ class SGOglLightNBPage : public QWidget
 
     QButtonGroup *m_lightSelectionGroup, *m_lightCheckGroup;
 
-    QCheckBox *m_lightingCheckBox, *m_normalizeCheckBox, *m_separateSpecularColorCheckBox;
+    QCheckBox *m_lightingCheckBox, *m_twoSidedLightingCheckBox, *m_localViewerLightingCheckBox,
+      *m_normalizeCheckBox, *m_rescaleNormalCheckBox, *m_separateSpecularColorCheckBox;
 
     QVectorEdit* m_lightPosition;
 

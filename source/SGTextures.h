@@ -37,7 +37,10 @@
 
 #pragma once
 
+#include <QColor>
+#include <QOpenGLFunctions_2_0>
 #include <QStringList>
+#include <QVector4D>
 #include <QVector>
 
 class QOpenGLTexture;
@@ -45,7 +48,7 @@ class QOpenGLTexture;
 class SGFixedGLState;
 class SGFrame;
 
-class SGTextures
+class SGTextures : protected QOpenGLFunctions_2_0
 {
   public:
     SGTextures(SGFrame* frame, SGFixedGLState* state);
@@ -57,6 +60,9 @@ class SGTextures
     void release(int unit);
 
   private:
+    void glTexEnvf(GLenum target, GLenum pname, const QColor& c);
+    void glTexGenf(GLenum coord, GLenum pname, const QVector4D& v);
+
     SGFrame* m_frame;
     SGFixedGLState* m_glState;
     QVector<QOpenGLTexture*> m_textures;

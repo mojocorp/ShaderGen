@@ -36,6 +36,7 @@
 ************************************************************************/
 
 #include "SGSurfaces.h"
+#include "globals.h"
 
 #include <QOpenGLFunctions>
 
@@ -93,12 +94,14 @@ TParametricSurface::generate()
 void
 TParametricSurface::draw(bool isNormalize)
 {
+    initializeOpenGLFunctions();
+
     if (isNormalize) {
         glEnableClientState(GL_NORMAL_ARRAY);
         glNormalPointer(GL_FLOAT, sizeof(QVector3D), m_normals.data());
     }
 
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < NUM_TEXTURES; i++) {
         glClientActiveTexture(GL_TEXTURE0 + i);
         glEnableClientState(GL_TEXTURE_COORD_ARRAY);
         glTexCoordPointer(2, GL_FLOAT, sizeof(QVector2D), m_texCoords.data());
@@ -111,7 +114,7 @@ TParametricSurface::draw(bool isNormalize)
     }
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_NORMAL_ARRAY);
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < NUM_TEXTURES; i++) {
         glClientActiveTexture(GL_TEXTURE0 + i);
         glDisableClientState(GL_TEXTURE_COORD_ARRAY);
     }

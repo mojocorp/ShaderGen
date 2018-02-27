@@ -76,6 +76,7 @@ struct Fog
     float fogStart, fogEnd, fogDensity;
     QColor fogColorVector;
     int fogMode;
+    int fogSource;
 };
 
 struct Texture
@@ -124,17 +125,21 @@ class SGFixedGLState
     Texture& getTexture(int num) { return m_texture[num]; }
 
     bool getLightingEnable() const { return m_lightingEnable; }
+    bool getTwoSidedLightingEnable() const { return m_twoSidedLightingEnable; }
+    bool getLocalViewerLightingEnable() const { return m_localViewerLightingEnable; }
     bool getFogEnable() const { return m_fogEnable; }
     bool getNormalizeEnable() const { return m_normalizeEnable; }
+    bool getRescaleNormalEnable() const { return m_rescaleNormalEnable; }
     bool getSeparateSpecularColorEnable() const { return m_separateSpecularColorEnable; }
-    bool get2SidedLightingEnable() const { return m_2sidedLightingEnable; }
     bool getTextureEnable() const { return m_textureEnable; }
 
     void setLightingEnable(bool en) { m_lightingEnable = en; }
+    void setTwoSidedLightingEnable(bool en) { m_twoSidedLightingEnable = en; }
+    void setLocalViewerLightingEnable(bool en) { m_localViewerLightingEnable = en; }
     void setFogEnable(bool en) { m_fogEnable = en; }
     void setNormalizeEnable(bool en) { m_normalizeEnable = en; }
+    void setRescaleNormalEnable(bool en) { m_rescaleNormalEnable = en; }
     void setSeparateSpecularColorEnable(bool en) { m_separateSpecularColorEnable = en; }
-    void set2SidedLightingEnable(bool en) { m_2sidedLightingEnable = en; }
     void setTextureEnable(bool en) { m_textureEnable = en; }
     int getLightEnum(int a) const;
     int getTexEnum(int a) const;
@@ -152,8 +157,9 @@ class SGFixedGLState
     void initFog();
     void initTexture(int num);
 
-    bool m_fogEnable, m_lightingEnable, m_normalizeEnable, m_2sidedLightingEnable, m_textureEnable,
-      m_texGenEnable, m_separateSpecularColorEnable;
+    bool m_fogEnable, m_lightingEnable, m_normalizeEnable, m_twoSidedLightingEnable,
+      m_textureEnable, m_texGenEnable, m_separateSpecularColorEnable, m_rescaleNormalEnable,
+      m_localViewerLightingEnable;
     Light m_light[NUM_LIGHTS];
     Texture m_texture[NUM_TEXTURES];
     Material m_material;

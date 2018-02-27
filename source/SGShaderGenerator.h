@@ -41,37 +41,25 @@
 
 #include "globals.h"
 
+class SGFixedGLState;
+
 class SGShaderGenerator
 {
   public:
-    SGShaderGenerator();
+    SGShaderGenerator(const SGFixedGLState* state);
     ~SGShaderGenerator();
     const QString& buildVertexShader();
     const QString& buildFragmentShader();
 
   private:
-    typedef struct _currentTextureState
-    {
-        bool textureCoordinateGenerationReflection;
-        bool textureCoordinateGenerationSphereMap;
-        bool textureCoordinateGenerationEye;
-        bool textureCoordinateGenerationObject;
-        bool textureCoordinateGenerationNormal;
-        bool textureEnabled;
-        bool textureGenerationEnableArray[NUM_TEXTURE_COORDS];
-    } CurrentTextureState;
+    SGFixedGLState* m_glState;
 
     QString m_fragShader;
     QString m_vertShader;
 
     bool m_fLightPoint, m_fLightSpot, m_fLightDir, m_fLightDirSpot;
-    bool m_fMapSphere, m_fMapReflection, m_vTexGenEnable;
+    bool m_fMapSphere, m_fMapReflection;
 
-    bool m_texturesEnabled;
-
-    CurrentTextureState m_currentTexture[NUM_TEXTURES];
-
-    void initTextures();
     void buildFragFog(QString& str);
     void buildFragTex(QString& str);
 

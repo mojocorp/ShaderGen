@@ -46,22 +46,6 @@
 
 #include <stdio.h>
 
-namespace {
-inline void
-glTexEnvf(GLenum target, GLenum pname, const QColor& c)
-{
-    const GLfloat color[] = { (GLfloat)c.redF(), (GLfloat)c.greenF(), (GLfloat)c.blueF() };
-    glTexEnvfv(target, pname, color);
-}
-
-inline void
-glTexGenf(GLenum coord, GLenum pname, const QVector4D& v)
-{
-    const GLfloat vector[] = { v.x(), v.y(), v.z(), v.w() };
-    glTexGenfv(coord, pname, vector);
-}
-}
-
 SGTextures::SGTextures(SGFrame* frame, SGFixedGLState* state)
   : m_frame(frame)
   , m_glState(state)
@@ -93,13 +77,14 @@ SGTextures::~SGTextures()
 void
 SGTextures::bind(int id, int unit)
 {
+    initializeOpenGLFunctions();
+
     for (int i = 0; i < m_textures.size(); i++) {
         if (!m_textures[i]) {
             const QImage image = QImage(":/textures/" + m_textureNames[i] + ".png").mirrored();
             if (image.isNull()) {
-                QMessageBox::critical(
-                  m_frame, "GLSL ShaderGen",
-                  QString("Unable to load image %1").arg(m_textureNames[i]));
+                QMessageBox::critical(m_frame, "GLSL ShaderGen",
+                                      QString("Unable to load image %1").arg(m_textureNames[i]));
                 continue;
             }
             m_textures[i] = new QOpenGLTexture(image, QOpenGLTexture::GenerateMipMaps);
@@ -171,6 +156,22 @@ SGTextures::bind(int id, int unit)
 void
 SGTextures::release(int unit)
 {
+    initializeOpenGLFunctions();
+
     glActiveTexture(GL_TEXTURE0 + unit);
     glDisable(GL_TEXTURE_2D);
+}
+
+void
+SGTextures::glTexEnvf(GLenum target, GLenum pname, const QColor& c)
+{
+    const GLfloat color[] = { (GLfloat)c.redF(), (GLfloat)c.greenF(), (GLfloat)c.blueF() };
+    glTexEnvfv(target, pname, color);
+}
+
+void
+SGTextures::glTexGenf(GLenum coord, GLenum pname, const QVector4D& v)
+{
+    const GLfloat vector[] = { v.x(), v.y(), v.z(), v.w() };
+    glTexGenfv(coord, pname, vector);
 }

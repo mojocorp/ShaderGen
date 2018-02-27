@@ -61,11 +61,13 @@ class SGOglFogNBPage : public QWidget
     void fogDensityChanged(double);
     void fogStartChanged(double);
     void fogEndChanged(double);
-    void onRadio(int index);
+    void fogModeChanged(int index);
+    void fogSourceChanged(int index);
 
   private:
     SGFixedGLState* m_glState;
 
+    QButtonGroup* m_fogSourceChoice;
     QButtonGroup* m_fogModeChoice;
     QColorButton* m_fogColor;
     QDoubleSpinBox* m_fogDensity;

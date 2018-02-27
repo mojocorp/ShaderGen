@@ -80,14 +80,26 @@ SGOglLightNBPage::SGOglLightNBPage(SGFixedGLState* glState, QWidget* parent)
     m_lightingCheckBox = new QCheckBox(tr("GL_LIGHTING"), this);
     connect(m_lightingCheckBox, SIGNAL(clicked()), SLOT(lightingChanged()));
 
+    m_twoSidedLightingCheckBox = new QCheckBox(tr("GL_LIGHT_MODEL_TWO_SIDE"), this);
+    connect(m_twoSidedLightingCheckBox, SIGNAL(clicked()), SLOT(twoSidedLightingChanged()));
+
+    m_localViewerLightingCheckBox = new QCheckBox(tr("GL_LIGHT_MODEL_LOCAL_VIEWER"), this);
+    connect(m_localViewerLightingCheckBox, SIGNAL(clicked()), SLOT(localViewerLightingChanged()));
+
     m_normalizeCheckBox = new QCheckBox(tr("GL_NORMALIZE"), this);
     connect(m_normalizeCheckBox, SIGNAL(clicked()), SLOT(normalizeChanged()));
+
+    m_rescaleNormalCheckBox = new QCheckBox(tr("GL_RESCALE_NORMAL"), this);
+    connect(m_rescaleNormalCheckBox, SIGNAL(clicked()), SLOT(rescaleNormalChanged()));
 
     m_separateSpecularColorCheckBox = new QCheckBox(tr("GL_SEPARATE_SPECULAR_COLOR"), this);
     connect(m_separateSpecularColorCheckBox, SIGNAL(clicked()), SLOT(separateSpecularChanged()));
 
     h1->addWidget(m_lightingCheckBox);
+    h1->addWidget(m_twoSidedLightingCheckBox);
+    h1->addWidget(m_localViewerLightingCheckBox);
     h1->addWidget(m_normalizeCheckBox);
+    h1->addWidget(m_rescaleNormalCheckBox);
     h1->addWidget(m_separateSpecularColorCheckBox);
 
     m_lightPosition = new QVectorEdit(this);
@@ -211,9 +223,30 @@ SGOglLightNBPage::lightingChanged()
 }
 
 void
+SGOglLightNBPage::twoSidedLightingChanged()
+{
+    m_glState->setTwoSidedLightingEnable(m_twoSidedLightingCheckBox->isChecked());
+    emit valueChanged();
+}
+
+void
+SGOglLightNBPage::localViewerLightingChanged()
+{
+    m_glState->setLocalViewerLightingEnable(m_localViewerLightingCheckBox->isChecked());
+    emit valueChanged();
+}
+
+void
 SGOglLightNBPage::normalizeChanged()
 {
     m_glState->setNormalizeEnable(m_normalizeCheckBox->isChecked());
+    emit valueChanged();
+}
+
+void
+SGOglLightNBPage::rescaleNormalChanged()
+{
+    m_glState->setRescaleNormalEnable(m_rescaleNormalCheckBox->isChecked());
     emit valueChanged();
 }
 

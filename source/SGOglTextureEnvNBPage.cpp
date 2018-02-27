@@ -39,8 +39,8 @@
 #include <QGroupBox>
 #include <QHBoxLayout>
 #include <QLabel>
-#include <QRadioButton>
 #include <QOpenGLFunctions>
+#include <QRadioButton>
 
 #include "SGFixedGLState.h"
 #include "SGOglTextureEnvNBPage.h"
@@ -77,7 +77,7 @@ SGOglTextureEnvNBPage::SGOglTextureEnvNBPage(SGFixedGLState* glState, QWidget* p
     QHBoxLayout* textureBoxSizer = new QHBoxLayout(textureBox);
     m_textureGroup = new QButtonGroup(this);
 
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < NUM_TEXTURES; i++) {
         QRadioButton* rb = new QRadioButton(texNumArray[i], textureBox);
         textureBoxSizer->addWidget(rb);
         m_textureGroup->addButton(rb, i);

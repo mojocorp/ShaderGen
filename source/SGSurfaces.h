@@ -37,12 +37,13 @@
 
 #pragma once
 
-#include <QVector>
+#include <QOpenGLFunctions_2_0>
 #include <QVector2D>
 #include <QVector3D>
+#include <QVector>
 
 // Abstract base class representing a parametric surface.
-class TParametricSurface
+class TParametricSurface : protected QOpenGLFunctions_2_0
 {
   public:
     TParametricSurface();

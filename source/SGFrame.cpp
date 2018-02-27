@@ -28,7 +28,7 @@ SGFrame::SGFrame(const QString& title)
 
     m_glState = new SGFixedGLState();
     m_textures = new SGTextures(this, m_glState);
-    m_shaderGen = new SGShaderGenerator();
+    m_shaderGen = new SGShaderGenerator(m_glState);
 
     createActions();
     createMenus();
@@ -189,6 +189,11 @@ SGFrame::createStatusBar()
 void
 SGFrame::setCanvasMode(SGCanvas::GLMode a)
 {
+    if (a == SGCanvas::GLModeChoiceFixed) {
+        m_glModeChoice->button(0)->setChecked(true);
+    } else {
+        m_glModeChoice->button(1)->setChecked(true);
+    }
     m_canvas->setMode(a);
     m_canvas->updateGL();
 }
@@ -216,10 +221,7 @@ SGFrame::printOglError(const char* file, int line)
     GLenum glErr = glGetError();
 
     while (glErr != GL_NO_ERROR) {
-        const QString str = QString("glError in file %1:%2: %3")
-                              .arg(file)
-                              .arg(line)
-                              .arg(glErr);
+        const QString str = QString("glError in file %1:%2: %3").arg(file).arg(line).arg(glErr);
         sgframe_instance->getShaderTextWindow()->log(str);
         retCode = 1;
         glErr = glGetError();
@@ -288,7 +290,7 @@ SGFrame::closeEvent(QCloseEvent* event)
 void
 SGFrame::onGLModeChanged(int id)
 {
-    m_canvas->setMode((SGCanvas::GLMode)id);
+    setCanvasMode((SGCanvas::GLMode)id);
 }
 
 void
@@ -321,9 +323,9 @@ void
 SGFrame::switchGLModeTriggered()
 {
     if (m_canvas->getMode() == SGCanvas::GLModeChoiceFixed) {
-        m_glModeChoice->button(1)->setChecked(true);
+        setCanvasMode(SGCanvas::GLModeChoiceShader);
     } else {
-        m_glModeChoice->button(0)->setChecked(true);
+        setCanvasMode(SGCanvas::GLModeChoiceFixed);
     }
     m_canvas->updateGL();
 }
@@ -331,7 +333,7 @@ SGFrame::switchGLModeTriggered()
 void
 SGFrame::setFixedGLMode()
 {
-    m_glModeChoice->button(0)->setChecked(true);
+    setCanvasMode(SGCanvas::GLModeChoiceFixed);
     m_canvas->updateGL();
 }
 

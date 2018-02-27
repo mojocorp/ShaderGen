@@ -39,9 +39,9 @@
 #include <QGroupBox>
 #include <QHBoxLayout>
 #include <QLabel>
+#include <QOpenGLFunctions>
 #include <QRadioButton>
 #include <QVBoxLayout>
-#include <QOpenGLFunctions>
 
 #include "SGFixedGLState.h"
 #include "SGOglTextureCoordNBPage.h"
@@ -243,6 +243,7 @@ SGOglTextureCoordNBPage::onRadioTexCoordGen(int index)
 void
 SGOglTextureCoordNBPage::onCheckbox(int index)
 {
+    m_glState->setTexGenEnable(m_texCoordSelGroup->checkedId() != -1);
     switch (index) {
         case 0:
             m_glState->getTexture(0).texGen = m_tex0TexGenEnableCheckBox->isChecked();

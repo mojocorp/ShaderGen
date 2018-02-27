@@ -118,6 +118,8 @@ SGCanvas::initializeGL()
     checkGlImplementation();
 
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+
+    m_prog.create();
 }
 
 void
@@ -131,23 +133,23 @@ SGCanvas::paintGL()
     glLoadIdentity();
 
     SGFixedGLState* glState = getGLState();
-    for (GLint i = 0; i < 5; i++) {
-        if (glState->getTexture(i).textureEnabled) {
-            m_frame->getTextures()->bind(glState->getTexture(i).textureCurrentSelection, i);
+    for (GLint unit = 0; unit < NUM_TEXTURES; unit++) {
+        if (glState->getTexture(unit).textureEnabled) {
+            m_frame->getTextures()->bind(glState->getTexture(unit).textureCurrentSelection, unit);
         } else {
-            m_frame->getTextures()->release(i);
+            m_frame->getTextures()->release(unit);
         }
     }
 
     PrintOpenGLError();
 
     if (m_mode == SGCanvas::GLModeChoiceFixed) {
+        m_prog.release();
         setupFromFixedState();
     } else {
-        if (m_prog.isLinked()) {
-            m_prog.bind();
-        } else {
-            m_prog.release();
+        m_prog.bind();
+        for (int unit = 0; unit < NUM_TEXTURES; unit++) {
+            m_prog.setUniformValue(qPrintable(QString("texUnit%1").arg(unit)), unit);
         }
     }
 
@@ -224,6 +226,11 @@ SGCanvas::setupFromFixedState()
     } else {
         glDisable(GL_NORMALIZE);
     }
+    if (glState->getRescaleNormalEnable()) {
+        glEnable(GL_RESCALE_NORMAL);
+    } else {
+        glDisable(GL_RESCALE_NORMAL);
+    }
 
     if (glState->getSeparateSpecularColorEnable()) {
         glLightModeli(GL_LIGHT_MODEL_COLOR_CONTROL, GL_SEPARATE_SPECULAR_COLOR);
@@ -243,6 +250,7 @@ SGCanvas::setupFromFixedState()
     if (glState->getFogEnable()) {
         glEnable(GL_FOG);
         glFogi(GL_FOG_MODE, glState->getFog().fogMode);
+        glFogi(GL_FOG_COORD_SRC, glState->getFog().fogSource);
         glFogf(GL_FOG_COLOR, glState->getFog().fogColorVector);
         glFogf(GL_FOG_DENSITY, glState->getFog().fogDensity);
         glFogf(GL_FOG_START, glState->getFog().fogStart);
@@ -323,29 +331,6 @@ SGCanvas::linkShaders(const QString& vertexShader, const QString& fragmentShader
     if (!m_prog.isLinked()) {
         writeMessage(tr("Error in linking programs!!"));
         return false;
-    } else {
-        m_prog.bind();
-        for (int i = 0; i < 5; i++) {
-            switch (i) {
-                case 0:
-                    m_prog.setUniformValue("texUnit0", 0);
-                    break;
-                case 1:
-                    m_prog.setUniformValue("texUnit1", 1);
-                    break;
-                case 2:
-                    m_prog.setUniformValue("texUnit2", 2);
-                    break;
-                case 3:
-                    m_prog.setUniformValue("texUnit3", 3);
-                    break;
-                case 4:
-                    m_prog.setUniformValue("texUnit4", 4);
-                    break;
-                default:
-                    break;
-            }
-        }
     }
 
     writeMessage(tr("Linked programs successfully"));

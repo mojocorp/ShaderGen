@@ -40,8 +40,8 @@
 #include <QDoubleSpinBox>
 #include <QGroupBox>
 #include <QLabel>
-#include <QRadioButton>
 #include <QOpenGLFunctions>
+#include <QRadioButton>
 
 #include "SGFixedGLState.h"
 #include "SGOglFogNBPage.h"
@@ -51,6 +51,35 @@ SGOglFogNBPage::SGOglFogNBPage(SGFixedGLState* glState, QWidget* parent)
   , m_glState(glState)
 {
     QGridLayout* fogSizer = new QGridLayout(this);
+
+    QRadioButton* fogCoord = new QRadioButton(tr("GL_FOG_COORD"), this);
+    QRadioButton* fogFragmentDepth = new QRadioButton(tr("GL_FRAGMENT_DEPTH"), this);
+
+    QGroupBox* fogSourceChoiceBox = new QGroupBox(tr("Select Source"), this);
+    QVBoxLayout* fogSourceChoiceSizer = new QVBoxLayout(fogSourceChoiceBox);
+
+    fogSourceChoiceSizer->addWidget(fogCoord);
+    fogSourceChoiceSizer->addWidget(fogFragmentDepth);
+
+    m_fogSourceChoice = new QButtonGroup(this);
+    m_fogSourceChoice->addButton(fogCoord, 0);
+    m_fogSourceChoice->addButton(fogFragmentDepth, 1);
+    connect(m_fogSourceChoice, SIGNAL(buttonClicked(int)), SLOT(fogSourceChanged(int)));
+
+    GLenum src = 0;
+    switch (glState->getFog().fogSource) {
+        case GL_FOG_COORD:
+            src = 0;
+            break;
+        case GL_FRAGMENT_DEPTH:
+            src = 1;
+            break;
+        default:
+            src = 0;
+            break;
+    }
+
+    m_fogSourceChoice->button(src)->setChecked(true);
 
     QRadioButton* fogLinear = new QRadioButton(tr("GL_LINEAR"), this);
     QRadioButton* fogExp = new QRadioButton(tr("GL_EXP"), this);
@@ -67,25 +96,25 @@ SGOglFogNBPage::SGOglFogNBPage(SGFixedGLState* glState, QWidget* parent)
     m_fogModeChoice->addButton(fogLinear, 0);
     m_fogModeChoice->addButton(fogExp, 1);
     m_fogModeChoice->addButton(fogExp2, 2);
-    connect(m_fogModeChoice, SIGNAL(buttonClicked(int)), SLOT(onRadio(int)));
+    connect(m_fogModeChoice, SIGNAL(buttonClicked(int)), SLOT(fogModeChanged(int)));
 
-    GLenum aa = glState->getFog().fogMode;
-    switch (aa) {
+    GLenum mode = 1;
+    switch (glState->getFog().fogMode) {
         case GL_LINEAR:
-            aa = 0;
+            mode = 0;
             break;
         case GL_EXP:
-            aa = 1;
+            mode = 1;
             break;
         case GL_EXP2:
-            aa = 2;
+            mode = 2;
             break;
         default:
-            aa = 1;
+            mode = 1;
             break;
     }
 
-    m_fogModeChoice->button(aa)->setChecked(true);
+    m_fogModeChoice->button(mode)->setChecked(true);
 
     m_fogDensity = new QDoubleSpinBox(this);
     m_fogDensity->setRange(0, 100);
@@ -97,11 +126,11 @@ SGOglFogNBPage::SGOglFogNBPage(SGFixedGLState* glState, QWidget* parent)
     m_fogEnd->setRange(-1000, 1000);
 
     connect(m_fogDensity, SIGNAL(valueChanged(double)), SLOT(fogDensityChanged(double)));
-    connect(m_fogStart, SIGNAL(valueChanged(double)), SLOT(fogDensityChanged(double)));
-    connect(m_fogEnd, SIGNAL(valueChanged(double)), SLOT(fogDensityChanged(double)));
+    connect(m_fogStart, SIGNAL(valueChanged(double)), SLOT(fogStartChanged(double)));
+    connect(m_fogEnd, SIGNAL(valueChanged(double)), SLOT(fogEndChanged(double)));
 
     m_fogColor = new QColorButton(this);
-    connect(m_fogColor, SIGNAL(selected(QColor)), SLOT(fogColorChanged(QColor)));
+    connect(m_fogColor, SIGNAL(selected(const QColor&)), SLOT(fogColorChanged(const QColor&)));
 
     QLabel* fogDensityLbl = new QLabel(tr("GL_FOG_DENSITY"), this);
     QLabel* fogStartLbl = new QLabel(tr("GL_FOG_START"), this);
@@ -114,21 +143,23 @@ SGOglFogNBPage::SGOglFogNBPage(SGFixedGLState* glState, QWidget* parent)
 
     fogSizer->addWidget(m_fogCheckBox, 0, 0);
 
-    fogSizer->addWidget(fogModeChoiceBox, 1, 0, 3, 1);
+    fogSizer->addWidget(fogSourceChoiceBox, 1, 0, 3, 1);
 
-    fogSizer->addWidget(fogDensityLbl, 1, 1);
-    fogSizer->addWidget(fogStartLbl, 2, 1);
-    fogSizer->addWidget(fogEndLbl, 3, 1);
+    fogSizer->addWidget(fogModeChoiceBox, 1, 1, 3, 1);
 
-    fogSizer->addWidget(m_fogDensity, 1, 2);
-    fogSizer->addWidget(m_fogStart, 2, 2);
-    fogSizer->addWidget(m_fogEnd, 3, 2);
+    fogSizer->addWidget(fogDensityLbl, 1, 2);
+    fogSizer->addWidget(fogStartLbl, 2, 2);
+    fogSizer->addWidget(fogEndLbl, 3, 2);
 
-    fogSizer->addWidget(fogColorLbl, 1, 3);
+    fogSizer->addWidget(m_fogDensity, 1, 3);
+    fogSizer->addWidget(m_fogStart, 2, 3);
+    fogSizer->addWidget(m_fogEnd, 3, 3);
 
-    fogSizer->addWidget(m_fogColor, 1, 4);
+    fogSizer->addWidget(fogColorLbl, 1, 4);
+
+    fogSizer->addWidget(m_fogColor, 1, 5);
     fogSizer->setRowStretch(4, 2);
-    fogSizer->setColumnStretch(5, 2);
+    fogSizer->setColumnStretch(6, 2);
 
     setup();
 }
@@ -180,7 +211,7 @@ SGOglFogNBPage::fogEndChanged(double end)
 }
 
 void
-SGOglFogNBPage::onRadio(int index)
+SGOglFogNBPage::fogModeChanged(int index)
 {
     switch (index) {
         case 0:
@@ -191,6 +222,22 @@ SGOglFogNBPage::onRadio(int index)
             break;
         case 2:
             m_glState->getFog().fogMode = GL_EXP2;
+            break;
+        default:
+            break;
+    }
+    emit valueChanged();
+}
+
+void
+SGOglFogNBPage::fogSourceChanged(int index)
+{
+    switch (index) {
+        case 0:
+            m_glState->getFog().fogSource = GL_FOG_COORD;
+            break;
+        case 1:
+            m_glState->getFog().fogSource = GL_FRAGMENT_DEPTH;
             break;
         default:
             break;
