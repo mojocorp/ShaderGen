@@ -194,6 +194,12 @@ SGFrame::setCanvasMode(SGCanvas::GLMode a)
     } else {
         m_glModeChoice->button(1)->setChecked(true);
     }
+    const QString vert = getVertexShader();
+    const QString frag = getFragmentShader();
+
+    getShaderTextWindow()->setFragmentShaderText(frag);
+    getShaderTextWindow()->setVertexShaderText(vert);
+
     m_canvas->setMode(a);
     m_canvas->update();
 }

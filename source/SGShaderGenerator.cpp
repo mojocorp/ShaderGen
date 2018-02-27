@@ -114,8 +114,6 @@ SGShaderGenerator::buildFragmentShader()
 void
 SGShaderGenerator::buildFragFog(QString& str)
 {
-    QString stringTemp;
-
     if (m_glState->getFogEnable()) {
         str += "\n    float fog;\n\n";
 
@@ -135,8 +133,6 @@ SGShaderGenerator::buildFragFog(QString& str)
         } else if (fogMode == GL_EXP) {
             const double preComputedValue = -fogDensity * LOG2E;
 
-            stringTemp = QString::number(preComputedValue);
-
             str += "\n      //fog = exp2(-gl_Fog.density * gl_FogFragCoord * "
                    "LOG2E);\n"
                    "\n      //The equation for fog allows us to move a portion of \n"
@@ -144,9 +140,9 @@ SGShaderGenerator::buildFragFog(QString& str)
                    "        //increasing the efficiency of our shader by doing a \n"
                    "        //scalar multiplication on the CPU rather than the "
                    "GPU.\n\n"
-                   "        fog = exp2(gl_FogFragCoord *";
+                   "        fog = exp2(gl_FogFragCoord * ";
 
-            str += stringTemp;
+            str += QString::number(preComputedValue);
             str += ");\n\n";
 
             // In the first 2 releases of ShaderGen, the fog calculation was
@@ -161,8 +157,6 @@ SGShaderGenerator::buildFragFog(QString& str)
         } else if (fogMode == GL_EXP2) {
             const double preComputedValue = -fogDensity * fogDensity * LOG2E;
 
-            stringTemp = QString::number(preComputedValue);
-
             str += "\n//    fog = exp2(-gl_Fog.density * gl_Fog.density *\n"
                    "    //      gl_FogFragCoord * gl_FogFragCoord * LOG2E);\n"
                    "\n  //The equation for fog allows us to move a portion of \n"
@@ -173,7 +167,7 @@ SGShaderGenerator::buildFragFog(QString& str)
                    "    //scalar multiplication on the CPU rather than the GPU.\n\n"
                    "    fog = exp2(gl_FogFragCoord * gl_FogFragCoord * ";
 
-            str += stringTemp;
+            str += QString::number(preComputedValue);
             str += ");\n\n";
         }
         str += "    fog = clamp(fog, 0.0, 1.0);\n\n"

@@ -394,23 +394,12 @@ SGCanvas::setMode(GLMode m)
 
     m_mode = m;
     if (m_mode == GLModeChoiceShader) {
-        switchToShaderMode();
+        const QString vert = m_frame->getVertexShader();
+        const QString frag = m_frame->getFragmentShader();
+
+        linkShaders(vert, frag);
     }
     update();
-}
-
-int
-SGCanvas::switchToShaderMode()
-{
-    const QString vert = m_frame->getVertexShader();
-    const QString frag = m_frame->getFragmentShader();
-
-    m_frame->getShaderTextWindow()->setFragmentShaderText(frag);
-    m_frame->getShaderTextWindow()->setVertexShaderText(vert);
-
-    linkShaders(vert, frag);
-    update();
-    return 0;
 }
 
 void

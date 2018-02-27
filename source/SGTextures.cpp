@@ -97,28 +97,28 @@ SGTextures::bind(int id, int unit)
 
     glActiveTexture(GL_TEXTURE0 + unit);
 
+    const Texture& texture = m_glState->getTexture(unit);
+
     PrintOpenGLError();
 
     glDisable(GL_TEXTURE_GEN_S);
     glDisable(GL_TEXTURE_GEN_T);
     PrintOpenGLError();
 
-    if (m_glState->getTexture(unit).texGen) {
-        glTexGeni(GL_S, GL_TEXTURE_GEN_MODE,
-                  m_glState->getTexture(unit).textureCoordinateGeneration);
-        glTexGeni(GL_T, GL_TEXTURE_GEN_MODE,
-                  m_glState->getTexture(unit).textureCoordinateGeneration);
+    if (texture.texGen) {
+        glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, texture.textureCoordinateGeneration);
+        glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, texture.textureCoordinateGeneration);
         PrintOpenGLError();
-        if (m_glState->getTexture(unit).textureCoordinateGeneration == GL_OBJECT_LINEAR) {
-            glTexGenf(GL_S, GL_OBJECT_PLANE, m_glState->getTexture(unit).objectPlaneCoeffS);
-            glTexGenf(GL_T, GL_OBJECT_PLANE, m_glState->getTexture(unit).objectPlaneCoeffT);
+        if (texture.textureCoordinateGeneration == GL_OBJECT_LINEAR) {
+            glTexGenf(GL_S, GL_OBJECT_PLANE, texture.objectPlaneCoeffS);
+            glTexGenf(GL_T, GL_OBJECT_PLANE, texture.objectPlaneCoeffT);
         }
         PrintOpenGLError();
-        if (m_glState->getTexture(unit).textureCoordinateGeneration == GL_EYE_LINEAR) {
+        if (texture.textureCoordinateGeneration == GL_EYE_LINEAR) {
             PrintOpenGLError();
-            glTexGenf(GL_S, GL_EYE_PLANE, m_glState->getTexture(unit).eyePlaneCoeffS);
+            glTexGenf(GL_S, GL_EYE_PLANE, texture.eyePlaneCoeffS);
             PrintOpenGLError();
-            glTexGenf(GL_T, GL_EYE_PLANE, m_glState->getTexture(unit).eyePlaneCoeffT);
+            glTexGenf(GL_T, GL_EYE_PLANE, texture.eyePlaneCoeffT);
         }
         PrintOpenGLError();
         glEnable(GL_TEXTURE_GEN_S);
@@ -127,25 +127,21 @@ SGTextures::bind(int id, int unit)
 
     PrintOpenGLError();
 
-    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE,
-              m_glState->getTexture(unit).textureApplicationMethod);
+    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, texture.textureApplicationMethod);
 
-    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, m_glState->getTexture(unit).texEnvColor);
+    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, texture.texEnvColor);
 
     PrintOpenGLError();
 
-    if (m_glState->getTexture(unit).textureApplicationMethod == GL_COMBINE) {
-        glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, m_glState->getTexture(unit).textureCombineMode);
-        glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_RGB, m_glState->getTexture(unit).textureCombineSource0);
-        glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_RGB, m_glState->getTexture(unit).textureCombineSource1);
-        glTexEnvi(GL_TEXTURE_ENV, GL_SRC2_RGB, m_glState->getTexture(unit).textureCombineSource2);
-        glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_RGB,
-                  m_glState->getTexture(unit).textureCombineOperand0);
-        glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_RGB,
-                  m_glState->getTexture(unit).textureCombineOperand1);
-        glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND2_RGB,
-                  m_glState->getTexture(unit).textureCombineOperand2);
-        glTexEnvf(GL_TEXTURE_ENV, GL_RGB_SCALE, m_glState->getTexture(unit).textureCombineScale);
+    if (texture.textureApplicationMethod == GL_COMBINE) {
+        glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, texture.textureCombineMode);
+        glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_RGB, texture.textureCombineSource0);
+        glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_RGB, texture.textureCombineSource1);
+        glTexEnvi(GL_TEXTURE_ENV, GL_SRC2_RGB, texture.textureCombineSource2);
+        glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_RGB, texture.textureCombineOperand0);
+        glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_RGB, texture.textureCombineOperand1);
+        glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND2_RGB, texture.textureCombineOperand2);
+        glTexEnvf(GL_TEXTURE_ENV, GL_RGB_SCALE, texture.textureCombineScale);
     }
 
     glEnable(GL_TEXTURE_2D);

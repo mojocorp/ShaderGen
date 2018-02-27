@@ -66,8 +66,6 @@ class SGCanvas : public QOpenGLWidget
     void setMode(GLMode a);
     GLMode getMode() const { return m_mode; }
 
-    int switchToShaderMode();
-
     const float CameraZ;
     float getZoom() const { return m_zoom; }
 
