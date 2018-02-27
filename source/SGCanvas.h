@@ -100,7 +100,4 @@ class SGCanvas : public QGLWidget
 
     void setupFromFixedState();
     void writeMessage(const QString str);
-    void unsupportedOpenGLVersion(void);
-    void checkGlImplementation();
-    void notEnoughTextureUnits(const int numTextures);
 };

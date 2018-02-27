@@ -115,7 +115,22 @@ SGCanvas::getGLState()
 void
 SGCanvas::initializeGL()
 {
-    checkGlImplementation();
+    // check OpenGl implementation
+    const int gl_major = context()->format().majorVersion();
+
+    int gl_numTextures;
+    glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS_ARB, &gl_numTextures);
+    if (gl_major < 2.0) {
+        QString errorString(tr("You must have OpenGL 2.0 compliant drivers to run ShaderGen!"));
+        QMessageBox::critical(this, tr("OpenGL 2.0 Driver Not Found"), errorString);
+
+        exit(1);
+    } else if (gl_numTextures < NUM_TEXTURES) {
+        QString errorString(tr("Your OpenGL Graphics Card Only Supports %1 Texture Units, Some "
+                               "ShaderGen Features May Not Work As Expected!")
+                              .arg(gl_numTextures));
+        QMessageBox::critical(this, tr("Insufficient Texture Units"), errorString);
+    }
 
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 
@@ -134,8 +149,9 @@ SGCanvas::paintGL()
 
     SGFixedGLState* glState = getGLState();
     for (GLint unit = 0; unit < NUM_TEXTURES; unit++) {
-        if (glState->getTexture(unit).textureEnabled) {
-            m_frame->getTextures()->bind(glState->getTexture(unit).textureCurrentSelection, unit);
+        const Texture& texture = glState->getTexture(unit);
+        if (texture.textureEnabled) {
+            m_frame->getTextures()->bind(texture.textureCurrentSelection, unit);
         } else {
             m_frame->getTextures()->release(unit);
         }
@@ -402,36 +418,4 @@ SGCanvas::writeMessage(const QString str)
 {
     m_frame->setStatusText(str);
     m_frame->getShaderTextWindow()->log(str);
-}
-
-void
-SGCanvas::checkGlImplementation()
-{
-    const int gl_major = context()->format().majorVersion();
-
-    int gl_numTextures;
-    glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS_ARB, &gl_numTextures);
-    if (gl_major < 2.0) {
-        unsupportedOpenGLVersion();
-    } else if (gl_numTextures < 5) {
-        notEnoughTextureUnits(gl_numTextures);
-    }
-}
-
-void
-SGCanvas::unsupportedOpenGLVersion()
-{
-    QString errorString(tr("You must have OpenGL 2.0 compliant drivers to run ShaderGen!"));
-    QMessageBox::critical(this, tr("OpenGL 2.0 Driver Not Found"), errorString);
-
-    exit(1);
-}
-
-void
-SGCanvas::notEnoughTextureUnits(const int numTextures)
-{
-    QString errorString(tr("Your OpenGL Graphics Card Only Supports %1 Texture Units, Some "
-                           "ShaderGen Features May Not Work As Expected!")
-                          .arg(numTextures));
-    QMessageBox::critical(this, tr("Insufficient Texture Units"), errorString);
 }
