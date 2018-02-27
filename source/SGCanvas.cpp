@@ -159,9 +159,10 @@ SGCanvas::paintGL()
 
     PrintOpenGLError();
 
+    setupFromFixedState();
+
     if (m_mode == SGCanvas::GLModeChoiceFixed) {
         m_prog.release();
-        setupFromFixedState();
     } else {
         m_prog.bind();
         for (int unit = 0; unit < NUM_TEXTURES; unit++) {
@@ -394,6 +395,8 @@ SGCanvas::setMode(GLMode m)
 
     m_mode = m;
     if (m_mode == GLModeChoiceShader) {
+        m_glCompiled = false;
+
         const QString vert = m_frame->getVertexShader();
         const QString frag = m_frame->getFragmentShader();
 

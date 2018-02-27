@@ -761,7 +761,7 @@ SGShaderGenerator::buildTexCoord(QString& str)
 
     for (int i = 0; i < NUM_TEXTURES; i++) {
         const Texture& texture = m_glState->getTexture(i);
-        if (texture.textureEnabled) {
+        if (texture.texGen) {
             if (texture.textureCoordinateGeneration == GL_REFLECTION_MAP) {
                 if (!m_fMapReflection && !m_fMapSphere) {
                     tempStringA = "    vec3 ecPosition3;"
@@ -826,15 +826,13 @@ SGShaderGenerator::buildTexCoord(QString& str)
                                        i, i, i, i, i, i, i, i);
             } else if (texture.textureCoordinateGeneration == GL_NORMAL_MAP) {
                 texCoordString.sprintf("\n    gl_TexCoord[%i] = vec4( normal, 1.0 );\n", i);
-
-            } else {
-                texCoordString.sprintf("\n"
-                                       "    gl_TexCoord[%i] = gl_MultiTexCoord%i;\n",
-                                       i, i);
             }
-
-            str += texCoordString;
+        } else {
+            texCoordString.sprintf("\n"
+                                   "    gl_TexCoord[%i] = gl_MultiTexCoord%i;\n",
+                                   i, i);
         }
+        str += texCoordString;
     }
 
     str += "}\n";
@@ -923,7 +921,7 @@ SGShaderGenerator::buildVertMain(QString& str)
         str += "    gl_FogFragCoord = ffog(ecPosition.z);\n";
     }
 
-    if (m_glState->getTexGenEnable()) {
+    if (m_glState->getTextureEnable()) {
         str += "    ftexgen(transformedNormal, ecPosition);\n";
     }
 
