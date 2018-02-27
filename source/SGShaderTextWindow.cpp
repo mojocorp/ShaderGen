@@ -10,8 +10,6 @@
 SGShaderTextWindow::SGShaderTextWindow(SGFrame* frame)
   : QFrame(frame)
   , m_frame(frame)
-  , m_haveCompiled(false)
-  , m_haveLinked(false)
 {
     m_notebook = new QTabWidget(this);
 
@@ -73,7 +71,7 @@ SGShaderTextWindow::compileClicked()
     const QString vert = m_frame->getVertexShader();
     const QString frag = m_frame->getFragmentShader();
 
-    m_haveCompiled = m_frame->getCanvas()->compileShaders(vert, frag);
+    m_frame->getCanvas()->compileShaders(vert, frag);
 
     m_notebook->setCurrentWidget(m_textBoxInfo);
 }
@@ -81,16 +79,15 @@ SGShaderTextWindow::compileClicked()
 void
 SGShaderTextWindow::linkClicked()
 {
-    if (m_haveCompiled) {
-        m_haveLinked =
-          m_frame->getCanvas()->linkShaders(getVertexShaderText(), getFragmentShaderText());
-        m_notebook->setCurrentWidget(m_textBoxInfo);
-        if (m_haveLinked) {
-            m_frame->setCanvasMode(SGCanvas::GLModeChoiceShader);
-        }
-
-        m_textBoxInfo->textCursor().movePosition(QTextCursor::End);
+    const QString vert = m_frame->getVertexShader();
+    const QString frag = m_frame->getFragmentShader();
+    const bool hasLinked = m_frame->getCanvas()->linkShaders(vert, frag);
+    m_notebook->setCurrentWidget(m_textBoxInfo);
+    if (hasLinked) {
+        m_frame->setCanvasMode(SGCanvas::GLModeChoiceShader);
     }
+
+    m_textBoxInfo->textCursor().movePosition(QTextCursor::End);
 }
 
 void
@@ -99,16 +96,12 @@ SGShaderTextWindow::buildClicked()
     const QString vert = m_frame->getVertexShader();
     const QString frag = m_frame->getFragmentShader();
 
-    m_haveCompiled = m_frame->getCanvas()->compileShaders(vert, frag);
-    m_notebook->setCurrentWidget(m_textBoxInfo);
-    if (m_haveCompiled) {
-        m_haveLinked = m_frame->getCanvas()->linkShaders(vert, frag);
-        if (m_haveLinked) {
-            m_frame->setCanvasMode(SGCanvas::GLModeChoiceShader);
-        }
-
-        m_textBoxInfo->textCursor().movePosition(QTextCursor::End);
+    const bool hasLinked = m_frame->getCanvas()->linkShaders(vert, frag);
+    if (hasLinked) {
+        m_notebook->setCurrentWidget(m_textBoxInfo);
+        m_frame->setCanvasMode(SGCanvas::GLModeChoiceShader);
     }
+    m_textBoxInfo->textCursor().movePosition(QTextCursor::End);
 }
 
 void

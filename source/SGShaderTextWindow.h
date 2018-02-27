@@ -13,8 +13,7 @@ class SGShaderTextWindow : public QFrame
     SGShaderTextWindow(SGFrame* frame);
     void setVertexShaderText(const QString& text) { m_textBoxVert->setPlainText(text); }
     void setFragmentShaderText(const QString& text) { m_textBoxFrag->setPlainText(text); }
-    QString getVertexShaderText() const { return m_textBoxVert->toPlainText(); }
-    QString getFragmentShaderText() const { return m_textBoxFrag->toPlainText(); }
+
   public slots:
     void log(const QString& text);
     void clearLog();
@@ -26,7 +25,6 @@ class SGShaderTextWindow : public QFrame
 
   private:
     SGFrame* m_frame;
-    bool m_haveCompiled, m_haveLinked;
     QPlainTextEdit *m_textBoxVert, *m_textBoxFrag;
     QTextEdit* m_textBoxInfo;
     QTabWidget* m_notebook;
