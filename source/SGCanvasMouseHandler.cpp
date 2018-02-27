@@ -109,7 +109,7 @@ SGCanvasMouseHandler::onMouseMove(QMouseEvent* event)
                 float delta = cursor.y() - m_vStart.y();
                 if (delta) {
                     m_canvas->SetZoom(m_startZoom + delta);
-                    m_canvas->updateGL();
+                    m_canvas->update();
                 }
             } else {
                 float theta = 180 * (cursor - m_vStart).length();
@@ -121,7 +121,7 @@ SGCanvasMouseHandler::onMouseMove(QMouseEvent* event)
                     glRotatef(-theta, axis.x(), axis.y(), axis.z());
                     glMultMatrixf(m_mStart.constData());
                     glGetFloatv(GL_MODELVIEW_MATRIX, m_xform.data());
-                    m_canvas->updateGL();
+                    m_canvas->update();
                 }
             }
             m_vInc = cursor - m_vPrev;
@@ -132,7 +132,7 @@ SGCanvasMouseHandler::onMouseMove(QMouseEvent* event)
             float delta = cursor.y() - m_vStart.y();
             if (delta) {
                 m_canvas->SetZoom(m_startZoom + delta);
-                m_canvas->updateGL();
+                m_canvas->update();
             }
         }
     }
@@ -158,4 +158,3 @@ SGCanvasMouseHandler::loadMatrix() const
     glRotatef(20.0f, 1.0f, 0.0f, 0.0f);
     glMultMatrixf(m_xform.constData());
 }
-

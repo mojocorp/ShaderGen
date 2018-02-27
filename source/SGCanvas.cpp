@@ -88,7 +88,7 @@ glLightf(GLenum light, GLenum pname, const QVector4D& v)
 }
 
 SGCanvas::SGCanvas(SGFrame* frame)
-  : QGLWidget(frame)
+  : QOpenGLWidget(frame)
   , CameraZ(-5)
   , m_mouse(this)
   , m_glCompiled(false)
@@ -305,28 +305,28 @@ SGCanvas::keyPressEvent(QKeyEvent* event)
             break;
     }
 
-    updateGL();
+    update();
 }
 
 void
 SGCanvas::mousePressEvent(QMouseEvent* event)
 {
     m_mouse.onMousePress(event);
-    updateGL();
+    update();
 }
 
 void
 SGCanvas::mouseMoveEvent(QMouseEvent* event)
 {
     m_mouse.onMouseMove(event);
-    updateGL();
+    update();
 }
 
 void
 SGCanvas::mouseReleaseEvent(QMouseEvent* event)
 {
     m_mouse.onMouseRelease(event);
-    updateGL();
+    update();
 }
 
 bool
@@ -396,7 +396,7 @@ SGCanvas::setMode(GLMode m)
     if (m_mode == GLModeChoiceShader) {
         switchToShaderMode();
     }
-    updateGL();
+    update();
 }
 
 int
@@ -409,7 +409,7 @@ SGCanvas::switchToShaderMode()
     m_frame->getShaderTextWindow()->setVertexShaderText(vert);
 
     linkShaders(vert, frag);
-    updateGL();
+    update();
     return 0;
 }
 

@@ -37,8 +37,8 @@
 
 #pragma once
 
-#include <QGLWidget>
 #include <QOpenGLShaderProgram>
+#include <QOpenGLWidget>
 
 #include "SGCanvasMouseHandler.h"
 #include "SGModels.h"
@@ -46,7 +46,7 @@
 class SGFrame;
 class SGFixedGLState;
 
-class SGCanvas : public QGLWidget
+class SGCanvas : public QOpenGLWidget
 {
   public:
     SGCanvas(SGFrame* frame);

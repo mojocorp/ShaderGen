@@ -195,7 +195,7 @@ SGFrame::setCanvasMode(SGCanvas::GLMode a)
         m_glModeChoice->button(1)->setChecked(true);
     }
     m_canvas->setMode(a);
-    m_canvas->updateGL();
+    m_canvas->update();
 }
 
 void
@@ -244,7 +244,7 @@ SGFrame::loadFile(const QString& filename)
     QJsonDocument loadDoc(QJsonDocument::fromJson(saveData));
     m_glState->read(loadDoc.object());
     m_oglNotebook->setup();
-    m_canvas->updateGL();
+    m_canvas->update();
 
     return true;
 }
@@ -310,13 +310,13 @@ SGFrame::modelActionTriggered(QAction* action)
         m_canvas->setModel(SGModels::ModelPlane);
     }
 
-    m_canvas->updateGL();
+    m_canvas->update();
 }
 
 void
 SGFrame::viewActionTriggered()
 {
-    m_canvas->updateGL();
+    m_canvas->update();
 }
 
 void
@@ -327,14 +327,14 @@ SGFrame::switchGLModeTriggered()
     } else {
         setCanvasMode(SGCanvas::GLModeChoiceFixed);
     }
-    m_canvas->updateGL();
+    m_canvas->update();
 }
 
 void
 SGFrame::setFixedGLMode()
 {
     setCanvasMode(SGCanvas::GLModeChoiceFixed);
-    m_canvas->updateGL();
+    m_canvas->update();
 }
 
 void

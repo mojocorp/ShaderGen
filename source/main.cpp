@@ -1,4 +1,5 @@
 #include <QApplication>
+#include <QSurfaceFormat>
 
 #include "SGFrame.h"
 
@@ -9,6 +10,11 @@ main(int argc, char* argv[])
     QApplication::setApplicationName("GLSL ShaderGen");
     QApplication::setOrganizationName("mojocorp");
     QApplication::setQuitOnLastWindowClosed(true);
+
+    QSurfaceFormat format;
+    format.setVersion(2, 0);
+    format.setProfile(QSurfaceFormat::CompatibilityProfile);
+    QSurfaceFormat::setDefaultFormat(format);
 
     SGFrame mainWin(QApplication::applicationName());
     mainWin.resize(800, 800);
