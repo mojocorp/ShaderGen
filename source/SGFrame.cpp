@@ -406,7 +406,7 @@ SGFrame::about()
     QMessageBox::about(this, "GLSL ShaderGen", "<center>"
                                                "<p><img src=\":textures/3Dlabs.png\"></p>"
                                                "<p><b>GLSL ShaderGen</b></p>"
-                                               "<p>Version 3.3.1</p>"
+                                               "<p>Version 3.4.0</p>"
                                                "</center>");
 }
 
