@@ -68,8 +68,8 @@ SGShaderTextWindow::generateClicked()
 void
 SGShaderTextWindow::compileClicked()
 {
-    const QString vert = m_frame->getVertexShader();
-    const QString frag = m_frame->getFragmentShader();
+    const QString vert = m_textBoxVert->toPlainText();
+    const QString frag = m_textBoxFrag->toPlainText();
 
     m_frame->getCanvas()->compileShaders(vert, frag);
 
@@ -79,8 +79,8 @@ SGShaderTextWindow::compileClicked()
 void
 SGShaderTextWindow::linkClicked()
 {
-    const QString vert = m_frame->getVertexShader();
-    const QString frag = m_frame->getFragmentShader();
+    const QString vert = m_textBoxVert->toPlainText();
+    const QString frag = m_textBoxFrag->toPlainText();
     const bool hasLinked = m_frame->getCanvas()->linkShaders(vert, frag);
     m_notebook->setCurrentWidget(m_textBoxInfo);
     if (hasLinked) {
@@ -93,8 +93,8 @@ SGShaderTextWindow::linkClicked()
 void
 SGShaderTextWindow::buildClicked()
 {
-    const QString vert = m_frame->getVertexShader();
-    const QString frag = m_frame->getFragmentShader();
+    const QString vert = m_textBoxVert->toPlainText();
+    const QString frag = m_textBoxFrag->toPlainText();
 
     const bool hasLinked = m_frame->getCanvas()->linkShaders(vert, frag);
     if (hasLinked) {

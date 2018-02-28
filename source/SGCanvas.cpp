@@ -342,7 +342,7 @@ SGCanvas::linkShaders(const QString& vertexShader, const QString& fragmentShader
     m_prog.link();
 
     if (m_prog.log().length() > 0) {
-        m_frame->getShaderTextWindow()->log(tr("InfoLog:") + m_prog.log());
+        m_frame->getShaderTextWindow()->log(m_prog.log());
     }
 
     if (!m_prog.isLinked()) {
@@ -369,7 +369,7 @@ SGCanvas::compileShaders(const QString& vertexShader, const QString& fragmentSha
         writeMessage(tr("Vertex shader compiled successfully"));
     }
     if (m_prog.log().length() > 0) {
-        m_frame->getShaderTextWindow()->log(tr("InfoLog:") + m_prog.log());
+        m_frame->getShaderTextWindow()->log(m_prog.log());
     }
 
     if (!m_prog.addShaderFromSourceCode(QOpenGLShader::Fragment, fragmentShader)) {
@@ -379,7 +379,7 @@ SGCanvas::compileShaders(const QString& vertexShader, const QString& fragmentSha
         writeMessage(tr("Fragment shader compiled successfully"));
     }
     if (m_prog.log().length() > 0) {
-        m_frame->getShaderTextWindow()->log(tr("InfoLog:") + m_prog.log());
+        m_frame->getShaderTextWindow()->log(m_prog.log());
     }
 
     m_glCompiled = true;
