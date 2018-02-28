@@ -167,7 +167,30 @@ SGOglFogNBPage::SGOglFogNBPage(SGFixedGLState* glState, QWidget* parent)
 void
 SGOglFogNBPage::setup()
 {
+    m_fogCheckBox->setChecked(m_glState->getFogEnable());
+
     const Fog& fog = m_glState->getFog();
+    switch (fog.fogSource) {
+        case GL_FOG_COORD:
+            m_fogSourceChoice->button(0)->setChecked(true);
+            break;
+        case GL_FRAGMENT_DEPTH:
+            m_fogSourceChoice->button(1)->setChecked(true);
+            break;
+    }
+
+    switch (fog.fogMode) {
+        case GL_LINEAR:
+            m_fogModeChoice->button(0)->setChecked(true);
+            break;
+        case GL_EXP:
+            m_fogModeChoice->button(1)->setChecked(true);
+            break;
+        case GL_EXP2:
+            m_fogModeChoice->button(2)->setChecked(true);
+            break;
+    }
+
     m_fogDensity->setValue(fog.fogDensity);
     m_fogStart->setValue(fog.fogStart);
     m_fogEnd->setValue(fog.fogEnd);

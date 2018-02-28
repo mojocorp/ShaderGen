@@ -202,6 +202,33 @@ SGOglTextureCoordNBPage::setup()
     m_tex2TexGenEnableCheckBox->setChecked(m_glState->getTexture(2).texGen);
     m_tex3TexGenEnableCheckBox->setChecked(m_glState->getTexture(3).texGen);
     m_tex4TexGenEnableCheckBox->setChecked(m_glState->getTexture(4).texGen);
+
+    const Texture& texture = m_glState->getTexture(m_texCoordUnitGroup->checkedId());
+
+    switch (texture.textureCoordinateGeneration) {
+        case GL_OBJECT_LINEAR:
+            m_coordGenGroup->button(0)->setChecked(true);
+            break;
+        case GL_EYE_LINEAR:
+            m_coordGenGroup->button(1)->setChecked(true);
+            break;
+        case GL_SPHERE_MAP:
+            m_coordGenGroup->button(2)->setChecked(true);
+            break;
+        case GL_REFLECTION_MAP:
+            m_coordGenGroup->button(3)->setChecked(true);
+            break;
+        case GL_NORMAL_MAP:
+            m_coordGenGroup->button(4)->setChecked(true);
+            break;
+        default:
+            break;
+    }
+
+    m_eyePlaneCoeffTextS->setValue(texture.eyePlaneCoeffS);
+    m_eyePlaneCoeffTextT->setValue(texture.eyePlaneCoeffT);
+    m_objectPlaneCoeffTextS->setValue(texture.objectPlaneCoeffS);
+    m_objectPlaneCoeffTextT->setValue(texture.objectPlaneCoeffT);
 }
 
 void
@@ -214,7 +241,7 @@ SGOglTextureCoordNBPage::onRadioTextureCoordUnit(int)
 void
 SGOglTextureCoordNBPage::onRadioTexCoordGen(int index)
 {
-    int workingTextureCoords = m_texCoordUnitGroup->checkedId();
+    const int workingTextureCoords = m_texCoordUnitGroup->checkedId();
 
     switch (index) {
         case TEXTURE_COORDINATE_OBJECT_LINEAR:

@@ -198,7 +198,10 @@ SGOglLightNBPage::setup()
         m_lightCheckGroup->button(i)->setChecked(m_glState->getLight(i).lightEnabled);
     }
     m_lightingCheckBox->setChecked(m_glState->getLightingEnable());
+    m_twoSidedLightingCheckBox->setChecked(m_glState->getTwoSidedLightingEnable());
+    m_localViewerLightingCheckBox->setChecked(m_glState->getLocalViewerLightingEnable());
     m_normalizeCheckBox->setChecked(m_glState->getNormalizeEnable());
+    m_rescaleNormalCheckBox->setChecked(m_glState->getRescaleNormalEnable());
     m_separateSpecularColorCheckBox->setChecked(m_glState->getSeparateSpecularColorEnable());
 
     const Light& light = m_glState->getLight(m_lightSelectionGroup->checkedId());
