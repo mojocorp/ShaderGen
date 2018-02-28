@@ -19,6 +19,8 @@ AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
+ArchitecturesAllowed=x64
+ArchitecturesInstallIn64BitMode=x64
 DefaultDirName={pf}\{#MyAppName}
 DefaultGroupName={#MyAppName}
 LicenseFile=../../License.txt
@@ -35,11 +37,12 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 
 [Files]
 Source: "../../build/ShaderGen.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "../../build/QtCore4.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "../../build/QtGui4.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "../../build/QtOpenGL4.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "../../build/Qt5Core.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "../../build/Qt5Gui.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "../../build/Qt5Widgets.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "../../build/platforms/qwindows.dll"; DestDir: "{app}/platforms"; Flags: ignoreversion
 
-Source: "C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Bootstrapper\Packages\vcredist_x64\vcredist_x64.exe"; DestDir: {tmp}; Flags: deleteafterinstall
+Source: "../../build/vcredist_x64.exe"; DestDir: {tmp}; Flags: deleteafterinstall
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]

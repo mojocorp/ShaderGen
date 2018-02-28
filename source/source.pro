@@ -1,6 +1,7 @@
 TEMPLATE = app
 TARGET = ShaderGen
 DESTDIR  = ../build
+CONFIG += resources_big
 
 QT += opengl
 DEPENDPATH += .
