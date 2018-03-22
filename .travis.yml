@@ -1,10 +1,16 @@
 language: cpp
 
+os:
+  - linux
+  - osx
+
 before_install:
- - sudo add-apt-repository --yes ppa:beineri/opt-qt571-trusty
- - sudo apt-get update -qq
+ - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo add-apt-repository --yes ppa:beineri/opt-qt571-trusty; fi
+ - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get update -qq; fi
+ - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
 install:
- - sudo apt-get install -qq qt57base
+ - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install -qq qt57base; fi
+ - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install qt5; fi
 
 branches:
   only:
@@ -17,9 +23,11 @@ matrix:
   - compiler: gcc
     os: linux
     env: QMAKESPEC=linux-g++
-#  - compiler: clang
-#    os: osx
-#    env: QMAKESPEC=macx-clang
+  - compiler: clang
+    os: osx
+    env: QMAKESPEC=macx-clang
 script:
-- source /opt/qt57/bin/qt57-env.sh
-- /opt/qt57/bin/qmake -r && make
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then source /opt/qt57/bin/qt57-env.sh; fi
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then /opt/qt57/bin/qmake -r; fi
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then /usr/local/opt/qt/bin/qmake -r; fi
+- make
