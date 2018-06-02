@@ -51,7 +51,8 @@ class SGCanvasMouseHandler
     void onMouseMove(QMouseEvent* event);
     void onMouseRelease(QMouseEvent* event);
     const QMatrix4x4& matrix() const;
-
+    float getZoom() const { return m_zoom; }
+    void setZoom(float value) { m_zoom = value; }
   private:
     void reset();
 
@@ -62,5 +63,7 @@ class SGCanvasMouseHandler
     QPoint m_vStart;
     float m_startZoom;
     QMatrix4x4 m_mStart;
+
+    float m_zoom;
     QMatrix4x4 m_xform;
 };

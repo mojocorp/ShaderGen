@@ -97,7 +97,6 @@ SGCanvas::SGCanvas(SGFrame* frame)
     m_mode = GLModeChoiceFixed;
     m_frame = frame;
     m_models = new SGModels();
-    m_zoom = 0.5f;
     m_modelCurrent = SGModels::ModelTorus;
 }
 
@@ -148,6 +147,7 @@ SGCanvas::paintGL()
     const float top = vp / aspect;
     const float zNear = 2;
     const float zFar = 10;
+    const float zoom = m_mouse.getZoom();
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
@@ -156,10 +156,10 @@ SGCanvas::paintGL()
 
     m_projection.setToIdentity();
     if (m_frame->isPerspective()) {
-        m_projection.perspective(fov * m_zoom, aspect, zNear, zFar);
+        m_projection.perspective(fov * zoom, aspect, zNear, zFar);
     } else {
-        m_projection.ortho(3 * left * m_zoom, 3 * right * m_zoom, 3 * bottom * m_zoom,
-                           3 * top * m_zoom, zNear, zFar);
+        m_projection.ortho(3 * left * zoom, 3 * right * zoom, 3 * bottom * zoom, 3 * top * zoom,
+                           zNear, zFar);
     }
     glMultMatrixf(m_projection.constData());
 
@@ -310,10 +310,10 @@ SGCanvas::keyPressEvent(QKeyEvent* event)
 {
     switch (event->key()) {
         case Qt::Key_PageDown: // page down
-            m_zoom -= 0.1f;
+            m_mouse.setZoom(m_mouse.getZoom() - 0.1f);
             break;
         case Qt::Key_PageUp: // page up
-            m_zoom += 0.1f;
+            m_mouse.setZoom(m_mouse.getZoom() + 0.1f);
             break;
         default:
             break;

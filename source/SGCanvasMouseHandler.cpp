@@ -98,8 +98,6 @@ sphereSheetProjector(const QVector2D& pos)
     return planeHit + QVector3D(0.0f, 0.0f, hyperbval);
 }
 
-static float StartZoom = 0.8f;
-
 SGCanvasMouseHandler::SGCanvasMouseHandler(SGCanvas* canvas1)
   : m_canvas(canvas1)
 {
@@ -110,11 +108,8 @@ void
 SGCanvasMouseHandler::reset()
 {
     m_frames = 0.0f;
-
-    m_startZoom = StartZoom;
-    if (m_canvas) {
-        m_canvas->SetZoom(m_startZoom);
-    }
+    m_zoom = 0.5f;
+    m_startZoom = m_zoom;
     m_validStart = false;
     m_xform.setToIdentity();
 }
@@ -126,12 +121,12 @@ SGCanvasMouseHandler::onMousePress(QMouseEvent* event)
 
     if (event->buttons() & Qt::LeftButton) {
         m_mStart = m_xform;
-        m_startZoom = m_canvas->getZoom();
+        m_startZoom = m_zoom;
         m_validStart = true;
     }
     // Right mouse button zooms.
     else if (event->buttons() & Qt::RightButton) {
-        m_startZoom = m_canvas->getZoom();
+        m_startZoom = m_zoom;
         m_validStart = true;
     }
 }
@@ -145,7 +140,7 @@ SGCanvasMouseHandler::onMouseMove(QMouseEvent* event)
             const QVector3D lend = m_canvas->getWorldSpace(event->x(), event->y());
             const float delta = lend.y() - lstart.y();
             if (delta) {
-                m_canvas->SetZoom(m_startZoom + delta);
+                m_zoom = m_startZoom + delta;
             }
         } else {
             const QVector3D lstart =
@@ -164,7 +159,7 @@ SGCanvasMouseHandler::onMouseMove(QMouseEvent* event)
             const QVector3D lend = m_canvas->getWorldSpace(event->x(), event->y());
             const float delta = lend.y() - lstart.y();
             if (delta) {
-                m_canvas->SetZoom(m_startZoom + delta);
+                m_zoom = m_startZoom + delta;
             }
         }
     }
