@@ -339,8 +339,6 @@ SGCanvas::mouseMoveEvent(QMouseEvent* event)
 void
 SGCanvas::mouseReleaseEvent(QMouseEvent* event)
 {
-    m_mouse.onMouseRelease(event);
-    update();
 }
 
 bool

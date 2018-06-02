@@ -65,9 +65,7 @@ SGTextures::SGTextures(SGFrame* frame, SGFixedGLState* state)
     m_textureNames << "metalSheetNormal";
 
     m_textures.resize(m_textureNames.size());
-    for (int i = 0; i < m_textures.size(); i++) {
-        m_textures[i] = NULL;
-    }
+    m_textures.fill(NULL);
 }
 
 SGTextures::~SGTextures()

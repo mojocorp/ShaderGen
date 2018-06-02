@@ -101,48 +101,30 @@ sphereSheetProjector(const QVector2D& pos)
 SGCanvasMouseHandler::SGCanvasMouseHandler(SGCanvas* canvas1)
   : m_canvas(canvas1)
 {
-    reset();
-}
-
-void
-SGCanvasMouseHandler::reset()
-{
-    m_frames = 0.0f;
     m_zoom = 0.5f;
-    m_startZoom = m_zoom;
-    m_validStart = false;
-    m_xform.setToIdentity();
 }
 
 void
 SGCanvasMouseHandler::onMousePress(QMouseEvent* event)
 {
     m_vStart = event->pos();
-
-    if (event->buttons() & Qt::LeftButton) {
-        m_mStart = m_xform;
-        m_startZoom = m_zoom;
-        m_validStart = true;
-    }
-    // Right mouse button zooms.
-    else if (event->buttons() & Qt::RightButton) {
-        m_startZoom = m_zoom;
-        m_validStart = true;
-    }
+    m_mStart = m_xform;
+    m_startZoom = m_zoom;
 }
 
 void
 SGCanvasMouseHandler::onMouseMove(QMouseEvent* event)
 {
-    if (event->buttons() & Qt::LeftButton) {
-        if (event->modifiers() & Qt::ControlModifier) {
-            const QVector3D lstart = m_canvas->getWorldSpace(m_vStart.x(), m_vStart.y());
-            const QVector3D lend = m_canvas->getWorldSpace(event->x(), event->y());
-            const float delta = lend.y() - lstart.y();
-            if (delta) {
-                m_zoom = m_startZoom + delta;
-            }
-        } else {
+    if ((event->buttons() & Qt::RightButton) ||
+        ((event->buttons() & Qt::LeftButton) && (event->modifiers() & Qt::ControlModifier))) {
+        const QVector3D lstart = m_canvas->getWorldSpace(m_vStart.x(), m_vStart.y());
+        const QVector3D lend = m_canvas->getWorldSpace(event->x(), event->y());
+        const float delta = lend.y() - lstart.y();
+        if (delta) {
+            m_zoom = m_startZoom + delta;
+        }
+    } else {
+        if (event->buttons() & Qt::LeftButton) {
             const QVector3D lstart =
               sphereSheetProjector(m_canvas->getNormalizedPosition(m_vStart));
             const QVector3D lend =
@@ -153,26 +135,5 @@ SGCanvasMouseHandler::onMouseMove(QMouseEvent* event)
             m_xform.rotate(rotation);
             m_xform *= m_mStart;
         }
-    } else if (event->buttons() & Qt::RightButton) {
-        if (m_validStart) {
-            const QVector3D lstart = m_canvas->getWorldSpace(m_vStart.x(), m_vStart.y());
-            const QVector3D lend = m_canvas->getWorldSpace(event->x(), event->y());
-            const float delta = lend.y() - lstart.y();
-            if (delta) {
-                m_zoom = m_startZoom + delta;
-            }
-        }
     }
-}
-
-void
-SGCanvasMouseHandler::onMouseRelease(QMouseEvent*)
-{
-    m_validStart = false;
-}
-
-const QMatrix4x4&
-SGCanvasMouseHandler::matrix() const
-{
-    return m_xform;
 }
