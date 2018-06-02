@@ -42,7 +42,7 @@ Source: "../../build/Qt5Gui.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "../../build/Qt5Widgets.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "../../build/platforms/qwindows.dll"; DestDir: "{app}/platforms"; Flags: ignoreversion
 
-Source: "../../build/vcredist_x64.exe"; DestDir: {tmp}; Flags: deleteafterinstall
+Source: "../../build/vc_redist.x64.exe"; DestDir: {tmp}; Flags: deleteafterinstall
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]

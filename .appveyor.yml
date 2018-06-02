@@ -1,0 +1,25 @@
+image: Visual Studio 2017
+
+branches:
+  only:
+    - master
+
+init:
+  - set QTDIR=C:\Qt\5.9.5\msvc2017_64
+  - call "%QTDIR%\bin\qtenv2.bat"
+  - call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
+  - cd /D "%APPVEYOR_BUILD_FOLDER%"
+
+install:
+  - choco install InnoSetup
+  - set PATH=%PATH%;"C:\Program Files (x86)\Inno Setup 5"
+
+build_script:
+  - qmake -r
+  - nmake
+  - windeployqt build
+  - ISCC "installer\win\GLSL ShaderGen.iss"
+  - dir installer
+
+artifacts:
+  - path: installer\win\Output\ShaderGen-3.4.0.exe
