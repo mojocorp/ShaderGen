@@ -76,6 +76,7 @@ class SGCanvas : public QOpenGLWidget
     void resizeGL(int width, int height);
     void SetZoom(float zoom) { m_zoom = zoom; }
     void setModel(SGModels::ModelId id) { m_modelCurrent = id; }
+    QVector2D getNormalizedPosition(const QPoint& pos) const;
 
   protected:
     virtual void keyPressEvent(QKeyEvent* event);
@@ -93,7 +94,9 @@ class SGCanvas : public QOpenGLWidget
     SGFrame* m_frame;
 
     QMatrix4x4 m_modelView;
-    float m_left, m_right, m_bottom, m_top, m_znear, m_zfar, m_zoom;
+    QMatrix4x4 m_projection;
+
+    float m_zoom;
 
     bool m_glCompiled;
     QOpenGLShaderProgram m_prog;

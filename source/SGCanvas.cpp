@@ -97,7 +97,7 @@ SGCanvas::SGCanvas(SGFrame* frame)
     m_mode = GLModeChoiceFixed;
     m_frame = frame;
     m_models = new SGModels();
-    m_zoom = 0.8f;
+    m_zoom = 0.5f;
     m_modelCurrent = SGModels::ModelTorus;
 }
 
@@ -140,6 +140,29 @@ SGCanvas::initializeGL()
 void
 SGCanvas::paintGL()
 {
+    const float aspect = (float)width() / (float)height();
+    const float vp = 0.8f;
+    const float left = -vp;
+    const float right = vp;
+    const float bottom = -vp / aspect;
+    const float top = vp / aspect;
+    const float zNear = 2;
+    const float zFar = 10;
+
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+
+    const float fov = 45.f;
+
+    m_projection.setToIdentity();
+    if (m_frame->isPerspective()) {
+        m_projection.perspective(fov * m_zoom, aspect, zNear, zFar);
+    } else {
+        m_projection.ortho(3 * left * m_zoom, 3 * right * m_zoom, 3 * bottom * m_zoom,
+                           3 * top * m_zoom, zNear, zFar);
+    }
+    glMultMatrixf(m_projection.constData());
+
     m_modelView.setToIdentity();
     if (m_frame->isPerspective()) {
         m_modelView.translate(0.0f, 0.0f, CameraZ - 1.0f);
@@ -194,26 +217,7 @@ SGCanvas::paintGL()
 void
 SGCanvas::resizeGL(int width, int height)
 {
-    const float aspect = (float)width / (float)height;
-    const float vp = 0.8f;
-    m_left = -vp;
-    m_right = vp;
-    m_bottom = -vp / aspect;
-    m_top = vp / aspect;
-    m_znear = 2;
-    m_zfar = 10;
-
     glViewport(0, 0, width, height);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    PrintOpenGLError();
-    if (m_frame->isPerspective()) {
-        glFrustum(m_left * m_zoom, m_right * m_zoom, m_bottom * m_zoom, m_top * m_zoom, m_znear,
-                  m_zfar);
-    } else {
-        glOrtho(3 * m_left * m_zoom, 3 * m_right * m_zoom, 3 * m_bottom * m_zoom,
-                3 * m_top * m_zoom, m_znear, m_zfar);
-    }
 }
 
 void
@@ -290,16 +294,15 @@ SGCanvas::setupFromFixedState()
 QVector3D
 SGCanvas::getWorldSpace(int x, int y)
 {
-    QVector3D v;
-    v.setX((float)x / (float)width());
-    v.setY(1 - (float)y / (float)height());
-    v.setZ(CameraZ);
-    v.setX(v.x() * (m_right - m_left));
-    v.setY(v.y() * (m_top - m_bottom));
-    v.setX(v.x() + m_left);
-    v.setY(v.y() + m_bottom);
+    QVector3D v(x, height() - 1 - y, CameraZ);
 
-    return v;
+    return v.unproject(m_modelView, m_projection, QRect(0, 0, width(), height()));
+}
+
+QVector2D
+SGCanvas::getNormalizedPosition(const QPoint& pos) const
+{
+    return QVector2D(pos.x() / float(width()), pos.y() / float(height()));
 }
 
 void

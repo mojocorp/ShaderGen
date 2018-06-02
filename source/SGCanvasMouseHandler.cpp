@@ -42,6 +42,62 @@
 #include "SGCanvasMouseHandler.h"
 #include "SGFrame.h"
 
+#define _USE_MATH_DEFINES
+#include <cmath>
+#include <math.h>
+
+QVector3D
+sphereSheetProjector(const QVector2D& pos)
+{
+    QVector3D rayOrigin(pos.x() - 0.5f, 0.5f - pos.y(), -0.5f);
+    const QVector3D rayDirection(0, 0, 1);
+    const QVector3D sphereOrigin(0, 0, 0);
+    const float sphereRadius = 0.35f;
+
+    // ray / sphere intersection
+    const QVector3D r_to_s = rayOrigin - sphereOrigin;
+
+    // Compute A, B and C coefficients
+    const float A = rayDirection.lengthSquared();
+    const float B = 2.0f * QVector3D::dotProduct(r_to_s, rayDirection);
+    const float C = r_to_s.lengthSquared() - sphereRadius * sphereRadius;
+
+    // Find discriminant
+    const float disc = B * B - 4.0 * A * C;
+
+    // if discriminant is negative there are no real roots
+    if (disc >= 0.0) {
+        const float t0 = (-B + std::sqrt(disc)) / (2.0 * A);
+        if (t0 > 0) {
+            rayOrigin = rayOrigin + t0 * rayDirection;
+        }
+    }
+
+    // intersection with the sheet
+    const QVector3D planeHit =
+      rayOrigin + rayDirection * rayOrigin.distanceToPlane(sphereOrigin, -rayDirection);
+
+    // distance from plane hit point to plane center in the projector
+    const float planarDist = (planeHit - sphereOrigin).length();
+
+    // let sphere and hyperbolic sheet meet at 45°
+    const float meetDist = sphereRadius * (float)std::cos(M_PI / 4.0);
+
+    if (planarDist < meetDist)
+        return rayOrigin;
+
+    // By Pythagoras' we know that the value of the sphere at 45°
+    // angle from the groundplane will be (radius^2 * 0.5).
+    const float v = (sphereRadius * sphereRadius) * 0.5f;
+
+    // A hyperbolic function is given by y = 1 / x, where x in our
+    // case is the "radial" distance from the plane centerpoint to the
+    // plane intersection point.
+    const float hyperbval = (1.0f / planarDist) * v;
+
+    return planeHit + QVector3D(0.0f, 0.0f, hyperbval);
+}
+
 static float StartZoom = 0.8f;
 
 SGCanvasMouseHandler::SGCanvasMouseHandler(SGCanvas* canvas1)
@@ -59,37 +115,22 @@ SGCanvasMouseHandler::reset()
     if (m_canvas) {
         m_canvas->SetZoom(m_startZoom);
     }
-    stop();
-    m_vPrev = QVector3D(0.0f, 0.0f, 0.0f);
-    m_vInc = QVector3D(0.0f, 0.0f, 0.0f);
     m_validStart = false;
     m_xform.setToIdentity();
 }
 
 void
-SGCanvasMouseHandler::stop()
-{
-    m_vInc = QVector3D(0.0f, 0.0f, 0.0f);
-}
-
-void
 SGCanvasMouseHandler::onMousePress(QMouseEvent* event)
 {
-    const QVector3D cursor = m_canvas->getWorldSpace(event->x(), event->y());
+    m_vStart = event->pos();
 
     if (event->buttons() & Qt::LeftButton) {
-        if (!(event->modifiers() & Qt::ControlModifier)) {
-            stop();
-        }
-        m_vStart = cursor;
         m_mStart = m_xform;
         m_startZoom = m_canvas->getZoom();
-        m_vPrev = cursor;
         m_validStart = true;
     }
     // Right mouse button zooms.
     else if (event->buttons() & Qt::RightButton) {
-        m_vStart = cursor;
         m_startZoom = m_canvas->getZoom();
         m_validStart = true;
     }
@@ -98,39 +139,32 @@ SGCanvasMouseHandler::onMousePress(QMouseEvent* event)
 void
 SGCanvasMouseHandler::onMouseMove(QMouseEvent* event)
 {
-    const QVector3D cursor = m_canvas->getWorldSpace(event->x(), event->y());
-
     if (event->buttons() & Qt::LeftButton) {
-        if (!m_validStart) {
-            m_vInc = QVector3D(0.0f, 0.0f, 0.0f);
-        } else {
-            if (event->modifiers() & Qt::ControlModifier) {
-                float delta = cursor.y() - m_vStart.y();
-                if (delta) {
-                    m_canvas->SetZoom(m_startZoom + delta);
-                    m_canvas->update();
-                }
-            } else {
-                float theta = 180 * (cursor - m_vStart).length();
-                if (theta) {
-                    const QVector3D axis = QVector3D::crossProduct(m_vStart, cursor).normalized();
-
-                    m_xform.setToIdentity();
-                    m_xform.rotate(-theta, axis.x(), axis.y(), axis.z());
-                    m_xform *= m_mStart;
-
-                    m_canvas->update();
-                }
-            }
-            m_vInc = cursor - m_vPrev;
-        }
-        m_vPrev = cursor;
-    } else if (event->buttons() & Qt::RightButton) {
-        if (m_validStart) {
-            float delta = cursor.y() - m_vStart.y();
+        if (event->modifiers() & Qt::ControlModifier) {
+            const QVector3D lstart = m_canvas->getWorldSpace(m_vStart.x(), m_vStart.y());
+            const QVector3D lend = m_canvas->getWorldSpace(event->x(), event->y());
+            const float delta = lend.y() - lstart.y();
             if (delta) {
                 m_canvas->SetZoom(m_startZoom + delta);
-                m_canvas->update();
+            }
+        } else {
+            const QVector3D lstart =
+              sphereSheetProjector(m_canvas->getNormalizedPosition(m_vStart));
+            const QVector3D lend =
+              sphereSheetProjector(m_canvas->getNormalizedPosition(event->pos()));
+            const QQuaternion rotation = QQuaternion::rotationTo(lstart, lend);
+
+            m_xform.setToIdentity();
+            m_xform.rotate(rotation);
+            m_xform *= m_mStart;
+        }
+    } else if (event->buttons() & Qt::RightButton) {
+        if (m_validStart) {
+            const QVector3D lstart = m_canvas->getWorldSpace(m_vStart.x(), m_vStart.y());
+            const QVector3D lend = m_canvas->getWorldSpace(event->x(), event->y());
+            const float delta = lend.y() - lstart.y();
+            if (delta) {
+                m_canvas->SetZoom(m_startZoom + delta);
             }
         }
     }
