@@ -36,7 +36,6 @@
 ************************************************************************/
 
 #include <QMouseEvent>
-#include <QOpenGLFunctions>
 #include <QTime>
 
 #include "SGCanvas.h"
@@ -76,7 +75,7 @@ SGCanvasMouseHandler::stop()
 void
 SGCanvasMouseHandler::onMousePress(QMouseEvent* event)
 {
-    QVector3D cursor = m_canvas->getWorldSpace(event->x(), event->y());
+    const QVector3D cursor = m_canvas->getWorldSpace(event->x(), event->y());
 
     if (event->buttons() & Qt::LeftButton) {
         if (!(event->modifiers() & Qt::ControlModifier)) {
@@ -99,7 +98,7 @@ SGCanvasMouseHandler::onMousePress(QMouseEvent* event)
 void
 SGCanvasMouseHandler::onMouseMove(QMouseEvent* event)
 {
-    QVector3D cursor = m_canvas->getWorldSpace(event->x(), event->y());
+    const QVector3D cursor = m_canvas->getWorldSpace(event->x(), event->y());
 
     if (event->buttons() & Qt::LeftButton) {
         if (!m_validStart) {
@@ -114,13 +113,12 @@ SGCanvasMouseHandler::onMouseMove(QMouseEvent* event)
             } else {
                 float theta = 180 * (cursor - m_vStart).length();
                 if (theta) {
-                    QVector3D axis = QVector3D::crossProduct(m_vStart, cursor);
-                    axis.normalize();
+                    const QVector3D axis = QVector3D::crossProduct(m_vStart, cursor).normalized();
 
-                    glLoadIdentity();
-                    glRotatef(-theta, axis.x(), axis.y(), axis.z());
-                    glMultMatrixf(m_mStart.constData());
-                    glGetFloatv(GL_MODELVIEW_MATRIX, m_xform.data());
+                    m_xform.setToIdentity();
+                    m_xform.rotate(-theta, axis.x(), axis.y(), axis.z());
+                    m_xform *= m_mStart;
+
                     m_canvas->update();
                 }
             }
@@ -144,17 +142,8 @@ SGCanvasMouseHandler::onMouseRelease(QMouseEvent*)
     m_validStart = false;
 }
 
-void
-SGCanvasMouseHandler::loadMatrix() const
+const QMatrix4x4&
+SGCanvasMouseHandler::matrix() const
 {
-    glLoadIdentity();
-
-    if (m_canvas->getFrame()->isPerspective()) {
-        glTranslatef(0.0f, 0.0f, m_canvas->CameraZ - 1.0f);
-    } else {
-        glTranslatef(0.0f, 0.0f, m_canvas->CameraZ);
-    }
-
-    glRotatef(20.0f, 1.0f, 0.0f, 0.0f);
-    glMultMatrixf(m_xform.constData());
+    return m_xform;
 }

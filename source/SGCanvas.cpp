@@ -140,6 +140,15 @@ SGCanvas::initializeGL()
 void
 SGCanvas::paintGL()
 {
+    m_modelView.setToIdentity();
+    if (m_frame->isPerspective()) {
+        m_modelView.translate(0.0f, 0.0f, CameraZ - 1.0f);
+    } else {
+        m_modelView.translate(0.0f, 0.0f, CameraZ);
+    }
+    m_modelView.rotate(20.0f, 1.0f, 0.0f, 0.0f);
+    m_modelView *= m_mouse.matrix();
+
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
     PrintOpenGLError();
@@ -172,7 +181,8 @@ SGCanvas::paintGL()
 
     PrintOpenGLError();
     glPushMatrix();
-    m_mouse.loadMatrix();
+
+    glMultMatrixf(m_modelView.constData());
     m_models->drawModel(m_modelCurrent, getGLState()->getNormalizeEnable());
     PrintOpenGLError();
     glPopMatrix();

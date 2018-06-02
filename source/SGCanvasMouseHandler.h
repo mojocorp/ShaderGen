@@ -50,7 +50,7 @@ class SGCanvasMouseHandler
     void onMousePress(QMouseEvent* event);
     void onMouseMove(QMouseEvent* event);
     void onMouseRelease(QMouseEvent* event);
-    void loadMatrix() const;
+    const QMatrix4x4& matrix() const;
 
   private:
     void reset();

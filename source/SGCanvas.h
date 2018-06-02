@@ -91,6 +91,8 @@ class SGCanvas : public QOpenGLWidget
     SGCanvasMouseHandler m_mouse;
     SGModels::ModelId m_modelCurrent;
     SGFrame* m_frame;
+
+    QMatrix4x4 m_modelView;
     float m_left, m_right, m_bottom, m_top, m_znear, m_zfar, m_zoom;
 
     bool m_glCompiled;
