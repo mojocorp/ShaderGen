@@ -22,4 +22,4 @@ build_script:
   - dir installer
 
 artifacts:
-  - path: installer\win\Output\ShaderGen-3.4.0.exe
+  - path: installer\win\Output\ShaderGen-3.5.0.exe

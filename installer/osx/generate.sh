@@ -16,4 +16,4 @@ hdiutil create \
         -volname "ShaderGen" \
         -srcfolder ./dist \
         -ov \
-        ShaderGen-3.4.0.dmg
+        ShaderGen-3.5.0.dmg
