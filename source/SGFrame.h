@@ -69,8 +69,8 @@ class SGFrame : public QMainWindow
     void setStatusText(const QString& text);
     bool isPerspective() const;
 
-    const QString& getVertexShader() const { return m_shaderGen->buildVertexShader(); }
-    const QString& getFragmentShader() const { return m_shaderGen->buildFragmentShader(); }
+    QString getVertexShader() const { return m_shaderGen->buildVertexShader(); }
+    QString getFragmentShader() const { return m_shaderGen->buildFragmentShader(); }
 
     /// Returns 1 if an OpenGL error occurred, 0 otherwise.
     static int printOglError(const char* file, int line);

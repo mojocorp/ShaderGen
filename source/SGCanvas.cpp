@@ -337,7 +337,7 @@ SGCanvas::mouseMoveEvent(QMouseEvent* event)
 }
 
 void
-SGCanvas::mouseReleaseEvent(QMouseEvent* event)
+SGCanvas::mouseReleaseEvent(QMouseEvent* /*event*/)
 {
 }
 

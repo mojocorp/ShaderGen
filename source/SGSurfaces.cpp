@@ -71,7 +71,7 @@ TParametricSurface::generate()
         m_flipped = flip(QVector2D(u, 0));
 
         for (int j = 0; j < stacks; j++) {
-            float v = j * m_dv;
+            const float v = j * m_dv;
             QVector3D normal, p0;
 
             QVector2D domain = m_flipped ? QVector2D(u + m_du, v) : QVector2D(u, v);
@@ -123,11 +123,11 @@ TParametricSurface::draw(bool isNormalize)
 // Send out a normal, texture coordinate, vertex coordinate, and an optional
 // custom attribute.
 void
-TParametricSurface::vertex(QVector2D& domain, QVector3D& normal, QVector3D& p0)
+TParametricSurface::vertex(QVector2D& domain, QVector3D& normal, QVector3D& p0) const
 {
     QVector3D p1, p2, p3;
-    float u = domain.x();
-    float v = domain.y();
+    const float u = domain.x();
+    const float v = domain.y();
 
     eval(domain, p0);
     QVector2D z1(u + m_du / 2, v);
@@ -151,16 +151,16 @@ TParametricSurface::vertex(QVector2D& domain, QVector3D& normal, QVector3D& p0)
 }
 
 void
-TKlein::eval(QVector2D& domain, QVector3D& range)
+TKlein::eval(QVector2D& domain, QVector3D& range) const
 {
-    float u = (1 - domain.x()) * TWO_PI;
-    float v = domain.y() * TWO_PI;
+    const float u = (1 - domain.x()) * TWO_PI;
+    const float v = domain.y() * TWO_PI;
 
-    float x0 = 3 * cosf(u) * (1 + sinf(u)) + (2 * (1 - cosf(u) / 2)) * cosf(u) * cosf(v);
-    float y0 = 8 * sinf(u) + (2 * (1 - cosf(u) / 2)) * sinf(u) * cosf(v);
+    const float x0 = 3 * cosf(u) * (1 + sinf(u)) + (2 * (1 - cosf(u) / 2)) * cosf(u) * cosf(v);
+    const float y0 = 8 * sinf(u) + (2 * (1 - cosf(u) / 2)) * sinf(u) * cosf(v);
 
-    float x1 = 3 * cosf(u) * (1 + sinf(u)) + (2 * (1 - cosf(u) / 2)) * cosf(v + M_PI);
-    float y1 = 8 * sinf(u);
+    const float x1 = 3 * cosf(u) * (1 + sinf(u)) + (2 * (1 - cosf(u) / 2)) * cosf(v + M_PI);
+    const float y1 = 8 * sinf(u);
 
     range.setX(u < M_PI ? x0 : x1);
     range.setY(u < M_PI ? y0 : y1);
@@ -175,25 +175,25 @@ TKlein::eval(QVector2D& domain, QVector3D& range)
 // Flip the normals along a segment of the Klein bottle so that we don't need
 // two-sided lighting.
 bool
-TKlein::flip(const QVector2D& domain)
+TKlein::flip(const QVector2D& domain) const
 {
     return (domain.x() < .125);
 }
 
 void
-TTrefoil::eval(QVector2D& domain, QVector3D& range)
+TTrefoil::eval(QVector2D& domain, QVector3D& range) const
 {
     const float a = 0.5f;
     const float b = 0.3f;
     const float c = 0.5f;
     const float d = 0.1f;
-    float u = (1 - domain.x()) * TWO_PI * 2;
-    float v = domain.y() * TWO_PI;
+    const float u = (1 - domain.x()) * TWO_PI * 2;
+    const float v = domain.y() * TWO_PI;
 
-    float r = a + b * cosf(1.5f * u);
-    float x = r * cosf(u);
-    float y = r * sinf(u);
-    float z = c * sinf(1.5f * u);
+    const float r = a + b * cosf(1.5f * u);
+    const float x = r * cosf(u);
+    const float y = r * sinf(u);
+    const float z = c * sinf(1.5f * u);
 
     QVector3D dv;
     dv.setX(-1.5f * b * sinf(1.5f * u) * cosf(u) - (a + b * cosf(1.5f * u)) * sinf(u));
@@ -216,15 +216,15 @@ TTrefoil::eval(QVector2D& domain, QVector3D& range)
 }
 
 void
-TConic::eval(QVector2D& domain, QVector3D& range)
+TConic::eval(QVector2D& domain, QVector3D& range) const
 {
     const float a = 0.2f;
     const float b = 1.5f;
     const float c = 0.1f;
     const float n = 2;
 
-    float u = domain.x() * TWO_PI;
-    float v = domain.y() * TWO_PI;
+    const float u = domain.x() * TWO_PI;
+    const float v = domain.y() * TWO_PI;
 
     range.setX(a * (1 - v / TWO_PI) * cosf(n * v) * (1 + cosf(u)) + c * cosf(n * v));
     range.setZ(a * (1 - v / TWO_PI) * sinf(n * v) * (1 + cosf(u)) + c * sinf(n * v));
@@ -237,12 +237,12 @@ TConic::eval(QVector2D& domain, QVector3D& range)
 }
 
 void
-TTorus::eval(QVector2D& domain, QVector3D& range)
+TTorus::eval(QVector2D& domain, QVector3D& range) const
 {
     const float major = 0.8f;
     const float minor = 0.2f;
-    float u = domain.x() * TWO_PI;
-    float v = domain.y() * TWO_PI;
+    const float u = domain.x() * TWO_PI;
+    const float v = domain.y() * TWO_PI;
 
     range.setX((major + minor * cosf(v)) * cosf(u));
     range.setY((major + minor * cosf(v)) * sinf(u));
@@ -253,11 +253,11 @@ TTorus::eval(QVector2D& domain, QVector3D& range)
 }
 
 void
-TSphere::eval(QVector2D& domain, QVector3D& range)
+TSphere::eval(QVector2D& domain, QVector3D& range) const
 {
     const float radius = 1;
-    float u = std::abs(domain.y() * M_PI);
-    float v = std::abs(domain.x() * TWO_PI);
+    const float u = std::abs(domain.y() * M_PI);
+    const float v = std::abs(domain.x() * TWO_PI);
 
     range.setX(radius * cosf(v) * sinf(u));
     range.setZ(radius * sinf(v) * sinf(u));
@@ -268,7 +268,7 @@ TSphere::eval(QVector2D& domain, QVector3D& range)
 }
 
 void
-TPlane::eval(QVector2D& domain, QVector3D& range)
+TPlane::eval(QVector2D& domain, QVector3D& range) const
 {
     if (m_z < 0) {
         range.setX(-m_width * (domain.x() - 0.5f));

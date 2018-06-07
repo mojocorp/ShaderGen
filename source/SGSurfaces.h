@@ -53,9 +53,9 @@ class TParametricSurface : protected QOpenGLFunctions_2_0
     void draw(bool normalize);
 
   protected:
-    virtual void eval(QVector2D& domain, QVector3D& range) = 0;
-    virtual void vertex(QVector2D& domain, QVector3D& normal, QVector3D& p0);
-    virtual bool flip(const QVector2D& /*domain*/) { return false; }
+    virtual void eval(QVector2D& domain, QVector3D& range) const = 0;
+    virtual void vertex(QVector2D& domain, QVector3D& normal, QVector3D& p0) const;
+    virtual bool flip(const QVector2D& /*domain*/) const { return false; }
 
     int m_slices;
     bool m_flipped;
@@ -68,32 +68,32 @@ class TParametricSurface : protected QOpenGLFunctions_2_0
 class TSphere : public TParametricSurface
 {
   public:
-    void eval(QVector2D& domain, QVector3D& range);
+    void eval(QVector2D& domain, QVector3D& range) const;
 };
 
 class TTorus : public TParametricSurface
 {
   public:
-    void eval(QVector2D& domain, QVector3D& range);
+    void eval(QVector2D& domain, QVector3D& range) const;
 };
 
 class TConic : public TParametricSurface
 {
   public:
-    void eval(QVector2D& domain, QVector3D& range);
+    void eval(QVector2D& domain, QVector3D& range) const;
 };
 
 class TTrefoil : public TParametricSurface
 {
   public:
-    void eval(QVector2D& domain, QVector3D& range);
+    void eval(QVector2D& domain, QVector3D& range) const;
 };
 
 class TKlein : public TParametricSurface
 {
   public:
-    void eval(QVector2D& domain, QVector3D& range);
-    bool flip(const QVector2D& domain);
+    void eval(QVector2D& domain, QVector3D& range) const;
+    bool flip(const QVector2D& domain) const;
 };
 
 class TPlane : public TParametricSurface
@@ -104,7 +104,7 @@ class TPlane : public TParametricSurface
       , m_width(width)
     {
     }
-    void eval(QVector2D& domain, QVector3D& range);
+    void eval(QVector2D& domain, QVector3D& range) const;
 
   protected:
     float m_z, m_width;

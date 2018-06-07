@@ -48,29 +48,24 @@ class SGShaderGenerator
   public:
     SGShaderGenerator(const SGFixedGLState* state);
     ~SGShaderGenerator();
-    const QString& buildVertexShader();
-    const QString& buildFragmentShader();
+    QString buildVertexShader() const;
+    QString buildFragmentShader() const;
 
   private:
     SGFixedGLState* m_glState;
 
-    QString m_fragShader;
-    QString m_vertShader;
+    void buildFragFog(QString& str) const;
+    void buildFragTex(QString& str) const;
 
-    bool m_fLightPoint, m_fLightSpot, m_fLightDir, m_fLightDirSpot;
-    bool m_fMapSphere, m_fMapReflection;
+    void buildFragSeparateSpecularColor(QString& str) const;
 
-    void buildFragFog(QString& str);
-    void buildFragTex(QString& str);
-
-    void buildFragSeparateSpecularColor(QString& str);
-
-    void buildLightCode(QString& str);
-    void buildVertMain(QString& str);
-    void buildFuncFnormal(QString& str);
-    void buildFuncFog(QString& str);
-    void buildFuncPoint(QString& str);
-    void buildTexCoord(QString& str);
+    void buildLightCode(QString& str, bool& fLightPoint, bool& fLightSpot, bool& fLightDir,
+                        bool& fLightDirSpot) const;
+    void buildVertMain(QString& str) const;
+    void buildFuncFnormal(QString& str) const;
+    void buildFuncFog(QString& str) const;
+    void buildFuncPoint(QString& str) const;
+    void buildTexCoord(QString& str, bool& fMapReflection, bool& fMapSphere) const;
 
     void addFuncLightDirectional(QString& str) const;
     void addFuncLightPoint(QString& str) const;
