@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=3.5.0
+Type=Application
+Name=ShaderGen
+GenericName=GLSL Shader Generator
+Comment=
+Exec=AppRun %F
+Icon=icon
+Categories=
