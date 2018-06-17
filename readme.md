@@ -2,6 +2,7 @@ ShaderGen
 =========
 
 [![Build Status](https://secure.travis-ci.org/mojocorp/ShaderGen.png)](http://travis-ci.org/mojocorp/ShaderGen)
+[![GitHub Releases](https://img.shields.io/github/release/mojocorp/ShaderGen.svg)](https://github.com/mojocorp/ShaderGen/releases)
 
 <img src="https://raw.github.com/mojocorp/ShaderGen/master/screen-capture.jpg" >
 
