@@ -1,11 +1,13 @@
 #include "QColorButton.h"
 #include <QColorDialog>
 #include <QPainter>
+#include <QStyle>
+#include <QStyleOptionButton>
 
 QColorButton::QColorButton(QWidget* parent)
   : QPushButton(parent)
 {
-    setFixedSize(45, 23);
+    setFixedSize(70, 32);
 }
 
 QColor
@@ -27,10 +29,13 @@ QColorButton::paintEvent(QPaintEvent* event)
 {
     QPushButton::paintEvent(event);
 
+    QStyleOptionButton option;
+    option.initFrom(this);
+    const QRect rect = style()->subElementRect(QStyle::SE_PushButtonContents, &option, this);
     QPainter p(this);
     p.setPen(Qt::black);
     p.setBrush(m_color);
-    p.drawRect(5, 5, 34, 12);
+    p.drawRect(rect.adjusted(-2, 3, 1, -3));
 }
 
 void
