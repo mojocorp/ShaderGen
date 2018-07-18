@@ -141,8 +141,6 @@ class SGFixedGLState
     void setRescaleNormalEnable(bool en) { m_rescaleNormalEnable = en; }
     void setSeparateSpecularColorEnable(bool en) { m_separateSpecularColorEnable = en; }
     void setTextureEnable(bool en) { m_textureEnable = en; }
-    int getLightEnum(int a) const;
-    int getTexEnum(int a) const;
 
     bool getTexGenEnable() const { return m_texGenEnable; }
 

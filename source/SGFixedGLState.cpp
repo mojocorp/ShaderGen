@@ -75,17 +75,6 @@ SGFixedGLState::~SGFixedGLState()
 {
 }
 
-int
-SGFixedGLState::getLightEnum(int a) const
-{
-    return GL_LIGHT0 + a;
-}
-int
-SGFixedGLState::getTexEnum(int a) const
-{
-    return GL_TEXTURE0 + a;
-}
-
 void
 SGFixedGLState::initLight(int num)
 {
