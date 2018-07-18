@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=ShaderGen
+Comment=GLSL Shader Generator
+Exec=ShaderGen
+Icon=ShaderGen
+Categories=

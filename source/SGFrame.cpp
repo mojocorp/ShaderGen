@@ -403,11 +403,12 @@ SGFrame::help()
 void
 SGFrame::about()
 {
-    QMessageBox::about(this, "GLSL ShaderGen", "<center>"
-                                               "<p><img src=\":textures/3Dlabs.png\"></p>"
-                                               "<p><b>GLSL ShaderGen</b></p>"
-                                               "<p>Version 3.5.0</p>"
-                                               "</center>");
+    QMessageBox::about(this, "GLSL ShaderGen", QString("<center>"
+                                                       "<p><img src=\":textures/3Dlabs.png\"></p>"
+                                                       "<p><b>GLSL ShaderGen</b></p>"
+                                                       "<p>Version %1</p>"
+                                                       "</center>")
+                                                 .arg(SHADERGEN_VERSION));
 }
 
 bool

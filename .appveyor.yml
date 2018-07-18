@@ -11,15 +11,15 @@ init:
   - cd /D "%APPVEYOR_BUILD_FOLDER%"
 
 install:
-  - choco install InnoSetup
-  - set PATH=%PATH%;"C:\Program Files (x86)\Inno Setup 5"
+  - choco install nsis
+  - set PATH=%PATH%;"C:\Program Files (x86)\NSIS"
 
 build_script:
-  - qmake -r
-  - nmake
-  - windeployqt build
-  - ISCC "installer\win\GLSL ShaderGen.iss"
-  - dir installer
+  - mkdir -p build
+  - cd build
+  - cmake -G "Visual Studio 15 2017 Win64" -DCMAKE_INSTALL_PREFIX=installed ..
+  - cmake --build . --config Release --target install
+  - cpack -G NSIS64
 
 artifacts:
-  - path: installer\win\Output\ShaderGen-3.5.0.exe
+  - path: build\ShaderGen-*.exe

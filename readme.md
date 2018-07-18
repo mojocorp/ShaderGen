@@ -20,4 +20,4 @@ ShaderGen is a tool that automatically generates OpenGL Shading Language shaders
 
 * Download and install Qt 5.x
 * Download and install QtCreator
-* Load ShaderGen.pro project file 
+* Load the CMakeLists.txt 
