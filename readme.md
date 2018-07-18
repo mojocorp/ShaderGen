@@ -13,9 +13,9 @@ ShaderGen is a tool that automatically generates OpenGL Shading Language shaders
 
 ### Download ###
 
-[ShaderGen 3.5.0 Windows](https://github.com/mojocorp/ShaderGen/releases/download/v3.5.0/ShaderGen-3.5.0.exe)  
-[ShaderGen 3.5.0 Mac OS X Intel 64bit DMG](https://github.com/mojocorp/ShaderGen/releases/download/v3.5.0/ShaderGen-3.5.0.dmg)  
-[ShaderGen 3.5.0 Linux Ubuntu x64](https://github.com/mojocorp/ShaderGen/releases/download/v3.5.0/ShaderGen-3.5.0-linux-x86_64.AppImage)  
+[ShaderGen 3.5.0 Windows](https://github.com/mojocorp/ShaderGen/releases/download/3.5.0/ShaderGen-3.5.0.exe)  
+[ShaderGen 3.5.0 Mac OS X Intel 64bit DMG](https://github.com/mojocorp/ShaderGen/releases/download/3.5.0/ShaderGen-3.5.0.dmg)  
+[ShaderGen 3.5.0 Linux Ubuntu x64](https://github.com/mojocorp/ShaderGen/releases/download/3.5.0/ShaderGen-3.5.0-linux-x86_64.AppImage)  
 
 ### Compiling ###
 
