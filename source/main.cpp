@@ -6,6 +6,9 @@
 int
 main(int argc, char* argv[])
 {
+    // Force 'desktop' opengl
+    QCoreApplication::setAttribute(Qt::AA_UseDesktopOpenGL);
+
     QApplication app(argc, argv);
     QApplication::setApplicationName("GLSL ShaderGen");
     QApplication::setOrganizationName("mojocorp");
