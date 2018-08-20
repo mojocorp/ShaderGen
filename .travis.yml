@@ -28,7 +28,7 @@ install:
 script:
 - mkdir -p build
 - cd build
-- cmake -DCMAKE_INSTALL_PREFIX=installed ..
+- cmake -DCMAKE_INSTALL_PREFIX=installed -DCMAKE_BUILD_TYPE=Release ..
 - cmake --build . --config Release --target install
 - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ../linuxdeployqt.AppImage installed/bin/ShaderGen.desktop -appimage; fi
 - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then mv ShaderGen-*.AppImage ShaderGen-linux-x86_64.AppImage; fi
