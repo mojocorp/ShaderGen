@@ -1,7 +1,7 @@
 ShaderGen
 =========
 
-[![Build Status](https://secure.travis-ci.org/mojocorp/ShaderGen.png)](http://travis-ci.org/mojocorp/ShaderGen)
+![C/C++ CI](https://github.com/mojocorp/ShaderGen/workflows/C/C++%20CI/badge.svg)
 [![GitHub Releases](https://img.shields.io/github/release/mojocorp/ShaderGen.svg)](https://github.com/mojocorp/ShaderGen/releases)
 [![License](https://img.shields.io/badge/License-BSD-blue.svg)](https://raw.githubusercontent.com/mojocorp/ShaderGen/master/License.txt)
 
