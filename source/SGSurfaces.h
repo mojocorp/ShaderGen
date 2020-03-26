@@ -50,7 +50,7 @@ class TParametricSurface : protected QOpenGLFunctions_2_0
     virtual ~TParametricSurface() = default;
 
     void generate();
-    void draw(bool normalize);
+    void draw();
 
   protected:
     virtual void eval(QVector2D& domain, QVector3D& range) const = 0;

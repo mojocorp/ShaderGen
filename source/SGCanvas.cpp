@@ -209,7 +209,7 @@ SGCanvas::paintGL()
     glPushMatrix();
 
     glMultMatrixf(m_modelView.constData());
-    m_models->drawModel(m_modelCurrent, getGLState()->getNormalizeEnable());
+    m_models->drawModel(m_modelCurrent);
     PrintOpenGLError();
     glPopMatrix();
 

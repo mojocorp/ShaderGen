@@ -57,7 +57,7 @@ class SGModels
 
     SGModels();
     ~SGModels();
-    void drawModel(ModelId id, bool normalize);
+    void drawModel(ModelId id);
 
   private:
     std::array<std::unique_ptr<TParametricSurface>, 6> m_surface;

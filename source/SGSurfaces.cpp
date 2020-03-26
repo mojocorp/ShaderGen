@@ -87,14 +87,12 @@ TParametricSurface::generate()
 // Draw a parametric surface.  'slices' is the tesselation factor.  Returns the
 // number of vertices.
 void
-TParametricSurface::draw(bool isNormalize)
+TParametricSurface::draw()
 {
     initializeOpenGLFunctions();
 
-    if (isNormalize) {
-        glEnableClientState(GL_NORMAL_ARRAY);
-        glNormalPointer(GL_FLOAT, sizeof(QVector3D), m_normals.data());
-    }
+    glEnableClientState(GL_NORMAL_ARRAY);
+    glNormalPointer(GL_FLOAT, sizeof(QVector3D), m_normals.data());
 
     for (int i = 0; i < NUM_TEXTURES; i++) {
         glClientActiveTexture(GL_TEXTURE0 + i);
@@ -105,7 +103,7 @@ TParametricSurface::draw(bool isNormalize)
     glVertexPointer(3, GL_FLOAT, sizeof(QVector3D), m_vertices.data());
 
     for (int i = 0; i < m_slices; i++) {
-        glDrawArrays(GL_QUAD_STRIP, i * m_slices, m_slices);
+        glDrawArrays(GL_TRIANGLE_STRIP, i * m_slices, m_slices);
     }
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_NORMAL_ARRAY);

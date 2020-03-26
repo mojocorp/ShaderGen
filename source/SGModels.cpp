@@ -55,7 +55,7 @@ SGModels::SGModels()
 SGModels::~SGModels() {}
 
 void
-SGModels::drawModel(ModelId id, bool normalize)
+SGModels::drawModel(ModelId id)
 {
-    m_surface[id]->draw(normalize);
+    m_surface[id]->draw();
 }
