@@ -14,7 +14,7 @@ class SGOglNotebook : public QTabWidget
     Q_OBJECT
   public:
     SGOglNotebook(SGFixedGLState* glState, QWidget* parent = 0);
-    ~SGOglNotebook();
+    ~SGOglNotebook() = default;
 
     void setup();
   signals:

@@ -1,39 +1,39 @@
 /************************************************************************
-*                                                                       *
-*               Copyright (C) 2002-2005  3Dlabs Inc. Ltd.               *
-*                                                                       *
-*                        All rights reserved.                           *
-*                                                                       *
-* Redistribution and use in source and binary forms, with or without    *
-* modification, are permitted provided that the following conditions    *
-* are met:                                                              *
-*                                                                       *
-*     Redistributions of source code must retain the above copyright    *
-*     notice, this list of conditions and the following disclaimer.     *
-*                                                                       *
-*     Redistributions in binary form must reproduce the above           *
-*     copyright notice, this list of conditions and the following       *
-*     disclaimer in the documentation and/or other materials provided   *
-*     with the distribution.                                            *
-*                                                                       *
-*     Neither the name of 3Dlabs Inc. Ltd. nor the names of its         *
-*     contributors may be used to endorse or promote products derived   *
-*     from this software without specific prior written permission.     *
-*                                                                       *
-* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS   *
-* "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT     *
-* LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS     *
-* FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE        *
-* COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, *
-* INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,  *
-* BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;      *
-* LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER      *
-* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT    *
-* LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN     *
-* ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE       *
-* POSSIBILITY OF SUCH DAMAGE.                                           *
-*                                                                       *
-************************************************************************/
+ *                                                                       *
+ *               Copyright (C) 2002-2005  3Dlabs Inc. Ltd.               *
+ *                                                                       *
+ *                        All rights reserved.                           *
+ *                                                                       *
+ * Redistribution and use in source and binary forms, with or without    *
+ * modification, are permitted provided that the following conditions    *
+ * are met:                                                              *
+ *                                                                       *
+ *     Redistributions of source code must retain the above copyright    *
+ *     notice, this list of conditions and the following disclaimer.     *
+ *                                                                       *
+ *     Redistributions in binary form must reproduce the above           *
+ *     copyright notice, this list of conditions and the following       *
+ *     disclaimer in the documentation and/or other materials provided   *
+ *     with the distribution.                                            *
+ *                                                                       *
+ *     Neither the name of 3Dlabs Inc. Ltd. nor the names of its         *
+ *     contributors may be used to endorse or promote products derived   *
+ *     from this software without specific prior written permission.     *
+ *                                                                       *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS   *
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT     *
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS     *
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE        *
+ * COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, *
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,  *
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;      *
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER      *
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT    *
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN     *
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE       *
+ * POSSIBILITY OF SUCH DAMAGE.                                           *
+ *                                                                       *
+ ************************************************************************/
 
 #include <QKeyEvent>
 #include <QMessageBox>
@@ -44,7 +44,9 @@
 #include "SGFrame.h"
 #include "SGShaderTextWindow.h"
 #include "SGTextures.h"
-#include <stdio.h>
+
+#include <array>
+#include <cstdio>
 
 namespace {
 /******************************************************
@@ -54,36 +56,42 @@ The following functions are used to convert
 inline void
 glFogf(GLenum pname, const QColor& c)
 {
-    const GLfloat color[] = { (GLfloat)c.redF(), (GLfloat)c.greenF(), (GLfloat)c.blueF() };
-    glFogfv(pname, color);
+    const std::array<GLfloat, 3> color = { (GLfloat)c.redF(),
+                                           (GLfloat)c.greenF(),
+                                           (GLfloat)c.blueF() };
+    glFogfv(pname, color.data());
 }
 
 inline void
 glLightf(GLenum light, GLenum pname, const QColor& c)
 {
-    const GLfloat color[] = { (GLfloat)c.redF(), (GLfloat)c.greenF(), (GLfloat)c.blueF() };
-    glLightfv(light, pname, color);
+    const std::array<GLfloat, 3> color = { (GLfloat)c.redF(),
+                                           (GLfloat)c.greenF(),
+                                           (GLfloat)c.blueF() };
+    glLightfv(light, pname, color.data());
 }
 
 inline void
 glMaterialf(GLenum face, GLenum pname, const QColor& c)
 {
-    const GLfloat color[] = { (GLfloat)c.redF(), (GLfloat)c.greenF(), (GLfloat)c.blueF() };
-    glMaterialfv(face, pname, color);
+    const std::array<GLfloat, 3> color = { (GLfloat)c.redF(),
+                                           (GLfloat)c.greenF(),
+                                           (GLfloat)c.blueF() };
+    glMaterialfv(face, pname, color.data());
 }
 
 inline void
 glLightf(GLenum light, GLenum pname, const QVector3D& v)
 {
-    const GLfloat vector[] = { v.x(), v.y(), v.z() };
-    glLightfv(light, pname, vector);
+    const std::array<GLfloat, 3> vector = { v.x(), v.y(), v.z() };
+    glLightfv(light, pname, vector.data());
 }
 
 inline void
 glLightf(GLenum light, GLenum pname, const QVector4D& v)
 {
-    const GLfloat vector[] = { v.x(), v.y(), v.z(), v.w() };
-    glLightfv(light, pname, vector);
+    const std::array<GLfloat, 4> vector = { v.x(), v.y(), v.z(), v.w() };
+    glLightfv(light, pname, vector.data());
 }
 }
 
@@ -96,13 +104,8 @@ SGCanvas::SGCanvas(SGFrame* frame)
     setFocusPolicy(Qt::StrongFocus);
     m_mode = GLModeChoiceFixed;
     m_frame = frame;
-    m_models = new SGModels();
+    m_models = std::make_unique<SGModels>();
     m_modelCurrent = SGModels::ModelTorus;
-}
-
-SGCanvas::~SGCanvas()
-{
-    delete m_models;
 }
 
 SGFixedGLState*
@@ -158,8 +161,8 @@ SGCanvas::paintGL()
     if (m_frame->isPerspective()) {
         m_projection.perspective(fov * zoom, aspect, zNear, zFar);
     } else {
-        m_projection.ortho(3 * left * zoom, 3 * right * zoom, 3 * bottom * zoom, 3 * top * zoom,
-                           zNear, zFar);
+        m_projection.ortho(
+          3 * left * zoom, 3 * right * zoom, 3 * bottom * zoom, 3 * top * zoom, zNear, zFar);
     }
     glMultMatrixf(m_projection.constData());
 
@@ -182,8 +185,8 @@ SGCanvas::paintGL()
     SGFixedGLState* glState = getGLState();
     for (GLint unit = 0; unit < NUM_TEXTURES; unit++) {
         const Texture& texture = glState->getTexture(unit);
-        if (texture.textureEnabled) {
-            m_frame->getTextures()->bind(texture.textureCurrentSelection, unit);
+        if (texture.enabled) {
+            m_frame->getTextures()->bind(texture.currentSelection, unit);
         } else {
             m_frame->getTextures()->release(unit);
         }
@@ -233,17 +236,17 @@ SGCanvas::setupFromFixedState()
 
         for (int i = 0; i < 8; i++) {
             const Light& light = glState->getLight(i);
-            if (light.lightEnabled) {
-                glLightf(GL_LIGHT0 + i, GL_POSITION, light.lightPositionVector);
-                glLightf(GL_LIGHT0 + i, GL_AMBIENT, light.lightAmbientColorVector);
-                glLightf(GL_LIGHT0 + i, GL_DIFFUSE, light.lightDiffuseColorVector);
-                glLightf(GL_LIGHT0 + i, GL_SPECULAR, light.lightSpecularColorVector);
-                glLightf(GL_LIGHT0 + i, GL_SPOT_DIRECTION, light.lightSpotDirectionVector);
-                glLightf(GL_LIGHT0 + i, GL_SPOT_EXPONENT, light.lightSpotExponent);
-                glLightf(GL_LIGHT0 + i, GL_SPOT_CUTOFF, light.lightSpotCutoff);
-                glLightf(GL_LIGHT0 + i, GL_CONSTANT_ATTENUATION, light.lightConstantAttenuation);
-                glLightf(GL_LIGHT0 + i, GL_LINEAR_ATTENUATION, light.lightLinearAttenuation);
-                glLightf(GL_LIGHT0 + i, GL_QUADRATIC_ATTENUATION, light.lightQuadraticAttenuation);
+            if (light.enabled) {
+                glLightf(GL_LIGHT0 + i, GL_POSITION, light.position);
+                glLightf(GL_LIGHT0 + i, GL_AMBIENT, light.ambientColor);
+                glLightf(GL_LIGHT0 + i, GL_DIFFUSE, light.diffuseColor);
+                glLightf(GL_LIGHT0 + i, GL_SPECULAR, light.specularColor);
+                glLightf(GL_LIGHT0 + i, GL_SPOT_DIRECTION, light.spotDirection);
+                glLightf(GL_LIGHT0 + i, GL_SPOT_EXPONENT, light.spotExponent);
+                glLightf(GL_LIGHT0 + i, GL_SPOT_CUTOFF, light.spotCutoff);
+                glLightf(GL_LIGHT0 + i, GL_CONSTANT_ATTENUATION, light.constantAttenuation);
+                glLightf(GL_LIGHT0 + i, GL_LINEAR_ATTENUATION, light.linearAttenuation);
+                glLightf(GL_LIGHT0 + i, GL_QUADRATIC_ATTENUATION, light.quadraticAttenuation);
                 glEnable(GL_LIGHT0 + i);
             } else {
                 glDisable(GL_LIGHT0 + i);
@@ -272,20 +275,20 @@ SGCanvas::setupFromFixedState()
     glDepthFunc(GL_LESS);
     glEnable(GL_DEPTH_TEST);
     const Material& material = glState->getMaterial();
-    glMaterialf(GL_FRONT, GL_DIFFUSE, material.materialDiffuseColorVector);
-    glMaterialf(GL_FRONT, GL_SPECULAR, material.materialSpecularColorVector);
-    glMaterialf(GL_FRONT, GL_AMBIENT, material.materialAmbientColorVector);
-    glMaterialf(GL_FRONT, GL_SHININESS, material.materialShininess);
-    glMaterialf(GL_FRONT, GL_EMISSION, material.materialEmissionColorVector);
+    glMaterialf(GL_FRONT, GL_DIFFUSE, material.diffuseColor);
+    glMaterialf(GL_FRONT, GL_SPECULAR, material.specularColor);
+    glMaterialf(GL_FRONT, GL_AMBIENT, material.ambientColor);
+    glMaterialf(GL_FRONT, GL_SHININESS, material.shininess);
+    glMaterialf(GL_FRONT, GL_EMISSION, material.emissionColor);
 
     if (glState->getFogEnable()) {
         glEnable(GL_FOG);
-        glFogi(GL_FOG_MODE, glState->getFog().fogMode);
-        glFogi(GL_FOG_COORD_SRC, glState->getFog().fogSource);
-        glFogf(GL_FOG_COLOR, glState->getFog().fogColorVector);
-        glFogf(GL_FOG_DENSITY, glState->getFog().fogDensity);
-        glFogf(GL_FOG_START, glState->getFog().fogStart);
-        glFogf(GL_FOG_END, glState->getFog().fogEnd);
+        glFogi(GL_FOG_MODE, glState->getFog().mode);
+        glFogi(GL_FOG_COORD_SRC, glState->getFog().source);
+        glFogf(GL_FOG_COLOR, glState->getFog().color);
+        glFogf(GL_FOG_DENSITY, glState->getFog().density);
+        glFogf(GL_FOG_START, glState->getFog().start);
+        glFogf(GL_FOG_END, glState->getFog().end);
     } else {
         glDisable(GL_FOG);
     }
@@ -302,7 +305,7 @@ SGCanvas::getWorldSpace(int x, int y)
 QVector2D
 SGCanvas::getNormalizedPosition(const QPoint& pos) const
 {
-    return QVector2D(pos.x() / float(width()), pos.y() / float(height()));
+    return { pos.x() / float(width()), pos.y() / float(height()) };
 }
 
 void
@@ -338,8 +341,7 @@ SGCanvas::mouseMoveEvent(QMouseEvent* event)
 
 void
 SGCanvas::mouseReleaseEvent(QMouseEvent* /*event*/)
-{
-}
+{}
 
 bool
 SGCanvas::linkShaders(const QString& vertexShader, const QString& fragmentShader)
@@ -417,7 +419,7 @@ SGCanvas::setMode(GLMode m)
 }
 
 void
-SGCanvas::writeMessage(const QString str)
+SGCanvas::writeMessage(const QString& str)
 {
     m_frame->setStatusText(str);
     m_frame->getShaderTextWindow()->log(str);

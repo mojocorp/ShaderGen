@@ -53,7 +53,7 @@ class QCodeEditor : public QPlainTextEdit
     Q_OBJECT
 
   public:
-    QCodeEditor(QWidget* parent = 0);
+    QCodeEditor(QWidget* parent = nullptr);
 
     void lineNumberAreaPaintEvent(QPaintEvent* event);
     int lineNumberAreaWidth() const;
@@ -64,7 +64,7 @@ class QCodeEditor : public QPlainTextEdit
   private slots:
     void updateLineNumberAreaWidth(int newBlockCount);
     void highlightCurrentLine();
-    void updateLineNumberArea(const QRect&, int);
+    void updateLineNumberArea(QRect, int);
 
   private:
     QWidget* m_lineNumberArea;

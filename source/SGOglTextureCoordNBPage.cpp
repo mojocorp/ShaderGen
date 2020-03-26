@@ -1,39 +1,39 @@
 /************************************************************************
-*                                                                       *
-*               Copyright (C) 2002-2005  3Dlabs Inc. Ltd.               *
-*                                                                       *
-*                        All rights reserved.                           *
-*                                                                       *
-* Redistribution and use in source and binary forms, with or without    *
-* modification, are permitted provided that the following conditions    *
-* are met:                                                              *
-*                                                                       *
-*     Redistributions of source code must retain the above copyright    *
-*     notice, this list of conditions and the following disclaimer.     *
-*                                                                       *
-*     Redistributions in binary form must reproduce the above           *
-*     copyright notice, this list of conditions and the following       *
-*     disclaimer in the documentation and/or other materials provided   *
-*     with the distribution.                                            *
-*                                                                       *
-*     Neither the name of 3Dlabs Inc. Ltd. nor the names of its         *
-*     contributors may be used to endorse or promote products derived   *
-*     from this software without specific prior written permission.     *
-*                                                                       *
-* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS   *
-* "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT     *
-* LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS     *
-* FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE        *
-* COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, *
-* INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,  *
-* BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;      *
-* LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER      *
-* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT    *
-* LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN     *
-* ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE       *
-* POSSIBILITY OF SUCH DAMAGE.                                           *
-*                                                                       *
-************************************************************************/
+ *                                                                       *
+ *               Copyright (C) 2002-2005  3Dlabs Inc. Ltd.               *
+ *                                                                       *
+ *                        All rights reserved.                           *
+ *                                                                       *
+ * Redistribution and use in source and binary forms, with or without    *
+ * modification, are permitted provided that the following conditions    *
+ * are met:                                                              *
+ *                                                                       *
+ *     Redistributions of source code must retain the above copyright    *
+ *     notice, this list of conditions and the following disclaimer.     *
+ *                                                                       *
+ *     Redistributions in binary form must reproduce the above           *
+ *     copyright notice, this list of conditions and the following       *
+ *     disclaimer in the documentation and/or other materials provided   *
+ *     with the distribution.                                            *
+ *                                                                       *
+ *     Neither the name of 3Dlabs Inc. Ltd. nor the names of its         *
+ *     contributors may be used to endorse or promote products derived   *
+ *     from this software without specific prior written permission.     *
+ *                                                                       *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS   *
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT     *
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS     *
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE        *
+ * COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, *
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,  *
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;      *
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER      *
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT    *
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN     *
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE       *
+ * POSSIBILITY OF SUCH DAMAGE.                                           *
+ *                                                                       *
+ ************************************************************************/
 
 #include "QVectorEdit.h"
 #include <QGroupBox>
@@ -52,17 +52,17 @@ SGOglTextureCoordNBPage::SGOglTextureCoordNBPage(SGFixedGLState* glState, QWidge
 {
     QGroupBox* texPropertyBox = new QGroupBox(tr("Selected Texture Properties"), this);
 
-    QGridLayout* textureSizer = new QGridLayout(this);
-    QGridLayout* selectedTexPropertiesSizer = new QGridLayout(texPropertyBox);
+    auto textureSizer = new QGridLayout(this);
+    auto selectedTexPropertiesSizer = new QGridLayout(texPropertyBox);
 
-    QGroupBox* eyePlaneCoeffBox = new QGroupBox(tr("Eye Plane Coefficients"), this);
-    QHBoxLayout* eyePlaneCoeffBoxSizer = new QHBoxLayout(eyePlaneCoeffBox);
+    auto eyePlaneCoeffBox = new QGroupBox(tr("Eye Plane Coefficients"), this);
+    auto eyePlaneCoeffBoxSizer = new QHBoxLayout(eyePlaneCoeffBox);
 
-    QVBoxLayout* eyePlaneLabelSizer = new QVBoxLayout();
-    QVBoxLayout* eyePlaneTextSizer = new QVBoxLayout();
+    auto eyePlaneLabelSizer = new QVBoxLayout();
+    auto eyePlaneTextSizer = new QVBoxLayout();
 
-    QLabel* eyePlaneCoeffLabelS = new QLabel(tr("GL_S"), this);
-    QLabel* eyePlaneCoeffLabelT = new QLabel(tr("GL_T"), this);
+    auto eyePlaneCoeffLabelS = new QLabel(tr("GL_S"), this);
+    auto eyePlaneCoeffLabelT = new QLabel(tr("GL_T"), this);
 
     m_eyePlaneCoeffTextS = new QVectorEdit(this);
     connect(m_eyePlaneCoeffTextS, SIGNAL(valueChanged()), SLOT(onTextEnterEyeCoeffS()));
@@ -79,14 +79,14 @@ SGOglTextureCoordNBPage::SGOglTextureCoordNBPage(SGFixedGLState* glState, QWidge
     eyePlaneCoeffBoxSizer->addLayout(eyePlaneLabelSizer);
     eyePlaneCoeffBoxSizer->addLayout(eyePlaneTextSizer);
 
-    QGroupBox* objectPlaneCoeffBox = new QGroupBox(tr("Object Plane Coefficients"), this);
-    QHBoxLayout* objectPlaneCoeffBoxSizer = new QHBoxLayout(objectPlaneCoeffBox);
+    auto objectPlaneCoeffBox = new QGroupBox(tr("Object Plane Coefficients"), this);
+    auto objectPlaneCoeffBoxSizer = new QHBoxLayout(objectPlaneCoeffBox);
 
-    QVBoxLayout* objectPlaneLabelSizer = new QVBoxLayout();
-    QVBoxLayout* objectPlaneTextSizer = new QVBoxLayout();
+    auto objectPlaneLabelSizer = new QVBoxLayout();
+    auto objectPlaneTextSizer = new QVBoxLayout();
 
-    QLabel* objectPlaneCoeffLabelS = new QLabel(tr("GL_S"), this);
-    QLabel* objectPlaneCoeffLabelT = new QLabel(tr("GL_T"), this);
+    auto objectPlaneCoeffLabelS = new QLabel(tr("GL_S"), this);
+    auto objectPlaneCoeffLabelT = new QLabel(tr("GL_T"), this);
 
     m_objectPlaneCoeffTextS = new QVectorEdit(this);
     connect(m_objectPlaneCoeffTextS, SIGNAL(valueChanged()), SLOT(onTextEnterObjCoeffS()));
@@ -103,14 +103,14 @@ SGOglTextureCoordNBPage::SGOglTextureCoordNBPage(SGFixedGLState* glState, QWidge
     objectPlaneCoeffBoxSizer->addLayout(objectPlaneLabelSizer);
     objectPlaneCoeffBoxSizer->addLayout(objectPlaneTextSizer);
 
-    QGroupBox* texCoordUnitBox = new QGroupBox(tr("Selected Texture Unit"), this);
-    QHBoxLayout* texCoordUnitSizer = new QHBoxLayout(texCoordUnitBox);
+    auto texCoordUnitBox = new QGroupBox(tr("Selected Texture Unit"), this);
+    auto texCoordUnitSizer = new QHBoxLayout(texCoordUnitBox);
 
-    QRadioButton* tex0TexSelRadioButton = new QRadioButton(tr("T0"), this);
-    QRadioButton* tex1TexSelRadioButton = new QRadioButton(tr("T1"), this);
-    QRadioButton* tex2TexSelRadioButton = new QRadioButton(tr("T2"), this);
-    QRadioButton* tex3TexSelRadioButton = new QRadioButton(tr("T3"), this);
-    QRadioButton* tex4TexSelRadioButton = new QRadioButton(tr("T4"), this);
+    auto tex0TexSelRadioButton = new QRadioButton(tr("T0"), this);
+    auto tex1TexSelRadioButton = new QRadioButton(tr("T1"), this);
+    auto tex2TexSelRadioButton = new QRadioButton(tr("T2"), this);
+    auto tex3TexSelRadioButton = new QRadioButton(tr("T3"), this);
+    auto tex4TexSelRadioButton = new QRadioButton(tr("T4"), this);
 
     texCoordUnitSizer->addWidget(tex0TexSelRadioButton);
     texCoordUnitSizer->addWidget(tex1TexSelRadioButton);
@@ -133,8 +133,8 @@ SGOglTextureCoordNBPage::SGOglTextureCoordNBPage(SGFixedGLState* glState, QWidge
     m_tex3TexGenEnableCheckBox = new QCheckBox(tr("T3"), this);
     m_tex4TexGenEnableCheckBox = new QCheckBox(tr("T4"), this);
 
-    QGroupBox* texGenEnableDisableBox = new QGroupBox(tr("glEnable/glDisable TexGen"), this);
-    QHBoxLayout* texGenEnableDisableSizer = new QHBoxLayout(texGenEnableDisableBox);
+    auto texGenEnableDisableBox = new QGroupBox(tr("glEnable/glDisable TexGen"), this);
+    auto texGenEnableDisableSizer = new QHBoxLayout(texGenEnableDisableBox);
 
     texGenEnableDisableSizer->addWidget(m_tex0TexGenEnableCheckBox);
     texGenEnableDisableSizer->addWidget(m_tex1TexGenEnableCheckBox);
@@ -151,15 +151,15 @@ SGOglTextureCoordNBPage::SGOglTextureCoordNBPage(SGFixedGLState* glState, QWidge
     m_texCoordSelGroup->addButton(m_tex4TexGenEnableCheckBox, 4);
     connect(m_texCoordSelGroup, SIGNAL(buttonClicked(int)), SLOT(onCheckbox(int)));
 
-    QGroupBox* coordGenBox =
+    auto coordGenBox =
       new QGroupBox(tr("Texture Coordinate Generation Method (Vertex Shader)"), this);
-    QVBoxLayout* coordGenSizer = new QVBoxLayout(coordGenBox);
+    auto coordGenSizer = new QVBoxLayout(coordGenBox);
 
-    QRadioButton* olinearCoordGenRadioButton = new QRadioButton(tr("GL_OBJECT_LINEAR"), this);
-    QRadioButton* elinearCoordGenRadioButton = new QRadioButton(tr("GL_EYE_LINEAR"), this);
-    QRadioButton* spheremCoordGenRadioButton = new QRadioButton(tr("GL_SPHERE_MAP"), this);
-    QRadioButton* reflecmCoordGenRadioButton = new QRadioButton(tr("GL_REFLECTION_MAP"), this);
-    QRadioButton* normalmCoordGenRadioButton = new QRadioButton(tr("GL_NORMAL_MAP"), this);
+    auto olinearCoordGenRadioButton = new QRadioButton(tr("GL_OBJECT_LINEAR"), this);
+    auto elinearCoordGenRadioButton = new QRadioButton(tr("GL_EYE_LINEAR"), this);
+    auto spheremCoordGenRadioButton = new QRadioButton(tr("GL_SPHERE_MAP"), this);
+    auto reflecmCoordGenRadioButton = new QRadioButton(tr("GL_REFLECTION_MAP"), this);
+    auto normalmCoordGenRadioButton = new QRadioButton(tr("GL_NORMAL_MAP"), this);
 
     coordGenSizer->addWidget(olinearCoordGenRadioButton);
     coordGenSizer->addWidget(elinearCoordGenRadioButton);
@@ -205,7 +205,7 @@ SGOglTextureCoordNBPage::setup()
 
     const Texture& texture = m_glState->getTexture(m_texCoordUnitGroup->checkedId());
 
-    switch (texture.textureCoordinateGeneration) {
+    switch (texture.coordinateGeneration) {
         case GL_OBJECT_LINEAR:
             m_coordGenGroup->button(0)->setChecked(true);
             break;
@@ -245,21 +245,19 @@ SGOglTextureCoordNBPage::onRadioTexCoordGen(int index)
 
     switch (index) {
         case TEXTURE_COORDINATE_OBJECT_LINEAR:
-            m_glState->getTexture(workingTextureCoords).textureCoordinateGeneration =
-              GL_OBJECT_LINEAR;
+            m_glState->getTexture(workingTextureCoords).coordinateGeneration = GL_OBJECT_LINEAR;
             break;
         case TEXTURE_COORDINATE_EYE_LINEAR:
-            m_glState->getTexture(workingTextureCoords).textureCoordinateGeneration = GL_EYE_LINEAR;
+            m_glState->getTexture(workingTextureCoords).coordinateGeneration = GL_EYE_LINEAR;
             break;
         case TEXTURE_COORDINATE_SPHERE_MAP:
-            m_glState->getTexture(workingTextureCoords).textureCoordinateGeneration = GL_SPHERE_MAP;
+            m_glState->getTexture(workingTextureCoords).coordinateGeneration = GL_SPHERE_MAP;
             break;
         case TEXTURE_COORDINATE_REFLECTION_MAP:
-            m_glState->getTexture(workingTextureCoords).textureCoordinateGeneration =
-              GL_REFLECTION_MAP;
+            m_glState->getTexture(workingTextureCoords).coordinateGeneration = GL_REFLECTION_MAP;
             break;
         case TEXTURE_COORDINATE_NORMAL_MAP:
-            m_glState->getTexture(workingTextureCoords).textureCoordinateGeneration = GL_NORMAL_MAP;
+            m_glState->getTexture(workingTextureCoords).coordinateGeneration = GL_NORMAL_MAP;
             break;
         default:
             break;
@@ -336,7 +334,7 @@ SGOglTextureCoordNBPage::updateWidgets()
 {
     const Texture& texture = m_glState->getTexture(m_texCoordUnitGroup->checkedId());
 
-    switch (texture.textureCoordinateGeneration) {
+    switch (texture.coordinateGeneration) {
         case GL_OBJECT_LINEAR:
             m_coordGenGroup->button(TEXTURE_COORDINATE_OBJECT_LINEAR)->setChecked(true);
             break;

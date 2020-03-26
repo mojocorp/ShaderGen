@@ -1,39 +1,39 @@
 /************************************************************************
-*                                                                       *
-*               Copyright (C) 2002-2005  3Dlabs Inc. Ltd.               *
-*                                                                       *
-*                        All rights reserved.                           *
-*                                                                       *
-* Redistribution and use in source and binary forms, with or without    *
-* modification, are permitted provided that the following conditions    *
-* are met:                                                              *
-*                                                                       *
-*     Redistributions of source code must retain the above copyright    *
-*     notice, this list of conditions and the following disclaimer.     *
-*                                                                       *
-*     Redistributions in binary form must reproduce the above           *
-*     copyright notice, this list of conditions and the following       *
-*     disclaimer in the documentation and/or other materials provided   *
-*     with the distribution.                                            *
-*                                                                       *
-*     Neither the name of 3Dlabs Inc. Ltd. nor the names of its         *
-*     contributors may be used to endorse or promote products derived   *
-*     from this software without specific prior written permission.     *
-*                                                                       *
-* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS   *
-* "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT     *
-* LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS     *
-* FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE        *
-* COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, *
-* INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,  *
-* BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;      *
-* LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER      *
-* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT    *
-* LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN     *
-* ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE       *
-* POSSIBILITY OF SUCH DAMAGE.                                           *
-*                                                                       *
-************************************************************************/
+ *                                                                       *
+ *               Copyright (C) 2002-2005  3Dlabs Inc. Ltd.               *
+ *                                                                       *
+ *                        All rights reserved.                           *
+ *                                                                       *
+ * Redistribution and use in source and binary forms, with or without    *
+ * modification, are permitted provided that the following conditions    *
+ * are met:                                                              *
+ *                                                                       *
+ *     Redistributions of source code must retain the above copyright    *
+ *     notice, this list of conditions and the following disclaimer.     *
+ *                                                                       *
+ *     Redistributions in binary form must reproduce the above           *
+ *     copyright notice, this list of conditions and the following       *
+ *     disclaimer in the documentation and/or other materials provided   *
+ *     with the distribution.                                            *
+ *                                                                       *
+ *     Neither the name of 3Dlabs Inc. Ltd. nor the names of its         *
+ *     contributors may be used to endorse or promote products derived   *
+ *     from this software without specific prior written permission.     *
+ *                                                                       *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS   *
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT     *
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS     *
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE        *
+ * COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, *
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,  *
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;      *
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER      *
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT    *
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN     *
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE       *
+ * POSSIBILITY OF SUCH DAMAGE.                                           *
+ *                                                                       *
+ ************************************************************************/
 
 #pragma once
 
@@ -46,42 +46,42 @@
 
 struct Light
 {
-    bool lightEnabled;
+    bool enabled;
 
-    float lightSpotExponent;
-    float lightSpotCutoff;
-    float lightConstantAttenuation;
-    float lightLinearAttenuation;
-    float lightQuadraticAttenuation;
+    float spotExponent;
+    float spotCutoff;
+    float constantAttenuation;
+    float linearAttenuation;
+    float quadraticAttenuation;
 
-    QVector3D lightSpotDirectionVector;
-    QVector4D lightPositionVector;
-    QColor lightAmbientColorVector;
-    QColor lightDiffuseColorVector;
-    QColor lightSpecularColorVector;
+    QVector3D spotDirection;
+    QVector4D position;
+    QColor ambientColor;
+    QColor diffuseColor;
+    QColor specularColor;
 };
 
 struct Material
 {
-    QColor materialDiffuseColorVector;
-    QColor materialAmbientColorVector;
-    QColor materialSpecularColorVector;
-    QColor materialEmissionColorVector;
-    float materialShininess;
+    QColor diffuseColor;
+    QColor ambientColor;
+    QColor specularColor;
+    QColor emissionColor;
+    float shininess;
     int faceSelection;
 };
 
 struct Fog
 {
-    float fogStart, fogEnd, fogDensity;
-    QColor fogColorVector;
-    int fogMode;
-    int fogSource;
+    float start, end, density;
+    QColor color;
+    int mode;
+    int source;
 };
 
 struct Texture
 {
-    bool textureEnabled;
+    bool enabled;
 
     bool texGen;
 
@@ -93,21 +93,21 @@ struct Texture
 
     QColor texEnvColor;
 
-    int textureApplicationMethod;
-    int textureCoordinateGeneration;
+    int applicationMethod;
+    int coordinateGeneration;
 
-    int textureCurrentSelection;
+    int currentSelection;
 
-    float textureCombineScale;
+    float combineScale;
 
-    int textureCombineMode;
+    int combineMode;
 
-    int textureCombineSource0;
-    int textureCombineSource1;
-    int textureCombineSource2;
-    int textureCombineOperand0;
-    int textureCombineOperand1;
-    int textureCombineOperand2;
+    int combineSource0;
+    int combineSource1;
+    int combineSource2;
+    int combineOperand0;
+    int combineOperand1;
+    int combineOperand2;
 };
 
 // Wrapper
@@ -116,7 +116,7 @@ class SGFixedGLState
 
   public:
     SGFixedGLState() { init(); }
-    ~SGFixedGLState();
+    ~SGFixedGLState() = default;
     void init();
 
     Light& getLight(int num) { return m_light[num]; }

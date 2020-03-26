@@ -4,6 +4,8 @@
 #include <QStyle>
 #include <QStyleOptionButton>
 
+#include <memory>
+
 QColorButton::QColorButton(QWidget* parent)
   : QPushButton(parent)
 {
@@ -45,14 +47,13 @@ QColorButton::nextCheckState()
 
     QColor savedColor = m_color;
 
-    QColorDialog* dialog = new QColorDialog(this);
+    std::unique_ptr<QColorDialog> dialog(new QColorDialog(this));
     dialog->setCurrentColor(m_color);
-    connect(dialog, SIGNAL(currentColorChanged(QColor)), SLOT(setColor(const QColor&)));
+    connect(dialog.get(), SIGNAL(currentColorChanged(QColor)), SLOT(setColor(QColor)));
 
     if (dialog->exec() == QDialog::Accepted) {
         emit selected(m_color);
     } else {
         setColor(savedColor);
     }
-    delete dialog;
 }

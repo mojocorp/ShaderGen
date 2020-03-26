@@ -19,36 +19,35 @@
 #include "SGShaderTextWindow.h"
 #include "SGTextures.h"
 
-static SGFrame* sgframe_instance = 0;
+static SGFrame* sgframe_instance = nullptr;
 
 SGFrame::SGFrame(const QString& title)
-  : QMainWindow()
 {
     setWindowTitle(title);
 
-    m_glState = new SGFixedGLState();
-    m_textures = new SGTextures(this, m_glState);
-    m_shaderGen = new SGShaderGenerator(m_glState);
+    m_glState = std::make_unique<SGFixedGLState>();
+    m_textures = std::make_unique<SGTextures>(this, m_glState.get());
+    m_shaderGen = std::make_unique<SGShaderGenerator>(m_glState.get());
 
     createActions();
     createMenus();
     createStatusBar();
 
-    m_oglNotebook = new SGOglNotebook(m_glState, this);
+    m_oglNotebook = new SGOglNotebook(m_glState.get(), this);
     m_oglNotebook->resize(800, 300);
     connect(m_oglNotebook, SIGNAL(valueChanged()), SLOT(setFixedGLMode()));
 
-    QFrame* canvasWrapper = new QFrame(this);
-    QVBoxLayout* canvasWrapperLayout = new QVBoxLayout(canvasWrapper);
+    auto canvasWrapper = new QFrame(this);
+    auto canvasWrapperLayout = new QVBoxLayout(canvasWrapper);
 
     m_canvas = new SGCanvas(this);
     m_canvas->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
-    QGroupBox* gb = new QGroupBox(tr("Select GL Mode"), this);
+    auto gb = new QGroupBox(tr("Select GL Mode"), this);
     gb->setLayout(new QHBoxLayout);
-    QRadioButton* fixed = new QRadioButton(tr("FIXED FUNCTIONALITY MODE"), gb);
+    auto fixed = new QRadioButton(tr("FIXED FUNCTIONALITY MODE"), gb);
     fixed->setChecked(true);
-    QRadioButton* shader = new QRadioButton(tr("EQUIVALENT SHADER MODE "), gb);
+    auto shader = new QRadioButton(tr("EQUIVALENT SHADER MODE "), gb);
     gb->layout()->addWidget(fixed);
     gb->layout()->addWidget(shader);
 
@@ -80,11 +79,7 @@ SGFrame::SGFrame(const QString& title)
 
 SGFrame::~SGFrame()
 {
-    sgframe_instance = 0;
-
-    delete m_shaderGen;
-    delete m_textures;
-    delete m_glState;
+    sgframe_instance = nullptr;
 }
 
 void
@@ -133,7 +128,7 @@ SGFrame::createActions()
     m_planeAct = new QAction(tr("Plane"), this);
     m_planeAct->setCheckable(true);
 
-    QActionGroup* modelGroup = new QActionGroup(this);
+    auto modelGroup = new QActionGroup(this);
     modelGroup->addAction(m_torusAct);
     modelGroup->addAction(m_sphereAct);
     modelGroup->addAction(m_trefoilAct);
@@ -348,8 +343,8 @@ SGFrame::help()
 {
     QDialog help(this);
     help.setWindowTitle(tr("Help - ShaderGen"));
-    QVBoxLayout* layout = new QVBoxLayout(&help);
-    QTextEdit* txtEdit = new QTextEdit();
+    auto layout = new QVBoxLayout(&help);
+    auto txtEdit = new QTextEdit();
     txtEdit->setReadOnly(true);
     txtEdit->setPlainText(tr("\n"
                              "GLSL ShaderGen\n\n"
@@ -403,19 +398,21 @@ SGFrame::help()
 void
 SGFrame::about()
 {
-    QMessageBox::about(this, "GLSL ShaderGen", QString("<center>"
-                                                       "<p><img src=\":textures/3Dlabs.png\"></p>"
-                                                       "<p><b>GLSL ShaderGen</b></p>"
-                                                       "<p>Version %1</p>"
-                                                       "</center>")
-                                                 .arg(SHADERGEN_VERSION));
+    QMessageBox::about(this,
+                       "GLSL ShaderGen",
+                       QString("<center>"
+                               "<p><img src=\":textures/3Dlabs.png\"></p>"
+                               "<p><b>GLSL ShaderGen</b></p>"
+                               "<p>Version %1</p>"
+                               "</center>")
+                         .arg(SHADERGEN_VERSION));
 }
 
 bool
 SGFrame::open()
 {
-    QString fileName = QFileDialog::getOpenFileName(this, tr("Open"), QDir::homePath(),
-                                                    tr("ShaderGen Files (*.json)"));
+    QString fileName = QFileDialog::getOpenFileName(
+      this, tr("Open"), QDir::homePath(), tr("ShaderGen Files (*.json)"));
     if (fileName.isEmpty())
         return false;
 
@@ -425,8 +422,8 @@ SGFrame::open()
 bool
 SGFrame::saveAs()
 {
-    QString fileName = QFileDialog::getSaveFileName(this, tr("Save As"), QDir::homePath(),
-                                                    tr("ShaderGen Files (*.json)"));
+    QString fileName = QFileDialog::getSaveFileName(
+      this, tr("Save As"), QDir::homePath(), tr("ShaderGen Files (*.json)"));
     if (fileName.isEmpty())
         return false;
 

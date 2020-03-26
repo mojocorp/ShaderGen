@@ -51,10 +51,10 @@ class LineNumberArea : public QWidget
         codeEditor = editor;
     }
 
-    QSize sizeHint() const { return QSize(codeEditor->lineNumberAreaWidth(), 0); }
+    QSize sizeHint() const override { return { codeEditor->lineNumberAreaWidth(), 0 }; }
 
   protected:
-    void paintEvent(QPaintEvent* event) { codeEditor->lineNumberAreaPaintEvent(event); }
+    void paintEvent(QPaintEvent* event) override { codeEditor->lineNumberAreaPaintEvent(event); }
 
   private:
     QCodeEditor* codeEditor;
@@ -93,7 +93,7 @@ QCodeEditor::updateLineNumberAreaWidth(int /* newBlockCount */)
 }
 
 void
-QCodeEditor::updateLineNumberArea(const QRect& rect, int dy)
+QCodeEditor::updateLineNumberArea(QRect rect, int dy)
 {
     if (dy)
         m_lineNumberArea->scroll(0, dy);
@@ -148,8 +148,8 @@ QCodeEditor::lineNumberAreaPaintEvent(QPaintEvent* event)
         if (block.isVisible() && bottom >= event->rect().top()) {
             QString number = QString::number(blockNumber + 1);
             painter.setPen(QColor(177, 178, 177));
-            painter.drawText(0, top, m_lineNumberArea->width(), fontMetrics().height(),
-                             Qt::AlignRight, number);
+            painter.drawText(
+              0, top, m_lineNumberArea->width(), fontMetrics().height(), Qt::AlignRight, number);
         }
 
         block = block.next();

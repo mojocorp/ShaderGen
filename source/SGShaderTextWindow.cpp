@@ -28,11 +28,10 @@ SGShaderTextWindow::SGShaderTextWindow(SGFrame* frame)
     m_notebook->addTab(m_textBoxFrag, "Fragment Shader");
     m_notebook->addTab(m_textBoxInfo, "InfoLog");
 
-    QVBoxLayout* topSizer = new QVBoxLayout();
-    QHBoxLayout* button_sizer = new QHBoxLayout();
+    auto topSizer = new QVBoxLayout();
+    auto button_sizer = new QHBoxLayout();
 
-    QPushButton* pb;
-    pb = new QPushButton("1. GENERATE SHADERS", this);
+    auto pb = new QPushButton("1. GENERATE SHADERS", this);
     connect(pb, SIGNAL(clicked()), SLOT(generateClicked()));
     button_sizer->addWidget(pb);
 

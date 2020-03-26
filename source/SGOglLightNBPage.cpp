@@ -1,39 +1,39 @@
 /************************************************************************
-*                                                                       *
-*               Copyright (C) 2002-2005  3Dlabs Inc. Ltd.               *
-*                                                                       *
-*                        All rights reserved.                           *
-*                                                                       *
-* Redistribution and use in source and binary forms, with or without    *
-* modification, are permitted provided that the following conditions    *
-* are met:                                                              *
-*                                                                       *
-*     Redistributions of source code must retain the above copyright    *
-*     notice, this list of conditions and the following disclaimer.     *
-*                                                                       *
-*     Redistributions in binary form must reproduce the above           *
-*     copyright notice, this list of conditions and the following       *
-*     disclaimer in the documentation and/or other materials provided   *
-*     with the distribution.                                            *
-*                                                                       *
-*     Neither the name of 3Dlabs Inc. Ltd. nor the names of its         *
-*     contributors may be used to endorse or promote products derived   *
-*     from this software without specific prior written permission.     *
-*                                                                       *
-* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS   *
-* "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT     *
-* LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS     *
-* FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE        *
-* COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, *
-* INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,  *
-* BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;      *
-* LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER      *
-* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT    *
-* LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN     *
-* ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE       *
-* POSSIBILITY OF SUCH DAMAGE.                                           *
-*                                                                       *
-************************************************************************/
+ *                                                                       *
+ *               Copyright (C) 2002-2005  3Dlabs Inc. Ltd.               *
+ *                                                                       *
+ *                        All rights reserved.                           *
+ *                                                                       *
+ * Redistribution and use in source and binary forms, with or without    *
+ * modification, are permitted provided that the following conditions    *
+ * are met:                                                              *
+ *                                                                       *
+ *     Redistributions of source code must retain the above copyright    *
+ *     notice, this list of conditions and the following disclaimer.     *
+ *                                                                       *
+ *     Redistributions in binary form must reproduce the above           *
+ *     copyright notice, this list of conditions and the following       *
+ *     disclaimer in the documentation and/or other materials provided   *
+ *     with the distribution.                                            *
+ *                                                                       *
+ *     Neither the name of 3Dlabs Inc. Ltd. nor the names of its         *
+ *     contributors may be used to endorse or promote products derived   *
+ *     from this software without specific prior written permission.     *
+ *                                                                       *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS   *
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT     *
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS     *
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE        *
+ * COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, *
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,  *
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;      *
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER      *
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT    *
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN     *
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE       *
+ * POSSIBILITY OF SUCH DAMAGE.                                           *
+ *                                                                       *
+ ************************************************************************/
 
 #include <QGroupBox>
 #include <QLabel>
@@ -51,13 +51,13 @@ SGOglLightNBPage::SGOglLightNBPage(SGFixedGLState* glState, QWidget* parent)
   : QWidget(parent)
   , m_glState(glState)
 {
-    QGroupBox* enableDisableBox = new QGroupBox(tr("glEnable/glDisable"), this);
-    QGroupBox* lightSelectionBox = new QGroupBox(tr("Select Light"), this);
-    QGroupBox* selectedLightBox = new QGroupBox(tr("Selected Light Properties"), this);
-    QGridLayout* lightSizer = new QGridLayout(this);
-    QHBoxLayout* h1 = new QHBoxLayout(enableDisableBox);
-    QHBoxLayout* h2 = new QHBoxLayout(lightSelectionBox);
-    QGridLayout* h3 = new QGridLayout(selectedLightBox);
+    auto enableDisableBox = new QGroupBox(tr("glEnable/glDisable"), this);
+    auto lightSelectionBox = new QGroupBox(tr("Select Light"), this);
+    auto selectedLightBox = new QGroupBox(tr("Selected Light Properties"), this);
+    auto lightSizer = new QGridLayout(this);
+    auto h1 = new QHBoxLayout(enableDisableBox);
+    auto h2 = new QHBoxLayout(lightSelectionBox);
+    auto h3 = new QGridLayout(selectedLightBox);
 
     m_lightSelectionGroup = new QButtonGroup(this);
     for (int i = 0; i < NUM_LIGHTS; i++) {
@@ -119,8 +119,8 @@ SGOglLightNBPage::SGOglLightNBPage(SGFixedGLState* glState, QWidget* parent)
 
     m_constantAttenuation = new QDoubleSpinBox(this);
     m_constantAttenuation->setRange(-1000, 1000);
-    connect(m_constantAttenuation, SIGNAL(valueChanged(double)),
-            SLOT(constantAttenuationChanged()));
+    connect(
+      m_constantAttenuation, SIGNAL(valueChanged(double)), SLOT(constantAttenuationChanged()));
 
     m_linearAttenuation = new QDoubleSpinBox(this);
     m_linearAttenuation->setRange(-1000, 1000);
@@ -128,8 +128,8 @@ SGOglLightNBPage::SGOglLightNBPage(SGFixedGLState* glState, QWidget* parent)
 
     m_quadraticAttenuation = new QDoubleSpinBox(this);
     m_quadraticAttenuation->setRange(-1000, 1000);
-    connect(m_quadraticAttenuation, SIGNAL(valueChanged(double)),
-            SLOT(quadraticAttenuationChanged()));
+    connect(
+      m_quadraticAttenuation, SIGNAL(valueChanged(double)), SLOT(quadraticAttenuationChanged()));
 
     m_ambientLight = new QColorButton(this);
     connect(m_ambientLight, SIGNAL(clicked()), SLOT(ambientLightChanged()));
@@ -140,19 +140,19 @@ SGOglLightNBPage::SGOglLightNBPage(SGFixedGLState* glState, QWidget* parent)
     m_diffuseLight = new QColorButton(this);
     connect(m_diffuseLight, SIGNAL(clicked()), SLOT(diffuseLightChanged()));
 
-    QLabel* positionLbl = new QLabel(tr("GL_POSITION"), this);
+    auto positionLbl = new QLabel(tr("GL_POSITION"), this);
 
-    QLabel* ambientLbl = new QLabel(tr("GL_AMBIENT"), this);
-    QLabel* specularLbl = new QLabel(tr("GL_SPECULAR"), this);
-    QLabel* diffuseLbl = new QLabel(tr("GL_DIFFUSE"), this);
+    auto ambientLbl = new QLabel(tr("GL_AMBIENT"), this);
+    auto specularLbl = new QLabel(tr("GL_SPECULAR"), this);
+    auto diffuseLbl = new QLabel(tr("GL_DIFFUSE"), this);
 
-    QLabel* spotDirectionLbl = new QLabel(tr("GL_SPOT_DIRECTION"), this);
-    QLabel* spotExponentLbl = new QLabel(tr("GL_SPOT_EXPONENT"), this);
-    QLabel* spotCutoffLbl = new QLabel(tr("GL_SPOT_CUTOFF"), this);
+    auto spotDirectionLbl = new QLabel(tr("GL_SPOT_DIRECTION"), this);
+    auto spotExponentLbl = new QLabel(tr("GL_SPOT_EXPONENT"), this);
+    auto spotCutoffLbl = new QLabel(tr("GL_SPOT_CUTOFF"), this);
 
-    QLabel* constantAttenLbl = new QLabel(tr("GL_CONSTANT_ATTENUATION"), this);
-    QLabel* linearAttenLbl = new QLabel(tr("GL_LINEAR_ATTENUATION"), this);
-    QLabel* quadraticAttenLbl = new QLabel(tr("GL_QUADRATIC_ATTENUATION"), this);
+    auto constantAttenLbl = new QLabel(tr("GL_CONSTANT_ATTENUATION"), this);
+    auto linearAttenLbl = new QLabel(tr("GL_LINEAR_ATTENUATION"), this);
+    auto quadraticAttenLbl = new QLabel(tr("GL_QUADRATIC_ATTENUATION"), this);
 
     h3->addWidget(positionLbl, 0, 0);
 
@@ -195,7 +195,7 @@ void
 SGOglLightNBPage::setup()
 {
     for (int i = 0; i < NUM_LIGHTS; i++) {
-        m_lightCheckGroup->button(i)->setChecked(m_glState->getLight(i).lightEnabled);
+        m_lightCheckGroup->button(i)->setChecked(m_glState->getLight(i).enabled);
     }
     m_lightingCheckBox->setChecked(m_glState->getLightingEnable());
     m_twoSidedLightingCheckBox->setChecked(m_glState->getTwoSidedLightingEnable());
@@ -206,16 +206,16 @@ SGOglLightNBPage::setup()
 
     const Light& light = m_glState->getLight(m_lightSelectionGroup->checkedId());
 
-    m_lightPosition->setValue(light.lightPositionVector);
-    m_spotDirection->setValue(light.lightSpotDirectionVector);
-    m_spotExponent->setValue(light.lightSpotExponent);
-    m_spotCutoff->setValue(light.lightSpotCutoff);
-    m_constantAttenuation->setValue(light.lightConstantAttenuation);
-    m_linearAttenuation->setValue(light.lightLinearAttenuation);
-    m_quadraticAttenuation->setValue(light.lightQuadraticAttenuation);
-    m_ambientLight->setColor(light.lightAmbientColorVector);
-    m_specularLight->setColor(light.lightSpecularColorVector);
-    m_diffuseLight->setColor(light.lightDiffuseColorVector);
+    m_lightPosition->setValue(light.position);
+    m_spotDirection->setValue(light.spotDirection);
+    m_spotExponent->setValue(light.spotExponent);
+    m_spotCutoff->setValue(light.spotCutoff);
+    m_constantAttenuation->setValue(light.constantAttenuation);
+    m_linearAttenuation->setValue(light.linearAttenuation);
+    m_quadraticAttenuation->setValue(light.quadraticAttenuation);
+    m_ambientLight->setColor(light.ambientColor);
+    m_specularLight->setColor(light.specularColor);
+    m_diffuseLight->setColor(light.diffuseColor);
 }
 
 void
@@ -264,7 +264,7 @@ void
 SGOglLightNBPage::ambientLightChanged()
 {
     int lightSelected = m_lightSelectionGroup->checkedId();
-    m_glState->getLight(lightSelected).lightAmbientColorVector = m_ambientLight->color();
+    m_glState->getLight(lightSelected).ambientColor = m_ambientLight->color();
 
     emit valueChanged();
 }
@@ -273,7 +273,7 @@ void
 SGOglLightNBPage::specularLightChanged()
 {
     int lightSelected = m_lightSelectionGroup->checkedId();
-    m_glState->getLight(lightSelected).lightSpecularColorVector = m_specularLight->color();
+    m_glState->getLight(lightSelected).specularColor = m_specularLight->color();
 
     emit valueChanged();
 }
@@ -282,7 +282,7 @@ void
 SGOglLightNBPage::diffuseLightChanged()
 {
     int lightSelected = m_lightSelectionGroup->checkedId();
-    m_glState->getLight(lightSelected).lightDiffuseColorVector = m_diffuseLight->color();
+    m_glState->getLight(lightSelected).diffuseColor = m_diffuseLight->color();
 
     emit valueChanged();
 }
@@ -291,7 +291,7 @@ void
 SGOglLightNBPage::onCheckbox(int index)
 {
     const QAbstractButton* btn = m_lightCheckGroup->button(index);
-    m_glState->getLight(index).lightEnabled = btn->isChecked();
+    m_glState->getLight(index).enabled = btn->isChecked();
 
     emit valueChanged();
 }
@@ -300,7 +300,7 @@ void
 SGOglLightNBPage::spotExponentChanged()
 {
     int lightSelected = m_lightSelectionGroup->checkedId();
-    m_glState->getLight(lightSelected).lightSpotExponent = m_spotExponent->value();
+    m_glState->getLight(lightSelected).spotExponent = m_spotExponent->value();
     emit valueChanged();
 }
 
@@ -308,7 +308,7 @@ void
 SGOglLightNBPage::spotCutoffChanged()
 {
     int lightSelected = m_lightSelectionGroup->checkedId();
-    m_glState->getLight(lightSelected).lightSpotCutoff = m_spotCutoff->value();
+    m_glState->getLight(lightSelected).spotCutoff = m_spotCutoff->value();
     emit valueChanged();
 }
 
@@ -316,7 +316,7 @@ void
 SGOglLightNBPage::constantAttenuationChanged()
 {
     int lightSelected = m_lightSelectionGroup->checkedId();
-    m_glState->getLight(lightSelected).lightConstantAttenuation = m_constantAttenuation->value();
+    m_glState->getLight(lightSelected).constantAttenuation = m_constantAttenuation->value();
     emit valueChanged();
 }
 
@@ -324,7 +324,7 @@ void
 SGOglLightNBPage::quadraticAttenuationChanged()
 {
     int lightSelected = m_lightSelectionGroup->checkedId();
-    m_glState->getLight(lightSelected).lightQuadraticAttenuation = m_quadraticAttenuation->value();
+    m_glState->getLight(lightSelected).quadraticAttenuation = m_quadraticAttenuation->value();
     emit valueChanged();
 }
 
@@ -332,7 +332,7 @@ void
 SGOglLightNBPage::linearAttenuationChanged()
 {
     int lightSelected = m_lightSelectionGroup->checkedId();
-    m_glState->getLight(lightSelected).lightLinearAttenuation = m_linearAttenuation->value();
+    m_glState->getLight(lightSelected).linearAttenuation = m_linearAttenuation->value();
     emit valueChanged();
 }
 
@@ -345,7 +345,7 @@ SGOglLightNBPage::lightPositionChanged()
     }
 
     int lightSelected = m_lightSelectionGroup->checkedId();
-    m_glState->getLight(lightSelected).lightPositionVector = tempLightPosVector;
+    m_glState->getLight(lightSelected).position = tempLightPosVector;
     emit valueChanged();
 }
 
@@ -354,9 +354,9 @@ SGOglLightNBPage::spotDirectionChanged()
 {
     QVector4D tempLightSpotDirectionVector = m_spotDirection->getValue();
     int lightSelected = m_lightSelectionGroup->checkedId();
-    m_glState->getLight(lightSelected).lightSpotDirectionVector =
-      QVector3D(tempLightSpotDirectionVector.x(), tempLightSpotDirectionVector.y(),
-                tempLightSpotDirectionVector.z());
+    m_glState->getLight(lightSelected).spotDirection = QVector3D(tempLightSpotDirectionVector.x(),
+                                                                 tempLightSpotDirectionVector.y(),
+                                                                 tempLightSpotDirectionVector.z());
     emit valueChanged();
 }
 
@@ -365,18 +365,18 @@ SGOglLightNBPage::onRadio(int index)
 {
     const Light& light = m_glState->getLight(index);
 
-    m_ambientLight->setColor(light.lightAmbientColorVector);
-    m_diffuseLight->setColor(light.lightDiffuseColorVector);
-    m_specularLight->setColor(light.lightSpecularColorVector);
-    m_spotDirection->setValue(light.lightSpotDirectionVector);
-    m_spotExponent->setValue(light.lightSpotExponent);
-    m_spotCutoff->setValue(light.lightSpotCutoff);
+    m_ambientLight->setColor(light.ambientColor);
+    m_diffuseLight->setColor(light.diffuseColor);
+    m_specularLight->setColor(light.specularColor);
+    m_spotDirection->setValue(light.spotDirection);
+    m_spotExponent->setValue(light.spotExponent);
+    m_spotCutoff->setValue(light.spotCutoff);
 
-    m_constantAttenuation->setValue(light.lightConstantAttenuation);
-    m_quadraticAttenuation->setValue(light.lightQuadraticAttenuation);
-    m_linearAttenuation->setValue(light.lightLinearAttenuation);
+    m_constantAttenuation->setValue(light.constantAttenuation);
+    m_quadraticAttenuation->setValue(light.quadraticAttenuation);
+    m_linearAttenuation->setValue(light.linearAttenuation);
 
-    m_lightPosition->setValue(light.lightPositionVector);
+    m_lightPosition->setValue(light.position);
 
     emit valueChanged();
 }

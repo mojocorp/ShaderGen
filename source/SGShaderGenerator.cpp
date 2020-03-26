@@ -1,48 +1,48 @@
 /************************************************************************
-*                                                                       *
-*               Copyright (C) 2002-2005  3Dlabs Inc. Ltd.               *
-*                                                                       *
-*                        All rights reserved.                           *
-*                                                                       *
-* Redistribution and use in source and binary forms, with or without    *
-* modification, are permitted provided that the following conditions    *
-* are met:                                                              *
-*                                                                       *
-*     Redistributions of source code must retain the above copyright    *
-*     notice, this list of conditions and the following disclaimer.     *
-*                                                                       *
-*     Redistributions in binary form must reproduce the above           *
-*     copyright notice, this list of conditions and the following       *
-*     disclaimer in the documentation and/or other materials provided   *
-*     with the distribution.                                            *
-*                                                                       *
-*     Neither the name of 3Dlabs Inc. Ltd. nor the names of its         *
-*     contributors may be used to endorse or promote products derived   *
-*     from this software without specific prior written permission.     *
-*                                                                       *
-* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS   *
-* "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT     *
-* LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS     *
-* FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE        *
-* COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, *
-* INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,  *
-* BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;      *
-* LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER      *
-* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT    *
-* LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN     *
-* ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE       *
-* POSSIBILITY OF SUCH DAMAGE.                                           *
-*                                                                       *
-************************************************************************/
+ *                                                                       *
+ *               Copyright (C) 2002-2005  3Dlabs Inc. Ltd.               *
+ *                                                                       *
+ *                        All rights reserved.                           *
+ *                                                                       *
+ * Redistribution and use in source and binary forms, with or without    *
+ * modification, are permitted provided that the following conditions    *
+ * are met:                                                              *
+ *                                                                       *
+ *     Redistributions of source code must retain the above copyright    *
+ *     notice, this list of conditions and the following disclaimer.     *
+ *                                                                       *
+ *     Redistributions in binary form must reproduce the above           *
+ *     copyright notice, this list of conditions and the following       *
+ *     disclaimer in the documentation and/or other materials provided   *
+ *     with the distribution.                                            *
+ *                                                                       *
+ *     Neither the name of 3Dlabs Inc. Ltd. nor the names of its         *
+ *     contributors may be used to endorse or promote products derived   *
+ *     from this software without specific prior written permission.     *
+ *                                                                       *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS   *
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT     *
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS     *
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE        *
+ * COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, *
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,  *
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;      *
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER      *
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT    *
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN     *
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE       *
+ * POSSIBILITY OF SUCH DAMAGE.                                           *
+ *                                                                       *
+ ************************************************************************/
 /************************************************************************
-* This class creates the shader(s) to emulate the current               *
-* OpenGL Fixed State.  This class does not query the state              *
-* structures set up in the SGFixedGLState class, but rather             *
-* queries the state using the OpenGL API.  For this reason,             *
-* one can easily use this class as with an existing or new              *
-* application to extract the fixed state and generate an equivalent     *
-* shader.                                                               *
-************************************************************************/
+ * This class creates the shader(s) to emulate the current               *
+ * OpenGL Fixed State.  This class does not query the state              *
+ * structures set up in the SGFixedGLState class, but rather             *
+ * queries the state using the OpenGL API.  For this reason,             *
+ * one can easily use this class as with an existing or new              *
+ * application to extract the fixed state and generate an equivalent     *
+ * shader.                                                               *
+ ************************************************************************/
 
 #include <QOpenGLFunctions>
 
@@ -52,17 +52,12 @@
 const float LOG2E = 1.442695f;
 
 SGShaderGenerator::SGShaderGenerator(const SGFixedGLState* state)
-  : m_glState((SGFixedGLState*)state)
-{
-}
-
-SGShaderGenerator::~SGShaderGenerator()
-{
-}
+  : m_glState(const_cast<SGFixedGLState*>(state))
+{}
 
 /**********************************************
-* FRAGMENT SHADER
-**********************************************/
+ * FRAGMENT SHADER
+ **********************************************/
 
 QString
 SGShaderGenerator::buildFragmentShader() const
@@ -76,7 +71,7 @@ SGShaderGenerator::buildFragmentShader() const
 
     for (int i = 0; i < NUM_TEXTURES; i++) {
         const Texture& texture = m_glState->getTexture(i);
-        if (texture.textureEnabled) {
+        if (texture.enabled) {
             fragShader += QString("uniform sampler2D texUnit%1;\n").arg(i);
         }
     }
@@ -116,8 +111,8 @@ SGShaderGenerator::buildFragFog(QString& str) const
 
         // if(fogMode == GL_EXP || fogMode == GL_EXP2)
         //    str += "        const float LOG2E = 1.442695;
-        const int fogMode = m_glState->getFog().fogMode;
-        const double fogDensity = m_glState->getFog().fogDensity;
+        const int fogMode = m_glState->getFog().mode;
+        const double fogDensity = m_glState->getFog().density;
         if (fogMode == GL_LINEAR) {
             str += "    fog = (gl_Fog.end - gl_FogFragCoord) * gl_Fog.scale;\n\n";
         } else if (fogMode == GL_EXP) {
@@ -174,13 +169,14 @@ SGShaderGenerator::buildFragTex(QString& str) const
     for (int i = 0; i < NUM_TEXTURES; i++) {
         const Texture& texture = m_glState->getTexture(i);
 
-        if (texture.textureEnabled) {
-            switch (texture.textureApplicationMethod) {
+        if (texture.enabled) {
+            switch (texture.applicationMethod) {
                 case GL_MODULATE:
                     fragmentTextureString.sprintf("    color *= "
                                                   "texture2D(texUnit%i, "
                                                   "gl_TexCoord[%i].xy);\n\n",
-                                                  i, i);
+                                                  i,
+                                                  i);
                     break;
                 case GL_DECAL:
                     fragmentTextureString.sprintf(
@@ -189,7 +185,13 @@ SGShaderGenerator::buildFragTex(QString& str) const
                       "    vec3 tempColor%i = mix(color.rgb, texture%i.rgb, "
                       "texture%i.a);\n"
                       "    color = vec4 (tempColor%i, color.a);\n\n",
-                      i, i, i, i, i, i, i);
+                      i,
+                      i,
+                      i,
+                      i,
+                      i,
+                      i,
+                      i);
                     break;
                 case GL_BLEND:
                     fragmentTextureString.sprintf("    vec4 texture%i = texture2D(texUnit%i, "
@@ -198,13 +200,21 @@ SGShaderGenerator::buildFragTex(QString& str) const
                                                   "gl_TextureEnvColor[%i].rgb, texture%i.rgb);\n"
                                                   "    color = vec4 (tempColor%i, color.a * "
                                                   "texture%i.a);\n\n",
-                                                  i, i, i, i, i, i, i, i);
+                                                  i,
+                                                  i,
+                                                  i,
+                                                  i,
+                                                  i,
+                                                  i,
+                                                  i,
+                                                  i);
                     break;
                 case GL_REPLACE:
                     fragmentTextureString.sprintf("    color = "
                                                   "texture2D(texUnit%i, "
                                                   "gl_TexCoord[%i].xy);\n\n",
-                                                  i, i);
+                                                  i,
+                                                  i);
                     break;
                 case GL_ADD:
                     fragmentTextureString.sprintf("    vec4 texture%i = texture2D(texUnit%i, "
@@ -212,19 +222,23 @@ SGShaderGenerator::buildFragTex(QString& str) const
                                                   "    color.rgb += texture%i.rgb;\n"
                                                   "    color.a   *= texture%i.a;\n"
                                                   "    color = clamp(color, 0.0, 1.0);\n\n",
-                                                  i, i, i, i, i);
+                                                  i,
+                                                  i,
+                                                  i,
+                                                  i,
+                                                  i);
                     break;
                 case GL_COMBINE:
-                    const int combineMode = texture.textureCombineMode;
-                    const int combineSrc0 = texture.textureCombineSource0;
-                    const int combineSrc1 = texture.textureCombineSource1;
-                    const int combineSrc2 = texture.textureCombineSource2;
+                    const int combineMode = texture.combineMode;
+                    const int combineSrc0 = texture.combineSource0;
+                    const int combineSrc1 = texture.combineSource1;
+                    const int combineSrc2 = texture.combineSource2;
 
-                    const int combineOperand0 = texture.textureCombineOperand0;
-                    const int combineOperand1 = texture.textureCombineOperand1;
-                    const int combineOperand2 = texture.textureCombineOperand2;
+                    const int combineOperand0 = texture.combineOperand0;
+                    const int combineOperand1 = texture.combineOperand1;
+                    const int combineOperand2 = texture.combineOperand2;
 
-                    const int combineRGBScale = texture.textureCombineScale;
+                    const int combineRGBScale = texture.combineScale;
 
                     QString Arg0, Arg1, Arg2, Operand0, Operand1, Operand2;
 
@@ -233,24 +247,34 @@ SGShaderGenerator::buildFragTex(QString& str) const
                             Arg0.sprintf("    vec4 texture%iArg0 = texture2D(texUnit%i, "
                                          "gl_TexCoord[%i].xy);\n"
                                          "    vec4 texUnit%iArg0 = texture%iArg0;\n",
-                                         i, i, i, i, i);
+                                         i,
+                                         i,
+                                         i,
+                                         i,
+                                         i);
                         } else if (combineOperand0 == GL_ONE_MINUS_SRC_COLOR) {
                             Arg0.sprintf("    vec4 texture%iArg0 = "
                                          "texture2D(texUnit%i,gl_TexCoord[%i]."
                                          "xy);\n"
                                          "        vec4 texUnit%iArg0 = "
                                          "vec4(1.0) - texture%iArg0;\n",
-                                         i, i, i, i, i);
+                                         i,
+                                         i,
+                                         i,
+                                         i,
+                                         i);
                         }
                     } else if (combineSrc0 == GL_CONSTANT) {
                         if (combineOperand0 == GL_SRC_COLOR) {
                             Arg0.sprintf("    vec4 texUnit%iArg0 = "
                                          "gl_TextureEnvColor[%i];\n",
-                                         i, i);
+                                         i,
+                                         i);
                         } else if (combineOperand0 == GL_ONE_MINUS_SRC_COLOR) {
                             Arg0.sprintf("    vec4 texUnit%iArg0 = vec4(1.0) - "
                                          "gl_TextureEnvColor[%i];\n",
-                                         i, i);
+                                         i,
+                                         i);
                         }
                     } else if (combineSrc0 == GL_PRIMARY_COLOR) {
                         if (combineOperand0 == GL_SRC_COLOR) {
@@ -270,24 +294,34 @@ SGShaderGenerator::buildFragTex(QString& str) const
                             Arg1.sprintf("    vec4 texture%iArg1 = "
                                          "texture2D(texUnit%i,gl_TexCoord[%i].xy);\n"
                                          "    vec4 texUnit%iArg1 = texture%iArg1;\n",
-                                         i, i, i, i, i);
+                                         i,
+                                         i,
+                                         i,
+                                         i,
+                                         i);
                         } else if (combineOperand1 == GL_ONE_MINUS_SRC_COLOR) {
                             Arg1.sprintf("    vec4 texture%iArg1 = "
                                          "texture2D(texUnit%i,gl_TexCoord[%i]."
                                          "xy);\n"
                                          "    vec4 texUnit%iArg1 = vec4(1.0) - "
                                          "texture%iArg1;\n",
-                                         i, i, i, i, i);
+                                         i,
+                                         i,
+                                         i,
+                                         i,
+                                         i);
                         }
                     } else if (combineSrc1 == GL_CONSTANT) {
                         if (combineOperand1 == GL_SRC_COLOR) {
                             Arg1.sprintf("    vec4 texUnit%iArg1 = "
                                          "gl_TextureEnvColor[%i];\n",
-                                         i, i);
+                                         i,
+                                         i);
                         } else if (combineOperand1 == GL_ONE_MINUS_SRC_COLOR) {
                             Arg1.sprintf("    vec4 texUnit%iArg1 = vec4(1.0) - "
                                          "gl_TextureEnvColor[%i];\n",
-                                         i, i);
+                                         i,
+                                         i);
                         }
                     } else if (combineSrc1 == GL_PRIMARY_COLOR) {
                         if (combineOperand1 == GL_SRC_COLOR) {
@@ -309,24 +343,34 @@ SGShaderGenerator::buildFragTex(QString& str) const
                             Arg2.sprintf("    vec4 texture%iArg2 = "
                                          "texture2D(texUnit%i,gl_TexCoord[%i].xy);\n"
                                          "    vec4 texUnit%iArg2 = texture%iArg2\n;",
-                                         i, i, i, i, i);
+                                         i,
+                                         i,
+                                         i,
+                                         i,
+                                         i);
                         } else if (combineOperand2 == GL_ONE_MINUS_SRC_COLOR) {
                             Arg2.sprintf("    vec4 texture%iArg2 = "
                                          "texture2D(texUnit%i,gl_TexCoord[%i]."
                                          "xy);\n"
                                          "    vec4 texUnit%iArg2 = vec4(1.0) - "
                                          "texture%iArg2\n;",
-                                         i, i, i, i, i);
+                                         i,
+                                         i,
+                                         i,
+                                         i,
+                                         i);
                         }
                     } else if (combineSrc2 == GL_CONSTANT) {
                         if (combineOperand2 == GL_SRC_COLOR) {
                             Arg2.sprintf("    vec4 texUnit%iArg2 = "
                                          "gl_TextureEnvColor[%i];\n",
-                                         i, i);
+                                         i,
+                                         i);
                         } else if (combineOperand2 == GL_ONE_MINUS_SRC_COLOR) {
                             Arg2.sprintf("    vec4 texUnit%iArg2 = vec4(1.0) - "
                                          "gl_TextureEnvColor[%i];\n",
-                                         i, i);
+                                         i,
+                                         i);
                         }
                     } else if (combineSrc2 == GL_PRIMARY_COLOR) {
                         if (combineOperand2 == GL_SRC_COLOR) {
@@ -347,18 +391,17 @@ SGShaderGenerator::buildFragTex(QString& str) const
                         case GL_REPLACE:
                             if (combineRGBScale > 1) {
                                 fragmentTextureString =
-                                  Arg0 +
-                                  QString().sprintf("    color = clamp(%.1f * "
-                                                    "texUnit%iArg0, 0.0, "
-                                                    "1.0);\n",
-                                                    (float)combineRGBScale, i);
+                                  Arg0 + QString().sprintf("    color = clamp(%.1f * "
+                                                           "texUnit%iArg0, 0.0, "
+                                                           "1.0);\n",
+                                                           (float)combineRGBScale,
+                                                           i);
                             } else {
                                 fragmentTextureString =
-                                  Arg0 +
-                                  QString().sprintf("    color = "
-                                                    "clamp(texUnit%iArg0, 0.0, "
-                                                    "1.0);\n",
-                                                    i);
+                                  Arg0 + QString().sprintf("    color = "
+                                                           "clamp(texUnit%iArg0, 0.0, "
+                                                           "1.0);\n",
+                                                           i);
                             }
                             break;
                         case GL_MODULATE:
@@ -367,13 +410,16 @@ SGShaderGenerator::buildFragTex(QString& str) const
                                   Arg0 + Arg1 +
                                   QString().sprintf("    color = clamp(%.1f * texUnit%iArg0 * "
                                                     "texUnit%iArg1, 0.0, 1.0);\n",
-                                                    (float)combineRGBScale, i, i);
+                                                    (float)combineRGBScale,
+                                                    i,
+                                                    i);
                             } else {
                                 fragmentTextureString =
                                   Arg0 + Arg1 +
                                   QString().sprintf("    color = clamp(texUnit%iArg0 * "
                                                     "texUnit%iArg1, 0.0, 1.0);\n",
-                                                    i, i);
+                                                    i,
+                                                    i);
                             }
                             break;
                         case GL_ADD:
@@ -383,13 +429,16 @@ SGShaderGenerator::buildFragTex(QString& str) const
                                   QString().sprintf("    color = clamp(%.1f * "
                                                     "vec4(texUnit%iArg0 + texUnit%iArg1), 0.0, "
                                                     "1.0);\n",
-                                                    (float)combineRGBScale, i, i);
+                                                    (float)combineRGBScale,
+                                                    i,
+                                                    i);
                             } else {
                                 fragmentTextureString =
                                   Arg0 + Arg1 +
                                   QString().sprintf("    color = clamp(texUnit%iArg0 + "
                                                     "texUnit%iArg1, 0.0, 1.0);\n",
-                                                    i, i);
+                                                    i,
+                                                    i);
                             }
                             break;
                         case GL_ADD_SIGNED:
@@ -399,13 +448,16 @@ SGShaderGenerator::buildFragTex(QString& str) const
                                   QString().sprintf("    color = clamp(%.1f * "
                                                     "vec4(texUnit%iArg0 + texUnit%iArg1 - "
                                                     "vec4(0.5)), 0.0, 1.0);\n",
-                                                    (float)combineRGBScale, i, i);
+                                                    (float)combineRGBScale,
+                                                    i,
+                                                    i);
                             } else {
                                 fragmentTextureString =
                                   Arg0 + Arg1 +
                                   QString().sprintf("    color = clamp(texUnit%iArg0 + "
                                                     "texUnit%iArg1 - vec4(0.5), 0.0, 1.0);\n",
-                                                    i, i);
+                                                    i,
+                                                    i);
                             }
                             break;
                         case GL_INTERPOLATE:
@@ -416,7 +468,11 @@ SGShaderGenerator::buildFragTex(QString& str) const
                                                     "texUnit%iArg2"
                                                     " + texUnit%iArg1 * (vec4(1.0) - "
                                                     "texUnit%iArg2)), 0.0, 1.0);\n",
-                                                    (float)combineRGBScale, i, i, i, i);
+                                                    (float)combineRGBScale,
+                                                    i,
+                                                    i,
+                                                    i,
+                                                    i);
                             } else {
                                 fragmentTextureString =
                                   Arg0 + Arg1 + Arg2 +
@@ -424,7 +480,10 @@ SGShaderGenerator::buildFragTex(QString& str) const
                                                     "texUnit%iArg2"
                                                     " + texUnit%iArg1 * (vec4(1.0) - "
                                                     "texUnit%iArg2), 0.0, 1.0);\n",
-                                                    i, i, i, i);
+                                                    i,
+                                                    i,
+                                                    i,
+                                                    i);
                             }
                             break;
                         case GL_SUBTRACT:
@@ -433,13 +492,16 @@ SGShaderGenerator::buildFragTex(QString& str) const
                                   Arg0 + Arg1 +
                                   QString().sprintf("    color = clamp(%.1f * (texUnit%iArg0 - "
                                                     "texUnit%iArg1), 0.0, 1.0);\n",
-                                                    (float)combineRGBScale, i, i);
+                                                    (float)combineRGBScale,
+                                                    i,
+                                                    i);
                             } else {
                                 fragmentTextureString =
                                   Arg0 + Arg1 +
                                   QString().sprintf("    color = clamp(texUnit%iArg0 - "
                                                     "texUnit%iArg1, 0.0, 1.0);\n",
-                                                    i, i);
+                                                    i,
+                                                    i);
                             }
                             break;
                         case GL_DOT3_RGB:
@@ -453,7 +515,13 @@ SGShaderGenerator::buildFragTex(QString& str) const
                                                     "(texUnit%iArg1.g - 0.5) + "
                                                     "(texUnit%iArg0.b - 0.5) * "
                                                     "(texUnit%iArg1.b - 0.5), 0.0, 1.0));\n",
-                                                    (float)combineRGBScale, i, i, i, i, i, i);
+                                                    (float)combineRGBScale,
+                                                    i,
+                                                    i,
+                                                    i,
+                                                    i,
+                                                    i,
+                                                    i);
                             } else {
                                 fragmentTextureString =
                                   Arg0 + Arg1 +
@@ -464,7 +532,12 @@ SGShaderGenerator::buildFragTex(QString& str) const
                                                     "(texUnit%iArg1.g - 0.5) + "
                                                     "(texUnit%iArg0.b - 0.5) * "
                                                     "(texUnit%iArg1.b - 0.5)), 0.0, 1.0));\n",
-                                                    i, i, i, i, i, i);
+                                                    i,
+                                                    i,
+                                                    i,
+                                                    i,
+                                                    i,
+                                                    i);
                             }
                             break;
                         case GL_DOT3_RGBA:
@@ -479,7 +552,13 @@ SGShaderGenerator::buildFragTex(QString& str) const
                                                     "(texUnit%iArg1.g - 0.5) + "
                                                     "(texUnit%iArg0.b - 0.5) * "
                                                     "(texUnit%iArg1.b - 0.5)), 0.0, 1.0));\n",
-                                                    (float)combineRGBScale, i, i, i, i, i, i);
+                                                    (float)combineRGBScale,
+                                                    i,
+                                                    i,
+                                                    i,
+                                                    i,
+                                                    i,
+                                                    i);
                             } else {
                                 fragmentTextureString =
                                   Arg0 + Arg1 +
@@ -490,7 +569,12 @@ SGShaderGenerator::buildFragTex(QString& str) const
                                                     "(texUnit%iArg1.g - 0.5) + "
                                                     "(texUnit%iArg0.b - 0.5) * "
                                                     "(texUnit%iArg1.b - 0.5)), 0.0, 1.0));\n",
-                                                    i, i, i, i, i, i);
+                                                    i,
+                                                    i,
+                                                    i,
+                                                    i,
+                                                    i,
+                                                    i);
                             }
                             break;
                     }
@@ -510,8 +594,8 @@ SGShaderGenerator::buildFragSeparateSpecularColor(QString& str) const
     }
 }
 /*******************************************
-* VERTEX SHADER
-********************************************/
+ * VERTEX SHADER
+ ********************************************/
 
 QString
 SGShaderGenerator::buildVertexShader() const
@@ -537,7 +621,7 @@ SGShaderGenerator::buildVertexShader() const
     //  multiple texture coordinates correctly.
     for (int i = NUM_TEXTURES - 1; i >= 0; i--) {
         const Texture& texture = m_glState->getTexture(i);
-        if (texture.textureEnabled) {
+        if (texture.enabled) {
             buildTexCoord(bottomVertShader, fMapReflection, fMapSphere);
             break;
         }
@@ -572,8 +656,11 @@ SGShaderGenerator::buildVertexShader() const
 }
 
 void
-SGShaderGenerator::buildLightCode(QString& str, bool& fLightPoint, bool& fLightSpot,
-                                  bool& fLightDir, bool& fLightDirSpot) const
+SGShaderGenerator::buildLightCode(QString& str,
+                                  bool& fLightPoint,
+                                  bool& fLightSpot,
+                                  bool& fLightDir,
+                                  bool& fLightDirSpot) const
 {
     const bool lightModelTwoSided = m_glState->getTwoSidedLightingEnable();
 
@@ -601,9 +688,9 @@ SGShaderGenerator::buildLightCode(QString& str, bool& fLightPoint, bool& fLightS
 
         for (int i = 0; i < NUM_LIGHTS; i++) {
             const Light& light = m_glState->getLight(i);
-            if (light.lightEnabled) {
-                const QVector4D& v = light.lightPositionVector;
-                const float spotCut = light.lightSpotCutoff;
+            if (light.enabled) {
+                const QVector4D& v = light.position;
+                const float spotCut = light.spotCutoff;
 
                 if (v[3] == 0.0) {
                     if (spotCut != DEFAULT_SPOT_CUT) {
@@ -652,14 +739,14 @@ SGShaderGenerator::buildLightCode(QString& str, bool& fLightPoint, bool& fLightS
 
             for (int i = 0; i < NUM_LIGHTS; i++) {
                 const Light& light = m_glState->getLight(i);
-                if (light.lightEnabled) {
-                    const QVector4D& v = light.lightPositionVector;
+                if (light.enabled) {
+                    const QVector4D& v = light.position;
 
                     if (v[3] == 0.0) {
                         str += QString().sprintf("    directionalLight(%d, normal);\n\n", i);
                         fLightDir = true;
                     } else {
-                        const float spotCut = light.lightSpotCutoff;
+                        const float spotCut = light.spotCutoff;
                         if (spotCut == 180.0) {
                             str += QString().sprintf("    pointLight(%d, normal, "
                                                      "eye, ecPosition3);\n\n",
@@ -732,7 +819,7 @@ SGShaderGenerator::buildFuncFog(QString& str) const
            "float ffog(in float ecDistance)\n"
            "{\n";
 
-    if (m_glState->getFog().fogSource == GL_FOG_COORD) {
+    if (m_glState->getFog().source == GL_FOG_COORD) {
         str += "    return gl_FogCoord;\n";
     } else {
         str += "    return(abs(ecDistance));\n";
@@ -751,7 +838,7 @@ SGShaderGenerator::buildTexCoord(QString& str, bool& fMapReflection, bool& fMapS
     for (int i = 0; i < NUM_TEXTURES; i++) {
         const Texture& texture = m_glState->getTexture(i);
         if (texture.texGen) {
-            if (texture.textureCoordinateGeneration == GL_REFLECTION_MAP) {
+            if (texture.coordinateGeneration == GL_REFLECTION_MAP) {
                 if (!fMapReflection && !fMapSphere) {
                     tempStringA = "    vec3 ecPosition3;"
                                   "    ecPosition3 = (vec3(ecPosition))/ecPosition.w;\n";
@@ -772,7 +859,7 @@ SGShaderGenerator::buildTexCoord(QString& str, bool& fMapReflection, bool& fMapS
                 } else {
                     texCoordString.sprintf("    gl_TexCoord[%i] = vec4(reflection, 1.0); \n", i);
                 }
-            } else if (texture.textureCoordinateGeneration == GL_SPHERE_MAP) {
+            } else if (texture.coordinateGeneration == GL_SPHERE_MAP) {
                 if (!fMapSphere && !fMapReflection) {
                     tempStringA = "    vec3 ecPosition3;\n"
                                   "    ecPosition3 = (vec3(ecPosition))/ecPosition.w;\n";
@@ -793,7 +880,7 @@ SGShaderGenerator::buildTexCoord(QString& str, bool& fMapReflection, bool& fMapS
                 } else {
                     texCoordString.sprintf("    gl_TexCoord[%i] = vec4(sMap, 0.0, 1.0);\n", i);
                 }
-            } else if (texture.textureCoordinateGeneration == GL_EYE_LINEAR) {
+            } else if (texture.coordinateGeneration == GL_EYE_LINEAR) {
                 texCoordString.sprintf("\n    gl_TexCoord[%i].s = dot( "
                                        "ecPosition, gl_EyePlaneS[%i] );\n"
                                        "    gl_TexCoord[%i].t = dot( "
@@ -802,8 +889,15 @@ SGShaderGenerator::buildTexCoord(QString& str, bool& fMapReflection, bool& fMapS
                                        "ecPosition, gl_EyePlaneR[%i] );\n"
                                        "    gl_TexCoord[%i].q = dot( "
                                        "ecPosition, gl_EyePlaneQ[%i] );\n",
-                                       i, i, i, i, i, i, i, i);
-            } else if (texture.textureCoordinateGeneration == GL_OBJECT_LINEAR) {
+                                       i,
+                                       i,
+                                       i,
+                                       i,
+                                       i,
+                                       i,
+                                       i,
+                                       i);
+            } else if (texture.coordinateGeneration == GL_OBJECT_LINEAR) {
                 texCoordString.sprintf("\n    gl_TexCoord[%i].s = dot( "
                                        "gl_Vertex, gl_ObjectPlaneS[%i] );\n"
                                        "    gl_TexCoord[%i].t = dot( "
@@ -812,14 +906,22 @@ SGShaderGenerator::buildTexCoord(QString& str, bool& fMapReflection, bool& fMapS
                                        "gl_Vertex, gl_ObjectPlaneR[%i] );\n"
                                        "    gl_TexCoord[%i].q = dot( "
                                        "gl_Vertex, gl_ObjectPlaneQ[%i] );\n",
-                                       i, i, i, i, i, i, i, i);
-            } else if (texture.textureCoordinateGeneration == GL_NORMAL_MAP) {
+                                       i,
+                                       i,
+                                       i,
+                                       i,
+                                       i,
+                                       i,
+                                       i,
+                                       i);
+            } else if (texture.coordinateGeneration == GL_NORMAL_MAP) {
                 texCoordString.sprintf("\n    gl_TexCoord[%i] = vec4( normal, 1.0 );\n", i);
             }
         } else {
             texCoordString.sprintf("\n"
                                    "    gl_TexCoord[%i] = gl_MultiTexCoord%i;\n",
-                                   i, i);
+                                   i,
+                                   i);
         }
         str += texCoordString;
     }
@@ -873,7 +975,7 @@ SGShaderGenerator::buildVertMain(QString& str) const
 
     for (int i = 0; i < NUM_TEXTURES; i++) {
         const Texture& texture = m_glState->getTexture(i);
-        if (texture.textureEnabled || lighting) {
+        if (texture.enabled || lighting) {
             str += "    vec3  transformedNormal;\n"
                    "    float alphaFade = 1.0;\n\n";
             break;
@@ -888,7 +990,7 @@ SGShaderGenerator::buildVertMain(QString& str) const
 
     for (int i = 0; i < NUM_TEXTURES; i++) {
         const Texture& texture = m_glState->getTexture(i);
-        if (texture.textureEnabled || lighting) {
+        if (texture.enabled || lighting) {
             str += "    transformedNormal = fnormal();\n";
             break;
         }
@@ -923,8 +1025,8 @@ SGShaderGenerator::buildVertMain(QString& str) const
 }
 
 /*****************************************************************
-* STATIC METHODS TO ADD PREDEFINED FUNCTIONS
-*****************************************************************/
+ * STATIC METHODS TO ADD PREDEFINED FUNCTIONS
+ *****************************************************************/
 
 void
 SGShaderGenerator::addFuncLightDirectional(QString& str) const

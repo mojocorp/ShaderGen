@@ -6,7 +6,7 @@ class QColorButton : public QPushButton
 {
     Q_OBJECT
   public:
-    QColorButton(QWidget* parent = 0);
+    QColorButton(QWidget* parent = nullptr);
 
     //! Returns the currently selected color.
     QColor color() const;

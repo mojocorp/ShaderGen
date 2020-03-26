@@ -30,10 +30,6 @@ SGOglNotebook::SGOglNotebook(SGFixedGLState* glState, QWidget* parent)
     addTab(m_textureEnvPage, tr("TEXTURE ENVIRONMENT SET"));
 }
 
-SGOglNotebook::~SGOglNotebook()
-{
-}
-
 void
 SGOglNotebook::setup()
 {

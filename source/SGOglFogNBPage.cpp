@@ -1,39 +1,39 @@
 /************************************************************************
-*                                                                       *
-*               Copyright (C) 2002-2005  3Dlabs Inc. Ltd.               *
-*                                                                       *
-*                        All rights reserved.                           *
-*                                                                       *
-* Redistribution and use in source and binary forms, with or without    *
-* modification, are permitted provided that the following conditions    *
-* are met:                                                              *
-*                                                                       *
-*     Redistributions of source code must retain the above copyright    *
-*     notice, this list of conditions and the following disclaimer.     *
-*                                                                       *
-*     Redistributions in binary form must reproduce the above           *
-*     copyright notice, this list of conditions and the following       *
-*     disclaimer in the documentation and/or other materials provided   *
-*     with the distribution.                                            *
-*                                                                       *
-*     Neither the name of 3Dlabs Inc. Ltd. nor the names of its         *
-*     contributors may be used to endorse or promote products derived   *
-*     from this software without specific prior written permission.     *
-*                                                                       *
-* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS   *
-* "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT     *
-* LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS     *
-* FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE        *
-* COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, *
-* INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,  *
-* BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;      *
-* LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER      *
-* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT    *
-* LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN     *
-* ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE       *
-* POSSIBILITY OF SUCH DAMAGE.                                           *
-*                                                                       *
-************************************************************************/
+ *                                                                       *
+ *               Copyright (C) 2002-2005  3Dlabs Inc. Ltd.               *
+ *                                                                       *
+ *                        All rights reserved.                           *
+ *                                                                       *
+ * Redistribution and use in source and binary forms, with or without    *
+ * modification, are permitted provided that the following conditions    *
+ * are met:                                                              *
+ *                                                                       *
+ *     Redistributions of source code must retain the above copyright    *
+ *     notice, this list of conditions and the following disclaimer.     *
+ *                                                                       *
+ *     Redistributions in binary form must reproduce the above           *
+ *     copyright notice, this list of conditions and the following       *
+ *     disclaimer in the documentation and/or other materials provided   *
+ *     with the distribution.                                            *
+ *                                                                       *
+ *     Neither the name of 3Dlabs Inc. Ltd. nor the names of its         *
+ *     contributors may be used to endorse or promote products derived   *
+ *     from this software without specific prior written permission.     *
+ *                                                                       *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS   *
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT     *
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS     *
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE        *
+ * COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, *
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,  *
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;      *
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER      *
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT    *
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN     *
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE       *
+ * POSSIBILITY OF SUCH DAMAGE.                                           *
+ *                                                                       *
+ ************************************************************************/
 
 #include "QColorButton.h"
 #include <QBoxLayout>
@@ -50,13 +50,13 @@ SGOglFogNBPage::SGOglFogNBPage(SGFixedGLState* glState, QWidget* parent)
   : QWidget(parent)
   , m_glState(glState)
 {
-    QGridLayout* fogSizer = new QGridLayout(this);
+    auto fogSizer = new QGridLayout(this);
 
-    QRadioButton* fogCoord = new QRadioButton(tr("GL_FOG_COORD"), this);
-    QRadioButton* fogFragmentDepth = new QRadioButton(tr("GL_FRAGMENT_DEPTH"), this);
+    auto fogCoord = new QRadioButton(tr("GL_FOG_COORD"), this);
+    auto fogFragmentDepth = new QRadioButton(tr("GL_FRAGMENT_DEPTH"), this);
 
-    QGroupBox* fogSourceChoiceBox = new QGroupBox(tr("Select Source"), this);
-    QVBoxLayout* fogSourceChoiceSizer = new QVBoxLayout(fogSourceChoiceBox);
+    auto fogSourceChoiceBox = new QGroupBox(tr("Select Source"), this);
+    auto fogSourceChoiceSizer = new QVBoxLayout(fogSourceChoiceBox);
 
     fogSourceChoiceSizer->addWidget(fogCoord);
     fogSourceChoiceSizer->addWidget(fogFragmentDepth);
@@ -67,7 +67,7 @@ SGOglFogNBPage::SGOglFogNBPage(SGFixedGLState* glState, QWidget* parent)
     connect(m_fogSourceChoice, SIGNAL(buttonClicked(int)), SLOT(fogSourceChanged(int)));
 
     GLenum src = 0;
-    switch (glState->getFog().fogSource) {
+    switch (glState->getFog().source) {
         case GL_FOG_COORD:
             src = 0;
             break;
@@ -81,12 +81,12 @@ SGOglFogNBPage::SGOglFogNBPage(SGFixedGLState* glState, QWidget* parent)
 
     m_fogSourceChoice->button(src)->setChecked(true);
 
-    QRadioButton* fogLinear = new QRadioButton(tr("GL_LINEAR"), this);
-    QRadioButton* fogExp = new QRadioButton(tr("GL_EXP"), this);
-    QRadioButton* fogExp2 = new QRadioButton(tr("GL_EXP2"), this);
+    auto fogLinear = new QRadioButton(tr("GL_LINEAR"), this);
+    auto fogExp = new QRadioButton(tr("GL_EXP"), this);
+    auto fogExp2 = new QRadioButton(tr("GL_EXP2"), this);
 
-    QGroupBox* fogModeChoiceBox = new QGroupBox(tr("Select Fog Mode"), this);
-    QVBoxLayout* fogModeChoiceSizer = new QVBoxLayout(fogModeChoiceBox);
+    auto fogModeChoiceBox = new QGroupBox(tr("Select Fog Mode"), this);
+    auto fogModeChoiceSizer = new QVBoxLayout(fogModeChoiceBox);
 
     fogModeChoiceSizer->addWidget(fogLinear);
     fogModeChoiceSizer->addWidget(fogExp);
@@ -99,7 +99,7 @@ SGOglFogNBPage::SGOglFogNBPage(SGFixedGLState* glState, QWidget* parent)
     connect(m_fogModeChoice, SIGNAL(buttonClicked(int)), SLOT(fogModeChanged(int)));
 
     GLenum mode = 1;
-    switch (glState->getFog().fogMode) {
+    switch (glState->getFog().mode) {
         case GL_LINEAR:
             mode = 0;
             break;
@@ -132,10 +132,10 @@ SGOglFogNBPage::SGOglFogNBPage(SGFixedGLState* glState, QWidget* parent)
     m_fogColor = new QColorButton(this);
     connect(m_fogColor, SIGNAL(selected(const QColor&)), SLOT(fogColorChanged(const QColor&)));
 
-    QLabel* fogDensityLbl = new QLabel(tr("GL_FOG_DENSITY"), this);
-    QLabel* fogStartLbl = new QLabel(tr("GL_FOG_START"), this);
-    QLabel* fogEndLbl = new QLabel(tr("GL_FOG_END"), this);
-    QLabel* fogColorLbl = new QLabel(tr("GL_FOG_COLOR"), this);
+    auto fogDensityLbl = new QLabel(tr("GL_FOG_DENSITY"), this);
+    auto fogStartLbl = new QLabel(tr("GL_FOG_START"), this);
+    auto fogEndLbl = new QLabel(tr("GL_FOG_END"), this);
+    auto fogColorLbl = new QLabel(tr("GL_FOG_COLOR"), this);
 
     m_fogCheckBox = new QCheckBox(tr("GL_FOG_ENABLE"), this);
     m_fogCheckBox->setChecked(glState->getFogEnable());
@@ -170,7 +170,7 @@ SGOglFogNBPage::setup()
     m_fogCheckBox->setChecked(m_glState->getFogEnable());
 
     const Fog& fog = m_glState->getFog();
-    switch (fog.fogSource) {
+    switch (fog.source) {
         case GL_FOG_COORD:
             m_fogSourceChoice->button(0)->setChecked(true);
             break;
@@ -179,7 +179,7 @@ SGOglFogNBPage::setup()
             break;
     }
 
-    switch (fog.fogMode) {
+    switch (fog.mode) {
         case GL_LINEAR:
             m_fogModeChoice->button(0)->setChecked(true);
             break;
@@ -191,16 +191,16 @@ SGOglFogNBPage::setup()
             break;
     }
 
-    m_fogDensity->setValue(fog.fogDensity);
-    m_fogStart->setValue(fog.fogStart);
-    m_fogEnd->setValue(fog.fogEnd);
-    m_fogColor->setColor(fog.fogColorVector);
+    m_fogDensity->setValue(fog.density);
+    m_fogStart->setValue(fog.start);
+    m_fogEnd->setValue(fog.end);
+    m_fogColor->setColor(fog.color);
 }
 
 void
 SGOglFogNBPage::fogColorChanged(const QColor& color)
 {
-    m_glState->getFog().fogColorVector = color;
+    m_glState->getFog().color = color;
 
     emit valueChanged();
 }
@@ -215,21 +215,21 @@ SGOglFogNBPage::onCheckbox()
 void
 SGOglFogNBPage::fogDensityChanged(double density)
 {
-    m_glState->getFog().fogDensity = density;
+    m_glState->getFog().density = density;
     emit valueChanged();
 }
 
 void
 SGOglFogNBPage::fogStartChanged(double start)
 {
-    m_glState->getFog().fogStart = start;
+    m_glState->getFog().start = start;
     emit valueChanged();
 }
 
 void
 SGOglFogNBPage::fogEndChanged(double end)
 {
-    m_glState->getFog().fogEnd = end;
+    m_glState->getFog().end = end;
     emit valueChanged();
 }
 
@@ -238,13 +238,13 @@ SGOglFogNBPage::fogModeChanged(int index)
 {
     switch (index) {
         case 0:
-            m_glState->getFog().fogMode = GL_LINEAR;
+            m_glState->getFog().mode = GL_LINEAR;
             break;
         case 1:
-            m_glState->getFog().fogMode = GL_EXP;
+            m_glState->getFog().mode = GL_EXP;
             break;
         case 2:
-            m_glState->getFog().fogMode = GL_EXP2;
+            m_glState->getFog().mode = GL_EXP2;
             break;
         default:
             break;
@@ -257,10 +257,10 @@ SGOglFogNBPage::fogSourceChanged(int index)
 {
     switch (index) {
         case 0:
-            m_glState->getFog().fogSource = GL_FOG_COORD;
+            m_glState->getFog().source = GL_FOG_COORD;
             break;
         case 1:
-            m_glState->getFog().fogSource = GL_FRAGMENT_DEPTH;
+            m_glState->getFog().source = GL_FRAGMENT_DEPTH;
             break;
         default:
             break;

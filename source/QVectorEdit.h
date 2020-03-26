@@ -10,7 +10,7 @@ class QVectorEdit : public QWidget
 {
     Q_OBJECT
   public:
-    QVectorEdit(QWidget* parent = 0);
+    QVectorEdit(QWidget* parent = nullptr);
 
     QVector4D getValue() const;
 

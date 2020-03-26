@@ -7,7 +7,7 @@
 QVectorEdit::QVectorEdit(QWidget* parent)
   : QWidget(parent)
 {
-    QHBoxLayout* layout = new QHBoxLayout(this);
+    auto layout = new QHBoxLayout(this);
     layout->setSpacing(0);
     layout->setMargin(0);
 
@@ -71,14 +71,14 @@ QVectorEdit::setValue(const QVector4D& vec)
 QVector4D
 QVectorEdit::getValue() const
 {
-    return QVector4D(m_x->value(), m_y->value(), m_z->value(), m_w->value());
+    return { float(m_x->value()), float(m_y->value()), float(m_z->value()), float(m_w->value()) };
 }
 
 QSize
 QVectorEdit::sizeHint() const
 {
     QSize s = m_x->sizeHint();
-    return QSize(4 * 40, s.height());
+    return { 4 * 40, s.height() };
 }
 
 void

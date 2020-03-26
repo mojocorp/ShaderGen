@@ -1,39 +1,39 @@
 /************************************************************************
-*                                                                       *
-*               Copyright (C) 2002-2005  3Dlabs Inc. Ltd.               *
-*                                                                       *
-*                        All rights reserved.                           *
-*                                                                       *
-* Redistribution and use in source and binary forms, with or without    *
-* modification, are permitted provided that the following conditions    *
-* are met:                                                              *
-*                                                                       *
-*     Redistributions of source code must retain the above copyright    *
-*     notice, this list of conditions and the following disclaimer.     *
-*                                                                       *
-*     Redistributions in binary form must reproduce the above           *
-*     copyright notice, this list of conditions and the following       *
-*     disclaimer in the documentation and/or other materials provided   *
-*     with the distribution.                                            *
-*                                                                       *
-*     Neither the name of 3Dlabs Inc. Ltd. nor the names of its         *
-*     contributors may be used to endorse or promote products derived   *
-*     from this software without specific prior written permission.     *
-*                                                                       *
-* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS   *
-* "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT     *
-* LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS     *
-* FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE        *
-* COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, *
-* INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,  *
-* BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;      *
-* LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER      *
-* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT    *
-* LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN     *
-* ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE       *
-* POSSIBILITY OF SUCH DAMAGE.                                           *
-*                                                                       *
-************************************************************************/
+ *                                                                       *
+ *               Copyright (C) 2002-2005  3Dlabs Inc. Ltd.               *
+ *                                                                       *
+ *                        All rights reserved.                           *
+ *                                                                       *
+ * Redistribution and use in source and binary forms, with or without    *
+ * modification, are permitted provided that the following conditions    *
+ * are met:                                                              *
+ *                                                                       *
+ *     Redistributions of source code must retain the above copyright    *
+ *     notice, this list of conditions and the following disclaimer.     *
+ *                                                                       *
+ *     Redistributions in binary form must reproduce the above           *
+ *     copyright notice, this list of conditions and the following       *
+ *     disclaimer in the documentation and/or other materials provided   *
+ *     with the distribution.                                            *
+ *                                                                       *
+ *     Neither the name of 3Dlabs Inc. Ltd. nor the names of its         *
+ *     contributors may be used to endorse or promote products derived   *
+ *     from this software without specific prior written permission.     *
+ *                                                                       *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS   *
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT     *
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS     *
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE        *
+ * COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, *
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,  *
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;      *
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER      *
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT    *
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN     *
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE       *
+ * POSSIBILITY OF SUCH DAMAGE.                                           *
+ *                                                                       *
+ ************************************************************************/
 #include "QColorButton.h"
 #include <QGridLayout>
 #include <QGroupBox>
@@ -47,7 +47,7 @@ SGOglMaterialNBPage::SGOglMaterialNBPage(SGFixedGLState* glState, QWidget* paren
   : QWidget(parent)
   , m_glState(glState)
 {
-    QGridLayout* materialSizer = new QGridLayout(this);
+    auto materialSizer = new QGridLayout(this);
 
     m_shininessMaterial = new QDoubleSpinBox(this);
     m_shininessMaterial->setRange(0, 1000);
@@ -65,11 +65,11 @@ SGOglMaterialNBPage::SGOglMaterialNBPage(SGFixedGLState* glState, QWidget* paren
     m_emissionMaterial = new QColorButton(this);
     connect(m_emissionMaterial, SIGNAL(selected(QColor)), SLOT(emissionChanged()));
 
-    QLabel* ambientMatLbl = new QLabel(tr("GL_AMBIENT"), this);
-    QLabel* specularMatLbl = new QLabel(tr("GL_SPECULAR"), this);
-    QLabel* diffuseMatLbl = new QLabel(tr("GL_DIFFUSE"), this);
-    QLabel* shininessLbl = new QLabel(tr("GL_SHININESS"), this);
-    QLabel* emissionLbl = new QLabel(tr("GL_EMISSION"), this);
+    auto ambientMatLbl = new QLabel(tr("GL_AMBIENT"), this);
+    auto specularMatLbl = new QLabel(tr("GL_SPECULAR"), this);
+    auto diffuseMatLbl = new QLabel(tr("GL_DIFFUSE"), this);
+    auto shininessLbl = new QLabel(tr("GL_SHININESS"), this);
+    auto emissionLbl = new QLabel(tr("GL_EMISSION"), this);
 
     materialSizer->addWidget(ambientMatLbl, 0, 0);
     materialSizer->addWidget(diffuseMatLbl, 1, 0);
@@ -95,11 +95,11 @@ void
 SGOglMaterialNBPage::setup()
 {
     const Material& mat = m_glState->getMaterial();
-    m_shininessMaterial->setValue(mat.materialShininess);
-    m_ambientMaterial->setColor(mat.materialAmbientColorVector);
-    m_diffuseMaterial->setColor(mat.materialDiffuseColorVector);
-    m_specularMaterial->setColor(mat.materialSpecularColorVector);
-    m_emissionMaterial->setColor(mat.materialEmissionColorVector);
+    m_shininessMaterial->setValue(mat.shininess);
+    m_ambientMaterial->setColor(mat.ambientColor);
+    m_diffuseMaterial->setColor(mat.diffuseColor);
+    m_specularMaterial->setColor(mat.specularColor);
+    m_emissionMaterial->setColor(mat.emissionColor);
 }
 
 void
@@ -107,7 +107,7 @@ SGOglMaterialNBPage::ambientChanged()
 {
     Material& mat = m_glState->getMaterial();
 
-    mat.materialAmbientColorVector = m_ambientMaterial->color();
+    mat.ambientColor = m_ambientMaterial->color();
 
     emit valueChanged();
 }
@@ -117,7 +117,7 @@ SGOglMaterialNBPage::diffuseChanged()
 {
     Material& mat = m_glState->getMaterial();
 
-    mat.materialDiffuseColorVector = m_diffuseMaterial->color();
+    mat.diffuseColor = m_diffuseMaterial->color();
 
     emit valueChanged();
 }
@@ -127,7 +127,7 @@ SGOglMaterialNBPage::specularChanged()
 {
     Material& mat = m_glState->getMaterial();
 
-    mat.materialSpecularColorVector = m_specularMaterial->color();
+    mat.specularColor = m_specularMaterial->color();
 
     emit valueChanged();
 }
@@ -137,7 +137,7 @@ SGOglMaterialNBPage::emissionChanged()
 {
     Material& mat = m_glState->getMaterial();
 
-    mat.materialEmissionColorVector = m_emissionMaterial->color();
+    mat.emissionColor = m_emissionMaterial->color();
 
     emit valueChanged();
 }
@@ -145,7 +145,7 @@ SGOglMaterialNBPage::emissionChanged()
 void
 SGOglMaterialNBPage::shininessChanged()
 {
-    m_glState->getMaterial().materialShininess = m_shininessMaterial->value();
+    m_glState->getMaterial().shininess = m_shininessMaterial->value();
 
     emit valueChanged();
 }
