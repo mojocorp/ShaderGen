@@ -37,18 +37,22 @@
 
 #pragma once
 
+#include <QOpenGLFunctions_2_1>
 #include <QOpenGLShaderProgram>
 #include <QOpenGLWidget>
 
 #include "SGCanvasMouseHandler.h"
-#include "SGModels.h"
 
+#include <array>
 #include <memory>
 
 class SGFrame;
 class SGFixedGLState;
+class TParametricSurface;
 
-class SGCanvas : public QOpenGLWidget
+class SGCanvas
+  : public QOpenGLWidget
+  , protected QOpenGLFunctions_2_1
 {
   public:
     SGCanvas(SGFrame* frame);
@@ -75,7 +79,18 @@ class SGCanvas : public QOpenGLWidget
     void initializeGL() override;
     void paintGL() override;
     void resizeGL(int width, int height) override;
-    void setModel(SGModels::ModelId id) { m_modelCurrent = id; }
+
+    enum ModelId
+    {
+        ModelTorus = 0,
+        ModelPlane,
+        ModelSphere,
+        ModelConic,
+        ModelTrefoil,
+        ModelKlein
+    };
+    void setModel(ModelId id) { m_modelCurrent = id; }
+
     QVector2D getNormalizedPosition(const QPoint& pos) const;
 
   protected:
@@ -88,9 +103,9 @@ class SGCanvas : public QOpenGLWidget
     SGFixedGLState* getGLState();
 
     GLMode m_mode;
-    std::unique_ptr<SGModels> m_models;
     SGCanvasMouseHandler m_mouse;
-    SGModels::ModelId m_modelCurrent;
+    ModelId m_modelCurrent;
+    std::array<std::unique_ptr<TParametricSurface>, 6> m_models;
     SGFrame* m_frame;
 
     QMatrix4x4 m_modelView;
@@ -101,4 +116,11 @@ class SGCanvas : public QOpenGLWidget
 
     void setupFromFixedState();
     void writeMessage(const QString& str);
+    void drawModel(ModelId id);
+
+    void glFog(GLenum pname, const QColor& c);
+    void glLight(GLenum light, GLenum pname, const QColor& c);
+    void glMaterial(GLenum face, GLenum pname, const QColor& c);
+    void glLight(GLenum light, GLenum pname, const QVector3D& v);
+    void glLight(GLenum light, GLenum pname, const QVector4D& v);
 };

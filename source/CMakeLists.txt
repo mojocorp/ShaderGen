@@ -14,7 +14,6 @@ set(HEADERS
     globals.h
     SGFrame.h
     SGFixedGLState.h
-    SGModels.h
     SGOglNotebook.h
     SGSurfaces.h
     SGShaderGenerator.h
@@ -35,7 +34,6 @@ set(HEADERS
 set(SOURCES
     SGFrame.cpp
     SGFixedGLState.cpp
-    SGModels.cpp
     SGOglNotebook.cpp
     SGSurfaces.cpp
     SGShaderGenerator.cpp

@@ -37,20 +37,23 @@
 
 #pragma once
 
-#include <QOpenGLFunctions_2_0>
 #include <QVector2D>
 #include <QVector3D>
 #include <QVector>
 
 // Abstract base class representing a parametric surface.
-class TParametricSurface : protected QOpenGLFunctions_2_0
+class TParametricSurface
 {
   public:
     TParametricSurface();
     virtual ~TParametricSurface() = default;
 
     void generate();
-    void draw();
+
+    int slices() const { return m_slices; }
+    const QVector<QVector3D>& vertices() const { return m_vertices; }
+    const QVector<QVector3D>& normals() const { return m_normals; }
+    const QVector<QVector2D>& texCoords() const { return m_texCoords; }
 
   protected:
     virtual void eval(QVector2D& domain, QVector3D& range) const = 0;

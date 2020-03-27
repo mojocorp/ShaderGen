@@ -60,8 +60,8 @@ class SGTextures : protected QOpenGLFunctions_2_0
     void release(int unit);
 
   private:
-    void glTexEnvf(GLenum target, GLenum pname, const QColor& c);
-    void glTexGenf(GLenum coord, GLenum pname, const QVector4D& v);
+    void glTexEnv(GLenum target, GLenum pname, const QColor& c);
+    void glTexGen(GLenum coord, GLenum pname, const QVector4D& v);
 
     SGFrame* m_frame;
     SGFixedGLState* m_glState;

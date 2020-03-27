@@ -36,9 +36,6 @@
  ************************************************************************/
 
 #include "SGSurfaces.h"
-#include "globals.h"
-
-#include <QOpenGLFunctions>
 
 #define _USE_MATH_DEFINES
 #include <cmath>
@@ -81,35 +78,6 @@ TParametricSurface::generate()
             m_texCoords.push_back(domain);
             m_vertices.push_back(p0);
         }
-    }
-}
-
-// Draw a parametric surface.  'slices' is the tesselation factor.  Returns the
-// number of vertices.
-void
-TParametricSurface::draw()
-{
-    initializeOpenGLFunctions();
-
-    glEnableClientState(GL_NORMAL_ARRAY);
-    glNormalPointer(GL_FLOAT, sizeof(QVector3D), m_normals.data());
-
-    for (int i = 0; i < NUM_TEXTURES; i++) {
-        glClientActiveTexture(GL_TEXTURE0 + i);
-        glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-        glTexCoordPointer(2, GL_FLOAT, sizeof(QVector2D), m_texCoords.data());
-    }
-    glEnableClientState(GL_VERTEX_ARRAY);
-    glVertexPointer(3, GL_FLOAT, sizeof(QVector3D), m_vertices.data());
-
-    for (int i = 0; i < m_slices; i++) {
-        glDrawArrays(GL_TRIANGLE_STRIP, i * m_slices, m_slices);
-    }
-    glDisableClientState(GL_VERTEX_ARRAY);
-    glDisableClientState(GL_NORMAL_ARRAY);
-    for (int i = 0; i < NUM_TEXTURES; i++) {
-        glClientActiveTexture(GL_TEXTURE0 + i);
-        glDisableClientState(GL_TEXTURE_COORD_ARRAY);
     }
 }
 

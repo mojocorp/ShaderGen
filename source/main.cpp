@@ -15,7 +15,7 @@ main(int argc, char* argv[])
     QApplication::setQuitOnLastWindowClosed(true);
 
     QSurfaceFormat format;
-    format.setVersion(2, 0);
+    format.setVersion(2, 1);
     format.setProfile(QSurfaceFormat::CompatibilityProfile);
     QSurfaceFormat::setDefaultFormat(format);
 

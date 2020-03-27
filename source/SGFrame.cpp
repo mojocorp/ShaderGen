@@ -298,17 +298,17 @@ void
 SGFrame::modelActionTriggered(QAction* action)
 {
     if (action == m_torusAct) {
-        m_canvas->setModel(SGModels::ModelTorus);
+        m_canvas->setModel(SGCanvas::ModelTorus);
     } else if (action == m_sphereAct) {
-        m_canvas->setModel(SGModels::ModelSphere);
+        m_canvas->setModel(SGCanvas::ModelSphere);
     } else if (action == m_trefoilAct) {
-        m_canvas->setModel(SGModels::ModelTrefoil);
+        m_canvas->setModel(SGCanvas::ModelTrefoil);
     } else if (action == m_kleinAct) {
-        m_canvas->setModel(SGModels::ModelKlein);
+        m_canvas->setModel(SGCanvas::ModelKlein);
     } else if (action == m_conicAct) {
-        m_canvas->setModel(SGModels::ModelConic);
+        m_canvas->setModel(SGCanvas::ModelConic);
     } else if (action == m_planeAct) {
-        m_canvas->setModel(SGModels::ModelPlane);
+        m_canvas->setModel(SGCanvas::ModelPlane);
     }
 
     m_canvas->update();

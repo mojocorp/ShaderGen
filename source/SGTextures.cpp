@@ -106,15 +106,15 @@ SGTextures::bind(int id, int unit)
         glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, texture.coordinateGeneration);
         PrintOpenGLError();
         if (texture.coordinateGeneration == GL_OBJECT_LINEAR) {
-            glTexGenf(GL_S, GL_OBJECT_PLANE, texture.objectPlaneCoeffS);
-            glTexGenf(GL_T, GL_OBJECT_PLANE, texture.objectPlaneCoeffT);
+            glTexGen(GL_S, GL_OBJECT_PLANE, texture.objectPlaneCoeffS);
+            glTexGen(GL_T, GL_OBJECT_PLANE, texture.objectPlaneCoeffT);
         }
         PrintOpenGLError();
         if (texture.coordinateGeneration == GL_EYE_LINEAR) {
             PrintOpenGLError();
-            glTexGenf(GL_S, GL_EYE_PLANE, texture.eyePlaneCoeffS);
+            glTexGen(GL_S, GL_EYE_PLANE, texture.eyePlaneCoeffS);
             PrintOpenGLError();
-            glTexGenf(GL_T, GL_EYE_PLANE, texture.eyePlaneCoeffT);
+            glTexGen(GL_T, GL_EYE_PLANE, texture.eyePlaneCoeffT);
         }
         PrintOpenGLError();
         glEnable(GL_TEXTURE_GEN_S);
@@ -125,7 +125,7 @@ SGTextures::bind(int id, int unit)
 
     glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, texture.applicationMethod);
 
-    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, texture.texEnvColor);
+    glTexEnv(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, texture.texEnvColor);
 
     PrintOpenGLError();
 
@@ -155,16 +155,16 @@ SGTextures::release(int unit)
 }
 
 void
-SGTextures::glTexEnvf(GLenum target, GLenum pname, const QColor& c)
+SGTextures::glTexEnv(GLenum target, GLenum pname, const QColor& c)
 {
-    const std::array<GLfloat, 3> color = { (GLfloat)c.redF(),
-                                           (GLfloat)c.greenF(),
-                                           (GLfloat)c.blueF() };
+    const std::array<GLfloat, 4> color = {
+        (GLfloat)c.redF(), (GLfloat)c.greenF(), (GLfloat)c.blueF(), 1.f
+    };
     glTexEnvfv(target, pname, color.data());
 }
 
 void
-SGTextures::glTexGenf(GLenum coord, GLenum pname, const QVector4D& v)
+SGTextures::glTexGen(GLenum coord, GLenum pname, const QVector4D& v)
 {
     const std::array<GLfloat, 4> vector = { v.x(), v.y(), v.z(), v.w() };
     glTexGenfv(coord, pname, vector.data());

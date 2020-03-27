@@ -43,57 +43,11 @@
 #include "SGFixedGLState.h"
 #include "SGFrame.h"
 #include "SGShaderTextWindow.h"
+#include "SGSurfaces.h"
 #include "SGTextures.h"
 
 #include <array>
 #include <cstdio>
-
-namespace {
-/******************************************************
-The following functions are used to convert
-    data back and forth between OpenGL and Qt.
-******************************************************/
-inline void
-glFogf(GLenum pname, const QColor& c)
-{
-    const std::array<GLfloat, 3> color = { (GLfloat)c.redF(),
-                                           (GLfloat)c.greenF(),
-                                           (GLfloat)c.blueF() };
-    glFogfv(pname, color.data());
-}
-
-inline void
-glLightf(GLenum light, GLenum pname, const QColor& c)
-{
-    const std::array<GLfloat, 3> color = { (GLfloat)c.redF(),
-                                           (GLfloat)c.greenF(),
-                                           (GLfloat)c.blueF() };
-    glLightfv(light, pname, color.data());
-}
-
-inline void
-glMaterialf(GLenum face, GLenum pname, const QColor& c)
-{
-    const std::array<GLfloat, 3> color = { (GLfloat)c.redF(),
-                                           (GLfloat)c.greenF(),
-                                           (GLfloat)c.blueF() };
-    glMaterialfv(face, pname, color.data());
-}
-
-inline void
-glLightf(GLenum light, GLenum pname, const QVector3D& v)
-{
-    const std::array<GLfloat, 3> vector = { v.x(), v.y(), v.z() };
-    glLightfv(light, pname, vector.data());
-}
-
-inline void
-glLightf(GLenum light, GLenum pname, const QVector4D& v)
-{
-    const std::array<GLfloat, 4> vector = { v.x(), v.y(), v.z(), v.w() };
-    glLightfv(light, pname, vector.data());
-}
-}
 
 SGCanvas::SGCanvas(SGFrame* frame)
   : QOpenGLWidget(frame)
@@ -104,8 +58,18 @@ SGCanvas::SGCanvas(SGFrame* frame)
     setFocusPolicy(Qt::StrongFocus);
     m_mode = GLModeChoiceFixed;
     m_frame = frame;
-    m_models = std::make_unique<SGModels>();
-    m_modelCurrent = SGModels::ModelTorus;
+    m_modelCurrent = ModelTorus;
+
+    m_models[ModelTorus] = std::make_unique<TTorus>();
+    m_models[ModelPlane] = std::make_unique<TPlane>();
+    m_models[ModelSphere] = std::make_unique<TSphere>();
+    m_models[ModelConic] = std::make_unique<TConic>();
+    m_models[ModelTrefoil] = std::make_unique<TTrefoil>();
+    m_models[ModelKlein] = std::make_unique<TKlein>();
+
+    for (auto& surface : m_models) {
+        surface->generate();
+    }
 }
 
 SGFixedGLState*
@@ -117,6 +81,8 @@ SGCanvas::getGLState()
 void
 SGCanvas::initializeGL()
 {
+    initializeOpenGLFunctions();
+
     // check OpenGl implementation
     const int gl_major = context()->format().majorVersion();
 
@@ -209,7 +175,7 @@ SGCanvas::paintGL()
     glPushMatrix();
 
     glMultMatrixf(m_modelView.constData());
-    m_models->drawModel(m_modelCurrent);
+    drawModel(m_modelCurrent);
     PrintOpenGLError();
     glPopMatrix();
 
@@ -237,11 +203,11 @@ SGCanvas::setupFromFixedState()
         for (int i = 0; i < 8; i++) {
             const Light& light = glState->getLight(i);
             if (light.enabled) {
-                glLightf(GL_LIGHT0 + i, GL_POSITION, light.position);
-                glLightf(GL_LIGHT0 + i, GL_AMBIENT, light.ambientColor);
-                glLightf(GL_LIGHT0 + i, GL_DIFFUSE, light.diffuseColor);
-                glLightf(GL_LIGHT0 + i, GL_SPECULAR, light.specularColor);
-                glLightf(GL_LIGHT0 + i, GL_SPOT_DIRECTION, light.spotDirection);
+                glLight(GL_LIGHT0 + i, GL_POSITION, light.position);
+                glLight(GL_LIGHT0 + i, GL_AMBIENT, light.ambientColor);
+                glLight(GL_LIGHT0 + i, GL_DIFFUSE, light.diffuseColor);
+                glLight(GL_LIGHT0 + i, GL_SPECULAR, light.specularColor);
+                glLight(GL_LIGHT0 + i, GL_SPOT_DIRECTION, light.spotDirection);
                 glLightf(GL_LIGHT0 + i, GL_SPOT_EXPONENT, light.spotExponent);
                 glLightf(GL_LIGHT0 + i, GL_SPOT_CUTOFF, light.spotCutoff);
                 glLightf(GL_LIGHT0 + i, GL_CONSTANT_ATTENUATION, light.constantAttenuation);
@@ -275,22 +241,49 @@ SGCanvas::setupFromFixedState()
     glDepthFunc(GL_LESS);
     glEnable(GL_DEPTH_TEST);
     const Material& material = glState->getMaterial();
-    glMaterialf(GL_FRONT, GL_DIFFUSE, material.diffuseColor);
-    glMaterialf(GL_FRONT, GL_SPECULAR, material.specularColor);
-    glMaterialf(GL_FRONT, GL_AMBIENT, material.ambientColor);
+    glMaterial(GL_FRONT, GL_DIFFUSE, material.diffuseColor);
+    glMaterial(GL_FRONT, GL_SPECULAR, material.specularColor);
+    glMaterial(GL_FRONT, GL_AMBIENT, material.ambientColor);
     glMaterialf(GL_FRONT, GL_SHININESS, material.shininess);
-    glMaterialf(GL_FRONT, GL_EMISSION, material.emissionColor);
+    glMaterial(GL_FRONT, GL_EMISSION, material.emissionColor);
 
     if (glState->getFogEnable()) {
         glEnable(GL_FOG);
         glFogi(GL_FOG_MODE, glState->getFog().mode);
         glFogi(GL_FOG_COORD_SRC, glState->getFog().source);
-        glFogf(GL_FOG_COLOR, glState->getFog().color);
+        glFog(GL_FOG_COLOR, glState->getFog().color);
         glFogf(GL_FOG_DENSITY, glState->getFog().density);
         glFogf(GL_FOG_START, glState->getFog().start);
         glFogf(GL_FOG_END, glState->getFog().end);
     } else {
         glDisable(GL_FOG);
+    }
+}
+
+void
+SGCanvas::drawModel(ModelId id)
+{
+    const TParametricSurface* surface = m_models[id].get();
+
+    glEnableClientState(GL_NORMAL_ARRAY);
+    glNormalPointer(GL_FLOAT, sizeof(QVector3D), surface->normals().data());
+
+    for (int i = 0; i < NUM_TEXTURES; i++) {
+        glClientActiveTexture(GL_TEXTURE0 + i);
+        glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+        glTexCoordPointer(2, GL_FLOAT, sizeof(QVector2D), surface->texCoords().data());
+    }
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glVertexPointer(3, GL_FLOAT, sizeof(QVector3D), surface->vertices().data());
+
+    for (int i = 0; i < surface->slices(); i++) {
+        glDrawArrays(GL_TRIANGLE_STRIP, i * surface->slices(), surface->slices());
+    }
+    glDisableClientState(GL_VERTEX_ARRAY);
+    glDisableClientState(GL_NORMAL_ARRAY);
+    for (int i = 0; i < NUM_TEXTURES; i++) {
+        glClientActiveTexture(GL_TEXTURE0 + i);
+        glDisableClientState(GL_TEXTURE_COORD_ARRAY);
     }
 }
 
@@ -423,4 +416,49 @@ SGCanvas::writeMessage(const QString& str)
 {
     m_frame->setStatusText(str);
     m_frame->getShaderTextWindow()->log(str);
+}
+
+/******************************************************
+The following functions are used to convert
+    data back and forth between OpenGL and Qt.
+******************************************************/
+void
+SGCanvas::glFog(GLenum pname, const QColor& c)
+{
+    const std::array<GLfloat, 4> color = {
+        (GLfloat)c.redF(), (GLfloat)c.greenF(), (GLfloat)c.blueF(), 1.f
+    };
+    glFogfv(pname, color.data());
+}
+
+void
+SGCanvas::glLight(GLenum light, GLenum pname, const QColor& c)
+{
+    const std::array<GLfloat, 4> color = {
+        (GLfloat)c.redF(), (GLfloat)c.greenF(), (GLfloat)c.blueF(), 1.f
+    };
+    glLightfv(light, pname, color.data());
+}
+
+void
+SGCanvas::glMaterial(GLenum face, GLenum pname, const QColor& c)
+{
+    const std::array<GLfloat, 4> color = {
+        (GLfloat)c.redF(), (GLfloat)c.greenF(), (GLfloat)c.blueF(), 1.f
+    };
+    glMaterialfv(face, pname, color.data());
+}
+
+void
+SGCanvas::glLight(GLenum light, GLenum pname, const QVector3D& v)
+{
+    const std::array<GLfloat, 3> vector = { v.x(), v.y(), v.z() };
+    glLightfv(light, pname, vector.data());
+}
+
+void
+SGCanvas::glLight(GLenum light, GLenum pname, const QVector4D& v)
+{
+    const std::array<GLfloat, 4> vector = { v.x(), v.y(), v.z(), v.w() };
+    glLightfv(light, pname, vector.data());
 }
