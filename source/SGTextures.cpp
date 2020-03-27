@@ -66,7 +66,6 @@ SGTextures::SGTextures(SGFrame* frame, SGFixedGLState* state)
     m_textureNames << "metalSheetNormal";
 
     m_textures.resize(m_textureNames.size());
-    m_textures.fill(nullptr);
 }
 
 void
@@ -74,21 +73,20 @@ SGTextures::bind(int id, int unit)
 {
     initializeOpenGLFunctions();
 
-    for (int i = 0; i < m_textures.size(); i++) {
-        if (!m_textures[i]) {
-            const QImage image = QImage(":/textures/" + m_textureNames[i] + ".png").mirrored();
-            if (image.isNull()) {
-                QMessageBox::critical(m_frame,
-                                      "GLSL ShaderGen",
-                                      QString("Unable to load image %1").arg(m_textureNames[i]));
-                continue;
-            }
-            m_textures[i] = new QOpenGLTexture(image, QOpenGLTexture::GenerateMipMaps);
-            m_textures[i]->setMinificationFilter(QOpenGLTexture::LinearMipMapLinear);
-            m_textures[i]->setMagnificationFilter(QOpenGLTexture::Linear);
-            m_textures[i]->setWrapMode(QOpenGLTexture::Repeat);
+    if (!m_textures[id]) {
+        const QImage image = QImage(":/textures/" + m_textureNames[id] + ".png").mirrored();
+        if (image.isNull()) {
+            QMessageBox::critical(m_frame,
+                                  "GLSL ShaderGen",
+                                  QString("Unable to load image %1").arg(m_textureNames[id]));
+            return;
         }
+        m_textures[id] = new QOpenGLTexture(image, QOpenGLTexture::GenerateMipMaps);
+        m_textures[id]->setMinificationFilter(QOpenGLTexture::LinearMipMapLinear);
+        m_textures[id]->setMagnificationFilter(QOpenGLTexture::Linear);
+        m_textures[id]->setWrapMode(QOpenGLTexture::Repeat);
     }
+
     PrintOpenGLError();
 
     glActiveTexture(GL_TEXTURE0 + unit);

@@ -38,7 +38,7 @@
 #pragma once
 
 #include <QColor>
-#include <QOpenGLFunctions_2_0>
+#include <QOpenGLFunctions_2_1>
 #include <QStringList>
 #include <QVector4D>
 #include <QVector>
@@ -48,7 +48,7 @@ class QOpenGLTexture;
 class SGFixedGLState;
 class SGFrame;
 
-class SGTextures : protected QOpenGLFunctions_2_0
+class SGTextures : protected QOpenGLFunctions_2_1
 {
   public:
     SGTextures(SGFrame* frame, SGFixedGLState* state);
