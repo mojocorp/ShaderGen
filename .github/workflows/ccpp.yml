@@ -1,6 +1,12 @@
 name: C/C++ CI
 
-on: [push]
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+env:
+  BUILD_TYPE: Release
 
 jobs:
   build:
@@ -11,22 +17,17 @@ jobs:
     runs-on: ${{ matrix.os }}
     
     steps:
-    - uses: actions/checkout@v2
-    - run: mkdir build
+    - uses: actions/checkout@v3
     - name: Install Qt
-      uses: jurplel/install-qt-action@v2.4.0
+      uses: jurplel/install-qt-action@v3
       with:
         version: 5.12.7
     - name: Configure
-      working-directory: build
-      shell: bash
-      run: cmake -DCMAKE_BUILD_TYPE=Release ..
+      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
     - name: Build
-      working-directory: build
-      shell: bash
-      run: cmake --build . --config Release
+      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
     - name: Pack
-      working-directory: build
+      working-directory: ${{github.workspace}}/build
       shell: bash
       run: |
           if [ "${{ matrix.os }}" == "windows-latest" ]; then
