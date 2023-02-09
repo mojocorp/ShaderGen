@@ -53,7 +53,8 @@ const float LOG2E = 1.442695f;
 
 SGShaderGenerator::SGShaderGenerator(const SGFixedGLState* state)
   : m_glState(const_cast<SGFixedGLState*>(state))
-{}
+{
+}
 
 /**********************************************
  * FRAGMENT SHADER
@@ -172,11 +173,10 @@ SGShaderGenerator::buildFragTex(QString& str) const
         if (texture.enabled) {
             switch (texture.applicationMethod) {
                 case GL_MODULATE:
-                    fragmentTextureString.sprintf("    color *= "
-                                                  "texture2D(texUnit%i, "
-                                                  "gl_TexCoord[%i].xy);\n\n",
-                                                  i,
-                                                  i);
+                    fragmentTextureString = QString("    color *= "
+                                                    "texture2D(texUnit%1, "
+                                                    "gl_TexCoord[%2].xy);\n\n")
+                                              .arg(i).arg(i);
                     break;
                 case GL_DECAL:
                     fragmentTextureString.sprintf(
@@ -210,11 +210,10 @@ SGShaderGenerator::buildFragTex(QString& str) const
                                                   i);
                     break;
                 case GL_REPLACE:
-                    fragmentTextureString.sprintf("    color = "
-                                                  "texture2D(texUnit%i, "
-                                                  "gl_TexCoord[%i].xy);\n\n",
-                                                  i,
-                                                  i);
+                    fragmentTextureString = QString("    color = "
+                                                    "texture2D(texUnit%1, "
+                                                    "gl_TexCoord[%2].xy);\n\n")
+                                              .arg(i).arg(i);
                     break;
                 case GL_ADD:
                     fragmentTextureString.sprintf("    vec4 texture%i = texture2D(texUnit%i, "
@@ -266,27 +265,25 @@ SGShaderGenerator::buildFragTex(QString& str) const
                         }
                     } else if (combineSrc0 == GL_CONSTANT) {
                         if (combineOperand0 == GL_SRC_COLOR) {
-                            Arg0.sprintf("    vec4 texUnit%iArg0 = "
-                                         "gl_TextureEnvColor[%i];\n",
-                                         i,
-                                         i);
+                            Arg0 = QString("    vec4 texUnit%1Arg0 = "
+                                           "gl_TextureEnvColor[%2];\n")
+                                     .arg(i).arg(i);
                         } else if (combineOperand0 == GL_ONE_MINUS_SRC_COLOR) {
-                            Arg0.sprintf("    vec4 texUnit%iArg0 = vec4(1.0) - "
-                                         "gl_TextureEnvColor[%i];\n",
-                                         i,
-                                         i);
+                            Arg0 = QString("    vec4 texUnit%1Arg0 = vec4(1.0) - "
+                                           "gl_TextureEnvColor[%2];\n")
+                                     .arg(i).arg(i);
                         }
                     } else if (combineSrc0 == GL_PRIMARY_COLOR) {
                         if (combineOperand0 == GL_SRC_COLOR) {
-                            Arg0.sprintf("    vec4 texUnit%iArg0 = gl_Color;", i);
+                            Arg0 = QString("    vec4 texUnit%1Arg0 = gl_Color;").arg(i);
                         } else if (combineOperand0 == GL_ONE_MINUS_SRC_COLOR) {
-                            Arg0.sprintf("    vec4 texUnit%iArg0 = vec4(1.0) - gl_Color;", i);
+                            Arg0 = QString("    vec4 texUnit%1Arg0 = vec4(1.0) - gl_Color;").arg(i);
                         }
                     } else if (combineSrc0 == GL_PREVIOUS) {
                         if (combineOperand0 == GL_SRC_COLOR) {
-                            Arg0.sprintf("    vec4 texUnit%iArg0 = color;", i);
+                            Arg0 = QString("    vec4 texUnit%1Arg0 = color;").arg(i);
                         } else if (combineOperand0 == GL_ONE_MINUS_SRC_COLOR) {
-                            Arg0.sprintf("    vec4 texUnit%iArg0 = vec4(1.0) - color;", i);
+                            Arg0 = QString("    vec4 texUnit%1Arg0 = vec4(1.0) - color;").arg(i);
                         }
                     }
                     if (combineSrc1 == GL_TEXTURE) {
@@ -313,29 +310,27 @@ SGShaderGenerator::buildFragTex(QString& str) const
                         }
                     } else if (combineSrc1 == GL_CONSTANT) {
                         if (combineOperand1 == GL_SRC_COLOR) {
-                            Arg1.sprintf("    vec4 texUnit%iArg1 = "
-                                         "gl_TextureEnvColor[%i];\n",
-                                         i,
-                                         i);
+                            Arg1 = QString("    vec4 texUnit%1Arg1 = "
+                                           "gl_TextureEnvColor[%2];\n")
+                                     .arg(i).arg(i);
                         } else if (combineOperand1 == GL_ONE_MINUS_SRC_COLOR) {
-                            Arg1.sprintf("    vec4 texUnit%iArg1 = vec4(1.0) - "
-                                         "gl_TextureEnvColor[%i];\n",
-                                         i,
-                                         i);
+                            Arg1 = QString("    vec4 texUnit%1Arg1 = vec4(1.0) - "
+                                           "gl_TextureEnvColor[%2];\n")
+                                     .arg(i).arg(i);
                         }
                     } else if (combineSrc1 == GL_PRIMARY_COLOR) {
                         if (combineOperand1 == GL_SRC_COLOR) {
-                            Arg1.sprintf("    vec4 texUnit%iArg1 = gl_Color;\n", i);
+                            Arg1 = QString("    vec4 texUnit%1Arg1 = gl_Color;\n").arg(i);
                         } else if (combineOperand1 == GL_ONE_MINUS_SRC_COLOR) {
-                            Arg1.sprintf("    vec4 texUnit%iArg1 = vec4(1.0) - "
-                                         "gl_Color;\n",
-                                         i);
+                            Arg1 = QString("    vec4 texUnit%1Arg1 = vec4(1.0) - "
+                                           "gl_Color;\n")
+                                     .arg(i);
                         }
                     } else if (combineSrc1 == GL_PREVIOUS) {
                         if (combineOperand1 == GL_SRC_COLOR) {
-                            Arg1.sprintf("    vec4 texUnit%iArg1 = color;\n", i);
+                            Arg1 = QString("    vec4 texUnit%1Arg1 = color;\n").arg(i);
                         } else if (combineOperand1 == GL_ONE_MINUS_SRC_COLOR) {
-                            Arg1.sprintf("   vec4 texUnit%iArg1 = vec4(1.0) - color;\n", i);
+                            Arg1 = QString("   vec4 texUnit%1Arg1 = vec4(1.0) - color;\n").arg(i);
                         }
                     }
                     if (combineSrc2 == GL_TEXTURE) {
@@ -362,102 +357,86 @@ SGShaderGenerator::buildFragTex(QString& str) const
                         }
                     } else if (combineSrc2 == GL_CONSTANT) {
                         if (combineOperand2 == GL_SRC_COLOR) {
-                            Arg2.sprintf("    vec4 texUnit%iArg2 = "
-                                         "gl_TextureEnvColor[%i];\n",
-                                         i,
-                                         i);
+                            Arg2 = QString("    vec4 texUnit%1Arg2 = "
+                                           "gl_TextureEnvColor[%2];\n")
+                                     .arg(i).arg(i);
                         } else if (combineOperand2 == GL_ONE_MINUS_SRC_COLOR) {
-                            Arg2.sprintf("    vec4 texUnit%iArg2 = vec4(1.0) - "
-                                         "gl_TextureEnvColor[%i];\n",
-                                         i,
-                                         i);
+                            Arg2 = QString("    vec4 texUnit%1Arg2 = vec4(1.0) - "
+                                           "gl_TextureEnvColor[%2];\n")
+                                     .arg(i).arg(i);
                         }
                     } else if (combineSrc2 == GL_PRIMARY_COLOR) {
                         if (combineOperand2 == GL_SRC_COLOR) {
-                            Arg2.sprintf("    vec4 texUnit%iArg2 = gl_Color;\n", i);
+                            Arg2 = QString("    vec4 texUnit%1Arg2 = gl_Color;\n").arg(i);
                         } else if (combineOperand2 == GL_ONE_MINUS_SRC_COLOR) {
-                            Arg2.sprintf("    vec4 texUnit%iArg2 = vec4(1.0) - "
-                                         "gl_Color;\n",
-                                         i);
+                            Arg2 = QString("    vec4 texUnit%1Arg2 = vec4(1.0) - "
+                                           "gl_Color;\n")
+                                     .arg(i);
                         }
                     } else if (combineSrc2 == GL_PREVIOUS) {
                         if (combineOperand2 == GL_SRC_COLOR) {
-                            Arg2.sprintf("    vec4 texUnit%iArg2 = color;\n", i);
+                            Arg2 = QString("    vec4 texUnit%1Arg2 = color;\n").arg(i);
                         } else if (combineOperand2 == GL_ONE_MINUS_SRC_COLOR) {
-                            Arg2.sprintf("    vec4 texUnit%iArg2 = vec4(1.0) - color;\n", i);
+                            Arg2 = QString("    vec4 texUnit%1Arg2 = vec4(1.0) - color;\n").arg(i);
                         }
                     }
                     switch (combineMode) {
                         case GL_REPLACE:
                             if (combineRGBScale > 1) {
                                 fragmentTextureString =
-                                  Arg0 + QString().sprintf("    color = clamp(%.1f * "
-                                                           "texUnit%iArg0, 0.0, "
-                                                           "1.0);\n",
-                                                           (float)combineRGBScale,
-                                                           i);
+                                  Arg0 + QString("    color = clamp(%1 * "
+                                                           "texUnit%2Arg0, 0.0, "
+                                                           "1.0);\n").arg((float)combineRGBScale).arg(i);
                             } else {
-                                fragmentTextureString =
-                                  Arg0 + QString().sprintf("    color = "
-                                                           "clamp(texUnit%iArg0, 0.0, "
-                                                           "1.0);\n",
-                                                           i);
+                                fragmentTextureString = Arg0 + QString("    color = "
+                                                                       "clamp(texUnit%1Arg0, 0.0, "
+                                                                       "1.0);\n")
+                                                                 .arg(i);
                             }
                             break;
                         case GL_MODULATE:
                             if (combineRGBScale > 1) {
                                 fragmentTextureString =
                                   Arg0 + Arg1 +
-                                  QString().sprintf("    color = clamp(%.1f * texUnit%iArg0 * "
-                                                    "texUnit%iArg1, 0.0, 1.0);\n",
-                                                    (float)combineRGBScale,
-                                                    i,
-                                                    i);
+                                  QString("    color = clamp(%1 * texUnit%2Arg0 * "
+                                          "texUnit%3Arg1, 0.0, 1.0);\n")
+                                    .arg((float)combineRGBScale).arg(i).arg(i);
                             } else {
-                                fragmentTextureString =
-                                  Arg0 + Arg1 +
-                                  QString().sprintf("    color = clamp(texUnit%iArg0 * "
-                                                    "texUnit%iArg1, 0.0, 1.0);\n",
-                                                    i,
-                                                    i);
+                                fragmentTextureString = Arg0 + Arg1 +
+                                                        QString("    color = clamp(texUnit%1Arg0 * "
+                                                                "texUnit%2Arg1, 0.0, 1.0);\n")
+                                                          .arg(i).arg(i);
                             }
                             break;
                         case GL_ADD:
                             if (combineRGBScale > 1) {
                                 fragmentTextureString =
                                   Arg0 + Arg1 +
-                                  QString().sprintf("    color = clamp(%.1f * "
-                                                    "vec4(texUnit%iArg0 + texUnit%iArg1), 0.0, "
-                                                    "1.0);\n",
-                                                    (float)combineRGBScale,
-                                                    i,
-                                                    i);
+                                  QString("    color = clamp(%1 * "
+                                          "vec4(texUnit%2Arg0 + texUnit%3Arg1), 0.0, "
+                                          "1.0);\n")
+                                    .arg((float)combineRGBScale).arg(i).arg(i);
                             } else {
-                                fragmentTextureString =
-                                  Arg0 + Arg1 +
-                                  QString().sprintf("    color = clamp(texUnit%iArg0 + "
-                                                    "texUnit%iArg1, 0.0, 1.0);\n",
-                                                    i,
-                                                    i);
+                                fragmentTextureString = Arg0 + Arg1 +
+                                                        QString("    color = clamp(texUnit%1Arg0 + "
+                                                                "texUnit%2Arg1, 0.0, 1.0);\n")
+                                                          .arg(i).arg(i);
                             }
                             break;
                         case GL_ADD_SIGNED:
                             if (combineRGBScale > 1) {
                                 fragmentTextureString =
                                   Arg0 + Arg1 +
-                                  QString().sprintf("    color = clamp(%.1f * "
-                                                    "vec4(texUnit%iArg0 + texUnit%iArg1 - "
-                                                    "vec4(0.5)), 0.0, 1.0);\n",
-                                                    (float)combineRGBScale,
-                                                    i,
-                                                    i);
+                                  QString("    color = clamp(%1 * "
+                                          "vec4(texUnit%2Arg0 + texUnit%3Arg1 - "
+                                          "vec4(0.5)), 0.0, 1.0);\n")
+                                    .arg((float)combineRGBScale).arg(i).arg(i);
                             } else {
                                 fragmentTextureString =
                                   Arg0 + Arg1 +
-                                  QString().sprintf("    color = clamp(texUnit%iArg0 + "
-                                                    "texUnit%iArg1 - vec4(0.5), 0.0, 1.0);\n",
-                                                    i,
-                                                    i);
+                                  QString("    color = clamp(texUnit%1Arg0 + "
+                                          "texUnit%2Arg1 - vec4(0.5), 0.0, 1.0);\n")
+                                    .arg(i).arg(i);
                             }
                             break;
                         case GL_INTERPOLATE:
@@ -490,18 +469,14 @@ SGShaderGenerator::buildFragTex(QString& str) const
                             if (combineRGBScale > 1) {
                                 fragmentTextureString =
                                   Arg0 + Arg1 +
-                                  QString().sprintf("    color = clamp(%.1f * (texUnit%iArg0 - "
-                                                    "texUnit%iArg1), 0.0, 1.0);\n",
-                                                    (float)combineRGBScale,
-                                                    i,
-                                                    i);
+                                  QString("    color = clamp(%1 * (texUnit%2Arg0 - "
+                                          "texUnit%3Arg1), 0.0, 1.0);\n")
+                                    .arg((float)combineRGBScale).arg(i).arg(i);
                             } else {
-                                fragmentTextureString =
-                                  Arg0 + Arg1 +
-                                  QString().sprintf("    color = clamp(texUnit%iArg0 - "
-                                                    "texUnit%iArg1, 0.0, 1.0);\n",
-                                                    i,
-                                                    i);
+                                fragmentTextureString = Arg0 + Arg1 +
+                                                        QString("    color = clamp(texUnit%1Arg0 - "
+                                                                "texUnit%2Arg1, 0.0, 1.0);\n")
+                                                          .arg(i).arg(i);
                             }
                             break;
                         case GL_DOT3_RGB:
@@ -694,20 +669,18 @@ SGShaderGenerator::buildLightCode(QString& str,
 
                 if (v[3] == 0.0) {
                     if (spotCut != DEFAULT_SPOT_CUT) {
-                        str += QString().sprintf("    infiniteSpotLight(%d, normal);\n\n", i);
+                        str += QString("    infiniteSpotLight(%1, normal);\n\n").arg(i);
                         fLightDirSpot = true;
                     } else {
-                        str += QString().sprintf("    directionalLight(%d, normal);\n\n", i);
+                        str += QString("    directionalLight(%1, normal);\n\n").arg(i);
                         fLightDir = true;
                     }
                 } else {
                     if (spotCut == DEFAULT_SPOT_CUT) {
-                        str +=
-                          QString().sprintf("    pointLight(%d, normal, eye, ecPosition3);\n\n", i);
+                        str += QString("    pointLight(%1, normal, eye, ecPosition3);\n\n").arg(i);
                         fLightPoint = true;
                     } else {
-                        str +=
-                          QString().sprintf("    spotLight(%d, normal, eye, ecPosition3);\n\n", i);
+                        str += QString("    spotLight(%1, normal, eye, ecPosition3);\n\n").arg(i);
                         fLightSpot = true;
                     }
                 }
@@ -743,19 +716,19 @@ SGShaderGenerator::buildLightCode(QString& str,
                     const QVector4D& v = light.position;
 
                     if (v[3] == 0.0) {
-                        str += QString().sprintf("    directionalLight(%d, normal);\n\n", i);
+                        str += QString("    directionalLight(%1, normal);\n\n").arg(i);
                         fLightDir = true;
                     } else {
                         const float spotCut = light.spotCutoff;
                         if (spotCut == 180.0) {
-                            str += QString().sprintf("    pointLight(%d, normal, "
-                                                     "eye, ecPosition3);\n\n",
-                                                     i);
+                            str += QString("    pointLight(%1, normal, "
+                                           "eye, ecPosition3);\n\n")
+                                     .arg(i);
                             fLightPoint = true;
                         } else {
-                            str += QString().sprintf("    spotLight(%d, normal, "
-                                                     "eye, ecPosition3);\n\n",
-                                                     i);
+                            str += QString("    spotLight(%1, normal, "
+                                           "eye, ecPosition3);\n\n")
+                                     .arg(i);
                             fLightSpot = true;
                         }
                     }
@@ -849,15 +822,16 @@ SGShaderGenerator::buildTexCoord(QString& str, bool& fMapReflection, bool& fMapS
                     if (!fMapSphere) {
                         texCoordString =
                           tempStringA + tempStringB +
-                          QString().sprintf("    gl_TexCoord[%i] = vec4(reflection, 1.0); \n", i);
+                          QString("    gl_TexCoord[%1] = vec4(reflection, 1.0); \n").arg(i);
                     } else {
                         texCoordString =
                           tempStringB +
-                          QString().sprintf("    gl_TexCoord[%i] = vec4(reflection, 1.0); \n", i);
+                          QString("    gl_TexCoord[%1] = vec4(reflection, 1.0); \n").arg(i);
                     }
                     fMapReflection = true;
                 } else {
-                    texCoordString.sprintf("    gl_TexCoord[%i] = vec4(reflection, 1.0); \n", i);
+                    texCoordString =
+                      QString("    gl_TexCoord[%1] = vec4(reflection, 1.0); \n").arg(i);
                 }
             } else if (texture.coordinateGeneration == GL_SPHERE_MAP) {
                 if (!fMapSphere && !fMapReflection) {
@@ -870,15 +844,16 @@ SGShaderGenerator::buildTexCoord(QString& str, bool& fMapReflection, bool& fMapS
                     if (!fMapReflection) {
                         texCoordString =
                           tempStringA + tempStringB +
-                          QString().sprintf("    gl_TexCoord[%i] = vec4(sMap, 0.0, 1.0);\n", i);
+                          QString("    gl_TexCoord[%1] = vec4(sMap, 0.0, 1.0);\n").arg(i);
                     } else {
                         texCoordString =
                           tempStringB +
-                          QString().sprintf("    gl_TexCoord[%i] = vec4(sMap, 0.0, 1.0);\n", i);
+                          QString("    gl_TexCoord[%1] = vec4(sMap, 0.0, 1.0);\n").arg(i);
                     }
                     fMapSphere = true;
                 } else {
-                    texCoordString.sprintf("    gl_TexCoord[%i] = vec4(sMap, 0.0, 1.0);\n", i);
+                    texCoordString =
+                      QString("    gl_TexCoord[%i] = vec4(sMap, 0.0, 1.0);\n").arg(i);
                 }
             } else if (texture.coordinateGeneration == GL_EYE_LINEAR) {
                 texCoordString.sprintf("\n    gl_TexCoord[%i].s = dot( "
@@ -915,13 +890,12 @@ SGShaderGenerator::buildTexCoord(QString& str, bool& fMapReflection, bool& fMapS
                                        i,
                                        i);
             } else if (texture.coordinateGeneration == GL_NORMAL_MAP) {
-                texCoordString.sprintf("\n    gl_TexCoord[%i] = vec4( normal, 1.0 );\n", i);
+                texCoordString = QString("\n    gl_TexCoord[%1] = vec4( normal, 1.0 );\n").arg(i);
             }
         } else {
-            texCoordString.sprintf("\n"
-                                   "    gl_TexCoord[%i] = gl_MultiTexCoord%i;\n",
-                                   i,
-                                   i);
+            texCoordString = QString("\n"
+                                     "    gl_TexCoord[%1] = gl_MultiTexCoord%2;\n")
+                               .arg(i).arg(i);
         }
         str += texCoordString;
     }
